@@ -1,0 +1,23 @@
+.actions-menu li {
+  display: inline-block;
+  list-style: none;
+  margin-left: 5px;
+}
+.btn-cir {
+    border: none;
+    border-radius: 50%;
+}
+.ptxt {
+    margin-left: 0px;
+    color: #aaaa15;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+input[type='number'] {
+    -moz-appearance:textfield;
+}
