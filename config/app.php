@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Time Teck'),
+    'name' => env('APP_NAME', 'Care Service'),
 
     /*
     |--------------------------------------------------------------------------
@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost/teck'),
+    'url' => env('APP_URL', 'http://careservice.projectdevelopment.co/'),
 
     'asset_url' => env('ASSET_URL', null),
 

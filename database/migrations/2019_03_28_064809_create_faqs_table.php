@@ -17,6 +17,7 @@ class CreateFaqsTable extends Migration
             $table->bigIncrements('id');
             $table->text('question');
             $table->longText('answer');
+            $table->tinyInteger('faq_order');
             $table->timestamps();
         });
     }

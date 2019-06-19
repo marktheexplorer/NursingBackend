@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\Enquiry;
-use App\Teck;
 use Charts;
 use DB;
 use App\Faq;
@@ -64,6 +63,6 @@ class DashboardController extends Controller
         $chart->labels(['2 days ago', 'Yesterday', 'Today']);
         $chart->dataset('Dataset', 'line', [$users_2_days_ago, $yesterday_users, $today_users]);*/
 
-        return view('dashboard', compact('users', 'enquiries', 'chart', 'tecks', 'faqs'));
+        return view('dashboard', compact('users', 'enquiries', 'chart', 'faqs'));
     }
 }
