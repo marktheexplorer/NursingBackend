@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Service;
 use Image; 
+use Validator;
 
 class ServiceController extends Controller
 {
@@ -36,24 +37,33 @@ class ServiceController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
+    { 
         $input = $request->input();
         $validator = validator::make($input,[
             'title' => 'required|string|max:60',
             'description' => 'required|string',
-            'service_image' => 'nullable|url'
+            'service_image' => 'nullable|image|mimes:jpeg,png,jpg'
         ]);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        if($request->has('service_image') && ($request->input('service_image') != null)) {
-                $path = $input['service_image'];
-                $filename = basename($path); 
-                Image::make($path)->save(config('image.user_image_path').$filename);
-                $input['service_image'] = $filename;
+        if($request->has('service_image') && ($request->file('service_image') != null)) {
+                $image = $request->file('service_image');
+                $input['service_image'] = time().'.'.$image->getClientOriginalExtension();   
+
+                $destinationPath = config('image.user_image_path');
+                $img = Image::make($image->getRealPath());
+                $image->move($destinationPath, $input['service_image']);
             }
+
+                $input['title'] = $input['title'];
+                $input['description'] = $input['description'];
+                $service = Service::create($input);
+
+                flash()->success('New Service added successfully');
+                return redirect()->route('services.index');
     }
 
     /**

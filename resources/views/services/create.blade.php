@@ -25,14 +25,14 @@
                         </ul>
                         <div class="tab-content">
                             <div class="tab-pane fade show active" id="tab-2">
-                                <form action="{{ route('services.store') }}" method="post" class="form-horizontal">
+                                <form action="{{ route('services.store') }}" enctype = 'multipart/form-data' method="post" class="form-horizontal">
                                 @csrf
                                     <div class="row">
                                         <div class="col-sm-12 form-group">
                                             <label>Title</label>
-                                            <input type="text" class="form-control {{ $errors->has('title') ? ' is-invalid' : '' }}" name="title" placeholder="Title" value="{{ old('title') }}" required/>
+                                            <input type="text" class="form-control {{ $errors->has('title') ? ' is-invalid' : '' }}" name="title" placeholder="Title" value="{{ old('title') }}"/>
                                             @if ($errors->has('title'))
-                                                <span class="invalid-feedback" role="alert">
+                                                <span class="text-danger">
                                                     <strong>{{ $errors->first('title') }}</strong>
                                                 </span>
                                             @endif
@@ -41,7 +41,7 @@
                                             <label>Description </label>
                                             <textarea class="form-control" name="description" rows="15">{{ old('description') }}</textarea>
                                             @if ($errors->has('description'))
-                                                <span class="invalid-feedback" role="alert">
+                                                <span class="text-danger" >
                                                     <strong>{{ $errors->first('description') }}</strong>
                                                 </span>
                                             @endif
@@ -49,12 +49,12 @@
                                         <div class="col-sm-12 form-group">
                                             <label>Select Image:</label>
                                             <input type="file" name="service_image" class="form-control" onchange="readURL(this);">
+                                            <img id="preview" alt="your image" />
                                             @if ($errors->has('service_image'))
-                                                <span class="invalid-feedback" role="alert">
+                                                <span class="text-danger">
                                                     <strong>{{ $errors->first('service_image') }}</strong>
                                                 </span>
                                             @endif
-                                            <img id="preview" alt="your image" />
                                         </div>
                                         <div class="form-group">
                                             <button class="btn btn-default" type="submit">Submit</button>
