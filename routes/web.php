@@ -27,6 +27,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function()
 	Route::get('user/blocked/{userId}', 'UserController@block');
 	Route::get('user/blocklist', 'UserController@blocklist')->name('users.blocklist');
 	Route::resource('users', 'UserController');
+	Route::resource('services', 'ServiceController');
 	Route::resource('faqs', 'FaqController');
 	Route::get('reorder', 'FaqController@reorder')->name('faqs.reorder');
 	Route::post('updateorder', 'FaqController@updateorder')->name('faqs.updateorder');

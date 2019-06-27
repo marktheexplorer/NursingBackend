@@ -46,14 +46,16 @@
                 </ul>
             </li>
             <li>
-                <a href="javascript:;"><i class="sidebar-item-icon fas fa-bullhorn"></i>
+                <a href="javascript:;"><i class="sidebar-item-icon fas fa-users"></i>
                     <span class="nav-label">Services</span><i class="fa fa-angle-left arrow"></i></a>
-                    <ul class="nav-2-level collapse" aria-expanded="false">
-                        <li>
-                            <a href="#"><i class="sidebar-item-icon fas fa-list"></i>Services</a>
-                        </li>
-                    </ul>
-                </a>
+                <ul class="nav-2-level collapse" aria-expanded="false">
+                    <li>
+                        <a href="{{ route('services.create') }}"><i class="sidebar-item-icon fas fa-plus"></i>Add Service</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('services.index') }}"><i class="sidebar-item-icon fas fa-list-ul"></i>Services</a>
+                    </li>
+                </ul>
             </li>
             <li>
                 <a href="javascript:;"><i class="sidebar-item-icon fas fa-bullhorn"></i>
