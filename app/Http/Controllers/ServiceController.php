@@ -137,6 +137,18 @@ class ServiceController extends Controller
      */
     public function destroy($id)
     {
-        //
+         $service = Service::findOrFail($id);
+        if ($service->delete()) {
+            $response = array(
+                'status' => 'success',
+                'message' => 'Service deleted successfully',
+            );
+        } else {
+            $response = array(
+                'status' => 'error',
+                'message' => 'Service can not be deleted.Please try again',
+            );
+        }
+        return json_encode($response);
     }
 }

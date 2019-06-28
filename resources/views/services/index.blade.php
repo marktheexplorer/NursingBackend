@@ -59,7 +59,7 @@
 	              						</a>
 	              					</li>
 	              					<li>
-	              						<form action="{{ url('/admin/services/'.$service->id) }}" method="POST" onsubmit="deleteUser('{{ $service->id }}', '{{ $service->name }}', event,this)">
+	              						<form action="{{ url('/admin/services/'.$service->id) }}" method="POST" onsubmit="deleteService('{{ $service->id }}', '{{ $service->title }}', event,this)">
 	                    				@csrf
 	              							<button class="btn-sm btn-danger btn-cir" title="Delete"><i class="fas fa-trash-alt"></i></button>
 	              						</form>
@@ -82,12 +82,12 @@
     	$('#data-table').DataTable();
 	});
 
-	function deleteUser(id, name, event,form)
+	function deleteService(id, title, event,form)
     {
         event.preventDefault();
         swal({
             title: "Are you sure?",
-            text: "You want to delete "+name+" service",
+            text: "You want to delete "+title+" service",
             icon: "warning",
             buttons: {
 				cancel: true,
@@ -128,7 +128,7 @@
                     }
                 });
             } else {
-                swal("Cancelled", name+"'s service will not be deleted.", "error");
+                swal("Cancelled", title+" service will not be deleted.", "error");
             }
         });
     }
