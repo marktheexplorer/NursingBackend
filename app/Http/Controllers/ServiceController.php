@@ -85,7 +85,8 @@ class ServiceController extends Controller
      */
     public function edit($id)
     {
-        //
+        $service = Service::findOrFail($id);
+        return view('services.edit', compact('service'));
     }
 
     /**
@@ -97,7 +98,34 @@ class ServiceController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $input = $request->input();
+        $validator = validator::make($input,[
+            'title' => 'required|string|max:60',
+            'description' => 'required|string',
+            'service_image' => 'nullable|image|mimes:jpeg,png,jpg'
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        if($request->has('service_image') && ($request->file('service_image') != null)) {
+                $image = $request->file('service_image');
+                $input['service_image'] = time().'.'.$image->getClientOriginalExtension();   
+
+                $destinationPath = config('image.user_image_path');
+                $img = Image::make($image->getRealPath());
+                $image->move($destinationPath, $input['service_image']);
+            }
+
+                $service = Service::findOrFail($id);
+                $service->title = $input['title'];
+                $service->description = $input['description'];
+                $service->service_image = $input['service_image'];
+                $service->save();
+
+                flash()->success('Service updated successfully');
+                return redirect()->route('services.index');
     }
 
     /**

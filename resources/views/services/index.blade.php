@@ -49,17 +49,17 @@
 	              			<td>
 	              				<ul class="actions-menu">
 	              					<li>
-	              						<a href="{{ route('users.edit',['id' => $service->id]) }}">
+	              						<a href="{{ route('services.edit',['id' => $service->id]) }}">
 	              							<button class="btn-sm btn-primary btn-cir" title="Edit"><i class="fas fa-pencil-alt"></i></button>
 	              						</a>
 	              					</li>
 	              					<li>
-	              						<a href="{{ route('users.show',['id' => $service->id]) }}">
+	              						<a href="{{ route('services.show',['id' => $service->id]) }}">
 	              							<button class="btn-sm btn-warning btn-cir" title="View"><i class="fas fa-eye"></i></button>
 	              						</a>
 	              					</li>
 	              					<li>
-	              						<form action="{{ url('/admin/users/'.$service->id) }}" method="POST" onsubmit="deleteUser('{{ $service->id }}', '{{ $service->name }}', event,this)">
+	              						<form action="{{ url('/admin/services/'.$service->id) }}" method="POST" onsubmit="deleteUser('{{ $service->id }}', '{{ $service->name }}', event,this)">
 	                    				@csrf
 	              							<button class="btn-sm btn-danger btn-cir" title="Delete"><i class="fas fa-trash-alt"></i></button>
 	              						</form>
