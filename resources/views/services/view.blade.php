@@ -24,7 +24,7 @@
                     <div class="tab-content">
                         <div class="tab-pane fade show active" id="tab-1">
                                 <p><h5>Service : {{ ucfirst($service->title) }} </h5></p>
-                                <p>Description : {{ $service->description }} </p>
+                                <p>Description : {!! $service->description !!} </p>
                                 <div>Image : <img id="image_view" src="{{ asset(config('image.user_image_url').$service->service_image) }}" alt="No image"> </div>
                         </div>
                     </div>

@@ -44,7 +44,7 @@
 	            		<tr>
 	            			<td>{{ ++$key }}
 	              			<td>{{ ucfirst($service->title) }}</td>
-	              			<td>{{ $service->description }}</td>
+	              			<td>{!! ($service->description) !!}</td>
 	              			<td>{{ date_format(date_create($service->created_at), 'd M, y')}}
 	              			<td>
 	              				<ul class="actions-menu">
