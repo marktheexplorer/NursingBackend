@@ -74,7 +74,8 @@ class ServiceController extends Controller
      */
     public function show($id)
     {
-        //
+        $service = Service::findOrFail($id);
+        return view('services.view', compact('service'));
     }
 
     /**
