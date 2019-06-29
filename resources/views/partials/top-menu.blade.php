@@ -1,9 +1,10 @@
 <header class="header">
     <div class="page-brand">
         <a class="link" href="{{ route('dashboard') }}">
-            <span class="brand"><span class="brand-tip">{{$_ENV['APP_NAME']}}</span>
+            <span class="brand">
+                <span class="brand-tip">{{$_ENV['APP_NAME']}}</span>
             </span>
-            <span class="brand-mini">TT</span>
+            <span class="brand-mini">CS</span>
         </a>
     </div>
     <div class="flexbox flex-1">
@@ -34,3 +35,4 @@
         </ul>
     </div>
 </header>
+

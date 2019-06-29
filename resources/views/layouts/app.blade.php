@@ -7,7 +7,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{$_ENV['APP_NAME']}}</title>
+    <title>{{ config('app.name', 'TimeTeck') }}</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
@@ -29,7 +29,7 @@
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     @endauth
 </head>  
-<body class="@auth fixed-navbar has-animation @endauth @guest bg-silver-300 @endguest">
+<body class="@auth fixed-navbar has-animation @endauth @guest bg-silver-300 login-page @endguest">
     <div class="@auth page-wrapper @endauth">
         @auth
             @include('partials.top-menu')
@@ -47,9 +47,6 @@
     <script src="{{ asset('admin/assets/vendors/metisMenu/dist/metisMenu.min.js') }}" type="text/javascript"></script>
     <!-- CORE SCRIPTS-->
     <script src="{{ asset('admin/assets/js/app.min.js') }}" type="text/javascript"></script>
-    <!-- Chart js-->
-   <!--  <script src="{{ asset('admin/assets/vendors/chart.js/dist/Chart.min.js') }}" type="text/javascript"></script> -->
-
     <script>
         $('#flash-overlay-modal').modal();
     </script> 

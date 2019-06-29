@@ -17,21 +17,6 @@
             <li class="heading">FEATURES</li>
             <li>
                 <a href="javascript:;"><i class="sidebar-item-icon fas fa-users"></i>
-                    <span class="nav-label">Users</span><i class="fa fa-angle-left arrow"></i></a>
-                <ul class="nav-2-level collapse" aria-expanded="false">
-                    <li>
-                        <a href="{{ route('users.create') }}"><i class="sidebar-item-icon fas fa-plus"></i>Add User</a>
-                    </li>
-                    <li>
-                        <a href="{{ route('users.index') }}"><i class="sidebar-item-icon fas fa-list-ul"></i>Active Users</a>
-                    </li>
-                    <li>
-                        <a href="{{ route('users.blocklist') }}"><i class="sidebar-item-icon fas fa-list-ul"></i>Block Users</a>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <a href="javascript:;"><i class="sidebar-item-icon fas fa-users"></i>
                     <span class="nav-label">Caregiver</span><i class="fa fa-angle-left arrow"></i></a>
                 <ul class="nav-2-level collapse" aria-expanded="false">
                     <li>
