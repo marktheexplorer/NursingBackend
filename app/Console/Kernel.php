@@ -12,7 +12,6 @@ class Kernel extends ConsoleKernel{
      * @var array
      */
     protected $commands = [
-        Commands\UpateQuickTimeTeck::class
     ];
 
     /**
@@ -22,8 +21,6 @@ class Kernel extends ConsoleKernel{
      * @return void
      */
     protected function schedule(Schedule $schedule){
-        $schedule->command('Quicktimeteck:update')->cron('1 0 * * *');
-        $schedule->command('timeteck:notify')->cron('* * * * *');
     }
 
     /**
