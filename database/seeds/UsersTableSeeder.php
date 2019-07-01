@@ -16,7 +16,7 @@ class UsersTableSeeder extends Seeder
 
         DB::table('users')->insert([[
                 'role_id' => '1',
-                'name' => Str::random(10),
+                'name' => 'Admin',
                 'email' => 'admin@gmail.com',
                 'country_code' => '+91',
                 'mobile_number' => '999999909',

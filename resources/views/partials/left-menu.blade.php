@@ -17,24 +17,25 @@
             <li class="heading">FEATURES</li>
             <li>
                 <a href="javascript:;"><i class="sidebar-item-icon fas fa-users"></i>
-                    <span class="nav-label">Users</span><i class="fa fa-angle-left arrow"></i></a>
+                    <span class="nav-label">Caregiver</span><i class="fa fa-angle-left arrow"></i></a>
                 <ul class="nav-2-level collapse" aria-expanded="false">
                     <li>
-                        <a href="{{ route('users.create') }}"><i class="sidebar-item-icon fas fa-plus"></i>Add User</a>
+                        <a href="#"><i class="sidebar-item-icon fas fa-plus"></i>Add Caregiver</a>
                     </li>
                     <li>
-                        <a href="{{ route('users.index') }}"><i class="sidebar-item-icon fas fa-list-ul"></i>Active Users</a>
+                        <a href="#"><i class="sidebar-item-icon fas fa-list-ul"></i>Active Caregiver</a>
                     </li>
                     <li>
-                        <a href="{{ route('users.blocklist') }}"><i class="sidebar-item-icon fas fa-list-ul"></i>Block Users</a>
+                        <a href="#"><i class="sidebar-item-icon fas fa-list-ul"></i>Block Caregiver</a>
                     </li>
                 </ul>
             </li>
             <li>
                 <a href="javascript:;"><i class="sidebar-item-icon fas fa-users"></i>
-                    <span class="nav-label">Caregiver</span><i class="fa fa-angle-left arrow"></i></a>
+                    <span class="nav-label">Services</span><i class="fa fa-angle-left arrow"></i></a>
                 <ul class="nav-2-level collapse" aria-expanded="false">
                     <li>
+<<<<<<< HEAD
                         <a href="{{ route('caregiver.create') }}"><i class="sidebar-item-icon fas fa-plus"></i>Add Caregiver</a>
                     </li>
                     <li>
@@ -43,17 +44,14 @@
                     <li>
                         <a href="#"><i class="sidebar-item-icon fas fa-list-ul"></i>Block Caregiver</a>
                     </li>-->
+=======
+                        <a href="{{ route('services.create') }}"><i class="sidebar-item-icon fas fa-plus"></i>Add Service</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('services.index') }}"><i class="sidebar-item-icon fas fa-list-ul"></i>Services</a>
+                    </li>
+>>>>>>> 60d78a8db945eda99eff38bc4ebe0291299e0446
                 </ul>
-            </li>
-            <li>
-                <a href="javascript:;"><i class="sidebar-item-icon fas fa-bullhorn"></i>
-                    <span class="nav-label">Services</span><i class="fa fa-angle-left arrow"></i></a>
-                    <ul class="nav-2-level collapse" aria-expanded="false">
-                        <li>
-                            <a href="#"><i class="sidebar-item-icon fas fa-list"></i>Services</a>
-                        </li>
-                    </ul>
-                </a>
             </li>
             <li>
                 <a href="javascript:;"><i class="sidebar-item-icon fas fa-bullhorn"></i>

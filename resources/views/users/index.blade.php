@@ -14,10 +14,10 @@
     </div>
     @include('flash::message')
     <div class="page-content fade-in-up">
-    	<a href="{{ route('users.create') }}"><button class="btn btn-info "><i class="fas fa-plus"></i> Add</button></a>
         <div class="ibox">
             <div class="ibox-head">
                 <div class="ibox-title">Users Data</div>
+                <a href="{{ route('users.create') }}"><button class="btn btn-info "><i class="fas fa-plus"></i> Add</button></a>
             </div>
             <div class="ibox-body">
                 <table class="table table-striped table-bordered table-hover" id="data-table" cellspacing="0" width="100%">

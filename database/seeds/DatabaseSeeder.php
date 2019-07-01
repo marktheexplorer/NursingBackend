@@ -14,5 +14,10 @@ class DatabaseSeeder extends Seeder
     	$this->call(RolesTableSeeder::class);
         $this->call(UsersTableSeeder::class);
         $this->call(FaqsTableSeeder::class);
+<<<<<<< HEAD
+=======
+        $this->call(ServiceTableSeeder::class);
+        $this->call(PatientsTableSeeder::class);
+>>>>>>> 60d78a8db945eda99eff38bc4ebe0291299e0446
     }
 }

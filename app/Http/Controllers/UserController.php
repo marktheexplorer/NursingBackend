@@ -26,8 +26,8 @@ class UserController extends Controller{
         $input = $request->input();
         $validator =  Validator::make($input,[
             'name' => 'required|string|max:30',
-            'email' => 'email|required|unique',
-            'mobile_number' => 'required|numeric|unique',
+            'email' => 'email|required|unique:users',
+            'mobile_number' => 'required|numeric|unique:users',
             'location' => 'nullable|string|max:50',
             'password' => 'required|min:6',
         ]);
