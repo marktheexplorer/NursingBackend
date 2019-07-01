@@ -231,10 +231,10 @@ a,
                                         <div class="col-sm-3  form-group">
                                             <label>Service</label>
                                             <select name="service" class="form-control {{ $errors->has('service') ? ' is-invalid' : '' }}" required="true">
-                                                <option disabled="true" selected="true"> -- Select Service --</option>
-                                                <option value="Service1">Service1</option>
-                                                <option value="Service2">Service2</option>
-                                                <option value="Service3">Service3</option>
+                                                <option disabled="true" selected="true"> -- Select Service --</option><?php
+                                                foreach($service_list as $srvc){
+                                                    echo '<option value="'.$srvc->id.'">'.$srvc->title.'</option>';
+                                                }?>
                                             </select>
                                             @if ($errors->has('service'))
                                                 <span class="invalid-feedback" role="alert">

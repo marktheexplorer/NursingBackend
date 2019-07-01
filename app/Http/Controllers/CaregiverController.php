@@ -27,7 +27,8 @@ class CaregiverController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function create(){
-        return view('caregiver.create');
+        $service_list = DB::table('services')->orderBy('title', 'asc')->get();
+        return view('caregiver.create', compact(('service_list')));
     }
 
     /**
@@ -137,6 +138,8 @@ class CaregiverController extends Controller{
         }
 
         $nonservice_zipcode = DB::table('nonservice_zipcode')->where('caregiver_id', $id)->get();
+        $service = DB::table('services')->select('title')->where('id', $user->service)->first();
+        $user->service = $service->title;
         return view('caregiver.view', compact('user', 'nonservice_zipcode'));
     }
 
@@ -154,7 +157,8 @@ class CaregiverController extends Controller{
         }
 
         $user->nonservice_zipcode = DB::table('nonservice_zipcode')->where('caregiver_id', $id)->get();
-        return view('caregiver.edit', compact('user', 'nonservice_zipcode'));
+        $service_list = DB::table('services')->orderBy('title', 'asc')->get();
+        return view('caregiver.edit', compact('user', 'nonservice_zipcode', 'service_list'));
     }
 
     /**

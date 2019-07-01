@@ -232,10 +232,14 @@ a,
                                         <div class="col-sm-3  form-group">
                                             <label>Service</label>
                                             <select name="service" class="form-control {{ $errors->has('service') ? ' is-invalid' : '' }}" required="true">
-                                                <option disabled="true" > -- Select Service --</option>
-                                                <option value="Service1" <?php if($user->service == 'Service1'){ echo 'selected';}?>>Service1</option>
-                                                <option value="Service2" <?php if($user->service == 'Service2'){ echo 'selected';}?>>Service2</option>
-                                                <option value="Service3" <?php if($user->service == 'Service3'){ echo 'selected';}?>>Service3</option>
+                                                <option disabled="true" > -- Select Service --</option><?php
+                                                foreach($service_list as $srvc){
+                                                    if($user->service != $srvc->id){?>
+                                                        <option value="{{ $srvc->id }}" >{{ $srvc->title }}</option><?php
+                                                    }else{ ?>
+                                                        <option value="{{ $srvc->id }}" selected>{{ $srvc->title }}</option><?php
+                                                    }
+                                                }?>                                                    
                                             </select>
                                             @if ($errors->has('service'))
                                                 <span class="invalid-feedback" role="alert">
