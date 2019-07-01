@@ -32,4 +32,15 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function()
 	Route::post('updateorder', 'FaqController@updateorder')->name('faqs.updateorder');
 	Route::resource('cms', 'CmsPageController');
 	Route::resource('enquiries', 'EnquiryController');
+
+	//caregiver controller it automatically route the default route
+	Route::get('caregiver/blocked/{userId}', 'CaregiverController@blocked');
+	Route::get('caregiver/searchzip', 'CaregiverController@searchzip');
+	Route::get('caregiver/locationfromzip', 'CaregiverController@locationfromzip');	
+	Route::resource('caregiver', 'CaregiverController');
+	
+	//Route::get('admin/searchzip', 'CaregiverController@searchzip');
+	/*Route::get('admin/caregiver/searchzip', function(){
+		echo "there is something....";
+	});*/
 });

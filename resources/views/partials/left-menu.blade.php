@@ -35,14 +35,14 @@
                     <span class="nav-label">Caregiver</span><i class="fa fa-angle-left arrow"></i></a>
                 <ul class="nav-2-level collapse" aria-expanded="false">
                     <li>
-                        <a href="#"><i class="sidebar-item-icon fas fa-plus"></i>Add Caregiver</a>
+                        <a href="{{ route('caregiver.create') }}"><i class="sidebar-item-icon fas fa-plus"></i>Add Caregiver</a>
                     </li>
                     <li>
-                        <a href="#"><i class="sidebar-item-icon fas fa-list-ul"></i>Active Caregiver</a>
-                    </li>
+                        <a href="{{ route('caregiver.index') }}"><i class="sidebar-item-icon fas fa-list-ul"></i>Caregiver List</a>
+                    </li><!--
                     <li>
                         <a href="#"><i class="sidebar-item-icon fas fa-list-ul"></i>Block Caregiver</a>
-                    </li>
+                    </li>-->
                 </ul>
             </li>
             <li>
