@@ -42,7 +42,7 @@ class CaregiverController extends Controller{
         $validator =  Validator::make($input,[
             'name' => 'required|string|max:255|min:4',
             'email' => 'required|string|unique:users,email',
-            'mobile_number' => 'required|unique:users,mobile_number|between:8,15|numeric',
+            'mobile_number' => 'required|unique:users,mobile_number|numeric',
             'service' => 'required',
             'password' => 'required|min:6',
             'gender' => 'required',
