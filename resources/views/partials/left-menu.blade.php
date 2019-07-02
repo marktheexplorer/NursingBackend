@@ -24,10 +24,7 @@
                     </li>
                     <li>
                         <a href="{{ route('caregiver.index') }}"><i class="sidebar-item-icon fas fa-list-ul"></i>Caregiver List</a>
-                    </li><!--
-                    <li>
-                        <a href="#"><i class="sidebar-item-icon fas fa-list-ul"></i>Block Caregiver</a>
-                    </li>-->
+                    </li>
                 </ul>
             </li>
             <li>
@@ -38,6 +35,17 @@
                     </li>
                     <li>
                         <a href="{{ route('services.index') }}"><i class="sidebar-item-icon fas fa-list-ul"></i>Services</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:;"><i class="sidebar-item-icon fas fa-users"></i>
+                    <span class="nav-label">Qualification</span><i class="fa fa-angle-left arrow"></i></a>
+                <ul class="nav-2-level collapse" aria-expanded="false">
+                        <a href="{{ route('qualifications.create') }}"><i class="sidebar-item-icon fas fa-plus"></i>Add Qualification</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('qualifications.index') }}"><i class="sidebar-item-icon fas fa-list-ul"></i>Qualifications</a>
                     </li>
                 </ul>
             </li>
@@ -73,106 +81,6 @@
                     <span class="nav-label">Enquiry</span>
                 </a>
             </li>
-            <!-- <li>
-                <a href="javascript:;"><i class="sidebar-item-icon fa fa-bar-chart"></i>
-                    <span class="nav-label">Charts</span><i class="fa fa-angle-left arrow"></i></a>
-                <ul class="nav-2-level collapse" aria-expanded="false">
-                    <li>
-                        <a href="charts_flot.html">Flot Charts</a>
-                    </li>
-                    <li>
-                        <a href="charts_morris.html">Morris Charts</a>
-                    </li>
-                    <li>
-                        <a href="chartjs.html">Chart.js</a>
-                    </li>
-                    <li>
-                        <a href="charts_sparkline.html">Sparkline Charts</a>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <a href="javascript:;"><i class="sidebar-item-icon fa fa-map"></i>
-                    <span class="nav-label">Maps</span><i class="fa fa-angle-left arrow"></i></a>
-                <ul class="nav-2-level collapse" aria-expanded="false">
-                    <li>
-                        <a href="maps_vector.html">Vector maps</a>
-                    </li>
-                </ul>
-            </li>
-           
-            <li class="heading">PAGES</li>
-            <li>
-                <a href="javascript:;"><i class="sidebar-item-icon fa fa-envelope"></i>
-                    <span class="nav-label">Mailbox</span><i class="fa fa-angle-left arrow"></i></a>
-                <ul class="nav-2-level collapse" aria-expanded="false">
-                    <li>
-                        <a href="mailbox.html">Inbox</a>
-                    </li>
-                    <li>
-                        <a href="mail_view.html">Mail view</a>
-                    </li>
-                    <li>
-                        <a href="mail_compose.html">Compose mail</a>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <a href="calendar.html"><i class="sidebar-item-icon fa fa-calendar"></i>
-                    <span class="nav-label">Calendar</span>
-                </a>
-            </li>
-            <li>
-                <a href="javascript:;"><i class="sidebar-item-icon fa fa-file-text"></i>
-                    <span class="nav-label">Pages</span><i class="fa fa-angle-left arrow"></i></a>
-                <ul class="nav-2-level collapse" aria-expanded="false">
-                    <li>
-                        <a href="invoice.html">Invoice</a>
-                    </li>
-                    <li>
-                        <a href="profile.html">Profile</a>
-                    </li>
-                    <li>
-                        <a href="login.html">Login</a>
-                    </li>
-                    <li>
-                        <a href="register.html">Register</a>
-                    </li>
-                    <li>
-                        <a href="lockscreen.html">Lockscreen</a>
-                    </li>
-                    <li>
-                        <a href="forgot_password.html">Forgot password</a>
-                    </li>
-                    <li>
-                        <a href="error_404.html">404 error</a>
-                    </li>
-                    <li>
-                        <a href="error_500.html">500 error</a>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
-                    <span class="nav-label">Menu Levels</span><i class="fa fa-angle-left arrow"></i></a>
-                <ul class="nav-2-level collapse" aria-expanded="false">
-                    <li>
-                        <a href="javascript:;">Level 2</a>
-                    </li>
-                    <li>
-                        <a href="javascript:;">
-                            <span class="nav-label">Level 2</span><i class="fa fa-angle-left arrow"></i></a>
-                        <ul class="nav-3-level collapse" aria-expanded="false">
-                            <li>
-                                <a href="javascript:;">Level 3</a>
-                            </li>
-                            <li>
-                                <a href="javascript:;">Level 3</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </li> -->
         </ul>
     </div>
 </nav>

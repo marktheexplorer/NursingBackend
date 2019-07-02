@@ -151,4 +151,17 @@ class ServiceController extends Controller
         }
         return json_encode($response);
     }
+
+    public function block($id){
+        $service = Service::find($id);
+        $service->is_blocked = !$service->is_blocked;
+        $service->save();
+       
+        if ($service->is_blocked)
+            flash()->success("Service blocked successfully."); 
+        else 
+            flash()->success("Service Unblocked successfully."); 
+
+        return redirect()->route('services.index');  
+    }
 }

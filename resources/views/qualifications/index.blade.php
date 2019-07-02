@@ -4,20 +4,20 @@
 <div class="content-wrapper">
     <!-- START PAGE CONTENT-->
     <div class="page-heading">
-        <h1 class="page-title">Service Management</h1>
+        <h1 class="page-title">Qualification Management</h1>
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
                 <a href="{{ route('dashboard') }}"><i class="fas fa-home"></i></a>
             </li>
-            <li class="breadcrumb-item">Services</li>
+            <li class="breadcrumb-item">Qualifications</li>
         </ol>
     </div>
     @include('flash::message')
     <div class="page-content fade-in-up">
         <div class="ibox">
             <div class="ibox-head">
-                <div class="ibox-title">Services Data</div>
-                <a href="{{ route('services.create') }}"><button class="btn btn-info pull-right"><i class="fas fa-plus"></i> Add</button></a>
+                <div class="ibox-title">Qualification Data</div>
+                <a href="{{ route('qualifications.create') }}"><button class="btn btn-info pull-right"><i class="fas fa-plus"></i> Add</button></a>
             </div>
             <div class="ibox-body">
                 <table class="table table-striped table-bordered table-hover" id="data-table" cellspacing="0" width="100%">
@@ -25,42 +25,40 @@
                         <tr>
                             <th>Id</th>
               				<th>Title</th>
-	                  		<th>Description</th>
 	                  		<th>Created At</th>
-	                  		<th style="min-width: 150px;">Actions</th>
+	                  		<th>Actions</th>
                         </tr>
                     </thead>
                     <tfoot>
                         <tr>
                             <th>Id</th>
                             <th>Title</th>
-                            <th>Description</th>
                             <th>Created At</th>
                             <th>Actions</th>
                         </tr>
                     </tfoot>
                     <tbody>
-                 	@foreach($services as $key => $service)
+                 	@foreach($qualifications as $key => $qualification)
 	            		<tr>
-	            			<td>{{ ++$key }}
-	              			<td>{{ ucfirst($service->title) }}</td>
-	              			<td><?php echo ucfirst(substr($service->description, 0, 80)); ?>...</td>
-	              			<td>{{ date_format(date_create($service->created_at), 'd M, y')}}
+	            			<td>{{ ++$key }}</td>
+	              			<td>{{ ucfirst($qualification->name) }}</td>
+	              			<td>{{ date_format(date_create($qualification->created_at), 'd M, y')}}</td>
 	              			<td>
 	              				<ul class="actions-menu">
 	              					<li>
-	              						<a href="{{ route('services.edit',['id' => $service->id]) }}">
+	              						<a href="{{ route('qualifications.edit',['id' => $qualification->id]) }}">
 	              							<button class="btn-sm btn-primary btn-cir" title="Edit"><i class="fas fa-pencil-alt"></i></button>
 	              						</a>
 	              					</li>
 	              					<li>
-	              						<a href="{{ route('services.show',['id' => $service->id]) }}">
+	              						<a href="{{ route('qualifications.show',['id' => $qualification->id]) }}">
 	              							<button class="btn-sm btn-warning btn-cir" title="View"><i class="fas fa-eye"></i></button>
 	              						</a>
 	              					</li>
-	              					<li>
-                                        <a href="{{ url('admin/services/blocked/'.$service->id) }}">
-                                        @if($service->is_blocked)
+	              					
+                                    <li>
+                                        <a href="{{ url('admin/qualifications/blocked/'.$qualification->id) }}">
+                                        @if($qualification->is_blocked)
                                             <button type="button" class="btn-sm btn-danger btn-cir" title="Unblock"><i class="fa fa-unlock"></i></button>
                                         @else
                                             <button type="button" class="btn-sm btn-success btn-cir" title="Block"><i class="fa fa-ban"></i></button>
