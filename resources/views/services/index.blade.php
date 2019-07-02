@@ -27,7 +27,7 @@
               				<th>Title</th>
 	                  		<th>Description</th>
 	                  		<th>Created At</th>
-	                  		<th>Actions</th>
+	                  		<th style="min-width: 150px;">Actions</th>
                         </tr>
                     </thead>
                     <tfoot>
@@ -44,7 +44,7 @@
 	            		<tr>
 	            			<td>{{ ++$key }}
 	              			<td>{{ ucfirst($service->title) }}</td>
-	              			<td>{!! ($service->description) !!}</td>
+	              			<td><?php echo ucfirst(substr($service->description, 0, 80)); ?>...</td>
 	              			<td>{{ date_format(date_create($service->created_at), 'd M, y')}}
 	              			<td>
 	              				<ul class="actions-menu">
