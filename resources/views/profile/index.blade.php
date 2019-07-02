@@ -91,7 +91,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label>Address / Location</label>
-                                        <input type="text" class="form-control {{ $errors->has('location') ? ' is-invalid' : '' }}" name="address" placeholder="Location" value="{{ old('location', Auth::user()->location) }}" />
+                                        <input type="text" class="form-control {{ $errors->has('location') ? ' is-invalid' : '' }}" name="location" placeholder="Location" value="{{ old('location', Auth::user()->location) }}" />
                                         @if ($errors->has('location'))
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $errors->first('location') }}</strong>
