@@ -122,7 +122,7 @@ class ServiceController extends Controller
                 $service = Service::findOrFail($id);
                 $service->title = $input['title'];
                 $service->description = $input['description'];
-                $service->service_image = $input['service_image'];
+                $service->service_image = isset($input['service_image'])? $input['service_image'] : null;
                 $service->save();
 
                 flash()->success('Service updated successfully');
