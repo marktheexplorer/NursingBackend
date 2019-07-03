@@ -29,12 +29,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function()
 	Route::resource('users', 'UserController');
 	Route::get('services/blocked/{userId}', 'ServiceController@block');
 	Route::resource('services', 'ServiceController');
-<<<<<<< HEAD
-	Route::resource('qualification', 'QualificationController');
-=======
+	//Route::resource('qualification', 'QualificationController');
 	Route::get('qualifications/blocked/{userId}', 'QualificationController@block');
 	Route::resource('qualifications', 'QualificationController');
->>>>>>> 82702cf8df23738becbdcb269d02afef18499e15
 	Route::resource('faqs', 'FaqController');
 	Route::get('reorder', 'FaqController@reorder')->name('faqs.reorder');
 	Route::post('updateorder', 'FaqController@updateorder')->name('faqs.updateorder');

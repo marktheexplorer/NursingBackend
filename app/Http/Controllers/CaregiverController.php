@@ -28,7 +28,8 @@ class CaregiverController extends Controller{
      */
     public function create(){
         $service_list = DB::table('services')->orderBy('title', 'asc')->get();
-        return view('caregiver.create', compact(('service_list')));
+        $qualification = DB::table('qualifications')->orderBy('name', 'asc')->get();
+        return view('caregiver.create', compact('service_list', 'qualification'));
     }
 
     /**
