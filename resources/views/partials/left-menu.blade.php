@@ -42,6 +42,17 @@
                 </ul>
             </li>
             <li>
+                <a href="javascript:;"><i class="sidebar-item-icon fas fa-users"></i>
+                    <span class="nav-label">Qualifications</span><i class="fa fa-angle-left arrow"></i></a>
+                <ul class="nav-2-level collapse" aria-expanded="false">
+                        <a href="{{ route('qualification.create') }}"><i class="sidebar-item-icon fas fa-plus"></i>Add Qualification</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('qualification.index') }}"><i class="sidebar-item-icon fas fa-list-ul"></i>Qualifications</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
                 <a href="javascript:;"><i class="sidebar-item-icon fas fa-question-circle"></i>
                     <span class="nav-label">FAQs</span><i class="fa fa-angle-left arrow"></i></a>
                 <ul class="nav-2-level collapse" aria-expanded="false">
