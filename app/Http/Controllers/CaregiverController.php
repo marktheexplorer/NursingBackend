@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\User;
 use App\Caregiver;
+use App\Us_location;
 use App\Nonservice_zipcode;
 use Validator;
 use App\State;
@@ -45,7 +46,7 @@ class CaregiverController extends Controller{
             'name' => 'required|string|max:255|min:4',
             'email' => 'required|string|unique:users,email',
             'mobile_number' => 'required|unique:users,mobile_number|numeric',
-            'service' => 'required',
+            'service' => 'required|not_in:0',
             'password' => 'required|min:6',
             'gender' => 'required',
             'dob' => 'required',
@@ -56,13 +57,15 @@ class CaregiverController extends Controller{
             'city' => 'required',
             'state' => 'required',
             'non_service_zipcode' => 'required',
+            'service_zipcode' => 'required',
             'description' => 'required',
+            'qualification' => 'required|not_in:0',
             //'profile_image' => 'image',
             //'profile_image' => 'dimensions:min_width=150,min_height=150|image',
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
+            return redirect()->back()->withErrors($validator)->withInput($request->except('password'));
         }
 
         $upload_image = '';
@@ -94,7 +97,7 @@ class CaregiverController extends Controller{
             //save caregiver profile info
             $caregiver = new Caregiver();
             $caregiver->user_id = $user->id;
-            $caregiver->service = $input['service'];
+            $caregiver->service = 'NAN';
             $caregiver->min_price = $input['min_price'];
             $caregiver->max_price = $input['max_price'];
             $caregiver->description = $input['description'];
@@ -103,18 +106,52 @@ class CaregiverController extends Controller{
             $caregiver->zipcode = $input['zipcode'];            
             $caregiver->save();
 
+            $data = array();    //array to save caregiver attributes
             //save non servicable zip codes
             $zipcodes = trim($input['non_service_zipcode']);
-            $zipcode_array = explode(",", $zipcodes);
-            $data = array();
+            $zipcode_array = explode(", ", $zipcodes);                        
             foreach($zipcode_array as $zip){
-                //save non servicable zip codes
+                if(!empty(trim($zip))){
+                    $data[] = array(
+                        'caregiver_id' => $user->id,
+                        'value' => $zip,
+                        'type' => 'non_service_zipcodes'
+                    );   
+                }    
+            }
+
+            //save servicable zip codes
+            $servicezipcode = trim($input['service_zipcode']);
+            $zipcode_array = explode(", ", $servicezipcode);
+            foreach($zipcode_array as $zip){
+                if(!empty(trim($zip))){
+                    $data[] = array(
+                        'caregiver_id' => $user->id,
+                        'value' => trim($zip),
+                        'type' => 'service_zipcodes'
+                    );   
+                }    
+            }
+
+            //save qualification
+            foreach($input['qualification'] as $value){
                 $data[] = array(
                     'caregiver_id' => $user->id,
-                    'zipcode' => $zip
+                    'value' => $value,
+                    'type' => 'qualification'
                 );   
             }
-            DB::table('nonservice_zipcode')->insert($data);
+
+            //save services
+            foreach($input['service'] as $value){
+                $data[] = array(
+                    'caregiver_id' => $user->id,
+                    'value' => $value,
+                    'type' => 'service'
+                );   
+            }
+
+            DB::table('caregiver_attributes')->insert($data);
 
             //redirect to index page.
             flash()->success('New Caregiver Add successfull');
@@ -138,10 +175,15 @@ class CaregiverController extends Controller{
             return redirect()->route('caregiver.index');
         }
 
-        $nonservice_zipcode = DB::table('nonservice_zipcode')->where('caregiver_id', $id)->get();
-        $service = DB::table('services')->select('title')->where('id', $user->service)->first();
-        $user->service = $service->title;
-        return view('caregiver.view', compact('user', 'nonservice_zipcode'));
+        $user->services = DB::table('caregiver_attributes')->select('services.title')->Join('services', 'services.id', '=', 'caregiver_attributes.value')->where('caregiver_attributes.type', '=', 'service')->where('caregiver_attributes.caregiver_id', '=', $id)->orderBy('services.title', 'asc')->get();
+
+        $user->qualification = DB::table('caregiver_attributes')->select('qualifications.name')->Join('qualifications', 'qualifications.id', '=', 'caregiver_attributes.value')->where('caregiver_attributes.type', '=', 'qualification')->where('caregiver_attributes.caregiver_id', '=', $id)->orderBy('qualifications.name', 'asc')->get();
+
+        $user->service_zipcodes = DB::table('caregiver_attributes')->select('us_location.zip', 'us_location.city')->Join('us_location', 'us_location.zip', '=', 'caregiver_attributes.value')->where('caregiver_attributes.type', '=', 'service_zipcodes')->where('caregiver_attributes.caregiver_id', '=', $id)->orderBy('us_location.zip', 'asc')->get();
+
+        $user->non_service_zipcodes = DB::table('caregiver_attributes')->select('us_location.zip', 'us_location.city')->Join('us_location', 'us_location.zip', '=', 'caregiver_attributes.value')->where('caregiver_attributes.type', '=', 'non_service_zipcodes')->where('caregiver_attributes.caregiver_id', '=', $id)->orderBy('us_location.zip', 'asc')->get();
+
+        return view('caregiver.view', compact('user'));
     }
 
     /**
@@ -157,9 +199,17 @@ class CaregiverController extends Controller{
             return redirect()->route('caregiver.index');
         }
 
-        $user->nonservice_zipcode = DB::table('nonservice_zipcode')->where('caregiver_id', $id)->get();
+        $user->services = DB::table('caregiver_attributes')->select('services.id')->Join('services', 'services.id', '=', 'caregiver_attributes.value')->where('caregiver_attributes.type', '=', 'service')->where('caregiver_attributes.caregiver_id', '=', $id)->orderBy('services.title', 'asc')->get();
+
+        $user->qualification = DB::table('caregiver_attributes')->select('qualifications.id')->Join('qualifications', 'qualifications.id', '=', 'caregiver_attributes.value')->where('caregiver_attributes.type', '=', 'qualification')->where('caregiver_attributes.caregiver_id', '=', $id)->orderBy('qualifications.name', 'asc')->get();
+
+        $user->service_zipcodes = DB::table('caregiver_attributes')->select('us_location.zip', 'us_location.city')->Join('us_location', 'us_location.zip', '=', 'caregiver_attributes.value')->where('caregiver_attributes.type', '=', 'service_zipcodes')->where('caregiver_attributes.caregiver_id', '=', $id)->orderBy('us_location.zip', 'asc')->get();
+
+        $user->non_service_zipcodes = DB::table('caregiver_attributes')->select('us_location.zip', 'us_location.city')->Join('us_location', 'us_location.zip', '=', 'caregiver_attributes.value')->where('caregiver_attributes.type', '=', 'non_service_zipcodes')->where('caregiver_attributes.caregiver_id', '=', $id)->orderBy('us_location.zip', 'asc')->get();
+
         $service_list = DB::table('services')->orderBy('title', 'asc')->get();
-        return view('caregiver.edit', compact('user', 'nonservice_zipcode', 'service_list'));
+        $qualification = DB::table('qualifications')->orderBy('name', 'asc')->get();
+        return view('caregiver.edit', compact('user', 'qualification', 'service_list'));
     }
 
     /**
@@ -175,8 +225,8 @@ class CaregiverController extends Controller{
         $validator =  Validator::make($input,[
             'name' => 'required|string|max:255|min:4',
             'email' => 'required|string',
-            'mobile_number' => 'required|between:8,15',
-            'service' => 'required',
+            'mobile_number' => 'required|numeric',
+            'service' => 'required|not_in:0',
             'gender' => 'required',
             'dob' => 'required',
             'min_price' => 'required|min:0',
@@ -186,9 +236,9 @@ class CaregiverController extends Controller{
             'city' => 'required',
             'state' => 'required',
             'non_service_zipcode' => 'required',
+            'service_zipcode' => 'required',
             'description' => 'required',
-            //'profile_image' => 'image',
-            //'profile_image' => 'dimensions:min_width=150,min_height=150|image',
+            'qualification' => 'required|not_in:0',
         ]);
 
         if ($validator->fails()) {
@@ -224,7 +274,7 @@ class CaregiverController extends Controller{
 
         $caregiverid = DB::table('caregiver')->select('id')->where('user_id','=', $id)->first();
         $caregiver = Caregiver::findOrFail($caregiverid->id);
-        $caregiver->service = $input['service'];
+        $caregiver->service = '';
         $caregiver->min_price = $input['min_price'];
         $caregiver->max_price = $input['max_price'];
         $caregiver->description = $input['description'];
@@ -233,21 +283,56 @@ class CaregiverController extends Controller{
         $caregiver->zipcode = $input['zipcode'];            
         $caregiver->save();
 
-        //remove all old zip or add new zip
-        DB::table('nonservice_zipcode')->where('caregiver_id', '=', $id)->delete();
+        //remove all old zipcode, services, qualifications, non service zipcode, srvice zipcode
+        DB::table('caregiver_attributes')->where('caregiver_id', '=', $id)->delete();
 
         //now save new changes
-        $zipcodes = trim($input['non_service_zipcode']);
-        $zipcode_array = explode(",", $zipcodes);
-        $data = array();
+        $data = array();    //array to save caregiver attributes
+        //save non servicable zip codes
+        $zipcodes = $input['non_service_zipcode']." ";
+        $zipcode_array = explode(", ", $zipcodes); 
         foreach($zipcode_array as $zip){
-            //save non servicable zip codes
+            if(!empty(trim($zip))){
+                $data[] = array(
+                    'caregiver_id' => $id,
+                    'value' => $zip,
+                    'type' => 'non_service_zipcodes'
+                );   
+            }    
+        }
+
+        //save servicable zip codes
+        $servicezipcode = $input['service_zipcode']." ";
+        $zipcode_array = explode(", ", $servicezipcode);
+        foreach($zipcode_array as $zip){
+            if(!empty(trim($zip))){
+                $data[] = array(
+                    'caregiver_id' => $id,
+                    'value' => trim($zip),
+                    'type' => 'service_zipcodes'
+                );   
+            }    
+        }
+
+        //save qualification
+        foreach($input['qualification'] as $value){
             $data[] = array(
                 'caregiver_id' => $id,
-                'zipcode' => $zip
+                'value' => $value,
+                'type' => 'qualification'
             );   
         }
-        DB::table('nonservice_zipcode')->insert($data);
+
+        //save services
+        foreach($input['service'] as $value){
+            $data[] = array(
+                'caregiver_id' => $id,
+                'value' => $value,
+                'type' => 'service'
+            );   
+        }
+
+        DB::table('caregiver_attributes')->insert($data);
 
         flash()->success("User detail updated successfully.");
         return redirect()->route('caregiver.index');
@@ -264,8 +349,18 @@ class CaregiverController extends Controller{
     }
 
     public function searchzip(Request $request){
-        $keyword = $request->input('term');
-        $search_zipx = DB::select( DB::raw("SELECT zip FROM `us_location` as up where zip LIKE '$keyword%'")); 
+        DB::enableQueryLog();
+
+        $fieldval = $request->input('term');
+        $search_zipx = array();
+        if (strpos($fieldval, ', ') !== false) {
+            $temp = explode(', ', $fieldval);
+            $keyword = trim(substr(strrchr($fieldval, ", "), 1));
+            array_pop($temp); 
+            $search_zipx = Us_location::Where("zip", "like", "{$keyword}%")->WhereNotIn("zip", $temp)->orderBy("zip", "asc")->get();
+        }else{
+            $search_zipx = Us_location::Where("zip", "like", "{$fieldval}%")->orderBy("zip", "asc")->get();
+        }    
         $temp = array();
         foreach ($search_zipx as $row) {
             array_push($temp, "$row->zip");

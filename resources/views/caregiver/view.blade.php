@@ -65,9 +65,19 @@
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img">Service Type</i></div>
+                                        <div class="media-img">Services</i></div>
                                         <div class="media-body">
-                                            <div class="media-heading">{{ $user->service }} </div>
+                                            <div class="media-heading"><?php 
+                                                if(empty($user->services)){
+                                                    echo "NA";
+                                                }else{
+                                                    $count = 1;
+                                                    foreach($user->services as $srvc){
+                                                        echo $count.". ".$srvc->title.",<br/> ";
+                                                        $count++;
+                                                    }
+                                                } ?>
+                                            </div>
                                         </div>
                                     </li>
                                     <li class="media">
@@ -75,7 +85,23 @@
                                         <div class="media-body">
                                             <div class="media-heading">{{ "$".$user->min_price." - $".$user->max_price }} </div>
                                         </div>
-                                    </li>                                    
+                                    </li>               
+                                    <li class="media">
+                                        <div class="media-img">Qualification</i></div>
+                                        <div class="media-body">
+                                            <div class="media-heading"><?php 
+                                                if(empty($user->qualification)){
+                                                    echo "NA";
+                                                }else{
+                                                    $count = 1;
+                                                    foreach($user->qualification as $srvc){
+                                                        echo $count.". ".$srvc->name.",<br/> ";
+                                                        $count++;
+                                                    }
+                                                } ?>
+                                            </div>
+                                        </div>
+                                    </li>                     
                                     <li class="media">
                                         <div class="media-img">Gender</i></div>
                                         <div class="media-body">
@@ -85,21 +111,37 @@
                                     <li class="media">
                                         <div class="media-img">Date of Birth</i></div>
                                         <div class="media-body">
-                                            <div class="media-heading">{{ date_format(date_create($user->dob), 'd M, y') }} </div>
+                                            <div class="media-heading">{{ date_format(date_create($user->dob), 'd M, Y') }} </div>
+                                        </div>
+                                    </li>
+                                    <li class="media">
+                                        <div class="media-img">Servicable Zipcodes</i></div>
+                                        <div class="media-body">
+                                            <div class="media-heading"><?php 
+                                                if(empty($user->service_zipcodes)){
+                                                    echo "NA";
+                                                }else{
+                                                    $count = 1;
+                                                    foreach($user->service_zipcodes as $zip){
+                                                        echo $count.". ".$zip->zip." (".$zip->city.")<br/>";
+                                                        $count++;
+                                                    }
+                                                } ?>
+                                            </div>
                                         </div>
                                     </li>
                                     <li class="media">
                                         <div class="media-img">Non Servicable Zipcodes</i></div>
                                         <div class="media-body">
                                             <div class="media-heading"><?php 
-                                                if(empty($nonservice_zipcode)){
+                                                if(empty($user->non_service_zipcodes)){
                                                     echo "NA";
                                                 }else{
-                                                    $temp = '';
-                                                    foreach($nonservice_zipcode as $zip){
-                                                        $temp .= $zip->zipcode.", ";
+                                                    $count = 1;
+                                                    foreach($user->non_service_zipcodes as $zip){
+                                                        echo $count.". ".$zip->zip." (".$zip->city.")<br/>";
+                                                        $count++;
                                                     }
-                                                    echo rtrim($temp, ", ");
                                                 } ?>
                                             </div>
                                         </div>
@@ -113,7 +155,7 @@
                                     <li class="media">
                                         <div class="media-img">Created At</i></div>
                                         <div class="media-body">
-                                            <div class="media-heading">{{ date_format(date_create($user->created_at), 'd M, y') }} </div>
+                                            <div class="media-heading">{{ date_format(date_create($user->created_at), 'd M, Y') }} </div>
                                         </div>
                                     </li>
                                 </ul>

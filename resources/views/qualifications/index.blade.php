@@ -42,20 +42,19 @@
 	            		<tr>
 	            			<td>{{ ++$key }}</td>
 	              			<td>{{ ucfirst($qualification->name) }}</td>
-	              			<td>{{ date_format(date_create($qualification->created_at), 'd M, y')}}</td>
+	              			<td>{{ date_format(date_create($qualification->created_at), 'd M, Y')}}</td>
 	              			<td>
 	              				<ul class="actions-menu">
 	              					<li>
 	              						<a href="{{ route('qualifications.edit',['id' => $qualification->id]) }}">
 	              							<button class="btn-sm btn-primary btn-cir" title="Edit"><i class="fas fa-pencil-alt"></i></button>
 	              						</a>
-	              					</li>
+	              					</li><!--
 	              					<li>
 	              						<a href="{{ route('qualifications.show',['id' => $qualification->id]) }}">
 	              							<button class="btn-sm btn-warning btn-cir" title="View"><i class="fas fa-eye"></i></button>
 	              						</a>
-	              					</li>
-	              					
+	              					</li>-->	              					
                                     <li>
                                         <a href="{{ url('admin/qualifications/blocked/'.$qualification->id) }}">
                                         @if($qualification->is_blocked)

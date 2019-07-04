@@ -27,7 +27,6 @@
               				<th>Name</th>
 	                  		<th>Email</th>
 	                  		<th>Mobile no</th>
-	                  		<th>Service</th>
                             <th>Price Range</th>
 	                  		<th>Created At</th>
 	                  		<th>Actions</th>
@@ -39,7 +38,6 @@
                             <th>Name</th>
                             <th>Email</th>
                             <th>Mobile no</th>
-                            <th>Service</th>
                             <th>Price Range</th>
                             <th>Created At</th>
                             <th>Actions</th>
@@ -52,9 +50,8 @@
 	              			<td>{{ ucfirst($user->name) }}</td>
 	              			<td>{{ $user->email }}</td>
 	              			<td>{{ $user->mobile_number }}</td>
-	              			<td>{{ $user->service }}</td>
                             <td><?php echo "$".$user->min_price."-$".$user->max_price; ?></td>
-	              			<td>{{ date_format(date_create($user->created_at), 'd M, y')}}
+	              			<td>{{ date_format(date_create($user->created_at), 'd M, Y')}}
 	              			<td>
 	              				<ul class="actions-menu">
                                     <a href="{{ url('admin/caregiver/blocked/'.$user->id) }}">
