@@ -32,6 +32,10 @@ class CreateContactUsTable extends Migration
      */
     public function down()
     {
+         Schema::table('contact_us', function(Blueprint $table){
+            $table->dropForeign('contact_us_user_id_foreign');
+            $table->dropColumn('user_id');
+         });
         Schema::dropIfExists('contact_us');
     }
 }

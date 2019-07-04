@@ -32,7 +32,11 @@ class CreateAppFeedbacksTable extends Migration
      * @return void
      */
     public function down()
-    {
+    {   
+        Schema::table('app_feedbacks', function(Blueprint $table){
+            $table->dropForeign('app_feedbacks_user_id_foreign');
+            $table->dropColumn('user_id');
+         });
         Schema::dropIfExists('app_feedbacks');
     }
 }

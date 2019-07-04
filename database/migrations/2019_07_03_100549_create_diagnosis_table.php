@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDiseasesTable extends Migration
+class CreateDiagnosisTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateDiseasesTable extends Migration
      */
     public function up()
     {
-        Schema::create('diseases', function (Blueprint $table) {
+        Schema::create('diagnosis', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name');
-            $table->string('slug');
+            $table->string('title');
+            $table->boolean('is_blocked')->default(0);
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateDiseasesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('diseases');
+        Schema::dropIfExists('diagnosis');
     }
 }
