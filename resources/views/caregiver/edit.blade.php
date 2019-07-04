@@ -163,7 +163,7 @@ a,
 <div class="content-wrapper">
     <!-- START PAGE CONTENT-->
     <div class="page-heading">
-        <h1 class="page-title">Add Caregiver</h1>
+        <h1 class="page-title">Edit Caregiver</h1>
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
                 <a href="{{ route('dashboard') }}"><i class="fas fa-home"></i></a>
@@ -179,50 +179,50 @@ a,
                     <div class="ibox-body">
                         <ul class="nav nav-tabs tabs-line">
                             <li class="nav-item">
-                                <a class="nav-link active" href="#tab-2" data-toggle="tab"><i class="fas fa-plus"></i> Add Caregiver</a>
+                                <a class="nav-link active" href="#tab-2" data-toggle="tab"><i class="fas fa-plus"></i> Edit Caregiver</a>
                             </li>
                         </ul>
                         <div class="tab-content">
-                            <div class="tab-pane fade show active" id="tab-2">
+                            <div class="tab-pane fade show active" id="tab-2"><!--
                                 @foreach ($errors->all() as $error)
                                     <div>{{ $error }}</div>
-                                @endforeach
+                                @endforeach -->
                                 <form action="{{ route('caregiver.update', ['id' => $user->id]) }}" method="post" class="form-horizontal" enctype="multipart/form-data">
                                 @csrf
                                 @method('put')
                                     <div class="row">
                                         <div class="col-sm-6 form-group">
                                             <label>Name</label>
-                                            <input type="text" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" placeholder="Name" value="{{ $user->name }}" required/>
+                                            <input type="text" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" placeholder="Name" value="{{ $user->name }}" />
                                             @if ($errors->has('name'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('name') }}</strong>
                                                 </span>
                                             @endif
                                         </div>
-                                        <div class="col-sm-3  form-group">
+                                        <div class="col-sm-6  form-group">
                                             <label>Email</label>
-                                            <input type="email" name="email" placeholder="Email" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" value="{{ $user->email }}" required="required" readonly="true" />
+                                            <input type="text" name="email" placeholder="Email" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ $user->email }}" />
                                             @if ($errors->has('email'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('email') }}</strong>
                                                 </span>
                                             @endif
                                         </div>
+                                    </div>
+                                    <div class="row">    
                                         <div class="col-sm-3  form-group">
                                             <label>Mobile Number</label>
-                                            <input type="number" class="form-control {{ $errors->has('mobile_number') ? ' is-invalid' : '' }}" placeholder="Mobile Number" name="mobile_number" value="{{ $user->mobile_number }}" required>
+                                            <input type="number" class="form-control {{ $errors->has('mobile_number') ? ' is-invalid' : '' }}" placeholder="Mobile Number" name="mobile_number" value="{{ $user->mobile_number }}">
                                             @if ($errors->has('mobile_number'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('mobile_number') }}</strong>
                                                 </span>
                                             @endif
                                         </div>
-                                    </div>
-                                    <div class="row">    
                                         <div class="form-group col-sm-3" >
                                             <label>Password</label>
-                                            <input type="password" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" placeholder="Password" value="" />
+                                            <input type="password" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" placeholder="Password" value="{{ old('password') }}"/>
                                             @if ($errors->has('password'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('password') }}</strong>
@@ -230,30 +230,12 @@ a,
                                             @endif
                                         </div>
                                         <div class="col-sm-3  form-group">
-                                            <label>Service</label>
-                                            <select name="service" class="form-control {{ $errors->has('service') ? ' is-invalid' : '' }}" required="true">
-                                                <option disabled="true" > -- Select Service --</option><?php
-                                                foreach($service_list as $srvc){
-                                                    if($user->service != $srvc->id){?>
-                                                        <option value="{{ $srvc->id }}" >{{ $srvc->title }}</option><?php
-                                                    }else{ ?>
-                                                        <option value="{{ $srvc->id }}" selected>{{ $srvc->title }}</option><?php
-                                                    }
-                                                }?>                                                    
-                                            </select>
-                                            @if ($errors->has('service'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('service') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                        <div class="col-sm-3  form-group">
                                             <label>Gender</label>
-                                            <select name="gender" class="form-control {{ $errors->has('gender') ? ' is-invalid' : '' }}" required="true">
+                                            <select name="gender" class="form-control {{ $errors->has('gender') ? ' is-invalid' : '' }}">
                                                 <option disabled="true" selected="true"> -- Select Gender --</option>
-                                                <option value="Male" <?php if($user->gender == 'Male'){ echo 'selected';}?>>Male</option>
-                                                <option value="Female" <?php if($user->gender == 'Female'){ echo 'selected';}?>>Female</option>
-                                                <option value="Other" <?php if($user->gender == 'Other'){ echo 'selected';}?>>Other</option>
+                                                <option value="Male" {{ $user->gender == 'Male' ? 'selected':'' }} >Male</option>
+                                                <option value="Female" {{ $user->gender == 'Female' ? 'selected':'' }}>Female</option>
+                                                <option value="Other" {{ $user->gender == 'Other' ? 'selected':'' }}>Other</option>
                                             </select>
                                             @if ($errors->has('gender'))
                                                 <span class="invalid-feedback" role="alert">
@@ -263,7 +245,7 @@ a,
                                         </div>
                                         <div class="form-group col-sm-3" >
                                             <label>Date of Birth</label>
-                                            <input type="text" class="form-control {{ $errors->has('dob') ? ' is-invalid' : '' }}" name="dob" placeholder="Date of Birth" value="<?php echo date('d/m/Y', strtotime($user->dob)); ?>" required id="dob"/>
+                                            <input type="text" class="form-control {{ $errors->has('dob') ? ' is-invalid' : '' }}" name="dob" placeholder="Date of Birth" value="{{ date('d/m/Y', strtotime($user->dob)) }}" id="dob"/>
                                             @if ($errors->has('dob'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('dob')}}</strong>
@@ -274,7 +256,7 @@ a,
                                     <div class="row">
                                         <div class="col-sm-3  form-group">
                                             <label>Min Price</label>
-                                            <input type="number" class="form-control {{ $errors->has('min_price') ? ' is-invalid' : '' }}" placeholder="Minimum" name="min_price" value="<?php echo $user->min_price; ?>" required min="0" id="min_price">
+                                            <input type="number" class="form-control {{ $errors->has('min_price') ? ' is-invalid' : '' }}" placeholder="Minimum" name="min_price" value="{{ $user->min_price }}" min="0" id="min_price">
                                             @if ($errors->has('min_price'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('min_price') }}</strong>
@@ -283,7 +265,7 @@ a,
                                         </div>
                                         <div class="col-sm-3  form-group">
                                             <label>Max Price</label>
-                                            <input type="number" class="form-control {{ $errors->has('max_price') ? ' is-invalid' : '' }}" placeholder="Price" name="max_price" value="<?php echo $user->max_price; ?>" required min="0" id="max_price">
+                                            <input type="number" class="form-control {{ $errors->has('max_price') ? ' is-invalid' : '' }}" placeholder="Price" name="max_price" value="{{ $user->max_price }}" min="0" id="max_price">
                                             @if ($errors->has('max_price'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('max_price') }}</strong>
@@ -301,9 +283,47 @@ a,
                                         </div>                                        
                                     </div>    
                                     <div class="row">
+                                        <div class="col-sm-6  form-group">
+                                            <label>Qualification</label><?php
+                                                $qualification_array = array();
+                                                foreach($user->qualification as $qlf){
+                                                    $qualification_array[] = $qlf->id;
+                                                } ?>
+                                            <select name="qualification[]" class="form-control {{ $errors->has('qualification') ? ' is-invalid' : '' }}" multiple="true">
+                                                <option disabled="true" > -- Select Qualification --</option>
+                                                @foreach($qualification as $qlf)
+                                                    <option value="{{ $qlf->id }}" <?php if(in_array($qlf->id, $qualification_array)){ echo 'selected'; } ?> >{{ $qlf->name }}</option>
+                                                @endforeach
+                                            </select>
+                                            @if ($errors->has('qualification'))
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $errors->first('qualification') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                        <div class="col-sm-6  form-group">
+                                            <label>Service</label><?php
+                                                $service_array = array();
+                                                foreach($user->services as $qlf){
+                                                    $service_array[] = $qlf->id;
+                                                } ?>
+                                            <select name="service[]" class="form-control {{ $errors->has('service') ? ' is-invalid' : '' }}" multiple="true">
+                                                <option disabled="true" > -- Select Service --</option>
+                                                @foreach($service_list as $srvc)
+                                                    <option value="{{ $srvc->id }}" <?php if(in_array($srvc->id, $service_array)){ echo 'selected'; } ?> >{{ $srvc->title }}</option>
+                                                @endforeach
+                                            </select>
+                                            @if ($errors->has('service'))
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $errors->first('service') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="row">    
                                         <div class="form-group col-sm-6" >
                                             <label>Street </label>
-                                            <input type="text" class="form-control {{ $errors->has('location') ? ' is-invalid' : '' }}" name="location" placeholder="Location" value="<?php echo $user->location; ?>" />
+                                            <input type="text" class="form-control {{ $errors->has('location') ? ' is-invalid' : '' }}" name="location" placeholder="Location" value="{{ $user->location }}" />
                                             @if ($errors->has('location'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('location') }}</strong>
@@ -312,7 +332,7 @@ a,
                                         </div>
                                         <div class="form-group col-sm-2" >
                                             <label>Zip Code </label>
-                                            <input type="text" class="form-control {{ $errors->has('zipcode') ? ' is-invalid' : '' }}" name="zipcode" placeholder="Zip code" value="<?php echo $user->zipcode; ?>" id="zipcode" />
+                                            <input type="text" class="form-control {{ $errors->has('zipcode') ? ' is-invalid' : '' }}" name="zipcode" placeholder="Zip code" value="{{ $user->zipcode }}" id="zipcode" />
                                             @if ($errors->has('zipcode'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('zipcode') }}</strong>
@@ -321,7 +341,7 @@ a,
                                         </div>
                                         <div class="form-group col-sm-2" >
                                             <label>City </label>
-                                            <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" placeholder="city" value="<?php echo $user->city; ?>" id="city" readonly="true" />
+                                            <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" placeholder="city" value="{{ $user->city }}" id="city" readonly="true" />
                                             @if ($errors->has('city'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('city') }}</strong>
@@ -330,7 +350,7 @@ a,
                                         </div>
                                         <div class="form-group col-sm-2" >
                                             <label>State </label>
-                                            <input type="text" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" placeholder="state" value="<?php echo $user->state; ?>"  id="state" readonly="true" />
+                                            <input type="text" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" placeholder="state" value="{{ $user->state }}"  id="state" readonly="true" />
                                             @if ($errors->has('state'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('state') }}</strong>
@@ -340,27 +360,46 @@ a,
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-sm-12" >
-                                            <label>Non Servicable ZipCode </label><?php
-                                            $val = '';
-                                            if(!empty($user->nonservice_zipcode)){
-                                                $temp = '';
-                                                foreach($user->nonservice_zipcode as $zip){
-                                                    $temp .= $zip->zipcode.",";
-                                                }
-                                                $val =  rtrim($temp, ",");
-                                            } ?>
-                                            <input type="text" class="form-control {{ $errors->has('non_service_zipcode') ? ' is-invalid' : '' }}" name="non_service_zipcode" placeholder="Zip code" value="<?php echo $val; ?>" id="non_service_zipcode"/>
-                                            @if ($errors->has('non_service_zipcode'))
+                                            <label>Servicable ZipCode </label><?php
+                                            $szip = '';
+                                            foreach($user->service_zipcodes as $zip){
+                                                $szip .= $zip->zip.", ";
+                                            }?>
+                                            <input type="text" class="form-control {{ $errors->has('service_zipcode') ? ' is-invalid' : '' }} zipcodesuggest" name="service_zipcode" placeholder="Service Zip code" value="{{ $szip }}" id="service_zipcode"/>
+                                            @if ($errors->has('service_zipcode'))
                                                 <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('non_service_zipcode') }}</strong>
+                                                    <strong id="service_zipcode_msg">{{ $errors->first('service_zipcode') }}</strong>
+                                                </span>
+                                            @else 
+                                                <span class="invalid-feedback" role="alert" style="display: inline;">
+                                                    <strong id="service_zipcode_msg"></strong>
                                                 </span>
                                             @endif
                                         </div>    
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-sm-12" >
-                                            <label>Description </label>
-                                            <textarea class="form-control {{ $errors->has('description') ? ' is-invalid' : '' }}" rows="5" name="description" id="description" placeholder="Description"><?php echo $user->description; ?></textarea>
+                                            <label>Non Servicable ZipCode </label><?php
+                                            $nszip = '';
+                                            foreach($user->non_service_zipcodes as $zip){
+                                                $nszip .= $zip->zip.", ";
+                                            }?>
+                                            <input type="text" class="form-control {{ $errors->has('non_service_zipcode') ? ' is-invalid' : '' }} zipcodesuggest" name="non_service_zipcode" placeholder="Non-Service Zip code" value="{{ $nszip }}" id="non_service_zipcode"/>
+                                            @if ($errors->has('non_service_zipcode'))
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong id="non_service_zipcode_msg">{{ $errors->first('non_service_zipcode') }}</strong>
+                                                </span>
+                                            @else 
+                                                <span class="invalid-feedback" role="alert" style="display: inline;">
+                                                    <strong id="non_service_zipcode_msg"></strong>
+                                                </span>
+                                            @endif
+                                        </div>    
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-sm-12" >
+                                            <label>Bio </label>
+                                            <textarea class="form-control {{ $errors->has('description') ? ' is-invalid' : '' }}" rows="5" name="description" id="description" placeholder="Description">{{$user->description}}</textarea>
                                             @if ($errors->has('description'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('description') }}</strong>
@@ -390,32 +429,38 @@ a,
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
-    $(function() {
+    $(function(){
         function split( val ) {
             return val.split( /,\s*/ );
         }
 
         function extractLast( term ) {
-            return split( term ).pop();
+            //return split( term ).pop();  
+            temp = $.trim($("#service_zipcode").val());
+            fnd = ','
+            if(temp.indexOf(fnd) != -1){
+                term =  temp+" "+term;
+            }
+            console.log(term);
+            return term;
         }
 
         // don't navigate away from the field on tab when selecting an item                
-        $( "#non_service_zipcode" ).on( "keydown", function( event ) {
+        $( ".zipcodesuggest" ).on( "keydown", function( event ) {
             if(event.keyCode === $.ui.keyCode.TAB && $( this ).autocomplete( "instance" ).menu.active ) {
                 event.preventDefault();
             }
-        })
-        .autocomplete({
+        }).autocomplete({
             source: function( request, response ) {
-                $.getJSON( "searchzip", {
-                    term: extractLast( request.term )
+                $.getJSON( "http://localhost/careservice/public/index.php/admin/caregiver/searchzip", {
+                    term: extractLast( request.term)
                 }, response );
             },
             
             search: function() {
                 // custom minLength
                 var term = extractLast( this.value );
-                if ( term.length < 2 ) {
+                if ( term.length < 4 ) {
                     return false;
                 }
             },
@@ -459,7 +504,7 @@ a,
                 }
             }
         });
-    });       
+    });    
 
     $('#max_price').blur(function(){
         minprice = $("#min_price").val();
