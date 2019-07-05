@@ -17,9 +17,10 @@ class CreatePatientsProfilesTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id');
             $table->date('dob');
-            $table->unsignedBigInteger('diagnose_id');
+            $table->unsignedBigInteger('diagnose_id')->nullable();
             $table->string('range');
             $table->string('availability');
+            $table->string('gender');
             $table->timestamps();
         });
 

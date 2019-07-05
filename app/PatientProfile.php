@@ -4,15 +4,15 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Qualification extends Model
-{	
-	protected $table = "qualifications";
+class PatientProfile extends Model
+{
+    protected $table = "patients_profiles";
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name'
+        'user_id', 'dob', 'diagnose_id','range','availability','gender'
     ];
 }
