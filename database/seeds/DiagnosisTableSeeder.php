@@ -3,7 +3,7 @@
 use Illuminate\Database\Seeder;
 use Carbon\Carbon;
 
-class DiagnoseTableSeeder extends Seeder
+class DiagnosisTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
