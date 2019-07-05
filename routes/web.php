@@ -27,11 +27,14 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function()
 	Route::get('user/blocked/{userId}', 'UserController@block');
 	Route::get('user/blocklist', 'UserController@blocklist')->name('users.blocklist');
 	Route::resource('users', 'UserController');
+	Route::get('patients/blocked/{userId}', 'PatientsController@block');
+	Route::resource('patients', 'PatientsController');
 	Route::get('services/blocked/{userId}', 'ServiceController@block');
 	Route::resource('services', 'ServiceController');
-	//Route::resource('qualification', 'QualificationController');
 	Route::get('qualifications/blocked/{userId}', 'QualificationController@block');
 	Route::resource('qualifications', 'QualificationController');
+	Route::get('diagnosis/blocked/{userId}', 'DiagnoseController@block');
+	Route::resource('diagnosis', 'DiagnoseController');
 	Route::resource('faqs', 'FaqController');
 	Route::get('reorder', 'FaqController@reorder')->name('faqs.reorder');
 	Route::post('updateorder', 'FaqController@updateorder')->name('faqs.updateorder');
@@ -44,8 +47,4 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function()
 	Route::get('caregiver/locationfromzip', 'CaregiverController@locationfromzip');	
 	Route::resource('caregiver', 'CaregiverController');
 	
-	//Route::get('admin/searchzip', 'CaregiverController@searchzip');
-	/*Route::get('admin/caregiver/searchzip', function(){
-		echo "there is something....";
-	});*/
 });
