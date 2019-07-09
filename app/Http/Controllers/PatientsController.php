@@ -41,8 +41,6 @@ class PatientsController extends Controller
         $input = $request->input();
         $validator = validator::make($input,[
             'name' => 'required|string|max:60',
-            'email' => 'required|string|max:60',
-            'mobile_number' => 'required|numeric',
             'dob' => 'required',
             'gender' => 'required',
             'range' => 'required|numeric',
