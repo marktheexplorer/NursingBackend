@@ -29,12 +29,14 @@
                 </div>
             </div>
             <div class="col-lg-3 col-md-6">
-                <div class="ibox bg-warning color-white widget-stat">
-                    <div class="ibox-body">
-                        <h2 class="m-b-5 font-strong">{{ $enquiries }}</h2>
-                        <div class="m-b-5">Total Enquiries</div><i class="fas fa-clipboard-list widget-stat-icon"></i>
+                <a href="{{ route('patients.index') }}">
+                    <div class="ibox bg-warning color-white widget-stat">
+                        <div class="ibox-body">
+                            <h2 class="m-b-5 font-strong">{{ $users['patients'] }}</h2>
+                            <div class="m-b-5">Total Patients</div><i class="fas fa fa-wheelchair widget-stat-icon"></i>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
         <div class="row">
@@ -49,6 +51,16 @@
                 </a>
             </div>
             <div class="col-lg-3 col-md-6">
+                <a href="{{ route('diagnosis.index') }}">
+                    <div class="ibox bg-success color-white widget-stat">
+                        <div class="ibox-body">
+                            <h2 class="m-b-5 font-strong">{{ $diagnosis }}</h2>
+                            <div class="m-b-5">Diagnoses</div><i class="fas fa-diagnoses widget-stat-icon"></i>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-3 col-md-6">
                 <a href="{{ route('faqs.index') }}">
                     <div class="ibox bg-warning color-white widget-stat">
                         <div class="ibox-body">
@@ -57,6 +69,14 @@
                         </div>
                     </div>
                 </a>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="ibox bg-danger color-white widget-stat">
+                    <div class="ibox-body">
+                        <h2 class="m-b-5 font-strong">{{ $enquiries }}</h2>
+                        <div class="m-b-5">Total Enquiries</div><i class="fas fa-clipboard-list widget-stat-icon"></i>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row">
