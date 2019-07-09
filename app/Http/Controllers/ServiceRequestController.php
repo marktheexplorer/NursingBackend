@@ -51,7 +51,9 @@ class ServiceRequestController extends Controller{
             flash()->success("Service Request not Found"); 
             return redirect()->route('service_request.index');  
         }
-        return view('service_request.view', compact('services'));
+
+        $final_caregivers = DB::table('service_requests_attributes')->select('service_requests_attributes.value', 'users.name', 'users.email')->Join('users', 'users.id', '=', 'service_requests_attributes.value')->where('service_request_id', '=', $id)->where('service_requests_attributes.type', '=', 'caregiver_list')->get();
+        return view('service_request.view', compact('services', 'final_caregivers'));
     }
 
     /**
@@ -152,13 +154,14 @@ class ServiceRequestController extends Controller{
         //non filter caregivers list
         $caregivers = DB::table('users')->select('users.id', 'name', 'email', 'mobile_number', 'profile_image', 'is_blocked', 'users.created_at', 'services.title', 'min_price', 'max_price', 'gender', 'zipcode')->Join('caregiver', 'caregiver.user_id', '=', 'users.id')->Join('services', 'services.id', '=', 'caregiver.service')->where('users.id','>', '1')->where('users.type', '=', 1)->orderBy('users.id', 'desc')->get();
 
-        $selected_caregivers = DB::table('service_requests_attributes')->select('value')->where('service_request_id', '=', $id)->where('type', '=', 'caregiver_list')->get();
+        $final_caregivers = DB::table('service_requests_attributes')->select('service_requests_attributes.value', 'users.name', 'users.email')->Join('users', 'users.id', '=', 'service_requests_attributes.value')->where('service_request_id', '=', $id)->where('service_requests_attributes.type', '=', 'caregiver_list')->get();
+
         $select_caregiver = array(0);
-        foreach($selected_caregivers as $scr){
+        foreach($final_caregivers as $scr){
+
             $select_caregiver[] = $scr->value;
         }
-
-        return view('service_request.caregiverslist', compact('services', 'caregivers', 'select_caregiver'));
+        return view('service_request.caregiverslist', compact('services', 'caregivers', 'select_caregiver', 'final_caregivers'));
     }
 
     public function assign(Request $request){
@@ -176,13 +179,22 @@ class ServiceRequestController extends Controller{
                 'service_request_id' => $input['request_id'],
                 'value' => $input['caregiver_id'],
                 'type' => 'caregiver_list'
-            );    
+            ); 
             DB::table('service_requests_attributes')->insert($request);
+
+            //update status to 3
+            $service_request = DB::table('service_requests')->where('id', '=', $input['request_id'])->update(array('status' =>  '3'));
             flash()->success("Caregiver Add into caregiver list"); 
         }else{
             //un-assign to caregiver
             DB::table('service_requests_attributes')->where('id', '=', $findcaregiver->id)->delete();
             flash()->error("Caregiver Remove into caregiver list"); 
+
+            $isexist = DB::table('service_requests_attributes')->where('service_request_id', '=', $input['request_id'])->where('type', '=', 'caregiver_list')->get();
+            if(empty($isexist)){
+                //change status of request
+                $service_request = DB::table('service_requests')->where('id', '=', $input['request_id'])->update(array('status' => '2'));
+            }
         }     
         return redirect()->route('service_request.caregiver_list',['id' => $input['request_id']]); 
     }

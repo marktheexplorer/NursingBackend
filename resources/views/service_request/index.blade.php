@@ -4,12 +4,12 @@
 <div class="content-wrapper">
     <!-- START PAGE CONTENT-->
     <div class="page-heading">
-        <h1 class="page-title">Service Requests Management</h1>
+        <h1 class="page-title">Requests Management</h1>
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
                 <a href="{{ route('dashboard') }}"><i class="fas fa-home"></i></a>
             </li>
-            <li class="breadcrumb-item">Service Requests</li>
+            <li class="breadcrumb-item">Requests</li>
         </ol>
     </div>
     @include('flash::message')
@@ -17,7 +17,7 @@
     	<!--<a href="{{ route('caregiver.create') }}"><button class="btn btn-info "><i class="fas fa-plus"></i> Add</button></a> -->
         <div class="ibox">
             <div class="ibox-head">
-                <div class="ibox-title">Service Requests Data</div>
+                <div class="ibox-title">Requests Data</div>
             </div>
             <div class="ibox-body">
                 <table class="table table-striped table-bordered table-hover table-sm table-responsive" id="data-table" cellspacing="0" width="100%">
@@ -52,16 +52,7 @@
 	            		<tr>
 	            			<td>{{ ++$key }}.</td>
 	              			<td>{{ ucfirst($srvc->name) }}</td>
-                            <td><?php
-                                if($srvc->status == 2){
-                                    //ready to pick caregiver ?>
-                                    <a href="{{ route('service_request.caregiver_list',['id' => $srvc->id]) }}" title="Select Caregiver">Select Caregiver</a><?php
-                                }else if($srvc->status == 4){
-                                    //assign to caregiver
-                                }else {
-                                    echo "NA";
-                                } ?>
-                            </td>
+                            <td><a href="{{ route('service_request.caregiver_list',['id' => $srvc->id]) }}" title="Select Caregiver">Change Caregiver</a></td>
                             <td>{{ ucfirst($srvc->title) }}</td>
 	              			<td>{{ $srvc->location.", ".$srvc->city.", ".$srvc->state.", ".$srvc->zip }}</td>
                             <td><?php echo "$".$srvc->min_expected_bill." - $".$srvc->max_expected_bill; ?></td>

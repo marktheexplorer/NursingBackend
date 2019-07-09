@@ -17,7 +17,8 @@
             <li class="heading">FEATURES</li>
             <li>
                 <a href="javascript:;"><i class="sidebar-item-icon fas fa-user-nurse"></i>
-                    <span class="nav-label">Caregiver</span><i class="fa fa-angle-left arrow"></i></a>
+                    <span class="nav-label">Caregiver</span><i class="fa fa-angle-left arrow"></i>
+                </a>
                 <ul class="nav-2-level collapse" aria-expanded="false">
                     <li>
                         <a href="{{ route('caregiver.create') }}"><i class="sidebar-item-icon fas fa-plus"></i>Add Caregiver</a>
@@ -28,14 +29,17 @@
                 </ul>
             </li>
             <li>
-<<<<<<< HEAD
                 <a href="javascript:;"><i class="sidebar-item-icon fas fa-book-medical"></i>
-                    <span class="nav-label">Service Request</span><i class="fa fa-angle-left arrow"></i></a>
+                    <span class="nav-label">Request</span><i class="fa fa-angle-left arrow"></i>
+                </a>
                 <ul class="nav-2-level collapse" aria-expanded="false">
                     <li>
-                        <a href="{{ route('service_request.index') }}"><i class="sidebar-item-icon fas fa-list-ul"></i>Service Request List</a>
-=======
-                <a href="javascript:;"><i class="sidebar-item-icon fas fa-users"></i>
+                        <a href="{{ route('service_request.index') }}"><i class="sidebar-item-icon fas fa-list-ul"></i>Request List</a>
+                    </li>
+                </ul>
+            </li>
+            <li>            
+                <a href="javascript:;"><i class="sidebar-item-icon fas fa-diagnoses"></i>
                     <span class="nav-label">Diagnosis</span><i class="fa fa-angle-left arrow"></i></a>
                 <ul class="nav-2-level collapse" aria-expanded="false">
                     <li>
@@ -43,16 +47,11 @@
                     </li>
                     <li>
                         <a href="{{ route('diagnosis.index') }}"><i class="sidebar-item-icon fas fa-list-ul"></i>Diagnosis</a>
->>>>>>> fc6f821551f7e23c857ff375c654d68441e8eb4d
                     </li>
                 </ul>
             </li>
             <li>
-<<<<<<< HEAD
                 <a href="javascript:;"><i class="sidebar-item-icon fas fa-procedures"></i>
-=======
-                <a href="javascript:;"><i class="sidebar-item-icon fas fa-users"></i>
->>>>>>> fc6f821551f7e23c857ff375c654d68441e8eb4d
                     <span class="nav-label">Services</span><i class="fa fa-angle-left arrow"></i></a>
                 <ul class="nav-2-level collapse" aria-expanded="false">
                     <li>

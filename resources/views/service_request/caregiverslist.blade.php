@@ -4,12 +4,12 @@
 <div class="content-wrapper">
     <!-- START PAGE CONTENT-->
     <div class="page-heading">
-        <h1 class="page-title">Select Caregiver for Service Request</h1>
+        <h1 class="page-title">Select Caregiver for Request</h1>
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
                 <a href="{{ route('dashboard') }}"><i class="fas fa-home"></i></a>
             </li>
-            <li class="breadcrumb-item"><a href="{{ route('service_request.index')}}">Service Request</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('service_request.index')}}">Request</a></li>
         </ol>
     </div>
     <div class="page-content fade-in-up">
@@ -43,7 +43,7 @@
                                     <li class="media">                                        
                                         <div class="media-img">Location</div>
                                         <div class="media-body">
-                                            <div class="media-heading">{{ $services->location.", ".$services->city.", ".$services->state.", ".$services->country.", ".$services->zip  }} </div>
+                                            <div class="media-heading">{{ $services->location.", ".$services->city.", ".$services->state.", ".$services->country.", ".$services->zip  }}</div>
                                         </div>
                                     </li>
                                     <li class="media">    
@@ -51,12 +51,22 @@
                                         <div class="media-body">
                                             <div class="media-heading">{{ ucfirst($services->title) }} </div>
                                         </div>
-                                    </li><!--
-                                    <li class="media">
-                                        <div class="media-body">
-                                            <div class="media-heading">Search Caregivers by</div>
-                                        </div>
                                     </li>
+                                    <li class="media">
+                                        <div class="media-img">Assign Caregivers</div>
+                                        <div class="media-body">
+                                            <div class="media-heading"><?php
+                                                if(empty($final_caregivers)){
+                                                    echo "NA";
+                                                }else{
+                                                    $count = 1;
+                                                    foreach($final_caregivers as $user){
+                                                        echo $count.". ".ucfirst($user->name)." (".$user->email.")<br/>";
+                                                    }
+                                                }?>    
+                                            </div>
+                                        </div>
+                                    </li><!--
                                     <li class="media">
                                         <div class="media-body">
                                             <div class="media-heading"><input type="text" name="searchby['keyword']" value="" placeholder="Search..." class="" style="padding:3px;" /></div>
@@ -127,9 +137,9 @@
                                                             <input type="hidden" name="request_id" value="{{ $services->id }}" />
                                                             <input type="hidden" name="caregiver_id" value="{{ $user->id }}" />
                                                             @if(in_array($user->id, $select_caregiver))
-                                                                <button type="submit" class="btn-sm btn-danger btn-cir" title="Assign"><i class="fas fa-times-circle"></i></button>
+                                                                <button type="submit" class="btn-sm btn-danger btn-cir" title="Un-Assign"><i class="fas fa-times-circle"></i></button>
                                                             @else
-                                                                <button type="submit" class="btn-sm btn-success btn-cir" title="Un-Assign"><i class="fas fa-check-circle"></i></button>
+                                                                <button type="submit" class="btn-sm btn-success btn-cir" title="Assign"><i class="fas fa-check-circle"></i></button>
                                                             @endif
                                                         </form>    
                                                     </td>
