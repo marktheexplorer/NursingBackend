@@ -15,7 +15,7 @@
                 </a>
             </li>
             <li class="heading">FEATURES</li>
-         <li>
+            <li>
                 <a href="javascript:;"><i class="sidebar-item-icon fas fa-user-nurse"></i>
                     <span class="nav-label">Caregiver</span><i class="fa fa-angle-left arrow"></i></a>
                 <ul class="nav-2-level collapse" aria-expanded="false">
@@ -28,7 +28,16 @@
                 </ul>
             </li>
             <li>
-                <a href="javascript:;"><i class="sidebar-item-icon fas fa-users"></i>
+                <a href="javascript:;"><i class="sidebar-item-icon fas fa-book-medical"></i>
+                    <span class="nav-label">Service Request</span><i class="fa fa-angle-left arrow"></i></a>
+                <ul class="nav-2-level collapse" aria-expanded="false">
+                    <li>
+                        <a href="{{ route('service_request.index') }}"><i class="sidebar-item-icon fas fa-list-ul"></i>Service Request List</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:;"><i class="sidebar-item-icon fas fa-procedures"></i>
                     <span class="nav-label">Services</span><i class="fa fa-angle-left arrow"></i></a>
                 <ul class="nav-2-level collapse" aria-expanded="false">
                         <a href="{{ route('services.create') }}"><i class="sidebar-item-icon fas fa-plus"></i>Add Service</a>
@@ -39,7 +48,7 @@
                 </ul>
             </li>
             <li>
-                <a href="javascript:;"><i class="sidebar-item-icon fas fa-users"></i>
+                <a href="javascript:;"><i class="sidebar-item-icon fas fa-book-reader"></i>
                     <span class="nav-label">Qualification</span><i class="fa fa-angle-left arrow"></i></a>
                 <ul class="nav-2-level collapse" aria-expanded="false">
                         <a href="{{ route('qualifications.create') }}"><i class="sidebar-item-icon fas fa-plus"></i>Add Qualification</a>
@@ -50,7 +59,7 @@
                 </ul>
             </li>
             <li>
-                <a href="javascript:;"><i class="sidebar-item-icon fas fa-question-circle"></i>
+                <a href="javascript:;"><i class="sidebar-item-icon fas fa-question"></i>
                     <span class="nav-label">FAQs</span><i class="fa fa-angle-left arrow"></i></a>
                 <ul class="nav-2-level collapse" aria-expanded="false">
                     <li>
@@ -65,7 +74,7 @@
                 </ul>
             </li>
             <li>
-                <a href="javascript:;"><i class="sidebar-item-icon fas fa-list-alt"></i>
+                <a href="javascript:;"><i class="sidebar-item-icon far fa-file-alt"></i>
                     <span class="nav-label">CMS Pages</span><i class="fa fa-angle-left arrow"></i></a>
                 <ul class="nav-2-level collapse" aria-expanded="false">
                     <li>
@@ -77,7 +86,7 @@
                 </ul>
             </li>
             <li>
-                <a href="{{ route('enquiries.index') }}"><i class="sidebar-item-icon fas fa-address-card"></i>
+                <a href="{{ route('enquiries.index') }}"><i class="sidebar-item-icon fas fa-mail-bulk"></i>         
                     <span class="nav-label">Enquiry</span>
                 </a>
             </li>
