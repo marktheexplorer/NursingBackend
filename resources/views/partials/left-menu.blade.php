@@ -28,18 +28,34 @@
                 </ul>
             </li>
             <li>
+<<<<<<< HEAD
                 <a href="javascript:;"><i class="sidebar-item-icon fas fa-book-medical"></i>
                     <span class="nav-label">Service Request</span><i class="fa fa-angle-left arrow"></i></a>
                 <ul class="nav-2-level collapse" aria-expanded="false">
                     <li>
                         <a href="{{ route('service_request.index') }}"><i class="sidebar-item-icon fas fa-list-ul"></i>Service Request List</a>
+=======
+                <a href="javascript:;"><i class="sidebar-item-icon fas fa-users"></i>
+                    <span class="nav-label">Diagnosis</span><i class="fa fa-angle-left arrow"></i></a>
+                <ul class="nav-2-level collapse" aria-expanded="false">
+                    <li>
+                        <a href="{{ route('diagnosis.create') }}"><i class="sidebar-item-icon fas fa-plus"></i>Add Diagnose</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('diagnosis.index') }}"><i class="sidebar-item-icon fas fa-list-ul"></i>Diagnosis</a>
+>>>>>>> fc6f821551f7e23c857ff375c654d68441e8eb4d
                     </li>
                 </ul>
             </li>
             <li>
+<<<<<<< HEAD
                 <a href="javascript:;"><i class="sidebar-item-icon fas fa-procedures"></i>
+=======
+                <a href="javascript:;"><i class="sidebar-item-icon fas fa-users"></i>
+>>>>>>> fc6f821551f7e23c857ff375c654d68441e8eb4d
                     <span class="nav-label">Services</span><i class="fa fa-angle-left arrow"></i></a>
                 <ul class="nav-2-level collapse" aria-expanded="false">
+                    <li>
                         <a href="{{ route('services.create') }}"><i class="sidebar-item-icon fas fa-plus"></i>Add Service</a>
                     </li>
                     <li>
@@ -51,6 +67,7 @@
                 <a href="javascript:;"><i class="sidebar-item-icon fas fa-book-reader"></i>
                     <span class="nav-label">Qualification</span><i class="fa fa-angle-left arrow"></i></a>
                 <ul class="nav-2-level collapse" aria-expanded="false">
+                    <li>
                         <a href="{{ route('qualifications.create') }}"><i class="sidebar-item-icon fas fa-plus"></i>Add Qualification</a>
                     </li>
                     <li>

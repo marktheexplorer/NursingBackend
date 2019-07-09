@@ -37,4 +37,8 @@ class User extends Authenticatable
         return $this->orWhere('email', $identifier)->orWhere('mobile_number', $identifier)->first();
     }
 
+    public function patient(){
+        return $this->hasOne('App\PatientProfile', 'user_id', 'id');
+    }
+
 }

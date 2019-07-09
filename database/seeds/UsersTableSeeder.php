@@ -127,7 +127,7 @@ class UsersTableSeeder extends Seeder
                 'password' => bcrypt('secret'),
                 'created_at' => Carbon::now()->subDays(3),
             ],[
-                'role_id' => '2',
+                'role_id' => '3',
                 'name' => Str::random(10),
                 'email' => Str::random(5).'@gmail.com',
                 'country_code' => '+91',
@@ -135,7 +135,7 @@ class UsersTableSeeder extends Seeder
                 'password' => bcrypt('secret'),
                 'created_at' => Carbon::now()->subDays(4),
             ],[
-                'role_id' => '2',
+                'role_id' => '3',
                 'name' => Str::random(10),
                 'email' => Str::random(5).'@gmail.com',
                 'country_code' => '+91',
@@ -143,7 +143,7 @@ class UsersTableSeeder extends Seeder
                 'password' => bcrypt('secret'),
                 'created_at' => Carbon::now()->subDays(5),
             ],[
-                'role_id' => '2',
+                'role_id' => '3',
                 'name' => Str::random(10),
                 'email' => Str::random(5).'@gmail.com',
                 'country_code' => '+91',

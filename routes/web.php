@@ -24,11 +24,14 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function()
 	Route::get('user/blocked/{userId}', 'UserController@block');
 	Route::get('user/blocklist', 'UserController@blocklist')->name('users.blocklist');
 	Route::resource('users', 'UserController');
+	Route::get('patients/blocked/{userId}', 'PatientsController@block');
+	Route::resource('patients', 'PatientsController');
 	Route::get('services/blocked/{userId}', 'ServiceController@block');
 	Route::resource('services', 'ServiceController');
-	//Route::resource('qualification', 'QualificationController');
 	Route::get('qualifications/blocked/{userId}', 'QualificationController@block');
 	Route::resource('qualifications', 'QualificationController');
+	Route::get('diagnosis/blocked/{userId}', 'DiagnoseController@block');
+	Route::resource('diagnosis', 'DiagnoseController');
 	Route::resource('faqs', 'FaqController');
 	Route::get('reorder', 'FaqController@reorder')->name('faqs.reorder');
 	Route::post('updateorder', 'FaqController@updateorder')->name('faqs.updateorder');
@@ -41,9 +44,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function()
 	Route::get('caregiver/locationfromzip', 'CaregiverController@locationfromzip');	
 	Route::resource('caregiver', 'CaregiverController');
 	
+<<<<<<< HEAD
 	Route::post('service_request/save_request_caregivers', 'ServiceRequestController@save_request_caregivers')->name('service_request.save_request_caregivers');
 	Route::post('service_request/assign', 'ServiceRequestController@assign')->name('service_request.assign');
 	Route::get('service_request/caregiver_list/{userId}', 'ServiceRequestController@caregiver_list')->name('service_request.caregiver_list');
 	Route::get('service_request/blocked/{userId}', 'ServiceRequestController@blocked');
 	Route::resource('service_request', 'ServiceRequestController');
+=======
+>>>>>>> fc6f821551f7e23c857ff375c654d68441e8eb4d
 });
