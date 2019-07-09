@@ -80,7 +80,7 @@ class PatientsController extends Controller
 
                 $userProfile = PatientProfile::where('user_id',$id)->first();
                 if($userProfile){
-                    $userProfile['dob'] = Carbon::parse($input['dob'])->format('Y-m-d H:i:s');
+                    $userProfile['dob'] = date("Y-m-d", strtotime($input['dob']));
                     $userProfile['gender'] = $input['gender'];
                     $userProfile['range'] = $input['range'];
                     $userProfile['pin_code'] = $input['pin_code'];
@@ -88,7 +88,7 @@ class PatientsController extends Controller
                     $userProfile['availability'] = $input['availability'];
                     $userProfile->save();
                 }else{
-                    $profile['dob'] = Carbon::parse($input['dob'])->format('Y-m-d H:i:s');
+                    $profile['dob'] = date("Y-m-d", strtotime($input['dob']));
                     $profile['user_id'] = $patient->id;
                     $profile['gender'] = $input['gender'];
                     $profile['range'] = $input['range'];
@@ -161,7 +161,7 @@ class PatientsController extends Controller
             $input['password'] = Hash::make('123456');
             $patient = User::create($input);
 
-            $profile['dob'] = Carbon::parse($input['dob'])->format('Y-m-d H:i:s');
+            $profile['dob'] = date("Y-m-d", strtotime($input['dob']));
             $profile['user_id'] = $patient->id;
             $profile['gender'] = $input['gender'];
             $profile['range'] = $input['range'];
