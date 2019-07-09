@@ -9,6 +9,7 @@ use Charts;
 use DB;
 use App\Faq;
 use App\Service;
+use App\Diagnose;
 
 class DashboardController extends Controller
 {
@@ -31,8 +32,10 @@ class DashboardController extends Controller
         $users['total_users'] = User::count();
         $users['active_users'] = User::where('is_blocked', 0)->count(); 
         $users['blocked_users'] = User::where('is_blocked', 1)->count(); 
+        $users['patients'] = User::where('role_id', 3)->count(); 
 
         $services = Service::count();
+        $diagnosis = Diagnose::count();
 
         $enquiries = Enquiry::count();
         $faqs = Faq::count();
@@ -66,6 +69,6 @@ class DashboardController extends Controller
         $chart->labels(['2 days ago', 'Yesterday', 'Today']);
         $chart->dataset('Dataset', 'line', [$users_2_days_ago, $yesterday_users, $today_users]);*/
 
-        return view('dashboard', compact('users', 'enquiries', 'chart', 'faqs' ,'services'));
+        return view('dashboard', compact('users', 'enquiries', 'chart', 'faqs' ,'services','diagnosis'));
     }
 }

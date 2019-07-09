@@ -126,31 +126,7 @@ class UsersTableSeeder extends Seeder
                 'mobile_number' => '999999840',
                 'password' => bcrypt('secret'),
                 'created_at' => Carbon::now()->subDays(3),
-            ],[
-                'role_id' => '3',
-                'name' => Str::random(10),
-                'email' => Str::random(5).'@gmail.com',
-                'country_code' => '+91',
-                'mobile_number' => '99999997712',
-                'password' => bcrypt('secret'),
-                'created_at' => Carbon::now()->subDays(4),
-            ],[
-                'role_id' => '3',
-                'name' => Str::random(10),
-                'email' => Str::random(5).'@gmail.com',
-                'country_code' => '+91',
-                'mobile_number' => '9999999840',
-                'password' => bcrypt('secret'),
-                'created_at' => Carbon::now()->subDays(5),
-            ],[
-                'role_id' => '3',
-                'name' => Str::random(10),
-                'email' => Str::random(5).'@gmail.com',
-                'country_code' => '+91',
-                'mobile_number' => '9999999550',
-                'password' => bcrypt('secret'),
-                'created_at' => Carbon::now()->subDays(6),
-            ],
+            ],              
         ]);
     }
 }

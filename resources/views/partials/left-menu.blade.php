@@ -33,18 +33,6 @@
                     <span class="nav-label">Patient Management</span></a>
             </li>
             <li>
-                <a href="javascript:;"><i class="sidebar-item-icon fas fa-diagnoses"></i>
-                <span class="nav-label">Diagnosis</span><i class="fa fa-angle-left arrow"></i></a>
-                <ul class="nav-2-level collapse" aria-expanded="false">
-                    <li>
-                        <a href="{{ route('diagnosis.create') }}"><i class="sidebar-item-icon fas fa-plus"></i>Add Diagnose</a>
-                    </li>
-                    <li>
-                        <a href="{{ route('diagnosis.index') }}"><i class="sidebar-item-icon fas fa-list-ul"></i>Diagnosis</a>
-                    </li>
-                </ul>
-            </li>
-            <li>
                 <a href="javascript:;"><i class="sidebar-item-icon fas fa-book-medical"></i>
                     <span class="nav-label">Service Request</span><i class="fa fa-angle-left arrow"></i></a>
                 <ul class="nav-2-level collapse" aria-expanded="false">
@@ -54,28 +42,19 @@
                 </ul>
             </li>
             <li>
-                <a href="javascript:;"><i class="sidebar-item-icon fas fa fa-user"></i>
-                    <span class="nav-label">Services</span><i class="fa fa-angle-left arrow"></i></a>
+                <a href="javascript:;"><i class="sidebar-item-icon fas fa-list"></i><span class="nav-label">Master List</span><i class="fa fa-angle-left arrow"></i></a>
                 <ul class="nav-2-level collapse" aria-expanded="false">
                     <li>
-                        <a href="{{ route('services.create') }}"><i class="sidebar-item-icon fas fa-plus"></i>Add Service</a>
+                        <a href="{{ route('services.index') }}"><i class="sidebar-item-icon fas fa fa-user"></i>Services</a>
                     </li>
                     <li>
-                        <a href="{{ route('services.index') }}"><i class="sidebar-item-icon fas fa-list-ul"></i>Services</a>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <a href="javascript:;"><i class="sidebar-item-icon fa fa-graduation-cap"></i>
-                    <span class="nav-label">Qualification</span><i class="fa fa-angle-left arrow"></i></a>
-                <ul class="nav-2-level collapse" aria-expanded="false">
-                    <li>
-                        <a href="{{ route('qualifications.create') }}"><i class="sidebar-item-icon fas fa-plus"></i>Add Qualification</a>
+                        <a href="{{ route('qualifications.index') }}"><i class="sidebar-item-icon fa fa-graduation-cap"></i>Qualifications</a>
                     </li>
                     <li>
-                        <a href="{{ route('qualifications.index') }}"><i class="sidebar-item-icon fas fa-list-ul"></i>Qualifications</a>
+                        <a href="{{ route('diagnosis.index') }}"><i class="sidebar-item-icon fas fa-diagnoses"></i>Diagnosis</a>
                     </li>
-                </ul>
+                    
+                </ul>  
             </li>
             <li>
                 <a href="javascript:;"><i class="sidebar-item-icon fas fa-question"></i>
