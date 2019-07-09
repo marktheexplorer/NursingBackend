@@ -14,7 +14,8 @@ return array(
      |.....................................................................
      |
      */
-    'user_image_path' => str_replace('\\','/',public_path()). '/uploads/services/',
+    'service_image_path' => str_replace('\\','/',public_path()). '/uploads/services/',
+    'user_image_path' => str_replace('\\','/',public_path()). '/uploads/users/',
     
 
     /*
@@ -23,7 +24,8 @@ return array(
      |.....................................................................
      |
      */
-    'user_image_url' => '/uploads/services/',
+    'service_image_url' => '/uploads/services/',
+    'user_image_url' => '/uploads/users/',
     
 
     /*

@@ -53,7 +53,7 @@ class ServiceController extends Controller
                 $image = $request->file('service_image');
                 $input['service_image'] = time().'.'.$image->getClientOriginalExtension();   
 
-                $destinationPath = config('image.user_image_path');
+                $destinationPath = config('image.service_image_path');
                 $img = Image::make($image->getRealPath());
                 $image->move($destinationPath, $input['service_image']);
             }
@@ -114,7 +114,7 @@ class ServiceController extends Controller
                 $image = $request->file('service_image');
                 $input['service_image'] = time().'.'.$image->getClientOriginalExtension();   
 
-                $destinationPath = config('image.user_image_path');
+                $destinationPath = config('image.service_image_path');
                 $img = Image::make($image->getRealPath());
                 $image->move($destinationPath, $input['service_image']);
             }

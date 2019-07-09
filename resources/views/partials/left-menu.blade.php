@@ -28,7 +28,11 @@
                 </ul>
             </li>
             <li>
-                <a href="javascript:;"><i class="sidebar-item-icon fas fa-users"></i>
+                <a href="{{ route('patients.index') }}"><i class="sidebar-item-icon fas fa fa-wheelchair"></i>
+                    <span class="nav-label">Patients</span></a>
+            </li>
+            <li>
+                <a href="javascript:;"><i class="sidebar-item-icon fas fa-diagnoses"></i>
                     <span class="nav-label">Diagnosis</span><i class="fa fa-angle-left arrow"></i></a>
                 <ul class="nav-2-level collapse" aria-expanded="false">
                     <li>
@@ -52,7 +56,7 @@
                 </ul>
             </li>
             <li>
-                <a href="javascript:;"><i class="sidebar-item-icon fas fa-users"></i>
+                <a href="javascript:;"><i class="sidebar-item-icon fa fa-graduation-cap"></i>
                     <span class="nav-label">Qualification</span><i class="fa fa-angle-left arrow"></i></a>
                 <ul class="nav-2-level collapse" aria-expanded="false">
                     <li>
