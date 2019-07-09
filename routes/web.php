@@ -44,12 +44,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function()
 	Route::get('caregiver/locationfromzip', 'CaregiverController@locationfromzip');	
 	Route::resource('caregiver', 'CaregiverController');
 	
-<<<<<<< HEAD
 	Route::post('service_request/save_request_caregivers', 'ServiceRequestController@save_request_caregivers')->name('service_request.save_request_caregivers');
 	Route::post('service_request/assign', 'ServiceRequestController@assign')->name('service_request.assign');
 	Route::get('service_request/caregiver_list/{userId}', 'ServiceRequestController@caregiver_list')->name('service_request.caregiver_list');
 	Route::get('service_request/blocked/{userId}', 'ServiceRequestController@blocked');
 	Route::resource('service_request', 'ServiceRequestController');
-=======
->>>>>>> fc6f821551f7e23c857ff375c654d68441e8eb4d
 });
