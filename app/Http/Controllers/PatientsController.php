@@ -41,6 +41,8 @@ class PatientsController extends Controller
         $input = $request->input();
         $validator = validator::make($input,[
             'name' => 'required|string|max:60',
+            'email' => 'required|string|max:60',
+            'mobile_number' => 'required|numeric',
             'dob' => 'required',
             'gender' => 'required',
             'range' => 'required|numeric',
@@ -59,7 +61,9 @@ class PatientsController extends Controller
 
         if($request->has('profile_image') && ($request->file('profile_image') != null)) {
                 $image = $request->file('profile_image');
+                $user = User::findOrFail($id);
                 $input['profile_image'] = time().'.'.$image->getClientOriginalExtension();   
+                $user->profile_image = $input['profile_image'];
 
                 $destinationPath = config('image.user_image_path');
                 $img = Image::make($image->getRealPath());
@@ -72,7 +76,6 @@ class PatientsController extends Controller
                 $user->city = $input['city'];
                 $user->state = $input['state'];
                 $user->country = $input['country'];
-                $user->profile_image = $input['profile_image'];
                 $user->save();
 
                 $userProfile = PatientProfile::where('user_id',$id)->first();
