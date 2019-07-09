@@ -17,7 +17,8 @@
             <li class="heading">FEATURES</li>
             <li>
                 <a href="javascript:;"><i class="sidebar-item-icon fas fa-user-nurse"></i>
-                    <span class="nav-label">Caregiver</span><i class="fa fa-angle-left arrow"></i></a>
+                    <span class="nav-label">Caregiver</span><i class="fa fa-angle-left arrow"></i>
+                </a>
                 <ul class="nav-2-level collapse" aria-expanded="false">
                     <li>
                         <a href="{{ route('caregiver.create') }}"><i class="sidebar-item-icon fas fa-plus"></i>Add Caregiver</a>
@@ -28,21 +29,46 @@
                 </ul>
             </li>
             <li>
+<<<<<<< HEAD
+=======
 
                 <a href="{{ route('patients.index') }}"><i class="sidebar-item-icon fas fa fa-wheelchair"></i>
                     <span class="nav-label">Patient Management</span></a>
             </li>
             <li>
+>>>>>>> 4f0d05294ad46bb4e7fe474d09b9a50d51d48c0f
                 <a href="javascript:;"><i class="sidebar-item-icon fas fa-book-medical"></i>
-                    <span class="nav-label">Service Request</span><i class="fa fa-angle-left arrow"></i></a>
+                    <span class="nav-label">Request</span><i class="fa fa-angle-left arrow"></i>
+                </a>
                 <ul class="nav-2-level collapse" aria-expanded="false">
                     <li>
+<<<<<<< HEAD
+                        <a href="{{ route('service_request.index') }}"><i class="sidebar-item-icon fas fa-list-ul"></i>Request List</a>
+                    </li>
+                </ul>
+            </li>
+            <li>            
+                <a href="javascript:;"><i class="sidebar-item-icon fas fa-diagnoses"></i>
+                    <span class="nav-label">Diagnosis</span><i class="fa fa-angle-left arrow"></i></a>
+                <ul class="nav-2-level collapse" aria-expanded="false">
+                    <li>
+                        <a href="{{ route('diagnosis.create') }}"><i class="sidebar-item-icon fas fa-plus"></i>Add Diagnose</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('diagnosis.index') }}"><i class="sidebar-item-icon fas fa-list-ul"></i>Diagnosis</a>
+=======
                         <a href="{{ route('service_request.index') }}"><i class="sidebar-item-icon fas fa-list-ul"></i>Service Request List</a>
+>>>>>>> 4f0d05294ad46bb4e7fe474d09b9a50d51d48c0f
                     </li>
                 </ul>
             </li>
             <li>
+<<<<<<< HEAD
+                <a href="javascript:;"><i class="sidebar-item-icon fas fa-procedures"></i>
+                    <span class="nav-label">Services</span><i class="fa fa-angle-left arrow"></i></a>
+=======
                 <a href="javascript:;"><i class="sidebar-item-icon fas fa-list"></i><span class="nav-label">Master List</span><i class="fa fa-angle-left arrow"></i></a>
+>>>>>>> 4f0d05294ad46bb4e7fe474d09b9a50d51d48c0f
                 <ul class="nav-2-level collapse" aria-expanded="false">
                     <li>
                         <a href="{{ route('services.index') }}"><i class="sidebar-item-icon fas fa fa-user"></i>Services</a>

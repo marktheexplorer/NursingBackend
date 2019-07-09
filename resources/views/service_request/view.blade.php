@@ -4,12 +4,12 @@
 <div class="content-wrapper">
     <!-- START PAGE CONTENT-->
     <div class="page-heading">
-        <h1 class="page-title">Service Request Details</h1>
+        <h1 class="page-title">Request Details</h1>
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
                 <a href="{{ route('dashboard') }}"><i class="fas fa-home"></i></a>
             </li>
-            <li class="breadcrumb-item"><a href="{{ route('service_request.index')}}">Service Request</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('service_request.index')}}">Request</a></li>
         </ol>
     </div>
     <div class="page-content fade-in-up">
@@ -19,7 +19,7 @@
                     <div class="ibox-body">
                         <ul class="nav nav-tabs tabs-line">
                             <li class="nav-item">
-                                <a class="nav-link active" href="#tab-1" data-toggle="tab"><i class="ti-bar-chart"></i> Service Request Details</a>
+                                <a class="nav-link active" href="#tab-1" data-toggle="tab"><i class="ti-bar-chart"></i> Request Details</a>
                             </li>
                         </ul>
                         <div class="tab-content">
@@ -71,6 +71,21 @@
                                         <div class="media-img">Notes</i></div>
                                         <div class="media-body">
                                             <div class="media-heading">{{ $services->description }} </div>
+                                        </div>
+                                    </li>
+                                    <li class="media">
+                                        <div class="media-img">Assign Caregivers</div>
+                                        <div class="media-body">
+                                            <div class="media-heading"><?php
+                                                if(empty($final_caregivers)){
+                                                    echo "NA";
+                                                }else{
+                                                    $count = 1;
+                                                    foreach($final_caregivers as $user){
+                                                        echo $count.". ".ucfirst($user->name)." (".$user->email.")<br/>";
+                                                    }
+                                                }?>    
+                                            </div>
                                         </div>
                                     </li>
                                     <li class="media">
