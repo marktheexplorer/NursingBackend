@@ -46,7 +46,7 @@
                     <tbody>
                  	@foreach($caregivers as $key => $user)
 	            		<tr>
-	            			<td>{{ ++$key }}
+	            			<td>{{ ++$key }}</td>
 	              			<td>{{ ucfirst($user->name) }}</td>
 	              			<td>{{ $user->email }}</td>
 	              			<td>{{ $user->mobile_number }}</td>

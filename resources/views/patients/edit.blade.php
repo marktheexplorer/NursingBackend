@@ -20,14 +20,14 @@
                     <div class="ibox-body">
                         <ul class="nav nav-tabs tabs-line">
                             <li class="nav-item">
-                                <a class="nav-link active" href="#tab-2" data-toggle="tab"><i class="fas fa-pencil-alt"></i> Edit Patient</a>
+                                <a class="nav-link active" href="#tab-2" data-toggle="tab"><i class="fas fa-pencil-alt"></i>Edit Patient</a>
                             </li>
                         </ul>
                         <form action="{{ route('patients.update', ['id' => $user->id]) }}" enctype = 'multipart/form-data' method="post" class="form-horizontal">
                         @csrf
                         @method('put')
                             <div class="tab-content row">
-                                <div class="tab-pane fade show active col-md-8" id="tab-2">
+                                <div class="tab-pane fade show active col-md-9" id="tab-2">
                                     <div class="row">
                                        <div class="col-sm-4 form-group">
                                             <label>Name</label>
@@ -40,28 +40,30 @@
                                         </div>
                                         <div class="col-sm-4 form-group">
                                             <label>Email</label>
-                                            <input type="text" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" placeholder="Email" value="{{ old('email', $user->email) }}"/>
-                                            @if ($errors->has('email'))
-                                                <span class="text-danger">
-                                                    <strong>{{ $errors->first('email') }}</strong>
-                                                </span>
-                                            @endif
+                                            <input type="text" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" placeholder="Email" value="{{ old('email', $user->email) }}" disabled="true" />
                                         </div>
                                         <div class="col-sm-4 form-group">
-                                            <label>Date of Birth</label>
-                                            <input type="text" class="form-control {{ $errors->has('dob') ? ' is-invalid' : '' }}" name="dob" placeholder="DOB" value="{{ old('dob', $user->patient->dob) }}"/>
-                                            @if ($errors->has('dob'))
-                                                <span class="text-danger">
-                                                    <strong>{{ $errors->first('dob') }}</strong>
-                                                </span>
-                                            @endif
+                                           <label>Mobile number</label>
+                                           <input type="text" class="form-control {{ $errors->has('mobile_number') ? ' is-invalid' : '' }}" name="mobile_number" placeholder="Mobile Number" value="{{ old('mobile_number', $user->mobile_number) }}" disabled="true" />
+                                        </div>
+                                        <div class="col-sm-4 form-group date">
+                                           <label>Date of Birth</label>
+                                           <input type="text" class="form-control {{ $errors->has('dob') ? ' is-invalid' : '' }}" name="dob" id="dob" placeholder="DOB" value="{{ $user->patient?date('d/m/Y', strtotime($user->patient->dob)):'' }}"/>
+                                           <div class="input-group-addon">
+                                              <span class="glyphicon glyphicon-th"></span>
+                                           </div>
+                                           @if ($errors->has('dob'))
+                                           <span class="text-danger">
+                                           <strong>{{ $errors->first('dob') }}</strong>
+                                           </span>
+                                           @endif
                                         </div>
                                         <div class="col-sm-4 form-group">
                                             <label>Gender</label>
                                             <select class="form-control" name="gender">
-                                               <option value="Male" {{ old('gender') == 'Male' ? 'selected' : '' }}>Male</option>
-                                               <option value="Female" {{ old('gender') == 'Female' ? 'selected' : '' }}>Female</option>
-                                               <option value="Others" {{ old('gender') == 'Others' ? 'selected' : '' }}>Others</option>
+                                               <option value="Male" {{ ($user->patient?$user->patient->gender:old('gender')) == 'Male' ? 'selected' : '' }}>Male</option>
+                                               <option value="Female" {{ ($user->patient?$user->patient->gender:old('gender')) == 'Female' ? 'selected' : '' }}>Female</option>
+                                               <option value="Others" {{ ($user->patient?$user->patient->gender:old('gender')) == 'Others' ? 'selected' : '' }}>Others</option>
                                             </select>
                                             @if ($errors->has('gender'))
                                                 <span class="text-danger">
@@ -71,12 +73,21 @@
                                         </div>
                                         <div class="col-sm-4 form-group">
                                             <label>Expected cost</label>
-                                            <input type="text" class="form-control {{ $errors->has('range') ? ' is-invalid' : '' }}" name="range" placeholder="Range" value="{{ old('range', $user->patient->range) }}"/>
+                                            <input type="text" class="form-control {{ $errors->has('range') ? ' is-invalid' : '' }}" name="range" placeholder="Range" value="{{ old('range', $user->patient?$user->patient->range:'') }}"/>
                                             @if ($errors->has('range'))
                                                 <span class="text-danger">
                                                     <strong>{{ $errors->first('range') }}</strong>
                                                 </span>
                                             @endif
+                                        </div>
+                                        <div class="col-sm-4 form-group">
+                                           <label>Pin Code</label>
+                                           <input type="text" class="form-control {{ $errors->has('pin_code') ? ' is-invalid' : '' }}" name="pin_code" placeholder="Pin Code" value="{{ old('pin_code' ,$user->patient ?$user->patient->pin_code:'') }}"/>
+                                           @if ($errors->has('pin_code'))
+                                           <span class="text-danger">
+                                           <strong>{{ $errors->first('pin_code') }}</strong>
+                                           </span>
+                                           @endif
                                         </div>
                                         <div class="col-sm-4 form-group">
                                             <label>City</label>
@@ -107,7 +118,11 @@
                                         </div>
                                         <div class="col-sm-4 form-group">
                                             <label>Diagnose</label>
-                                            <input type="text" class="form-control {{ $errors->has('diagnose') ? ' is-invalid' : '' }}" name="diagnose" placeholder="Diagnose" value="{{ old('diagnose', $user->diagnose) }}"/>
+                                             <select class="form-control" name="diagnose_id">
+                                                @foreach($diagnosis as $diagnose)
+                                                <option value="{{ $diagnose->id }}" {{ ($user->patient?$user->patient->diagnose_id:old('diagnose')) == $diagnose->id ? 'selected' : '' }}>{{ $diagnose->title }}</option>
+                                                @endforeach
+                                             </select>
                                             @if ($errors->has('diagnose'))
                                                 <span class="text-danger">
                                                     <strong>{{ $errors->first('diagnose') }}</strong>
@@ -116,7 +131,7 @@
                                         </div>
                                         <div class="col-sm-4 form-group">
                                             <label>Availability</label>
-                                            <input type="text" class="form-control {{ $errors->has('availability') ? ' is-invalid' : '' }}" name="availability" placeholder="Availability" value="{{ old('country', $user->patient->availability) }}"/>
+                                            <input type="text" class="form-control {{ $errors->has('availability') ? ' is-invalid' : '' }}" name="availability" placeholder="Availability" value="{{ old('availability', $user->patient?$user->patient->availability:'') }}"/>
                                             @if ($errors->has('availability'))
                                                 <span class="text-danger">
                                                     <strong>{{ $errors->first('availability') }}</strong>
@@ -125,17 +140,15 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <label>  Select Image:</label>
-                                    <div class="col-sm-12 form-group">
-                                        <input type="file" name="service_image" class="form-control" onchange="readURL(this);">
-                                        <img  id="preview" src="{{ asset(config('image.user_image_url').$user->service_image) }}" alt="your image">
-                                        @if ($errors->has('service_image'))
-                                            <span class="text-danger">
-                                                <strong>{{ $errors->first('service_image') }}</strong>
-                                            </span>
-                                        @endif
-                                    </div>
+                                <div class="col-sm-3 form-group">
+                                    <label>Select Image:</label>
+                                    <input type="file" name="profile_image" class="form-control" onchange="readURL(this);">
+                                    <img  id="preview" src="{{ asset(config('image.user_image_url').$user->profile_image) }}" alt="your image">
+                                    @if ($errors->has('profile_image'))
+                                        <span class="text-danger">
+                                            <strong>{{ $errors->first('profile_image') }}</strong>
+                                        </span>
+                                    @endif
                                 </div>
                             </div>
                             <div class="form-group">
@@ -150,20 +163,31 @@
 </div>
 @endsection
 @section('footer-scripts')
-    <script src='//cdn.tinymce.com/4/tinymce.min.js'></script>
-    <script>
-        function readURL(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-
-                reader.onload = function (e) {
-                    $('#preview')
-                        .attr('src', e.target.result);
-                };
-
-                reader.readAsDataURL(input.files[0]);
-            }
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+   $( function(){
+        var maxBirthdayDate = new Date();
+        maxBirthdayDate.setFullYear( maxBirthdayDate.getFullYear() - 18,11,31);
+        $( "#dob" ).datepicker({
+            changeMonth: true,
+            changeYear: true,
+            maxDate: maxBirthdayDate,
+            yearRange: '1919:'+maxBirthdayDate.getFullYear(),
+        });
+    });
+   
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+   
+            reader.onload = function (e) {
+                $('#preview')
+                    .attr('src', e.target.result);
+            };
+   
+            reader.readAsDataURL(input.files[0]);
         }
-    </script>
-
+    }
+</script>
 @endsection
