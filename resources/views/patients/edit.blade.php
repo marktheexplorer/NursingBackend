@@ -40,11 +40,21 @@
                                         </div>
                                         <div class="col-sm-4 form-group">
                                             <label>Email</label>
-                                            <input type="text" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" placeholder="Email" value="{{ old('email', $user->email) }}" disabled="true" />
+                                            <input type="text" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" placeholder="Email" value="{{ old('email', $user->email) }}" readonly />
+                                            @if ($errors->has('email'))
+                                               <span class="text-danger">
+                                               <strong>{{ $errors->first('email') }}</strong>
+                                               </span>
+                                           @endif
                                         </div>
                                         <div class="col-sm-4 form-group">
                                            <label>Mobile number</label>
-                                           <input type="text" class="form-control {{ $errors->has('mobile_number') ? ' is-invalid' : '' }}" name="mobile_number" placeholder="Mobile Number" value="{{ old('mobile_number', $user->mobile_number) }}" disabled="true" />
+                                           <input type="text" class="form-control {{ $errors->has('mobile_number') ? ' is-invalid' : '' }}" name="mobile_number" placeholder="Mobile Number" value="{{ old('mobile_number', $user->mobile_number) }}" readonly />
+                                            @if ($errors->has('mobile_number'))
+                                               <span class="text-danger">
+                                               <strong>{{ $errors->first('mobile_number') }}</strong>
+                                               </span>
+                                           @endif
                                         </div>
                                         <div class="col-sm-4 form-group date">
                                            <label>Date of Birth</label>
