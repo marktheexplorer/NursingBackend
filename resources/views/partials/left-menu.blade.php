@@ -84,7 +84,7 @@
                 </ul>
             </li>
             <li>
-                <a href="{{ route('enquiries.index') }}"><i class="sidebar-item-icon fas fa-mail-bulk"></i>         
+                <a href="{{ route('enquiries.index') }}"><i class="sidebar-item-icon fas fa-mail-bulk"></i>
                     <span class="nav-label">Enquiry</span>
                 </a>
             </li>
