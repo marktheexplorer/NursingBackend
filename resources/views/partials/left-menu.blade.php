@@ -28,23 +28,11 @@
                 </ul>
             </li>
             <li>
+
                 <a href="{{ route('patients.index') }}"><i class="sidebar-item-icon fas fa fa-wheelchair"></i>
-                    <span class="nav-label">Patient</span></a>
+                    <span class="nav-label">Patient Management</span></a>
             </li>
             <li>
-                <a href="{{ route('service_request.index') }}"><i class="sidebar-item-icon fas fa-book-medical"></i>
-                    <span class="nav-label">Request</span>
-                </a>
-            </li>
-            <li>            
-                <a href="javascript:;"><i class="sidebar-item-icon fas fa-diagnoses"></i>
-                    <span class="nav-label">Diagnosis</span><i class="fa fa-angle-left arrow"></i></a>
-                <ul class="nav-2-level collapse" aria-expanded="false">
-                    <li>
-                        <a href="{{ route('diagnosis.create') }}"><i class="sidebar-item-icon fas fa-plus"></i>Add Diagnose</a>
-                    </li>
-                    <li>
-                        <a href="{{ route('diagnosis.index') }}"><i class="sidebar-item-icon fas fa-list-ul"></i>Diagnosis</a>
                 <a href="javascript:;"><i class="sidebar-item-icon fas fa-book-medical"></i>
                     <span class="nav-label">Service Request</span><i class="fa fa-angle-left arrow"></i></a>
                 <ul class="nav-2-level collapse" aria-expanded="false">
@@ -52,6 +40,21 @@
                         <a href="{{ route('service_request.index') }}"><i class="sidebar-item-icon fas fa-list-ul"></i>Service Request List</a>
                     </li>
                 </ul>
+            </li>
+            <li>
+                <a href="javascript:;"><i class="sidebar-item-icon fas fa-list"></i><span class="nav-label">Master List</span><i class="fa fa-angle-left arrow"></i></a>
+                <ul class="nav-2-level collapse" aria-expanded="false">
+                    <li>
+                        <a href="{{ route('services.index') }}"><i class="sidebar-item-icon fas fa fa-user"></i>Services</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('qualifications.index') }}"><i class="sidebar-item-icon fa fa-graduation-cap"></i>Qualifications</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('diagnosis.index') }}"><i class="sidebar-item-icon fas fa-diagnoses"></i>Diagnosis</a>
+                    </li>
+                    
+                </ul>  
             </li>
             <li>
                 <a href="javascript:;"><i class="sidebar-item-icon fas fa-question"></i>
@@ -81,7 +84,7 @@
                 </ul>
             </li>
             <li>
-                <a href="{{ route('enquiries.index') }}"><i class="sidebar-item-icon fas fa-mail-bulk"></i>
+                <a href="{{ route('enquiries.index') }}"><i class="sidebar-item-icon fas fa-mail-bulk"></i>         
                     <span class="nav-label">Enquiry</span>
                 </a>
             </li>
