@@ -80,10 +80,10 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-8">
+            <div class="col-lg-12">
                 <div class="ibox">
                     <div class="ibox-body">
-                        <div class="flexbox mb-4">
+                        <div class="flexbox mb-12">
                             <div>
                                 <h3 class="m-0">Users Data</h3>
                                 <div>Users analytics (monthly)</div>

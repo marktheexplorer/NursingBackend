@@ -8,6 +8,7 @@ use Validator;
 use App\PatientProfile;
 use Carbon\Carbon;
 use Image;
+use DB;
 
 use Illuminate\Http\Request;
 
@@ -21,6 +22,16 @@ class PatientsController extends Controller
     public function index(){
         $patients = User::where('role_id','3')->get();
     	return view('patients.index', compact('patients'));
+    }
+
+    public function activePatients(){
+        $patients = User::where('role_id','3')->where('is_blocked',0)->get();
+        return view('patients.index', compact('patients'));
+    }
+
+    public function inactivePatients(){
+        $patients = User::where('role_id','3')->where('is_blocked',1)->get();
+        return view('patients.index', compact('patients'));
     }
 
     public function edit($id){
@@ -182,5 +193,21 @@ class PatientsController extends Controller
             $diagnosis = '';
         }
         return view('patients.view', compact('user','diagnosis'));
+    }
+
+    public function locationfromzip(Request $request){
+        $pincode = $request->input('pin_code');
+        $search_pin = DB::select( DB::raw("SELECT * FROM `us_location` where zip = '".$pincode."'")); 
+
+        $response = array();
+        $response['error'] = false;
+        if(empty($search_pin)){
+            $response['error'] = true;
+            $response['msg'] = 'Invalid zipcode';
+        }else{
+            $response['city'] = $search_pin[0]->city;
+            $response['state'] = $search_pin[0]->state_code;
+        }
+        echo json_encode($response, true);
     }
 }

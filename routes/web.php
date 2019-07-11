@@ -24,6 +24,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function()
 	Route::get('user/blocked/{userId}', 'UserController@block');
 	Route::get('user/blocklist', 'UserController@blocklist')->name('users.blocklist');
 	Route::resource('users', 'UserController');
+	Route::get('patients/active', 'PatientsController@activePatients')->name('patients.active');
+	Route::get('patients/inactive', 'PatientsController@inactivePatients')->name('patients.inactive');
+	Route::get('patients/locationfromzip', 'PatientsController@locationfromzip');	
 	Route::get('patients/blocked/{userId}', 'PatientsController@block');
 	Route::resource('patients', 'PatientsController');
 	Route::get('services/blocked/{userId}', 'ServiceController@block');
