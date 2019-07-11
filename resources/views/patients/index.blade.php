@@ -50,11 +50,11 @@
                     <tbody>
                  	@foreach($patients as $key => $patient)
 	            		<tr>
-	            			<td>{{ ++$key }}
+	            			<td>{{ ++$key }}</td>
 	              			<td>{{ ucfirst($patient->name) }}</td>
 	              			<td>{{ $patient->email }}</td>
 	              			<td>{{ $patient->mobile_number }}</td>
-	              			<td>{{ date_format(date_create($patient->created_at), 'd M, y')}}
+	              			<td>{{ date_format(date_create($patient->created_at), 'd M, y')}}</td>
 	              			<td>
 	              				<ul class="actions-menu">
 	              					<li>
