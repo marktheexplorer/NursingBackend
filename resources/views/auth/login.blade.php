@@ -3,7 +3,7 @@
 @section('content')
 <div class="content">
     <div class="brand">
-        <a class="link" onclick="return void(0);">{{$_ENV['APP_NAME']}} Admin</a>
+        <a class="link" onclick="return void(0);"><img src="{{ asset('images/logo2.png') }}" alt="CareService Logo" title=" CareService"></a>
     </div>
     @include('flash::message')
     <form id="login-form" class="form-vertical" method="POST" action="{{ route('login') }}">
