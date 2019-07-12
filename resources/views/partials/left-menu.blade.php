@@ -28,7 +28,6 @@
                 </ul>
             </li>
             <li>
-
                 <a href="{{ route('patients.index') }}"><i class="sidebar-item-icon fas fa fa-wheelchair"></i>
                     <span class="nav-label">Patient Management</span></a>
             </li>

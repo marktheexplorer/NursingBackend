@@ -53,3 +53,5 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function()
 	Route::get('service_request/blocked/{userId}', 'ServiceRequestController@blocked');
 	Route::resource('service_request', 'ServiceRequestController');
 });
+
+	Route::get('cms/{slug}', 'CmsPageController@view_cms');
