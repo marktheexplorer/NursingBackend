@@ -34,10 +34,10 @@
             </li>
             <li>
                 <a href="javascript:;"><i class="sidebar-item-icon fas fa-book-medical"></i>
-                    <span class="nav-label">Service Request</span><i class="fa fa-angle-left arrow"></i></a>
+                    <span class="nav-label">Service</span><i class="fa fa-angle-left arrow"></i></a>
                 <ul class="nav-2-level collapse" aria-expanded="false">
                     <li>
-                        <a href="{{ route('service_request.index') }}"><i class="sidebar-item-icon fas fa-list-ul"></i>Service Request List</a>
+                        <a href="{{ route('service_request.index') }}"><i class="sidebar-item-icon fas fa-list-ul"></i>Service List</a>
                     </li>
                 </ul>
             </li>
