@@ -5,7 +5,10 @@ use Validator;
 use Illuminate\Http\Request;
 use App\Service_requests;
 use App\Service_requests_attributes;
+use App\User;
 use DB;
+use App\Mail\MailHelper;
+use Illuminate\Support\Facades\Mail;
 
 
 class ServiceRequestController extends Controller{
@@ -32,7 +35,7 @@ class ServiceRequestController extends Controller{
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request  $requestr
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request){
@@ -48,7 +51,7 @@ class ServiceRequestController extends Controller{
     public function show($id){
         $services = DB::table('service_requests')->select('service_requests.description', 'service_requests.created_at', 'service_requests.start_time', 'service_requests.end_time', 'service_requests.service', 'service_requests.id', 'service_requests.user_id', 'service_requests.location', 'service_requests.city', 'service_requests.state', 'service_requests.zip', 'service_requests.country', 'service_requests.min_expected_bill', 'service_requests.max_expected_bill', 'service_requests.start_date', 'service_requests.end_date', 'service_requests.status', 'users.name', 'users.email', 'users.mobile_number', 'users.name', 'users.name', 'users.is_blocked', 'services.title')->Join('users', 'service_requests.user_id', '=', 'users.id')->Join('services', 'services.id', '=', 'service_requests.service')->where('service_requests.id', $id)->first();
         if(empty($services)){
-            flash()->success("Service Request not Found"); 
+            flash()->success("Request not Found"); 
             return redirect()->route('service_request.index');  
         }
 
@@ -115,7 +118,7 @@ class ServiceRequestController extends Controller{
         $service_request->updated_at = date('Y-m-d h:i:s');
         $service_request->save();
 
-        flash()->success("Service Request detail updated successfully.");
+        flash()->success("Request detail updated successfully.");
         return redirect()->route('service_request.index');
     }
 
@@ -128,7 +131,7 @@ class ServiceRequestController extends Controller{
     public function blocked($id){
         $srvc = Service_requests::find($id);
         if(empty($srvc)){
-            flash()->success("Invalid Service Request."); 
+            flash()->success("Invalid Request."); 
             return redirect()->route('service_request.index');  
         }
 
@@ -136,16 +139,16 @@ class ServiceRequestController extends Controller{
         $srvc->save();
        
         if ($srvc->status)
-            flash()->success("Service Request Reject successfully."); 
+            flash()->success("Request Reject successfully."); 
         else 
-            flash()->success("Service Request Activate successfully."); 
+            flash()->success("Request Activate successfully."); 
         return redirect()->route('service_request.index');  
     }
 
     public function caregiver_list($id){
         $srvc = Service_requests::find($id);
         if(empty($srvc)){
-            flash()->success("Invalid Service Request."); 
+            flash()->success("Invalid Request."); 
             return redirect()->route('service_request.index');  
         }
         
@@ -161,14 +164,20 @@ class ServiceRequestController extends Controller{
 
             $select_caregiver[] = $scr->value;
         }
-        return view('service_request.caregiverslist', compact('services', 'caregivers', 'select_caregiver', 'final_caregivers'));
+
+        $picked_cargiver_id = 0;
+        $picked_caregiver = DB::table('service_requests_attributes')->where('service_request_id', '=', $id)->where('type', '=', 'final_caregiver')->first();
+        if(!empty($picked_caregiver)){
+            $picked_cargiver_id = $picked_caregiver->value;
+        }
+        return view('service_request.caregiverslist', compact('services', 'caregivers', 'select_caregiver', 'final_caregivers', 'picked_cargiver_id'));
     }
 
     public function assign(Request $request){
         $input = $request->input(); 
         $srvc = Service_requests::find($input['request_id']);
         if(empty($srvc)){
-            flash()->success("Invalid Service Request."); 
+            flash()->success("Invalid Request."); 
             return redirect()->route('service_request.index');  
         }
 
@@ -197,5 +206,85 @@ class ServiceRequestController extends Controller{
             }
         }     
         return redirect()->route('service_request.caregiver_list',['id' => $input['request_id']]); 
+    }
+
+    function picked_caregiver(Request $request){
+        $input = $request->input();
+        $srvc = Service_requests::find($input['request_id']);
+        if(empty($srvc)){
+            flash()->success("Invalid Request."); 
+            return redirect()->route('service_request.index'); 
+        }
+
+        $crgvr = User::find($input['caregiver_id']);
+        if(empty($crgvr)){
+            flash()->success("Invalid Caregiver."); 
+            return redirect()->route('service_request.caregiver_list',['id' => $input['request_id']]); 
+        }
+
+        $isexist = DB::table('service_requests_attributes')->where('service_request_id', '=', $input['request_id'])->where('type', '=', 'final_caregiver')->first();
+        if(empty($isexist)){
+            $request = array(
+                'service_request_id' => $input['request_id'],
+                'value' => $input['caregiver_id'],
+                'type' => 'final_caregiver'
+            ); 
+            DB::table('service_requests_attributes')->insert($request);
+        }
+        $service_request = DB::table('service_requests_attributes')->where('service_request_id', '=', $input['request_id'])->where('type', '=', 'final_caregiver')->update(array('value' => $input['caregiver_id']));
+        $service_request = DB::table('service_requests')->where('id', '=', $input['request_id'])->update(array('status' =>  '4'));
+
+        flash()->success("Caregiver picked for request successfully."); 
+        return redirect()->route('service_request.caregiver_list',['id' => $input['request_id']]); 
+    }
+
+    function confirm_caregiver(Request $request){
+        $data = array('name'=>"Virat Gandhi");
+   
+        $abc = Mail::send(['text'=>'mail'], $data, function($message) {
+            $message->to('sonu.shokeen@saffrontech.net', 'Tutorials Point')->subject('Laravel Basic Testing Mail');
+            $message->from('shokeenn@outlook.com','Virat Gandhi');
+        });
+        print_r($abc);die;
+        /*$input = $request->input();
+
+        $srvc = Service_requests::find($input['request_id']);
+        if(empty($srvc)){
+            flash()->success("Invalid Request."); 
+            return redirect()->route('service_request.index'); 
+        }
+
+        $crgvr = User::find($input['caregiver_id']);
+        if(empty($crgvr)){
+            flash()->success("Invalid Caregiver."); 
+            return redirect()->route('service_request.caregiver_list',['id' => $input['request_id']]); 
+        }
+
+        $patient = User::find($srvc->user_id);
+        if(empty($srvc)){
+            flash()->success("Invalid Patient."); 
+            return redirect()->route('service_request.index'); 
+        }
+
+        $token = md5(uniqid(rand(), true));
+        //$service_request = DB::table('service_requests')->where('id', '=', $input['request_id'])->update(array('status' =>  '5', 'token' => $token));
+        $objDemo = new \stdClass();
+        $objDemo->sender = env('APP_NAME');
+        $objDemo->receiver = ucfirst($patient->name);
+        $objDemo->type = 'basic_carepack_confirm';
+        $objDemo->subject = 'Basic Care Service Pack Mail';
+        $objDemo->token = $token;
+        $objDemo->mail_from = env('MAIL_FROM_EMAIL');
+        $objDemo->mail_from_name = env('MAIL_FROM_NAME');
+
+        $patient->email = 'sonu.shokeen@saffrontech.net';
+
+        $issemd = Mail::to($patient->email)->send(new MailHelper($objDemo));
+        if($issemd){
+            echo "mail sent...";
+        }else{
+            echo "some errors occured...";
+        }
+        //return view('mail.basic_carepack_confirmed', compact('objDemo'));*/
     }
 }
