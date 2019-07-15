@@ -19,8 +19,6 @@ class CreateCaregiversTable extends Migration
             $table->float('min_price');
             $table->float('max_price');
             $table->longText('description');
-            $table->string('gender');   
-            $table->date('dob');
             $table->string('zipcode');
             $table->timestamps();
         });

@@ -87,21 +87,19 @@ class PatientsController extends Controller
                 $user->city = $input['city'];
                 $user->state = $input['state'];
                 $user->country = $input['country'];
+                $user->dob = date("Y-m-d", strtotime($input['dob']));
+                $user->gender = $input['gender'];
                 $user->save();
 
                 $userProfile = PatientProfile::where('user_id',$id)->first();
                 if($userProfile){
-                    $userProfile['dob'] = date("Y-m-d", strtotime($input['dob']));
-                    $userProfile['gender'] = $input['gender'];
                     $userProfile['range'] = $input['range'];
                     $userProfile['pin_code'] = $input['pin_code'];
                     $userProfile['diagnose_id'] = $input['diagnose_id'];
                     $userProfile['availability'] = $input['availability'];
                     $userProfile->save();
                 }else{
-                    $profile['dob'] = date("Y-m-d", strtotime($input['dob']));
                     $profile['user_id'] = $patient->id;
-                    $profile['gender'] = $input['gender'];
                     $profile['range'] = $input['range'];
                     $profile['pin_code'] = $input['pin_code'];
                     $profile['diagnose_id'] = $input['diagnose_id'];
@@ -170,11 +168,11 @@ class PatientsController extends Controller
             $input['state'] = $input['state'];
             $input['country'] = $input['country'];
             $input['password'] = Hash::make('123456');
+            $input['dob'] = date("Y-m-d", strtotime($input['dob']));
+            $input['gender'] = $input['gender'];
             $patient = User::create($input);
 
-            $profile['dob'] = date("Y-m-d", strtotime($input['dob']));
             $profile['user_id'] = $patient->id;
-            $profile['gender'] = $input['gender'];
             $profile['range'] = $input['range'];
             $profile['pin_code'] = $input['pin_code'];
             $profile['diagnose_id'] = $input['diagnose_id'];

@@ -21,6 +21,8 @@ class CreateUsersTable extends Migration
             $table->boolean('email_verified')->default(0);
             $table->string('email_activation_token')->nullable();
             $table->string('country_code')->nullable();
+            $table->string('gender')->nullable();
+            $table->date('dob')->nullable();
             $table->string('mobile_number')->unique();
             $table->boolean('mobile_number_verified')->default(0);
             $table->string('otp')->nullable();
