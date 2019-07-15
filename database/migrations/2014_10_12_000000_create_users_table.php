@@ -26,7 +26,7 @@ class CreateUsersTable extends Migration
             $table->string('mobile_number')->unique();
             $table->boolean('mobile_number_verified')->default(0);
             $table->string('otp')->nullable();
-            $table->enum('type', ['facebook', 'google', 'app'])->default('app');
+            $table->enum('type', ['caregiver', 'patient'])->default('caregiver');
             $table->boolean('is_social')->default(0);
             $table->boolean('is_blocked')->default(0);
             $table->boolean('is_notify')->default(1);
