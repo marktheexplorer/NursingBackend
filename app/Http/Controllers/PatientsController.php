@@ -8,6 +8,7 @@ use Validator;
 use App\PatientProfile;
 use Carbon\Carbon;
 use Image;
+use DB;
 
 use Illuminate\Http\Request;
 
@@ -21,6 +22,16 @@ class PatientsController extends Controller
     public function index(){
         $patients = User::where('role_id','3')->get();
     	return view('patients.index', compact('patients'));
+    }
+
+    public function activePatients(){
+        $patients = User::where('role_id','3')->where('is_blocked',0)->get();
+        return view('patients.index', compact('patients'));
+    }
+
+    public function inactivePatients(){
+        $patients = User::where('role_id','3')->where('is_blocked',1)->get();
+        return view('patients.index', compact('patients'));
     }
 
     public function edit($id){
@@ -76,21 +87,19 @@ class PatientsController extends Controller
                 $user->city = $input['city'];
                 $user->state = $input['state'];
                 $user->country = $input['country'];
+                $user->dob = date("Y-m-d", strtotime($input['dob']));
+                $user->gender = $input['gender'];
                 $user->save();
 
                 $userProfile = PatientProfile::where('user_id',$id)->first();
                 if($userProfile){
-                    $userProfile['dob'] = date("Y-m-d", strtotime($input['dob']));
-                    $userProfile['gender'] = $input['gender'];
                     $userProfile['range'] = $input['range'];
                     $userProfile['pin_code'] = $input['pin_code'];
                     $userProfile['diagnose_id'] = $input['diagnose_id'];
                     $userProfile['availability'] = $input['availability'];
                     $userProfile->save();
                 }else{
-                    $profile['dob'] = date("Y-m-d", strtotime($input['dob']));
                     $profile['user_id'] = $patient->id;
-                    $profile['gender'] = $input['gender'];
                     $profile['range'] = $input['range'];
                     $profile['pin_code'] = $input['pin_code'];
                     $profile['diagnose_id'] = $input['diagnose_id'];
@@ -158,12 +167,13 @@ class PatientsController extends Controller
             $input['city'] = $input['city'];
             $input['state'] = $input['state'];
             $input['country'] = $input['country'];
+            $input['type'] = $input['patient'];
             $input['password'] = Hash::make('123456');
+            $input['dob'] = date("Y-m-d", strtotime($input['dob']));
+            $input['gender'] = $input['gender'];
             $patient = User::create($input);
 
-            $profile['dob'] = date("Y-m-d", strtotime($input['dob']));
             $profile['user_id'] = $patient->id;
-            $profile['gender'] = $input['gender'];
             $profile['range'] = $input['range'];
             $profile['pin_code'] = $input['pin_code'];
             $profile['diagnose_id'] = $input['diagnose_id'];
@@ -182,5 +192,21 @@ class PatientsController extends Controller
             $diagnosis = '';
         }
         return view('patients.view', compact('user','diagnosis'));
+    }
+
+    public function locationfromzip(Request $request){
+        $pincode = $request->input('pin_code');
+        $search_pin = DB::select( DB::raw("SELECT * FROM `us_location` where zip = '".$pincode."'")); 
+
+        $response = array();
+        $response['error'] = false;
+        if(empty($search_pin)){
+            $response['error'] = true;
+            $response['msg'] = 'Invalid zipcode';
+        }else{
+            $response['city'] = $search_pin[0]->city;
+            $response['state'] = $search_pin[0]->state_code;
+        }
+        echo json_encode($response, true);
     }
 }

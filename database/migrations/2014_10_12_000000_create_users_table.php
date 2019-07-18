@@ -21,10 +21,12 @@ class CreateUsersTable extends Migration
             $table->boolean('email_verified')->default(0);
             $table->string('email_activation_token')->nullable();
             $table->string('country_code')->nullable();
+            $table->string('gender')->nullable();
+            $table->date('dob')->nullable();
             $table->string('mobile_number')->unique();
             $table->boolean('mobile_number_verified')->default(0);
             $table->string('otp')->nullable();
-            $table->enum('type', ['facebook', 'google', 'app'])->default('app');
+            $table->enum('type', ['caregiver', 'patient'])->default('caregiver');
             $table->boolean('is_social')->default(0);
             $table->boolean('is_blocked')->default(0);
             $table->boolean('is_notify')->default(1);

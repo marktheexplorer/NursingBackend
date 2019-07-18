@@ -9,7 +9,7 @@
             <li class="breadcrumb-item">
                 <a href="{{ route('dashboard') }}"><i class="fas fa-home"></i></a>
             </li>
-            <li class="breadcrumb-item">Patient</li>
+            <li class="breadcrumb-item"><a href="{{ route('patients.index')}}" >Patients</a></li>
         </ol>
     </div>
     @include('flash::message')
@@ -17,7 +17,13 @@
         <div class="ibox">
             <div class="ibox-head">
                 <div class="ibox-title">Patient Data</div>
-                <a href="{{ route('patients.create') }}"><button class="btn btn-info pull-right"><i class="fas fa-plus"></i> Add</button></a>
+                <div>                    
+                    <a href="{{ route('patients.active') }}"><button class="btn btn-primary">Active</button></a>
+                    <a href="{{ route('patients.inactive') }}"><button class="btn btn-primary">Inactive</button></a>
+                </div>
+                <div>
+                    <a href="{{ route('patients.create') }}"><button class="btn btn-info"><i class="fas fa-plus"></i> Add</button></a>
+                </div>
             </div>
             <div class="ibox-body">
                 <table class="table table-striped table-bordered table-hover" id="data-table" cellspacing="0" width="100%">
@@ -44,11 +50,11 @@
                     <tbody>
                  	@foreach($patients as $key => $patient)
 	            		<tr>
-	            			<td>{{ ++$key }}
+	            			<td>{{ ++$key }}</td>
 	              			<td>{{ ucfirst($patient->name) }}</td>
 	              			<td>{{ $patient->email }}</td>
 	              			<td>{{ $patient->mobile_number }}</td>
-	              			<td>{{ date_format(date_create($patient->created_at), 'd M, y')}}
+	              			<td>{{ date_format(date_create($patient->created_at), 'd M, y')}}</td>
 	              			<td>
 	              				<ul class="actions-menu">
 	              					<li>
@@ -80,5 +86,12 @@
         </div>
 	</div>    
 </div>
+@endsection
+@section('footer-scripts')
+<script type="text/javascript">
+    $(document).ready( function () {
+        $('#data-table').DataTable();
+    });
+</script>
 @endsection
 

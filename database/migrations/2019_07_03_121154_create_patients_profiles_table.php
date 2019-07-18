@@ -16,11 +16,9 @@ class CreatePatientsProfilesTable extends Migration
         Schema::create('patients_profiles', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id');
-            $table->date('dob');
             $table->unsignedBigInteger('diagnose_id')->nullable();
             $table->string('range');
             $table->string('availability');
-            $table->string('gender');
             $table->string('pin_code');
             $table->timestamps();
         });

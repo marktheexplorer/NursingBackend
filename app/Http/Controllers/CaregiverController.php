@@ -18,7 +18,7 @@ class CaregiverController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        $caregivers = DB::table('users')->select('users.id', 'name', 'email', 'mobile_number', 'profile_image', 'is_blocked', 'users.created_at', 'service', 'min_price', 'max_price', 'gender')->Join('caregiver', 'caregiver.user_id', '=', 'users.id')->where('users.id','>', '1')->where('users.type', '=', 1)->orderBy('users.id', 'desc')->get();
+        $caregivers = DB::table('users')->select('users.id', 'name', 'email', 'mobile_number', 'profile_image', 'is_blocked', 'users.created_at', 'service', 'min_price', 'max_price', 'gender', 'dob')->Join('caregiver', 'caregiver.user_id', '=', 'users.id')->where('users.id','>', '1')->where('users.type', '=', 1)->orderBy('users.id', 'desc')->get();
         return view('caregiver.index', compact('caregivers'));
     }
 
@@ -60,8 +60,6 @@ class CaregiverController extends Controller{
             'service_zipcode' => 'required',
             'description' => 'required',
             'qualification' => 'required|not_in:0',
-            //'profile_image' => 'image',
-            //'profile_image' => 'dimensions:min_width=150,min_height=150|image',
         ]);
 
         if ($validator->fails()) {
@@ -87,6 +85,8 @@ class CaregiverController extends Controller{
         $user->country_code = '+1';
         $user->type = 1;
         $user->mobile_number_verified = 1;
+        $user->gender = $input['gender'];
+        $user->dob = date("Y-m-d", strtotime($input['dob']));
         $user->profile_image = $upload_image;
         $user->location = $input['location'];
         $user->city = $input['city'];
@@ -101,8 +101,6 @@ class CaregiverController extends Controller{
             $caregiver->min_price = $input['min_price'];
             $caregiver->max_price = $input['max_price'];
             $caregiver->description = $input['description'];
-            $caregiver->gender = $input['gender'];
-            $caregiver->dob = date("Y-m-d", strtotime($input['dob']));
             $caregiver->zipcode = $input['zipcode'];            
             $caregiver->save();
 
@@ -169,7 +167,7 @@ class CaregiverController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function show($id){
-        $user  = DB::table('users')->select('users.*', 'caregiver.service', 'caregiver.min_price', 'caregiver.max_price', 'caregiver.gender', 'caregiver.description', 'caregiver.gender', 'caregiver.dob', 'caregiver.zipcode')->Join('caregiver', 'caregiver.user_id', '=', 'users.id')->where('users.id','=', $id)->where('users.type', '=', 1)->orderBy('users.id', 'desc')->first();
+        $user  = DB::table('users')->select('users.*', 'caregiver.service', 'caregiver.min_price', 'caregiver.max_price', 'caregiver.description', 'caregiver.zipcode')->Join('caregiver', 'caregiver.user_id', '=', 'users.id')->where('users.id','=', $id)->where('users.type', '=', 1)->orderBy('users.id', 'desc')->first();
         if(empty($user)){
             flash()->error('Un-authorized user.');
             return redirect()->route('caregiver.index');
@@ -193,7 +191,7 @@ class CaregiverController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function edit($id){
-        $user  = DB::table('users')->select('users.*', 'caregiver.service', 'caregiver.min_price', 'caregiver.max_price', 'caregiver.gender', 'caregiver.description', 'caregiver.gender', 'caregiver.dob', 'caregiver.zipcode')->Join('caregiver', 'caregiver.user_id', '=', 'users.id')->where('users.id','=', $id)->where('users.type', '=', 1)->orderBy('users.id', 'desc')->first();
+        $user  = DB::table('users')->select('users.*', 'caregiver.service', 'caregiver.min_price', 'caregiver.max_price', 'caregiver.description', 'caregiver.zipcode')->Join('caregiver', 'caregiver.user_id', '=', 'users.id')->where('users.id','=', $id)->where('users.type', '=', 1)->orderBy('users.id', 'desc')->first();
         if(empty($user)){
             flash()->error('Un-authorized user.');
             return redirect()->route('caregiver.index');
@@ -258,6 +256,8 @@ class CaregiverController extends Controller{
         $user->city = $input['city'];
         $user->state = $input['state'];
         $user->country = 'USA';
+        $user->gender = $input['gender'];
+        $user->dob = date("Y-m-d", strtotime($input['dob']));
         if ($input['password'] != null) {
             $user->password = Hash::make($input['password']);
         }
@@ -278,8 +278,6 @@ class CaregiverController extends Controller{
         $caregiver->min_price = $input['min_price'];
         $caregiver->max_price = $input['max_price'];
         $caregiver->description = $input['description'];
-        $caregiver->gender = $input['gender'];
-        $caregiver->dob = date("Y-m-d", strtotime($input['dob']));
         $caregiver->zipcode = $input['zipcode'];            
         $caregiver->save();
 

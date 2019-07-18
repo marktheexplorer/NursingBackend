@@ -26,6 +26,7 @@
                             @endif 
                         </div>
                         <h5 class="font-strong m-b-10 m-t-10">{{ ucfirst($user->name) }}</h5>
+                        <h5 class="m-b-20 text-muted">Patient</h5>
                     </div>
                 </div>
             </div>
@@ -37,37 +38,70 @@
                                 <h5 class="text-info m-b-20 m-t-20"><i class="fa fa-bullhorn"></i> Details</h5>
                                 <ul class="media-list media-list-divider m-0">
                                     <li class="media">
-                                       <strong>Email :</strong> {{ $user->email}}
+                                        <div class="media-img">Email Id</div>
+                                        <div class="media-body">
+                                            <div class="media-heading text-warning">{{ $user->email }}</div>
+                                        </div>
                                     </li>
                                     <li class="media">
-                                       <strong>Mobile Number :</strong> {{ $user->mobile_number}}
+                                        <div class="media-img">Mobile Number</div>
+                                        <div class="media-body">
+                                            <div class="media-heading">{{ $user->mobile_number }}</div>
+                                        </div>
                                     </li>
                                     <li class="media">
-                                       <strong>DOB :</strong> {{ $user->patient ? $user->patient->dob : ''}}
+                                        <div class="media-img">Date of Birth</div>
+                                        <div class="media-body">
+                                            <div class="media-heading">{{ date_format(date_create($user->dob), 'd M, Y') }}</div>
+                                        </div>
                                     </li>
                                     <li class="media">
-                                       <strong>Gender :</strong> {{ $user->patient ? $user->patient->gender : ''}}
+                                        <div class="media-img">Gender</div>
+                                        <div class="media-body">
+                                            <div class="media-heading">{{ $user->gender ? $user->gender : ''}}</div>
+                                        </div>
                                     </li>
                                     <li class="media">
-                                       <strong>City :</strong> {{ $user->city}}
+                                        <div class="media-img">City</div>
+                                        <div class="media-body">
+                                            <div class="media-heading">{{ $user->city}}</div>
+                                        </div>
                                     </li>
                                     <li class="media">
-                                       <strong>State :</strong> {{ $user->state}}
+                                        <div class="media-img">State</div>
+                                        <div class="media-body">
+                                            <div class="media-heading">{{ $user->state}}</div>
+                                        </div>
                                     </li>
                                     <li class="media">
-                                      <strong>Country :</strong> {{ $user->country}}
+                                        <div class="media-img">Country</div>
+                                        <div class="media-body">
+                                            <div class="media-heading">{{ $user->country}}</div>
+                                        </div>
                                     </li>
                                     <li class="media">
-                                       <strong>Pin Code :</strong> {{ $user->patient ? $user->patient->pin_code : ''}}
+                                        <div class="media-img">Zip Code</div>
+                                        <div class="media-body">
+                                            <div class="media-heading">{{ $user->patient ? $user->patient->pin_code : ''}}</div>
+                                        </div>
                                     </li>
                                     <li class="media">
-                                       <strong>Diagnosis :</strong> {{ $diagnosis ? $diagnosis->title : ''}}
+                                        <div class="media-img">Diagnosis</div>
+                                        <div class="media-body">
+                                            <div class="media-heading">{{ $diagnosis ? $diagnosis->title : ''}}</div>
+                                        </div>
                                     </li>
                                     <li class="media">
-                                       <strong>Range :</strong> {{ $user->patient ? $user->patient->range : ''}}
+                                        <div class="media-img">Range</div>
+                                        <div class="media-body">
+                                            <div class="media-heading">${{ $user->patient ? $user->patient->range : ''}}</div>
+                                        </div>
                                     </li>
                                     <li class="media">
-                                       <strong>Availability :</strong> {{ $user->patient ? $user->patient->availability : ''}}
+                                        <div class="media-img">Availability</div>
+                                        <div class="media-body">
+                                            <div class="media-heading">{{ $user->patient ? $user->patient->availability : ''}}</div>
+                                        </div>
                                     </li>
                                 </ul>
                             </div>

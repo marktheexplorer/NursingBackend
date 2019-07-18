@@ -14,13 +14,13 @@
     </tr>
     <tr>
         <td style="text-align: center;">
-            <h3> <a href="{{ env('APP_URL').$objDemo->token }}" style="padding: 10px;border: 1px solid;background-color: #64b1e7;color: #fff;border-radius: 5px;text-decoration: none;" title="click here">Click Here</a></h3><br/><br/>
+            <h3> <a href="{{ $objDemo->weburl }}" style="padding: 10px;border: 1px solid;background-color: #64b1e7;color: #fff;border-radius: 5px;text-decoration: none;" title="click here">Click Here</a></h3><br/><br/>
         </td>
     </tr>
     <tr>
         <td style="">
             <span style="color: #555;margin: 0;font-size: 10px;">if you are unable to click on button, please copy given link and past direct into your browser.</span>
-            <span style="color: #555;margin: 0;font-size: 10px;">{{ env('APP_URL').$objDemo->token }}</span>
+            <span style="color: #555;margin: 0;font-size: 10px;">{{ $objDemo->weburl }}</span>
         </td>
     </tr>
 </tbody>    

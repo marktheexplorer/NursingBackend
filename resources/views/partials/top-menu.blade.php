@@ -2,7 +2,7 @@
     <div class="page-brand">
         <a class="link" href="{{ route('dashboard') }}">
             <span class="brand">
-                <span class="brand-tip">{{$_ENV['APP_NAME']}}</span>
+                <span class="brand-tip"><img src="{{ asset('images/logo.png') }}" alt="CareService Logo" title=" CareService"></span>
             </span>
             <span class="brand-mini">CS</span>
         </a>

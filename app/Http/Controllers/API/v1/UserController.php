@@ -27,17 +27,17 @@ class UserController extends Controller
      */ 
     public function register(Request $request) 
     {   
-        if ($request->has('type') && ($request->input('type') != null)) {
+        if ($request->input('type') == 'patient') {
             $validator = Validator::make($request->all(), [ 
+                'type' => ['required', Rule::in(['caregiver', 'patient'])],
                 'name' => 'required', 
                 'email' => 'required|email|unique:users',
-                'country_code' => 'required|numeric',
+                'password' => 'required|min:6',
+                'fcm_reg_id' => 'required|string', 
+                'dob' => 'required',
+                'gender' => 'required|string',
                 'mobile_number' => 'required|numeric|unique:users',
-                'type' => ['required', Rule::in(['facebook', 'google'])],
                 'profile_image' =>'nullable|url',
-                'current_lat_lng' => 'required|string',
-                'device' => ['required', Rule::in(['ios', 'android'])],
-                'fcm_reg_id' => 'required|string',
             ]);
 
             if ($validator->fails())
@@ -52,63 +52,47 @@ class UserController extends Controller
                 $input['profile_image'] = $filename;
             }
 
-            $currentLocation = Helper::geocode($input['current_lat_lng']);
-
-            $input['city'] = $currentLocation['city'];
-            $input['state'] = $currentLocation['state'];
-            $input['country'] = $currentLocation['country'];
-
-            $input['role_id'] = 2; 
-            $input['is_social'] = 1;
-            $input['email_verified'] = 1;
-            $input['otp'] = '4567'; 
-            $input['password'] = null;
+            $input['role_id'] = 3; 
+            $input['password'] = Hash::make($input['password']);
+            $input['email_activation_token'] = str_random(60);
+            $input['dob'] = date("Y-m-d", strtotime($input['dob']));
             $user = User::create($input);
 
             if ($user) {
                 $input['user_id'] = $user->id;
                 FcmUser::create($input);
                 //send otp code
-                return response()->json(['status_code' => $this->successStatus, 'message' => 'Please verify the mobile number to proceed. Otp, send it to your registered mobile number.', 'data'=> null]); 
+                return response()->json(['status_code' => $this->successStatus, 'message' => 'You are successfully registered.', 'data'=> null]); 
             } else {
                 return response()->json(['status_code' => 400, 'message' => 'Unable to register. Please try again.', 'data'=> null]); 
             }          
-        } else { 
-            $request = $request->only('name', 'email', 'mobile_number', 'password', 'country_code', 'current_lat_lng', 'fcm_reg_id', 'device');
-
-            $validator = Validator::make($request, [ 
+        } else {
+            $validator = Validator::make($request->all(), [ 
+                'type' => ['required', Rule::in(['caregiver', 'patient'])],
                 'name' => 'required', 
                 'email' => 'required|email|unique:users',
-                'country_code' => 'required|numeric',
                 'mobile_number' => 'required|numeric|unique:users',
                 'password' => 'required|min:6',
-                'current_lat_lng' => 'required|string',
-                'fcm_reg_id' => 'required|string',
-                'device' => ['required', Rule::in(['ios', 'android'])], 
+                'fcm_reg_id' => 'required|string', 
+                'dob' => 'required',
+                'gender' => 'required|string',
             ]);
             
             if ($validator->fails())
                 return response()->json(['status_code'=> 400, 'message'=> $validator->errors()->first(), 'data' => null]);            
-            $input = $request;
-
-            $currentLocation = Helper::geocode($input['current_lat_lng']);
-
-            $input['city'] = $currentLocation['city'];
-            $input['state'] = $currentLocation['state'];
-            $input['country'] = $currentLocation['country'];
+            $input = $request->all();
         
             $input['role_id'] = 2; 
             $input['password'] = Hash::make($input['password']);
             $input['email_activation_token'] = str_random(60);
-            $input['otp'] = '4567'; 
+            $input['dob'] = date("Y-m-d", strtotime($input['dob']));
             $user = User::create($input);
 
             if ($user) {
                 $input['user_id'] = $user->id;
                 FcmUser::create($input);
-                $user->notify(new SignupActivate($user));
                 //send otp code
-                return response()->json(['status_code' => $this->successStatus, 'message' => 'Please verify the mobile number to proceed. Otp, send it to your registered mobile number.', 'data'=> null]);
+                return response()->json(['status_code' => $this->successStatus, 'message' => 'You are successfully registered.', 'data'=> null]);
             } else {
                 return response()->json(['status_code' => $this->errorStatus, 'message' => 'Unable to register. Please try again.', 'data'=> null]); 
             }

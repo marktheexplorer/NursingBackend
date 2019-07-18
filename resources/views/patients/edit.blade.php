@@ -58,7 +58,7 @@
                                         </div>
                                         <div class="col-sm-4 form-group date">
                                            <label>Date of Birth</label>
-                                           <input type="text" class="form-control {{ $errors->has('dob') ? ' is-invalid' : '' }}" name="dob" id="dob" placeholder="DOB" value="{{ $user->patient?date('d/m/Y', strtotime($user->patient->dob)):'' }}"/>
+                                           <input type="text" class="form-control {{ $errors->has('dob') ? ' is-invalid' : '' }}" name="dob" id="dob" placeholder="DOB" value="{{ old('dob', date('d/m/Y', strtotime($user->dob))) }}"/>
                                            <div class="input-group-addon">
                                               <span class="glyphicon glyphicon-th"></span>
                                            </div>
@@ -71,9 +71,9 @@
                                         <div class="col-sm-4 form-group">
                                             <label>Gender</label>
                                             <select class="form-control" name="gender">
-                                               <option value="Male" {{ ($user->patient?$user->patient->gender:old('gender')) == 'Male' ? 'selected' : '' }}>Male</option>
-                                               <option value="Female" {{ ($user->patient?$user->patient->gender:old('gender')) == 'Female' ? 'selected' : '' }}>Female</option>
-                                               <option value="Others" {{ ($user->patient?$user->patient->gender:old('gender')) == 'Others' ? 'selected' : '' }}>Others</option>
+                                               <option value="Male" {{ ($user->gender?$user->gender:old('gender')) == 'Male' ? 'selected' : '' }}>Male</option>
+                                               <option value="Female" {{ ($user->gender?$user->gender:old('gender')) == 'Female' ? 'selected' : '' }}>Female</option>
+                                               <option value="Others" {{ ($user->gender?$user->gender:old('gender')) == 'Others' ? 'selected' : '' }}>Others</option>
                                             </select>
                                             @if ($errors->has('gender'))
                                                 <span class="text-danger">

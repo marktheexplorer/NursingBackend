@@ -51,11 +51,6 @@
 	              						</a>
 	              					</li>
 	              					<li>
-	              						<a href="{{ route('diagnosis.show',['id' => $diagnose->id]) }}">
-	              							<button class="btn-sm btn-warning btn-cir" title="View"><i class="fas fa-eye"></i></button>
-	              						</a>
-	              					</li>
-	              					<li>
                                         <a href="{{ url('admin/diagnosis/blocked/'.$diagnose->id) }}">
                                         @if($diagnose->is_blocked)
                                             <button type="button" class="btn-sm btn-danger btn-cir" title="Unblock"><i class="fa fa-unlock"></i></button>

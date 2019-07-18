@@ -239,14 +239,7 @@ class ServiceRequestController extends Controller{
     }
 
     function confirm_caregiver(Request $request){
-        $data = array('name'=>"Virat Gandhi");
-   
-        $abc = Mail::send(['text'=>'mail'], $data, function($message) {
-            $message->to('sonu.shokeen@saffrontech.net', 'Tutorials Point')->subject('Laravel Basic Testing Mail');
-            $message->from('shokeenn@outlook.com','Virat Gandhi');
-        });
-        print_r($abc);die;
-        /*$input = $request->input();
+        $input = $request->input();
 
         $srvc = Service_requests::find($input['request_id']);
         if(empty($srvc)){
@@ -267,24 +260,27 @@ class ServiceRequestController extends Controller{
         }
 
         $token = md5(uniqid(rand(), true));
+        
         //$service_request = DB::table('service_requests')->where('id', '=', $input['request_id'])->update(array('status' =>  '5', 'token' => $token));
+        
         $objDemo = new \stdClass();
         $objDemo->sender = env('APP_NAME');
         $objDemo->receiver = ucfirst($patient->name);
         $objDemo->type = 'basic_carepack_confirm';
         $objDemo->subject = 'Basic Care Service Pack Mail';
-        $objDemo->token = $token;
         $objDemo->mail_from = env('MAIL_FROM_EMAIL');
         $objDemo->mail_from_name = env('MAIL_FROM_NAME');
-
+        $objDemo->weburl = env('APP_URL')."confirm_careservice/".$token;
         $patient->email = 'sonu.shokeen@saffrontech.net';
-
         $issemd = Mail::to($patient->email)->send(new MailHelper($objDemo));
-        if($issemd){
-            echo "mail sent...";
-        }else{
-            echo "some errors occured...";
-        }
-        //return view('mail.basic_carepack_confirmed', compact('objDemo'));*/
+
+        //redirect back to list page
+        flash()->success("Basic Care Service Pack mail to Patient sent successfully."); 
+        return redirect()->route('service_request.caregiver_list',['id' => $input['request_id']]); 
+    }
+
+    public function confirm_careservice($token){
+        //need to start work on this...
+        echo $token;
     }
 }

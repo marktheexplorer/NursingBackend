@@ -136,6 +136,18 @@ class CmsPageController extends Controller
         return json_encode($response);
     }
 
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function view_cms($slug)
+    {
+        $cms = CmsPage::where('slug', 'LIKE', '%' . $slug . '%')->first();
+        return view('cms_view', compact('cms'));
+    }
+
     public static function slugify($text)
     {
         // replace non letter or digits by -
