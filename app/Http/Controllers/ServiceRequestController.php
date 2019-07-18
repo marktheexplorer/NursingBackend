@@ -262,6 +262,7 @@ class ServiceRequestController extends Controller{
         $token = md5(uniqid(rand(), true));
         
         //$service_request = DB::table('service_requests')->where('id', '=', $input['request_id'])->update(array('status' =>  '5', 'token' => $token));
+        $service_request = DB::table('service_requests')->where('id', '=', $input['request_id'])->update(array('token' => $token));
         
         $objDemo = new \stdClass();
         $objDemo->sender = env('APP_NAME');
@@ -281,6 +282,17 @@ class ServiceRequestController extends Controller{
 
     public function confirm_careservice($token){
         //need to start work on this...
-        echo $token;
-    }
+        $isexist = DB::table('service_requests')->where('token', '=', $token)->where('status', '=', '5')->first();
+        $data = array();
+
+        if($isexist){
+            //show upload form
+            $data['id'] = $isexist->id;
+        }else{
+            //show page with error message
+            $data['error'] = 'Oops, look like link is expire or invalid, please contact to 24*7 Nursing Care Admin';
+        }
+
+        return view('service_request.upload_carepack', compact('data'));
+    }   
 }
