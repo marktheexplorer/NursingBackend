@@ -39,7 +39,7 @@ class MailHelper extends Mailable{
         }
     }
 
-    public function basic_email() {
+    /*public function basic_email() {
         $data = array('name'=>"Virat Gandhi");
    
         Mail::send(['text'=>'mail'], $data, function($message) {
@@ -67,5 +67,5 @@ class MailHelper extends Mailable{
          $message->from('xyz@gmail.com','Virat Gandhi');
       });
       echo "Email Sent with attachment. Check your inbox.";
-   }
+   }*/
 }

@@ -14,7 +14,7 @@ return [
     'driver'     => env('MAIL_DRIVER', 'smtp'),
     'host'       => env('MAIL_HOST', 'smtp.gmail.com'),
     'port'       => env('MAIL_PORT', 587),
-    'from'       => ['address' =>'sonu.shokeen@saffrontech.net', 'name' => 'Nursing 24*7'],
+    'from'       => ['address' =>'nursingcare@gmail.com', 'name' => '24*7NursingCare'],
     'encryption' => env('MAIL_ENCRYPTION', 'tls'),
     'username'   => env('MAIL_USERNAME','sonu.shokeen@saffrontech.net'),
     'password'   => env('MAIL_PASSWORD','Sshokeen24'),
