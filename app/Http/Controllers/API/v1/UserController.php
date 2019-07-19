@@ -192,7 +192,7 @@ class UserController extends Controller
                     ->update([
                         'revoked' => 1
                     ]);
-                $success['token'] =  $otp->createToken($otp->name)->accessToken; 
+                $success['token'] = $otp->createToken($otp->name)->accessToken; 
                 $success['name'] =  $otp->name;
                 $success['email'] = $otp->email;
                 $success['mobile_number'] = $otp->mobile_number;
