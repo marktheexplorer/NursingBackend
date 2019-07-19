@@ -195,7 +195,6 @@ class UserController extends Controller
                 $success['token'] =  $otp->createToken($otp->name)->accessToken; 
                 $success['name'] =  $otp->name;
                 $success['email'] = $otp->email;
-                $success['country_code'] = $otp->country_code;
                 $success['mobile_number'] = $otp->mobile_number;
                 $success['profile_image'] = $otp->profile_image;
                 return response()->json(['status_code' => $this->successStatus, 'message' => 'Otp Verified.', 'data'=> ($request->input('type') == 1) ? $success : null]);
@@ -241,103 +240,27 @@ class UserController extends Controller
      */ 
     public function login(Request $request) 
     {   
-        if ($request->has('type') && ($request->input('type') != null)) {
-            $validator = Validator::make($request->all(), [ 
-                'username' => 'required|email',
-                'type' => ['required', Rule::in(['facebook', 'google'])],
-                'current_lat_lng' => 'required|string',
-                'fcm_reg_id' => 'required|string',
-                'device' => ['required', Rule::in(['ios', 'android'])],  
-            ]);
-
-            if ($validator->fails()) 
-                return response()->json(['status_code'=> 400, 'message'=> $validator->errors()->first(), 'data' => null]);
-
-            $user = User::where('email', $request->input('username'))->first(); 
-            if ($user) {  
-
-                $input = $request->input(); 
-                $currentLocation = Helper::geocode($input['current_lat_lng']);
-
-                $data['city'] = $currentLocation['city'];
-                $data['state'] = $currentLocation['state'];
-                $data['country'] = $currentLocation['country'];
-                $user->update($data);
-
-                FcmUser::where('user_id', $user->id)->update(['fcm_reg_id' => $input['fcm_reg_id']]);
-
-                if ($user->is_blocked) {
-                    return response()->json(['status_code' => 999, 'message' => 'Your account is blocked by admin. Please contact to admin:admin@timeteck.com.', 'data' => null]);
-                } elseif (!$user->mobile_number_verified) {
-                    $user->otp = '4567';
-                    $user->save();
-                    //send otp code
-                    $success['mobile_number'] = $user->mobile_number;
-                    return response()->json(['status_code' => 300, 'message' => 'The mobile number is not verified. Otp, send it to your registered mobile number. Please verify it.', 'data' => $success]);
-                } else {
-                    DB::table('oauth_access_tokens')
-                    ->where('user_id', $user->id)
-                    ->update([
-                        'revoked' => 1
-                    ]);
-
-                    $success['token'] = $user->createToken($user->name)->accessToken; 
-                    $success['name'] = $user->name;
-                    $success['email'] = $user->email;
-                    $success['country_code'] = $user->country_code;
-                    $success['mobile_number'] = $user->mobile_number;
-                    $success['profile_image'] = $user->profile_image;
-
-                    return response()->json(['status_code' => $this->successStatus, 'message' => '', 'data' => $success]);
-                } 
-            } else {
-                return response()->json(['status_code' => 350, 'message' => 'Invalid Credentials.', 'data' => null]);
-            } 
-        }
-
         $validator = Validator::make($request->all(), [ 
             'username' => 'required',
             'password' => 'required|min:6',
-            'current_lat_lng' => 'required|string',
-            'fcm_reg_id' => 'required|string',
-            'device' => ['required', Rule::in(['ios', 'android'])],   
+            'fcm_reg_id' => 'required|string' 
         ]);
 
         if ($validator->fails()) 
             return response()->json(['status_code'=> 400, 'message'=> $validator->errors()->first(), 'data' => null]); 
 
-        if (is_numeric($request->input('username')))
-            $field = 'mobile_number';
-        elseif (filter_var($request->input('username'), FILTER_VALIDATE_EMAIL))
-            $field = 'email';
-        else
-            $field = 'email';
-    
-        $request->merge([$field => $request->input('username')]);
-       
-        if (Auth::attempt($request->only($field, 'password'))) { 
+            $email = $request->input('username');
+            $password = $request->input('password');
+
+        if (Auth::attempt(['email' => $email, 'password' => $password])) { 
 
             $user = Auth::user();
-
             $input = $request->input(); 
-            $currentLocation = Helper::geocode($input['current_lat_lng']);
-
-            $data['city'] = $currentLocation['city'];
-            $data['state'] = $currentLocation['state'];
-            $data['country'] = $currentLocation['country'];
-            $user->update($data);
-
             FcmUser::where('user_id',$user->id)->update(['fcm_reg_id' => $input['fcm_reg_id']]);
 
             if ($user->is_blocked) {
-                return response()->json(['status_code' => 999, 'message' => 'Your account is blocked by admin. Please contact to admin:admin@timeteck.com.', 'data' => null]);
-            } elseif (!$user->mobile_number_verified) {
-                $user->otp = '4567';
-                $user->save();
-                //send otp code
-                $success['mobile_number'] = $user->mobile_number;
-                return response()->json(['status_code' => 300, 'message' => 'The mobile number is not verified. Otp, send it to your registered mobile number. Please verify it.', 'data' => $success]);
-            } elseif (!$user->email_verified && $field == 'email') {
+                return response()->json(['status_code' => 999, 'message' => 'Your account is blocked by admin. Please contact to admin.', 'data' => null]);
+            } elseif (!$user->email_verified) {
                 $user->notify(new SignupActivate($user));
                 return response()->json(['status_code' => 400, 'message' => 'Please verify your email address, link send to your registered email id.', 'data' => null]);
             } else {
@@ -347,6 +270,7 @@ class UserController extends Controller
                         'revoked' => 1
                     ]);
                 $success['token'] =  $user->createToken($user->name)->accessToken; 
+                $success['type'] =  $user->type; 
                 $success['name'] =  $user->name;
                 $success['email'] = $user->email;
                 $success['country_code'] = $user->country_code;
