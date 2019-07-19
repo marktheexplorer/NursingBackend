@@ -281,8 +281,8 @@ class UserController extends Controller
                         'revoked' => 1
                     ]);
 
-                    $success['token'] =  $user->createToken($user->name)->accessToken; 
-                    $success['name'] =  $user->name;
+                    $success['token'] = $user->createToken($user->name)->accessToken; 
+                    $success['name'] = $user->name;
                     $success['email'] = $user->email;
                     $success['country_code'] = $user->country_code;
                     $success['mobile_number'] = $user->mobile_number;
