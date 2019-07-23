@@ -88,7 +88,7 @@
                                         </div>
                                     </li><?php
                                     if($services->status < 5){ ?>
-                                        <li class="media caregiverlist"><?php
+                                        <li class="caregiverlist"><?php
                                             $count = 0; ?>
                                             <table class="table table-striped table-bordered table-hover" id="data-table" cellspacing="0" width="100%">
                                                 <thead>
