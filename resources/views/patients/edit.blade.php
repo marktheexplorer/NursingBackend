@@ -141,7 +141,11 @@
                                         </div>
                                         <div class="col-sm-4 form-group">
                                             <label>Availability</label>
-                                            <input type="text" class="form-control {{ $errors->has('availability') ? ' is-invalid' : '' }}" name="availability" placeholder="Availability" value="{{ old('availability', $user->patient?$user->patient->availability:'') }}"/>
+                                            <select class="form-control" name="availability">
+                                               <option value="24-hours" {{ ($user->patient?$user->patient->availability:old('availability')) == '24-hours' ? 'selected' : '' }}>24-hours</option>
+                                               <option value="12-hours(Day shift)" {{ ($user->patient?$user->patient->availability:old('availability')) == '12-hours(Day shift)' ? 'selected' : '' }}>12-hours(Day shift)</option>
+                                               <option value="12-hours(Night shift)" {{ ($user->patient?$user->patient->availability:old('availability')) == '12-hours(Night shift)' ? 'selected' : '' }}>12-hours(Night shift)</option>
+                                            </select>
                                             @if ($errors->has('availability'))
                                                 <span class="text-danger">
                                                     <strong>{{ $errors->first('availability') }}</strong>
