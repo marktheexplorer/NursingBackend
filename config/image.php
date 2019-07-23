@@ -16,7 +16,7 @@ return array(
      */
     'service_image_path' => str_replace('\\','/',public_path()). '/uploads/services/',
     'user_image_path' => str_replace('\\','/',public_path()). '/uploads/users/',
-    
+
 
     /*
      |...................................................................../
@@ -50,5 +50,4 @@ return array(
 
     'large_thumbnail_height' => '600',
     'large_thumbnail_width' => '800'
-
 );

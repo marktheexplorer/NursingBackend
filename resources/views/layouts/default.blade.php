@@ -16,5 +16,6 @@
 </head>  
 <body>
    @yield('content')
+   @yield('footer-scripts')
 </body>
 </html>

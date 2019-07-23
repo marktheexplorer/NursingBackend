@@ -61,9 +61,15 @@
 	              			<td>
 	              				<ul class="actions-menu">
                                     <li>
-	              						<a href="{{ route('service_request.edit',['id' => $srvc->id]) }}">
-	              							<button class="btn-sm btn-primary btn-cir" title="Edit"><i class="fas fa-pencil-alt"></i></button>
-	              						</a>
+                                        @if($srvc->status < 7)
+    	              						<a href="{{ route('service_request.edit',['id' => $srvc->id]) }}">
+    	              							<button class="btn-sm btn-primary btn-cir" title="Edit"><i class="fas fa-pencil-alt"></i></button>
+    	              						</a>
+                                        @else
+                                            <a href="{{ route('service_request.reschedule',['id' => $srvc->id]) }}">
+                                                <button class="btn-sm btn-primary btn-cir" title="Re-Schedule"><i class="fas fa-clock"></i></button>
+                                            </a>
+                                        @endif    
 	              					</li>
 	              					<li>
 	              						<a href="{{ route('service_request.show',['id' => $srvc->id]) }}">
