@@ -141,6 +141,11 @@
                                     </div>
                                     <div class="col-sm-4 form-group">
                                        <label>Availability</label>
+                                        <select class="form-control" name="availability">
+                                          <option value="24-hours">24-hours </option>
+                                          <option value="12-hours(Day shift)">12-hours(Day shift)</option>
+                                          <option value="12-hours(Night shift)">12-hours(Night shift)</option>
+                                       </select>
                                        <input type="text" class="form-control {{ $errors->has('availability') ? ' is-invalid' : '' }}" name="availability" placeholder="Availability" value="{{ old('country') }}"/>
                                        @if ($errors->has('availability'))
                                        <span class="text-danger">
