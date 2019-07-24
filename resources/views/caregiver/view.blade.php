@@ -21,7 +21,7 @@
                             if(empty($user->profile_image)){ ?>
                                 <img class="img-circle" src="{{ asset('admin/assets/img/admin-avatar.png') }}" /><?php
                             }else{ ?>
-                                <img class="img-circle" style="max-height:150px;max-width: 150px;" src="<?php echo asset($user->profile_image); ?>" /><?php
+                                <img class="img-circle" style="height:150px;width: 150px;" src="<?php echo asset($user->profile_image); ?>" /><?php
                             }   ?> 
                         </div>
                         <h5 class="font-strong m-b-10 m-t-10">{{ ucfirst($user->name) }}</h5>

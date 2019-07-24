@@ -30,7 +30,11 @@ class ServiceRequestController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function create(){
-        //
+        $caregiver_list = DB::table('users')->select('users.id', 'name', 'email', 'mobile_number', 'profile_image', 'users.is_blocked', 'users.created_at', 'min_price', 'max_price', 'gender', 'zipcode')->Join('caregiver', 'caregiver.user_id', '=', 'users.id')->where('users.id','>', '1')->where('users.type', '=', 'caregiver')->orderBy('users.name', 'asc')->get();
+
+        $service_list = DB::table('services')->orderBy('title', 'asc')->get();
+
+        return view('service_request.create', compact('caregiver_list', 'service_list'));
     }
 
     /**
@@ -40,7 +44,47 @@ class ServiceRequestController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request){
-        //
+        $input = $request->input(); 
+
+        $validator =  Validator::make($input,[
+            'user_id' => 'required|not_in:0',
+            'service' => 'required|not_in:0',
+            'start_date' => 'required',
+            'end_date' => 'required',
+            'start_time' => 'required',
+            'end_time' => 'required',
+            'min_expected_bill' => 'required|min:0',
+            'max_expected_bill' => 'required|min:1',
+            'location' => 'required',
+            'zipcode' => 'required',
+            'city' => 'required',
+            'state' => 'required',
+            'description' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput($request->except('password'));
+        }
+
+        $service_request = Service_requests();
+        $service_request->location = $input['location'];
+        $service_request->city = $input['city'];
+        $service_request->state = $input['state'];
+        $service_request->zip = $input['zipcode'];
+        $service_request->service = $input['service'];
+        $service_request->min_expected_bill = $input['min_expected_bill'];
+        $service_request->max_expected_bill = $input['max_expected_bill'];
+        $service_request->start_time = $input['start_time'];
+        $service_request->end_time = $input['end_time'];
+        //$service_request->start_date = $input['start_date'];
+        //$service_request->end_date = $input['end_date'];
+        $service_request->description = $input['description'];
+        $service_request->status = $input['status'];
+        $service_request->updated_at = date('Y-m-d h:i:s');
+        $service_request->save();
+
+        flash()->success("Request created successfully.");
+        return redirect()->route('service_request.index');
     }
 
     /**

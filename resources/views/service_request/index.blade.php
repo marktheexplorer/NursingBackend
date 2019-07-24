@@ -18,6 +18,7 @@
         <div class="ibox">
             <div class="ibox-head">
                 <div class="ibox-title">Requests Data</div>
+                <a style="float:right;" href="{{ route('service_request.create') }}"> Add Request</a>
             </div>
             <div class="ibox-body">
                 <table class="table table-striped table-bordered table-hover table-sm table-responsive" id="data-table" cellspacing="0" width="100%">

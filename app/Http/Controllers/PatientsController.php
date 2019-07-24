@@ -167,7 +167,7 @@ class PatientsController extends Controller
             $input['city'] = $input['city'];
             $input['state'] = $input['state'];
             $input['country'] = $input['country'];
-            $input['type'] = $input['patient'];
+            $input['type'] = 'patient';
             $input['password'] = Hash::make('123456');
             $input['dob'] = date("Y-m-d", strtotime($input['dob']));
             $input['gender'] = $input['gender'];

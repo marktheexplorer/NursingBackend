@@ -153,8 +153,8 @@
                               <div class="col-md-3">
                                  <label>  Select Image:</label>
                                  <div class="col-sm-12 form-group">
-                                    <input type="file" name="profile_image" class="form-control" onchange="readURL(this);">
-                                    <img  id="preview" alt="No Image Selected">
+                                    <input type="file" name="profile_image" class="" onchange="readURL(this);"><br/><br/>
+                                    <img  id="preview" alt="No Image Selected" style="display:none;">
                                     @if ($errors->has('profile_image'))
                                     <span class="text-danger">
                                     <strong>{{ $errors->first('profile_image') }}</strong>
@@ -196,8 +196,8 @@
             var reader = new FileReader();
    
             reader.onload = function (e) {
-                $('#preview')
-                    .attr('src', e.target.result);
+                $('#preview').css('display', 'block');
+                $('#preview').attr('src', e.target.result);
             };
    
             reader.readAsDataURL(input.files[0]);
