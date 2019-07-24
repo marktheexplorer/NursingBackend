@@ -156,7 +156,7 @@
                                 </div>
                                 <div class="col-sm-3 form-group">
                                     <label>Select Image:</label>
-                                    <input type="file" name="profile_image" class="form-control" onchange="readURL(this);">
+                                    <input type="file" name="profile_image" class="" onchange="readURL(this);"><br/><br/>
                                     <img  id="preview" src="{{ asset(config('image.user_image_url').$user->profile_image) }}" alt="your image">
                                     @if ($errors->has('profile_image'))
                                         <span class="text-danger">

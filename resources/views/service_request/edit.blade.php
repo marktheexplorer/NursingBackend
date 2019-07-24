@@ -233,17 +233,17 @@ a,
                             </li>
                         </ul>
                         <div class="tab-content">
-                            <div class="tab-pane fade show active" id="tab-2">
+                            <div class="tab-pane fade show active" id="tab-2"><!--
                                 @foreach ($errors->all() as $error)
                                     <div>{{ $error }}</div>
-                                @endforeach 
+                                @endforeach  -->
                                 <form action="{{ route('service_request.update', ['id' => $services->id]) }}" method="post" class="form-horizontal" enctype="multipart/form-data">
                                 @csrf
                                 @method('put')
                                     <div class="row">
                                         <div class="col-sm-3 form-group">
                                             <label>Patient</label>
-                                            <input type="text" class="form-control {{ $errors->has('user_id') ? ' is-invalid' : '' }}" name="user_id" placeholder="Patient" value="{{ $services->name }}" readonly="true" />
+                                            <input type="text" class="form-control {{ $errors->has('user_id') ? ' is-invalid' : '' }}" name="user_id" placeholder="Patient" value="{{ ucfirst($services->name) }}" readonly="true" />
                                             @if ($errors->has('user_id'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('user_id') }}</strong>
@@ -278,12 +278,26 @@ a,
                                             @endif
                                         </div> 
                                     </div>
-                                    <div class="row">    
-                                        <div class="form-group col-sm-3" >
+                                    <div class="row">                                            
+                                        <div class="col-sm-4  form-group">
+                                            <label>Service</label>
+                                            <select name="service" class="form-control {{ $errors->has('service') ? ' is-invalid' : '' }}" >
+                                                <option disabled="true" > -- Select Service --</option>
+                                                @foreach($service_list as $srvc)
+                                                    <option value="{{ $srvc->id }}" <?php if($services->service ==  $srvc->id){ echo 'selected'; } ?> >{{ $srvc->title }}</option>
+                                                @endforeach
+                                            </select>
+                                            @if ($errors->has('service'))
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $errors->first('service') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                        <div class="form-group col-sm-2" >
                                             <label>Duration</label>
                                             <input type="text" class="form-control {{ $errors->has('start_date') ? ' is-invalid' : '' }}" name="start_date" placeholder="Start from" value="{{ date('d/m/Y', strtotime($services->start_date)) }}" id="start_date" readonly="true" />
                                         </div>  
-                                        <div class="form-group col-sm-3" >
+                                        <div class="form-group col-sm-2" >
                                             <label>&nbsp;</label>
                                             <input type="text" class="form-control {{ $errors->has('end_date') ? ' is-invalid' : '' }}" name="end_date" placeholder="End from" value="{{ date('d/m/Y', strtotime($services->end_date)) }}" id="end_date" readonly="true" />
                                             @if ($errors->has('end_date'))
@@ -292,7 +306,7 @@ a,
                                                 </span>
                                             @endif
                                         </div>
-                                        <div class="form-group col-sm-3" >
+                                        <div class="form-group col-sm-2" >
                                             <label>Shift Timing</label>
                                             <select name="start_time" class="form-control {{ $errors->has('start_time') ? ' is-invalid' : '' }}" >
                                                 <option disabled="true" > -- Select Start time --</option>
@@ -306,7 +320,7 @@ a,
                                                 </span>
                                             @endif
                                         </div>  
-                                        <div class="form-group col-sm-3" >
+                                        <div class="form-group col-sm-2" >
                                             <label>&nbsp;</label>
                                             <select name="end_time" class="form-control {{ $errors->has('end_time') ? ' is-invalid' : '' }}" >
                                                 <option disabled="true" > -- Select End time --</option>
@@ -360,21 +374,7 @@ a,
                                         </div>
                                     </div>                                    
                                     <div class="row">
-                                        <div class="col-sm-6  form-group">
-                                            <label>Service</label>
-                                            <select name="service" class="form-control {{ $errors->has('service') ? ' is-invalid' : '' }}" multiple="true">
-                                                <option disabled="true" > -- Select Service --</option>
-                                                @foreach($service_list as $srvc)
-                                                    <option value="{{ $srvc->id }}" <?php if($services->service ==  $srvc->id){ echo 'selected'; } ?> >{{ $srvc->title }}</option>
-                                                @endforeach
-                                            </select>
-                                            @if ($errors->has('service'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('service') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                        <div class="form-group col-sm-6" >
+                                        <div class="form-group col-sm-12" >
                                             <label>Description </label>
                                             <textarea class="form-control {{ $errors->has('description') ? ' is-invalid' : '' }}" rows="4" name="description" id="description" placeholder="Description">{{$services->description}}</textarea>
                                             @if ($errors->has('description'))
@@ -465,7 +465,7 @@ a,
     $('#zipcode').blur(function(){
         zip = $(this).val();
         $.ajax({
-            url: 'locationfromzip',
+            url: '{{ env("APP_URL") }}admin/caregiver/locationfromzip',
             type: 'GET',
             dataType: 'json',
             data:{zipcode:zip},

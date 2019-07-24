@@ -29,7 +29,7 @@
                                     <li class="media">
                                         <div class="media-img">Patient Name</div>
                                         <div class="media-body">
-                                            <div class="media-heading">{{ $services->name }} </div>
+                                            <div class="media-heading">{{ ucfirst($services->name) }} </div>
                                         </div>
                                         <div class="media-img">Price Range</div>
                                         <div class="media-body">
@@ -56,31 +56,34 @@
                                         <div class="media-img">Assign Caregivers</div>
                                         <div class="media-body">
                                             <div class="media-heading"><?php
-                                                if(empty($final_caregivers)){
-                                                    echo "NA";
+                                                if(!empty($picked_caregiver)){
+                                                    //print_r($picked_caregiver);
+                                                    echo ucfirst($picked_caregiver->name)." (".$picked_caregiver->email.")";
                                                 }else{
                                                     $count = 1;
                                                     foreach($final_caregivers as $user){
                                                         if($services->status == 5){
                                                             echo $count.". ".ucfirst($user->name)." (".$user->email.") &nbsp;&nbsp;&nbsp;&nbsp;";
-                                                            echo "Confirmed and Mail sent";
-                                                        }else if($user->value != $picked_cargiver_id){ ?>
-                                                            <form action="{{ route('service_request.picked_caregiver') }}" method="post" class="form-horizontal">
-                                                                {{ $count.". ".ucfirst($user->name)." (".$user->email.") " }} 
-                                                                @csrf
-                                                                <input type="hidden" name="request_id" value="{{ $services->id }}" />
-                                                                <input type="hidden" name="caregiver_id" value="{{ $user->value }}" />&nbsp;&nbsp;&nbsp;&nbsp;
-                                                                <button type="submit" class="btn-sm btn-success btn-cir" title="Assign"><i class="fas fa-check-circle"></i></button>
-                                                            </form><?php
-                                                        }else{ ?>
-                                                            <form action="{{ route('service_request.confirm_caregiver') }}" method="post" class="form-horizontal">
-                                                                {{ $count.". ".ucfirst($user->name)." (".$user->email.") " }}
-                                                                @csrf
-                                                                <input type="hidden" name="request_id" value="{{ $services->id }}" />
-                                                                <input type="hidden" name="caregiver_id" value="{{ $user->value }}" />&nbsp;&nbsp;&nbsp;&nbsp;
-                                                                <button type="submit" class="btn-sm btn-success " title="Assign">Confirm</button>
-                                                            </form><?php
-                                                        }
+                                                        }else{ 
+                                                            if($user->value != $picked_cargiver_id){ ?>
+                                                                <form action="{{ route('service_request.picked_caregiver') }}" method="post" class="form-horizontal">
+                                                                    {{ $count.". ".ucfirst($user->name)." (".$user->email.") " }} 
+                                                                    @csrf
+                                                                    <input type="hidden" name="request_id" value="{{ $services->id }}" />
+                                                                    <input type="hidden" name="caregiver_id" value="{{ $user->value }}" />&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                    <button type="submit" class="btn-sm btn-success btn-cir" title="Assign"><i class="fas fa-check-circle"></i></button>
+                                                                </form><?php
+                                                            }else{ ?>
+                                                                <form action="{{ route('service_request.confirm_caregiver') }}" method="post" class="form-horizontal">
+                                                                    {{ $count.". ".ucfirst($user->name)." (".$user->email.") " }}
+                                                                    @csrf
+                                                                    <input type="hidden" name="request_id" value="{{ $services->id }}" />
+                                                                    <input type="hidden" name="caregiver_id" value="{{ $user->value }}" />&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                    <button type="submit" class="btn-sm btn-success " title="Assign">Confirm and send mail</button>
+                                                                </form><?php
+                                                            }
+                                                        }    
+                                                        $count++;
                                                         echo "<br/>";
                                                     }
                                                 }?>    
@@ -120,7 +123,7 @@
                                                             <td>{{ ucfirst($user->name) }}</td>
                                                             <td>{{ $user->email }}</td>
                                                             <td>{{ $user->mobile_number }}</td>
-                                                            <td>{{ ucfirst($user->title) }}</td>    
+                                                            <td>{{ ucfirst($services->title) }}</td>    
                                                             <td>{{ ucfirst($user->zipcode) }}</td>
                                                             <td>
                                                                 <form action="{{ route('service_request.assign') }}" method="post" class="form-horizontal" enctype="multipart/form-data">

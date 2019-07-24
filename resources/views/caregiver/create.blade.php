@@ -470,7 +470,7 @@ a,
     $('#zipcode').blur(function(){
         zip = $(this).val();
         $.ajax({
-            url: 'locationfromzip',
+            url: '{{ env("APP_URL") }}admin/caregiver/locationfromzip',
             type: 'GET',
             dataType: 'json',
             data:{zipcode:zip},

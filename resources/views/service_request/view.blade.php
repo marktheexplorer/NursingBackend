@@ -35,7 +35,15 @@
                                     <li class="media">
                                         <div class="media-img">Caregiver Name</div>
                                         <div class="media-body">
-                                            <div class="media-heading">NA</div>
+                                            <div class="media-heading"><?php
+                                                if(empty($final_caregivers)){
+                                                    echo "NA";
+                                                }else{
+                                                    foreach($final_caregivers as $user){
+                                                        echo ucfirst($user->name)." (".$user->email.")<br/>";
+                                                    }
+                                                }?>
+                                            </div>    
                                         </div>
                                     </li>
                                     <li class="media">
@@ -55,7 +63,7 @@
                                         <div class="media-body">
                                             <div class="media-heading">{{ "$".$services->min_expected_bill." - $".$services->max_expected_bill }} </div>
                                         </div>
-                                    </li>               
+                                    </li>   
                                     <li class="media">
                                         <div class="media-img">Shift</i></div>
                                         <div class="media-body">
@@ -74,22 +82,7 @@
                                             <div class="media-heading">{{ $services->description }} </div>
                                         </div>
                                     </li>
-                                    <li class="media">
-                                        <div class="media-img">Assign Caregivers</div>
-                                        <div class="media-body">
-                                            <div class="media-heading"><?php
-                                                if(empty($final_caregivers)){
-                                                    echo "NA";
-                                                }else{
-                                                    $count = 1;
-                                                    foreach($final_caregivers as $user){
-                                                        echo $count.". ".ucfirst($user->name)." (".$user->email.")<br/>";
-                                                    }
-                                                }?>    
-                                            </div>
-                                        </div>
-                                    </li>
-                                    @if(!empty($upload_docs))
+                                    @if(count($upload_docs) > 0)
                                         <li class="media">
                                             <div class="media-img">Upload Documents</div>
                                             <div class="media-body">
