@@ -10,6 +10,7 @@ use DB;
 use App\Faq;
 use App\Service;
 use App\Diagnose;
+use App\Service_requests;
 
 class DashboardController extends Controller
 {
@@ -29,13 +30,12 @@ class DashboardController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index(){
-        $users['total_users'] = User::count();
-        $users['active_users'] = User::where('is_blocked', 0)->count(); 
-        $users['blocked_users'] = User::where('is_blocked', 1)->count(); 
         $users['patients'] = User::where('role_id', 3)->count(); 
+        $users['caregivers'] = User::where('role_id', 2)->count(); 
 
         $services = Service::count();
         $diagnosis = Diagnose::count();
+        $service_requests = Service_requests::count();
 
         $enquiries = Enquiry::count();
         $faqs = Faq::count();
@@ -69,6 +69,6 @@ class DashboardController extends Controller
         $chart->labels(['2 days ago', 'Yesterday', 'Today']);
         $chart->dataset('Dataset', 'line', [$users_2_days_ago, $yesterday_users, $today_users]);*/
 
-        return view('dashboard', compact('users', 'enquiries', 'chart', 'faqs' ,'services','diagnosis'));
+        return view('dashboard', compact('users', 'enquiries', 'chart', 'faqs' ,'services','diagnosis','service_requests'));
     }
 }
