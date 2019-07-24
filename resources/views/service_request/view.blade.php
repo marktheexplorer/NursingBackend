@@ -13,6 +13,7 @@
         </ol>
     </div>
     <div class="page-content fade-in-up">
+        @include('flash::message')
         <div class="row">
             <div class="col-lg-12 col-md-12">
                 <div class="ibox">
@@ -34,7 +35,15 @@
                                     <li class="media">
                                         <div class="media-img">Caregiver Name</div>
                                         <div class="media-body">
-                                            <div class="media-heading">NA</div>
+                                            <div class="media-heading"><?php
+                                                if(empty($final_caregivers)){
+                                                    echo "NA";
+                                                }else{
+                                                    foreach($final_caregivers as $user){
+                                                        echo ucfirst($user->name)." (".$user->email.")<br/>";
+                                                    }
+                                                }?>
+                                            </div>    
                                         </div>
                                     </li>
                                     <li class="media">
@@ -54,7 +63,7 @@
                                         <div class="media-body">
                                             <div class="media-heading">{{ "$".$services->min_expected_bill." - $".$services->max_expected_bill }} </div>
                                         </div>
-                                    </li>               
+                                    </li>   
                                     <li class="media">
                                         <div class="media-img">Shift</i></div>
                                         <div class="media-body">
@@ -73,50 +82,84 @@
                                             <div class="media-heading">{{ $services->description }} </div>
                                         </div>
                                     </li>
-                                    <li class="media">
-                                        <div class="media-img">Assign Caregivers</div>
-                                        <div class="media-body">
-                                            <div class="media-heading"><?php
-                                                if(empty($final_caregivers)){
-                                                    echo "NA";
-                                                }else{
-                                                    $count = 1;
-                                                    foreach($final_caregivers as $user){
-                                                        echo $count.". ".ucfirst($user->name)." (".$user->email.")<br/>";
-                                                    }
-                                                }?>    
+                                    @if(count($upload_docs) > 0)
+                                        <li class="media">
+                                            <div class="media-img">Upload Documents</div>
+                                            <div class="media-body">
+                                                <div class="media-heading">
+                                                    <table class="table table-striped table-bordered table-hover table-sm">
+                                                        <thead class="thead-light">
+                                                            <tr>
+                                                                <td>#</td>
+                                                                <td>Document</td>
+                                                                <td>Date</td>
+                                                                @if($services->status == 6)
+                                                                    <td>Action</td>
+                                                                @endif    
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody><?php
+                                                            $count = 1;
+                                                            foreach($upload_docs as $docs){ ?>
+                                                                <tr>
+                                                                    <td>{{ $count }}.</td>
+                                                                    <td>
+                                                                        <a href="{{ asset('/request_docs/'.$docs->value) }}" title="Download Document"> Download 
+                                                                            @if($count == 1 && $services->status > 6)
+                                                                            {{ '(Approved)' }}
+                                                                        @endif</a>                                                           
+                                                                    </td>
+                                                                    <td>{{ date_format(date_create($docs->created_at), 'd M, Y') }}</td>
+                                                                    @if($count == 1 && $services->status == 6)
+                                                                        <td>
+                                                                            <a href="{{ url('admin/service_request/confirm_doc/'.$services->id) }}" class="btn-sm btn-success" title="Approved">Approved</a> &nbsp;&nbsp;&nbsp;&nbsp;
+                                                                            <a href="{{ env('APP_URL') }}" class="btn-sm btn-primary" title="click here">Dis-approved</a>
+                                                                        </td>
+                                                                    @endif    
+                                                                    <td></td>
+                                                                </tr><?php
+                                                                $count++;
+                                                            }?>
+                                                        </tbody>
+                                                    </table>    
+                                                </div>
                                             </div>
-                                        </div>
-                                    </li>
+                                        </li>
+                                    @endif
                                     <li class="media">
                                         <div class="media-img">Status</i></div>
                                         <div class="media-body">
                                             <div class="media-heading"><?php
                                                 switch($services->status){
                                                     case '0':
-                                                        echo "Pending";                                                        
+                                                        echo "Pending";
                                                         break;
                                                     case '1':
-                                                        echo "Reject";                                                        
+                                                        echo "Reject";
                                                         break;    
                                                     case '2':
                                                         echo "Approved";
                                                         break;    
                                                     case '3':
-                                                        echo "Caregiver not Assign";                                                        
+                                                        echo "Caregiver not Assign";
                                                         break;
                                                     case '4':
-                                                        echo "Assign to Caregiver";                                          
+                                                        echo "Assign to Caregiver"; 
                                                         break;       
                                                     case '5':
-                                                        echo "Reschedule";
+                                                        echo "Caregiver confirm and sent mail of basic careservice pack";
                                                         break;    
                                                     case '6':
-                                                        echo "Expired";
+                                                        echo "Document upload by patient, but document not varified";
                                                         break;        
                                                     case '7':
-                                                        echo "Closed";
+                                                        echo "Uploaded document varified";
                                                         break;            
+                                                    case '8':
+                                                        echo "Re-schedule";
+                                                    case '9':
+                                                        echo "Close";    
+                                                        break;  
                                                 } ?>
                                             </div>
                                         </div>

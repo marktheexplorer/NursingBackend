@@ -50,20 +50,20 @@ class ServiceController extends Controller
         }
 
         if($request->has('service_image') && ($request->file('service_image') != null)) {
-                $image = $request->file('service_image');
-                $input['service_image'] = time().'.'.$image->getClientOriginalExtension();   
+            $image = $request->file('service_image');
+            $input['service_image'] = time().'.'.$image->getClientOriginalExtension();   
 
-                $destinationPath = config('image.service_image_path');
-                $img = Image::make($image->getRealPath());
-                $image->move($destinationPath, $input['service_image']);
-            }
+            $destinationPath = config('image.service_image_path');
+            $img = Image::make($image->getRealPath());
+            $image->move($destinationPath, $input['service_image']);
+        }
 
-                $input['title'] = $input['title'];
-                $input['description'] = $input['description'];
-                $service = Service::create($input);
+        $input['title'] = $input['title'];
+        $input['description'] = $input['description'];
+        $service = Service::create($input);
 
-                flash()->success('New Service added successfully');
-                return redirect()->route('services.index');
+        flash()->success('New Service added successfully');
+        return redirect()->route('services.index');
     }
 
     /**

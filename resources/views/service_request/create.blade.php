@@ -1,5 +1,55 @@
-@extends('layouts.app')
-<style>
+@extends('layouts.app')<?php
+$timeslot = array(
+        "0000" => "00:00",
+        "0030" => "00:30",
+        "0100" => "01:00",
+        "0130" => "01:30",
+        "0200" => "02:00",
+        "0230" => "02:30",
+        "0300" => "03:00",
+        "0330" => "03:30",
+        "0400" => "04:00",
+        "0430" => "04:30",
+        "0500" => "05:00",
+        "0530" => "05:30",
+        "0600" => "06:00",
+        "0630" => "06:30",
+        "0700" => "07:00",
+        "0730" => "07:30",
+        "0800" => "08:00",
+        "0830" => "08:30",
+        "0900" => "09:00",
+        "0930" => "09:30",
+        "1000" => "10:00",
+        "1030" => "10:30",
+        "1100" => "11:00",
+        "1130" => "11:30",
+        "1200" => "12:00",
+        "1230" => "12:30",
+        "1300" => "13:00",
+        "1330" => "13:30",
+        "1400" => "14:00",
+        "1430" => "14:30",
+        "1500" => "15:00",
+        "1530" => "15:30",
+        "1600" => "16:00",
+        "1630" => "16:30",
+        "1700" => "17:00",
+        "1730" => "17:30",
+        "1800" => "18:00",
+        "1830" => "18:30",
+        "1900" => "19:00",
+        "1930" => "19:30",
+        "2000" => "20:00",
+        "2030" => "20:30",
+        "2100" => "21:00",
+        "2130" => "21:30",
+        "2200" => "22:00",
+        "2230" => "22:30",
+        "2300" => "23:00",
+        "2330" => "23:30"  
+    );?>
+<style> 
     /*
 Theme Name: jqueryui-com
 Template: jquery
@@ -163,12 +213,12 @@ a,
 <div class="content-wrapper">
     <!-- START PAGE CONTENT-->
     <div class="page-heading">
-        <h1 class="page-title">Add Caregiver</h1>
+        <h1 class="page-title">Add Request</h1>
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
                 <a href="{{ route('dashboard') }}"><i class="fas fa-home"></i></a>
             </li>
-            <li class="breadcrumb-item"><a href="{{ route('caregiver.index') }}">Caregiver</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('service_request.index') }}">Request</a></li>
         </ol>
     </div>
     <div class="page-content fade-in-up">
@@ -179,129 +229,72 @@ a,
                     <div class="ibox-body">
                         <ul class="nav nav-tabs tabs-line">
                             <li class="nav-item">
-                                <a class="nav-link active" href="#tab-2" data-toggle="tab"><i class="fas fa-plus"></i> Add Caregiver</a>
+                                <a class="nav-link active" href="#tab-2" data-toggle="tab"><i class="fas fa-plus"></i> Add Request</a>
                             </li>
                         </ul>
                         <div class="tab-content">
                             <div class="tab-pane fade show active" id="tab-2"><!--
                                 @foreach ($errors->all() as $error)
                                     <div>{{ $error }}</div>
-                                @endforeach -->
-                                <form action="{{ route('caregiver.store') }}" method="post" class="form-horizontal" enctype="multipart/form-data">
+                                @endforeach  -->
+                                <form action="{{ route('service_request.store') }}" method="post" class="form-horizontal" enctype="multipart/form-data">
                                 @csrf
                                     <div class="row">
                                         <div class="col-sm-6 form-group">
-                                            <label>Name</label>
-                                            <input type="text" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" placeholder="Name" value="{{ old('name') }}" />
-                                            @if ($errors->has('name'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('name') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                        <div class="col-sm-6  form-group">
-                                            <label>Email</label>
-                                            <input type="text" name="email" placeholder="Email" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" />
-                                            @if ($errors->has('email'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('email') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                    <div class="row">    
-                                        <div class="col-sm-3  form-group">
-                                            <label>Mobile Number</label>
-                                            <input type="number" class="form-control {{ $errors->has('mobile_number') ? ' is-invalid' : '' }}" placeholder="Mobile Number" name="mobile_number" value="{{ old('mobile_number')}}">
-                                            @if ($errors->has('mobile_number'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('mobile_number') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                        <div class="form-group col-sm-3" >
-                                            <label>Password</label>
-                                            <input type="password" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" placeholder="Password" value="{{ old('password') }}"/>
-                                            @if ($errors->has('password'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('password') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                        <div class="col-sm-3  form-group">
-                                            <label>Gender</label>
-                                            <select name="gender" class="form-control {{ $errors->has('gender') ? ' is-invalid' : '' }}">
-                                                <option disabled="true" selected="true"> -- Select Gender --</option>
-                                                <option value="Male" {{ old('gender') == 'Male' ? 'selected':'' }}>Male</option>
-                                                <option value="Female" {{ old('gender') == 'Female' ? 'selected':'' }}>Female</option>
-                                                <option value="Other" {{ old('gender') == 'Other' ? 'selected':'' }}>Other</option>
-                                            </select>
-                                            @if ($errors->has('gender'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('gender') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                        <div class="form-group col-sm-3" >
-                                            <label>Date of Birth</label>
-                                            <input type="text" class="form-control {{ $errors->has('dob') ? ' is-invalid' : '' }}" name="dob" placeholder="Date of Birth" value="{{ old('dob') }}" id="dob"/>
-                                            @if ($errors->has('dob'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('dob')}}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-3  form-group">
-                                            <label>Min Price</label>
-                                            <input type="number" class="form-control {{ $errors->has('min_price') ? ' is-invalid' : '' }}" placeholder="Minimum" name="min_price" value="{{ old('min_price')}}" min="0" id="min_price">
-                                            @if ($errors->has('min_price'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('min_price') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                        <div class="col-sm-3  form-group">
-                                            <label>Max Price</label>
-                                            <input type="number" class="form-control {{ $errors->has('max_price') ? ' is-invalid' : '' }}" placeholder="Price" name="max_price" value="{{ old('max_price')}}" min="0" id="max_price">
-                                            @if ($errors->has('max_price'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('max_price') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                        <div class="form-group col-sm-6" >
-                                            <label>Profile Image</label>
-                                            <input type="file" class="form-control {{ $errors->has('profile_image') ? ' is-invalid' : '' }}" name="profile_image" placeholder="Profile Image" value="{{ old('profile_image') }}" accept="image/*"/>
-                                            @if ($errors->has('profile_image'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('profile_image') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>                                        
-                                    </div>    
-                                    <div class="row">
-                                        <div class="col-sm-6  form-group">
-                                            <label>Qualification</label>
-                                            <select name="qualification[]" class="form-control {{ $errors->has('qualification') ? ' is-invalid' : '' }}" multiple="true">
-                                                <option disabled="true" > -- Select Qualification --</option>
-                                                @foreach($qualification as $qlf)
-                                                    <option value="{{ $qlf->id }}" {{ (collect(old('qualification'))->contains($qlf->id)) ? 'selected':'' }} >{{ $qlf->name }}</option>
+                                            <label>Patient</label><!--
+                                            <input type="text" class="form-control {{ $errors->has('user_id') ? ' is-invalid' : '' }}" name="user_id" placeholder="Patient" value="" readonly="true" /> -->
+                                            <select name="user_id" class="form-control {{ $errors->has('user_id') ? ' is-invalid' : '' }}" >
+                                                <option disabled="true" selected="true"> -- Select Patient --</option>
+                                                @foreach($caregiver_list as $key => $caregiver)
+                                                    <option value="{{ $caregiver->id }}" >{{ ucfirst($caregiver->name) }}</option>
                                                 @endforeach
                                             </select>
-                                            @if ($errors->has('qualification'))
+                                            @if ($errors->has('end_time'))
                                                 <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('qualification') }}</strong>
+                                                    <strong>{{ $errors->first('end_time')}}</strong>
+                                                </span>
+                                            @endif
+                                            @if ($errors->has('user_id'))
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $errors->first('user_id') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>   <!--
+                                        <div class="col-sm-3 form-group">
+                                            <label>Caregiver</label>
+                                            <input type="text" class="form-control {{ $errors->has('caregiver_id') ? ' is-invalid' : '' }}" name="caregiver_id" placeholder="caregiver_id" value="" readonly="true" />
+                                            @if ($errors->has('caregiver_id'))
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $errors->first('caregiver_id') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>       -->      
+                                        <div class="col-sm-3  form-group">
+                                            <label>Min Expected Bill ($)</label>
+                                            <input type="number" class="form-control {{ $errors->has('min_expected_bill') ? ' is-invalid' : '' }}" placeholder="Minimum Expected Bill" name="min_expected_bill" value="" min="0" id="min_price">
+                                            @if ($errors->has('min_expected_bill'))
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $errors->first('min_expected_bill') }}</strong>
                                                 </span>
                                             @endif
                                         </div>
-                                        <div class="col-sm-6  form-group">
+                                        <div class="col-sm-3  form-group">
+                                            <label>Max Expected Bill ($)</label>
+                                            <input type="number" class="form-control {{ $errors->has('max_expected_bill') ? ' is-invalid' : '' }}" placeholder="Max Expected Bill" name="max_expected_bill" value="" min="0" id="max_price">
+                                            @if ($errors->has('max_expected_bill'))
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $errors->first('max_expected_bill') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div> 
+                                    </div>
+                                    <div class="row">    
+                                        <div class="col-sm-4  form-group">
                                             <label>Service</label>
-                                            <select name="service[]" class="form-control {{ $errors->has('service') ? ' is-invalid' : '' }}" multiple="true">
+                                            <select name="service" class="form-control {{ $errors->has('service') ? ' is-invalid' : '' }}">
                                                 <option disabled="true" > -- Select Service --</option>
                                                 @foreach($service_list as $srvc)
-                                                    <option value="{{ $srvc->id }}" {{ (collect(old('service'))->contains($srvc->id)) ? 'selected':'' }}>{{ $srvc->title }}</option>
+                                                    <option value="{{ $srvc->id }}" >{{ $srvc->title }}</option>
                                                 @endforeach
                                             </select>
                                             @if ($errors->has('service'))
@@ -309,12 +302,53 @@ a,
                                                     <strong>{{ $errors->first('service') }}</strong>
                                                 </span>
                                             @endif
+                                        </div>                                        
+                                        <div class="form-group col-sm-2" >
+                                            <label>Duration</label>
+                                            <input type="text" class="form-control {{ $errors->has('start_date') ? ' is-invalid' : '' }}" name="start_date" placeholder="Start from" value="{{ date('d/m/Y', time()) }}" id="start_date"  />
+                                        </div>  
+                                        <div class="form-group col-sm-2" >
+                                            <label>&nbsp;</label>
+                                            <input type="text" class="form-control {{ $errors->has('end_date') ? ' is-invalid' : '' }}" name="end_date" placeholder="End from" value="{{ date('d/m/Y', time()) }}" id="end_date"  />
+                                            @if ($errors->has('end_date'))
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $errors->first('end_date')}}</strong>
+                                                </span>
+                                            @endif
                                         </div>
-                                    </div>
+                                        <div class="form-group col-sm-2" >
+                                            <label>Shift Timing</label>
+                                            <select name="start_time" class="form-control {{ $errors->has('start_time') ? ' is-invalid' : '' }}" >
+                                                <option disabled="true" > -- Select Start time --</option>
+                                                @foreach($timeslot as $key => $slot)
+                                                    <option value="{{ $key }}" >{{ $slot }}</option>
+                                                @endforeach
+                                            </select>
+                                            @if ($errors->has('start_time'))
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $errors->first('start_time')}}</strong>
+                                                </span>
+                                            @endif
+                                        </div>  
+                                        <div class="form-group col-sm-2" >
+                                            <label>&nbsp;</label>
+                                            <select name="end_time" class="form-control {{ $errors->has('end_time') ? ' is-invalid' : '' }}" >
+                                                <option disabled="true" > -- Select End time --</option>
+                                                @foreach($timeslot as $key => $slot)
+                                                    <option value="{{ $key }}" >{{ $slot }}</option>
+                                                @endforeach
+                                            </select>
+                                            @if ($errors->has('end_time'))
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $errors->first('end_time')}}</strong>
+                                                </span>
+                                            @endif
+                                        </div>                                        
+                                    </div>    
                                     <div class="row">    
                                         <div class="form-group col-sm-6" >
                                             <label>Street </label>
-                                            <input type="text" class="form-control {{ $errors->has('location') ? ' is-invalid' : '' }}" name="location" placeholder="Location" value="{{ old('location') }}" />
+                                            <input type="text" class="form-control {{ $errors->has('location') ? ' is-invalid' : '' }}" name="location" placeholder="Location" value="" />
                                             @if ($errors->has('location'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('location') }}</strong>
@@ -323,7 +357,7 @@ a,
                                         </div>
                                         <div class="form-group col-sm-2" >
                                             <label>Zip Code </label>
-                                            <input type="text" class="form-control {{ $errors->has('zipcode') ? ' is-invalid' : '' }}" name="zipcode" placeholder="Zip code" value="{{ old('zipcode') }}" id="zipcode" />
+                                            <input type="text" class="form-control {{ $errors->has('zipcode') ? ' is-invalid' : '' }}" name="zipcode" placeholder="Zip code" value="" id="zipcode" />
                                             @if ($errors->has('zipcode'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('zipcode') }}</strong>
@@ -332,7 +366,7 @@ a,
                                         </div>
                                         <div class="form-group col-sm-2" >
                                             <label>City </label>
-                                            <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" placeholder="city" value="{{ old('city') }}" id="city" readonly="true" />
+                                            <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" placeholder="city" value="" id="city" readonly="true" />
                                             @if ($errors->has('city'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('city') }}</strong>
@@ -341,54 +375,25 @@ a,
                                         </div>
                                         <div class="form-group col-sm-2" >
                                             <label>State </label>
-                                            <input type="text" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" placeholder="state" value="{{ old('state') }}"  id="state" readonly="true" />
+                                            <input type="text" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" placeholder="state" value=""  id="state" readonly="true" />
                                             @if ($errors->has('state'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('state') }}</strong>
                                                 </span>
                                             @endif
                                         </div>
-                                    </div>
+                                    </div>                                    
                                     <div class="row">
                                         <div class="form-group col-sm-12" >
-                                            <label>Servicable ZipCode </label>
-                                            <input type="text" class="form-control {{ $errors->has('service_zipcode') ? ' is-invalid' : '' }} zipcodesuggest" name="service_zipcode" placeholder="Service Zip code" value="{{ old('service_zipcode') }}" id="service_zipcode"/>
-                                            @if ($errors->has('service_zipcode'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong id="service_zipcode_msg">{{ $errors->first('service_zipcode') }}</strong>
-                                                </span>
-                                            @else 
-                                                <span class="invalid-feedback" role="alert" style="display: inline;">
-                                                    <strong id="service_zipcode_msg"></strong>
-                                                </span>
-                                            @endif
-                                        </div>    
-                                    </div>
-                                    <div class="row">
-                                        <div class="form-group col-sm-12" >
-                                            <label>Non Servicable ZipCode </label>
-                                            <input type="text" class="form-control {{ $errors->has('non_service_zipcode') ? ' is-invalid' : '' }} zipcodesuggest" name="non_service_zipcode" placeholder="Non-Service Zip code" value="{{ old('non_service_zipcode') }}" id="non_service_zipcode"/>
-                                            @if ($errors->has('non_service_zipcode'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong id="non_service_zipcode_msg">{{ $errors->first('non_service_zipcode') }}</strong>
-                                                </span>
-                                            @else 
-                                                <span class="invalid-feedback" role="alert" style="display: inline;">
-                                                    <strong id="non_service_zipcode_msg"></strong>
-                                                </span>
-                                            @endif
-                                        </div>    
-                                    </div>
-                                    <div class="row">
-                                        <div class="form-group col-sm-12" >
-                                            <label>Bio </label>
-                                            <textarea class="form-control {{ $errors->has('description') ? ' is-invalid' : '' }}" rows="5" name="description" id="description" placeholder="Description"></textarea>
+                                            <label>Description </label>
+                                            <textarea class="form-control {{ $errors->has('description') ? ' is-invalid' : '' }}" rows="4" name="description" id="description" placeholder="Description"></textarea>
                                             @if ($errors->has('description'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('description') }}</strong>
                                                 </span>
                                             @endif
                                         </div>
+                                        <input type="hidden" name="status" value="2" />
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-sm-5 pull-right"></div>
@@ -435,7 +440,7 @@ a,
             }
         }).autocomplete({
             source: function( request, response ) {
-                $.getJSON( "searchzip", {
+                $.getJSON( "http://localhost/careservice/public/index.php/admin/caregiver/searchzip", {
                     term: extractLast( request.term)
                 }, response );
             },
@@ -470,7 +475,7 @@ a,
     $('#zipcode').blur(function(){
         zip = $(this).val();
         $.ajax({
-            url: 'locationfromzip',
+            url: '{{ env("APP_URL") }}admin/caregiver/locationfromzip',
             type: 'GET',
             dataType: 'json',
             data:{zipcode:zip},
@@ -498,15 +503,36 @@ a,
     });
 
     //date picker field
-    $( function(){
-        var maxBirthdayDate = new Date();
-        maxBirthdayDate.setFullYear( maxBirthdayDate.getFullYear() - 18,11,31);
-        $( "#dob" ).datepicker({
+    $( function() {
+        var dateFormat = "mm/dd/yy",
+        from = $( "#start_date" ).datepicker({
+            minDate : 0,
+            //defaultDate: "+1w",
+            dateFormat: 'dd-mm-yy',
             changeMonth: true,
-            changeYear: true,
-            maxDate: maxBirthdayDate,
-            yearRange: '1919:'+maxBirthdayDate.getFullYear(),
+            numberOfMonths: 1
+        }).on( "change", function() {
+            to.datepicker( "option", "minDate", getDate( this ) );
+        }),
+        to = $( "#end_date" ).datepicker({
+            minDate : 1,
+            //defaultDate: "+1w",
+            dateFormat: 'dd-mm-yy',
+            changeMonth: true,
+            numberOfMonths: 1
+        }).on( "change", function() {
+            from.datepicker( "option", "maxDate", getDate( this ) );
         });
-    });
+ 
+        function getDate( element ) {
+            var date;
+            try {
+                date = $.datepicker.parseDate( dateFormat, element.value );
+            } catch( error ) {
+                date = null;
+            } 
+            return date;
+        }
+    });    
 </script>
 @endsection

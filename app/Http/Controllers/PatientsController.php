@@ -99,7 +99,7 @@ class PatientsController extends Controller
                     $userProfile['availability'] = $input['availability'];
                     $userProfile->save();
                 }else{
-                    $profile['user_id'] = $patient->id;
+                    $profile['user_id'] = $user->id;
                     $profile['range'] = $input['range'];
                     $profile['pin_code'] = $input['pin_code'];
                     $profile['diagnose_id'] = $input['diagnose_id'];
@@ -167,7 +167,7 @@ class PatientsController extends Controller
             $input['city'] = $input['city'];
             $input['state'] = $input['state'];
             $input['country'] = $input['country'];
-            $input['type'] = $input['patient'];
+            $input['type'] = 'patient';
             $input['password'] = Hash::make('123456');
             $input['dob'] = date("Y-m-d", strtotime($input['dob']));
             $input['gender'] = $input['gender'];

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Service_requests;
 use App\Service_requests_attributes;
 use App\User;
+use App\RequestBooking;
 use DB;
 use App\Mail\MailHelper;
 use Illuminate\Support\Facades\Mail;
@@ -29,7 +30,11 @@ class ServiceRequestController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function create(){
-        //
+        $caregiver_list = DB::table('users')->select('users.id', 'name', 'email', 'mobile_number', 'profile_image', 'users.is_blocked', 'users.created_at', 'gender')->Join('patients_profiles', 'patients_profiles.user_id', '=', 'users.id')->where('users.id','>', '1')->where('users.type', '=', 'patient')->orderBy('users.name', 'asc')->get();
+
+        $service_list = DB::table('services')->orderBy('title', 'asc')->get();
+
+        return view('service_request.create', compact('caregiver_list', 'service_list'));
     }
 
     /**
@@ -39,7 +44,49 @@ class ServiceRequestController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request){
-        //
+        $input = $request->input(); 
+
+        $validator =  Validator::make($input,[
+            'user_id' => 'required|not_in:0',
+            'service' => 'required|not_in:0',
+            'start_date' => 'required',
+            'end_date' => 'required',
+            'start_time' => 'required',
+            'end_time' => 'required',
+            'min_expected_bill' => 'required|min:0',
+            'max_expected_bill' => 'required|min:1',
+            'location' => 'required',
+            'zipcode' => 'required',
+            'city' => 'required',
+            'state' => 'required',
+            'description' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput($request->except('password'));
+        }
+
+        $service_request = array(
+            'user_id' => $input['user_id'],
+            'location' => $input['location'],
+            'city' => $input['city'],
+            'state' => $input['state'],
+            'zip' => $input['zipcode'],
+            'service' => $input['service'],
+            'min_expected_bill' => $input['min_expected_bill'],
+            'max_expected_bill' => $input['max_expected_bill'],
+            'start_time' => $input['start_time'],
+            'end_time' => $input['end_time'],
+            'start_date' => date('Y-m-d', strtotime($input['start_date'])),
+            'end_date' => date('Y-m-d', strtotime($input['end_date'])),
+            'description' => $input['description'],
+            'status' => $input['status'],
+            'updated_at' => date('Y-m-d h:i:s')
+        ); 
+        DB::table('service_requests')->insert($service_request);
+
+        flash()->success("Request created successfully.");
+        return redirect()->route('service_request.index');
     }
 
     /**
@@ -49,14 +96,16 @@ class ServiceRequestController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function show($id){
-        $services = DB::table('service_requests')->select('service_requests.description', 'service_requests.created_at', 'service_requests.start_time', 'service_requests.end_time', 'service_requests.service', 'service_requests.id', 'service_requests.user_id', 'service_requests.location', 'service_requests.city', 'service_requests.state', 'service_requests.zip', 'service_requests.country', 'service_requests.min_expected_bill', 'service_requests.max_expected_bill', 'service_requests.start_date', 'service_requests.end_date', 'service_requests.status', 'users.name', 'users.email', 'users.mobile_number', 'users.name', 'users.name', 'users.is_blocked', 'services.title')->Join('users', 'service_requests.user_id', '=', 'users.id')->Join('services', 'services.id', '=', 'service_requests.service')->where('service_requests.id', $id)->first();
+        $services = DB::table('service_requests')->select('service_requests.id', 'service_requests.description', 'service_requests.created_at', 'service_requests.start_time', 'service_requests.end_time', 'service_requests.service', 'service_requests.id', 'service_requests.user_id', 'service_requests.location', 'service_requests.city', 'service_requests.state', 'service_requests.zip', 'service_requests.country', 'service_requests.min_expected_bill', 'service_requests.max_expected_bill', 'service_requests.start_date', 'service_requests.end_date', 'service_requests.status', 'users.name', 'users.email', 'users.mobile_number', 'users.name', 'users.name', 'users.is_blocked', 'services.title')->Join('users', 'service_requests.user_id', '=', 'users.id')->Join('services', 'services.id', '=', 'service_requests.service')->where('service_requests.id', $id)->first();
         if(empty($services)){
             flash()->success("Request not Found"); 
             return redirect()->route('service_request.index');  
         }
 
-        $final_caregivers = DB::table('service_requests_attributes')->select('service_requests_attributes.value', 'users.name', 'users.email')->Join('users', 'users.id', '=', 'service_requests_attributes.value')->where('service_request_id', '=', $id)->where('service_requests_attributes.type', '=', 'caregiver_list')->get();
-        return view('service_request.view', compact('services', 'final_caregivers'));
+        $final_caregivers = DB::table('service_requests_attributes')->select('service_requests_attributes.value', 'users.name', 'users.email')->Join('users', 'users.id', '=', 'service_requests_attributes.value')->where('service_request_id', '=', $id)->where('service_requests_attributes.type', '=', 'final_caregiver')->get();        
+
+        $upload_docs = DB::table('service_requests_attributes')->select('service_requests_attributes.*')->where('service_request_id', '=', $id)->where('type', '=', 'carepack_docs')->orderBy('id', 'desc')->get();
+        return view('service_request.view', compact('services', 'final_caregivers', 'upload_docs'));
     }
 
     /**
@@ -152,25 +201,22 @@ class ServiceRequestController extends Controller{
             return redirect()->route('service_request.index');  
         }
         
-        $services = DB::table('service_requests')->select('service_requests.description', 'service_requests.created_at', 'service_requests.start_time', 'service_requests.end_time', 'service_requests.service', 'service_requests.id', 'service_requests.user_id', 'service_requests.location', 'service_requests.city', 'service_requests.state', 'service_requests.zip', 'service_requests.country', 'service_requests.min_expected_bill', 'service_requests.max_expected_bill', 'service_requests.start_date', 'service_requests.end_date', 'service_requests.status', 'users.name', 'users.email', 'users.mobile_number', 'users.name', 'users.name', 'users.is_blocked', 'services.title')->Join('users', 'service_requests.user_id', '=', 'users.id')->Join('services', 'services.id', '=', 'service_requests.service')->where('service_requests.id', $id)->first();
+        $services = DB::table('service_requests')->select('service_requests.description', 'service_requests.created_at', 'service_requests.start_time', 'service_requests.end_time', 'service_requests.service', 'service_requests.id', 'service_requests.user_id', 'service_requests.location', 'service_requests.city', 'services.title','service_requests.state', 'service_requests.zip', 'service_requests.country', 'service_requests.min_expected_bill', 'service_requests.max_expected_bill', 'service_requests.start_date', 'service_requests.end_date', 'service_requests.status', 'users.name', 'users.email', 'users.mobile_number', 'users.name', 'users.name', 'users.is_blocked', 'services.title')->Join('users', 'service_requests.user_id', '=', 'users.id')->Join('services', 'services.id', '=', 'service_requests.service')->where('service_requests.id', $id)->first();
 
         //non filter caregivers list
-        $caregivers = DB::table('users')->select('users.id', 'name', 'email', 'mobile_number', 'profile_image', 'users.is_blocked', 'users.created_at', 'services.title', 'min_price', 'max_price', 'gender', 'zipcode')->Join('caregiver', 'caregiver.user_id', '=', 'users.id')->Join('services', 'services.id', '=', 'caregiver.service')->where('users.id','>', '1')->where('users.type', '=', 1)->orderBy('users.id', 'desc')->get();
+        /*$caregivers = DB::table('users')->select('users.id', 'name', 'email', 'mobile_number', 'profile_image', 'users.is_blocked', 'users.created_at', 'services.title', 'min_price', 'max_price', 'gender', 'zipcode')->Join('caregiver', 'caregiver.user_id', '=', 'users.id')->leftJoin('services', 'services.id', '=', 'caregiver.service')->where('users.id','>', '1')->where('users.type', '=', 'caregiver')->orderBy('users.id', 'desc')->get();*/
+
+        $caregivers = DB::table('users')->select('users.id', 'name', 'email', 'mobile_number', 'profile_image', 'users.is_blocked', 'users.created_at', 'min_price', 'max_price', 'gender', 'zipcode')->Join('caregiver', 'caregiver.user_id', '=', 'users.id')->Join('caregiver_attributes', 'caregiver_attributes.caregiver_id', '=', 'users.id')->where('users.id','>', '1')->where('caregiver_attributes.type', '=', 'service')->where('caregiver_attributes..value', '=', $srvc->service)->orderBy('users.name', 'asc')->get();
 
         $final_caregivers = DB::table('service_requests_attributes')->select('service_requests_attributes.value', 'users.name', 'users.email')->Join('users', 'users.id', '=', 'service_requests_attributes.value')->where('service_request_id', '=', $id)->where('service_requests_attributes.type', '=', 'caregiver_list')->get();
 
         $select_caregiver = array(0);
         foreach($final_caregivers as $scr){
-
             $select_caregiver[] = $scr->value;
         }
 
-        $picked_cargiver_id = 0;
-        $picked_caregiver = DB::table('service_requests_attributes')->where('service_request_id', '=', $id)->where('type', '=', 'final_caregiver')->first();
-        if(!empty($picked_caregiver)){
-            $picked_cargiver_id = $picked_caregiver->value;
-        }
-        return view('service_request.caregiverslist', compact('services', 'caregivers', 'select_caregiver', 'final_caregivers', 'picked_cargiver_id'));
+        $picked_caregiver = DB::table('service_requests_attributes')->select('service_requests_attributes.value', 'users.name', 'users.email')->Join('users', 'users.id', '=', 'service_requests_attributes.value')->where('service_request_id', '=', $id)->where('service_requests_attributes.type', '=', 'final_caregiver')->first();
+        return view('service_request.caregiverslist', compact('services', 'caregivers', 'select_caregiver', 'final_caregivers', 'picked_caregiver'));
     }
 
     public function assign(Request $request){
@@ -261,8 +307,8 @@ class ServiceRequestController extends Controller{
 
         $token = md5(uniqid(rand(), true));
         
-        //$service_request = DB::table('service_requests')->where('id', '=', $input['request_id'])->update(array('status' =>  '5', 'token' => $token));
-        $service_request = DB::table('service_requests')->where('id', '=', $input['request_id'])->update(array('token' => $token));
+        $service_request = DB::table('service_requests')->where('id', '=', $input['request_id'])->update(array('status' =>  '5', 'token' => $token));
+        //$service_request = DB::table('service_requests')->where('id', '=', $input['request_id'])->update(array('token' => $token));
         
         $objDemo = new \stdClass();
         $objDemo->sender = env('APP_NAME');
@@ -287,12 +333,81 @@ class ServiceRequestController extends Controller{
 
         if($isexist){
             //show upload form
-            $data['id'] = $isexist->id;
+            $data['token'] = $isexist->token;
         }else{
             //show page with error message
             $data['error'] = 'Oops, look like link is expire or invalid, please contact to 24*7 Nursing Care Admin';
         }
-
         return view('service_request.upload_carepack', compact('data'));
     }   
+
+    public function upload_carepack_docs(Request $request){
+        if($request->has('care_pack') && ($request->file('care_pack') != null)) {
+            $input = $request->input();
+            $isrequest = DB::table('service_requests')->where('token', '=', $input['token'])->first();
+            if(empty($isrequest)){
+                flash()->success("'Oops, look like link is expire or invalid, please contact to 24*7 Nursing Care Admin'"); 
+                return view('service_request.upload_carepack', compact('data'));    
+            }
+
+            $docs = $request->file('care_pack');
+            $token = md5(uniqid(rand(), true));
+            $doc_name = $token.time().'.'.$docs->getClientOriginalExtension();
+
+            $destinationPath = public_path('/request_docs');
+            $docs->move($destinationPath, $doc_name);
+
+            $request = array(
+                'service_request_id' => $isrequest->id,
+                'value' => $doc_name,
+                'type' => 'carepack_docs'
+            ); 
+            DB::table('service_requests_attributes')->insert($request);
+            $service_request = DB::table('service_requests')->where('token', '=', $input['token'])->update(array('status' => 6));
+            $data = array('upload' => 'success', 'message' => 'Thanks for aupload Document, Admin will contact you soon.');
+
+            return view('service_request.upload_carepack', compact('data'));
+        }else{
+            flash()->success("Please upload basic care pack document"); 
+            return view('service_request.upload_carepack', compact('data'));    
+        }
+    }
+
+    public function confirm_doc($id){
+        $isrequest = DB::table('service_requests')->where('id', '=', $id)->first();
+        if(empty($isrequest)){
+            flash()->success("Un-authorized Request"); 
+            return redirect()->route('service_request.index');
+        }
+
+        //get final confirmed caregiver
+        $caregiver = DB::table('service_requests_attributes')->where('service_request_id', '=', $id)->where('type', '=', 'final_caregiver')->first();
+
+        //save request booking
+        $requestbooking = new \App\RequestBooking;
+        $requestbooking->request_id = $id;
+        $requestbooking->caregiver_id = $caregiver->value;
+        $requestbooking->start_date = date('Y-m-d', strtotime($isrequest->start_date));
+        $requestbooking->end_date = date('Y-m-d', strtotime($isrequest->end_date));
+        $requestbooking->save();
+
+        //redirect back to list page
+        $service_request = DB::table('service_requests')->where('id', '=', $id)->update(array('status' => 7));
+
+        flash()->success("Uploaded Document approved."); 
+        return redirect()->route('service_request.show',['id' => $id]);
+    }
+
+    public function reschedule($id){
+        $services = DB::table('service_requests')->select('service_requests.id', 'service_requests.description', 'service_requests.created_at', 'service_requests.start_time', 'service_requests.end_time', 'service_requests.service', 'service_requests.id', 'service_requests.user_id', 'service_requests.location', 'service_requests.city', 'service_requests.state', 'service_requests.zip', 'service_requests.country', 'service_requests.min_expected_bill', 'service_requests.max_expected_bill', 'service_requests.start_date', 'service_requests.end_date', 'service_requests.status', 'users.name', 'users.email', 'users.mobile_number', 'users.name', 'users.name', 'users.is_blocked', 'services.title')->Join('users', 'service_requests.user_id', '=', 'users.id')->Join('services', 'services.id', '=', 'service_requests.service')->where('service_requests.id', $id)->first();
+        if(empty($services)){
+            flash()->success("Request not Found"); 
+            return redirect()->route('service_request.index');  
+        }
+
+        $final_caregivers = DB::table('service_requests_attributes')->select('service_requests_attributes.value', 'users.name', 'users.email')->Join('users', 'users.id', '=', 'service_requests_attributes.value')->where('service_request_id', '=', $id)->where('service_requests_attributes.type', '=', 'caregiver_list')->get();
+
+        $upload_docs = DB::table('service_requests_attributes')->select('service_requests_attributes.*')->where('service_request_id', '=', $id)->where('type', '=', 'carepack_docs')->orderBy('id', 'desc')->get();
+        return view('service_request.view', compact('services', 'final_caregivers', 'upload_docs'));
+    }
 }

@@ -191,6 +191,15 @@ a,
                                 @csrf
                                 @method('put')
                                     <div class="row">
+                                        <div class="col-sm-12 form-group center" style="text-align: center;"><?php
+                                            if(empty($user->profile_image)){ ?>
+                                                <img class="img-circle" src="{{ asset('admin/assets/img/admin-avatar.png') }}" /><?php
+                                            }else{ ?>
+                                                <img class="img-circle" style="height:150px;width: 150px;" src="<?php echo asset($user->profile_image); ?>" /><?php
+                                            }   ?> 
+                                        </div>                                        
+                                    </div>
+                                    <div class="row">
                                         <div class="col-sm-6 form-group">
                                             <label>Name</label>
                                             <input type="text" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" placeholder="Name" value="{{ $user->name }}" />
@@ -273,8 +282,8 @@ a,
                                             @endif
                                         </div>
                                         <div class="form-group col-sm-6" >
-                                            <label>Profile Image</label>
-                                            <input type="file" class="form-control {{ $errors->has('profile_image') ? ' is-invalid' : '' }}" name="profile_image" placeholder="Profile Image" value="{{ old('profile_image') }}" accept="image/*"/>
+                                            <label>Change Profile Image</label><br/>
+                                            <input type="file" class=" {{ $errors->has('profile_image') ? ' is-invalid' : '' }}" name="profile_image" placeholder="Profile Image" value="{{ old('profile_image') }}" accept="image/*"/>
                                             @if ($errors->has('profile_image'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('profile_image') }}</strong>
@@ -487,7 +496,7 @@ a,
     $('#zipcode').blur(function(){
         zip = $(this).val();
         $.ajax({
-            url: 'locationfromzip',
+            url: '{{ env("APP_URL") }}admin/caregiver/locationfromzip',
             type: 'GET',
             dataType: 'json',
             data:{zipcode:zip},

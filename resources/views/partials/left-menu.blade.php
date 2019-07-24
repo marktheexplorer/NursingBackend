@@ -52,7 +52,8 @@
             </li>
             <li>
                 <a href="javascript:;"><i class="sidebar-item-icon fas fa-question"></i>
-                    <span class="nav-label">FAQs</span><i class="fa fa-angle-left arrow"></i></a>
+                    <span class="nav-label">FAQs</span><i class="fa fa-angle-left arrow"></i>
+                </a>
                 <ul class="nav-2-level collapse" aria-expanded="false">
                     <li>
                         <a href="{{ route('faqs.create') }}"><i class="sidebar-item-icon fas fa-plus"></i>Add FAQ</a>

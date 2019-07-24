@@ -272,8 +272,8 @@ a,
                                             @endif
                                         </div>
                                         <div class="form-group col-sm-6" >
-                                            <label>Profile Image</label>
-                                            <input type="file" class="form-control {{ $errors->has('profile_image') ? ' is-invalid' : '' }}" name="profile_image" placeholder="Profile Image" value="{{ old('profile_image') }}" accept="image/*"/>
+                                            <label>Profile Image</label><br/>
+                                            <input type="file" class="{{ $errors->has('profile_image') ? ' is-invalid' : '' }}" name="profile_image" placeholder="Profile Image" value="{{ old('profile_image') }}" accept="image/*"/>
                                             @if ($errors->has('profile_image'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('profile_image') }}</strong>
@@ -470,7 +470,7 @@ a,
     $('#zipcode').blur(function(){
         zip = $(this).val();
         $.ajax({
-            url: 'locationfromzip',
+            url: '{{ env("APP_URL") }}admin/caregiver/locationfromzip',
             type: 'GET',
             dataType: 'json',
             data:{zipcode:zip},
