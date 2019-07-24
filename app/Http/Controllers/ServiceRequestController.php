@@ -215,8 +215,18 @@ class ServiceRequestController extends Controller{
             $select_caregiver[] = $scr->value;
         }
 
-        $picked_caregiver = DB::table('service_requests_attributes')->select('service_requests_attributes.value', 'users.name', 'users.email')->Join('users', 'users.id', '=', 'service_requests_attributes.value')->where('service_request_id', '=', $id)->where('service_requests_attributes.type', '=', 'final_caregiver')->first();
-        return view('service_request.caregiverslist', compact('services', 'caregivers', 'select_caregiver', 'final_caregivers', 'picked_caregiver'));
+        $picked_caregiver = array();
+        if($srvc->status > 4){
+            $picked_caregiver = DB::table('service_requests_attributes')->select('service_requests_attributes.value', 'users.name', 'users.email')->Join('users', 'users.id', '=', 'service_requests_attributes.value')->where('service_request_id', '=', $id)->where('service_requests_attributes.type', '=', 'final_caregiver')->first();
+        }    
+        
+        $picked_cargiver_id = 0;
+        $picked_caregivers = DB::table('service_requests_attributes')->where('service_request_id', '=', $id)->where('type', '=', 'final_caregiver')->first();
+        if(!empty($picked_caregivers)){
+            $picked_cargiver_id = $picked_caregivers->value;
+        }
+        
+        return view('service_request.caregiverslist', compact('services', 'caregivers', 'select_caregiver', 'final_caregivers', 'picked_caregiver', 'picked_cargiver_id'));
     }
 
     public function assign(Request $request){
