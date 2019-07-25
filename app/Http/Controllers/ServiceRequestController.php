@@ -102,7 +102,7 @@ class ServiceRequestController extends Controller{
             return redirect()->route('service_request.index');  
         }
 
-        $final_caregivers =  $picked_caregiver = DB::table('service_requests_attributes')->where('service_request_id', '=', $id)->where('type', '=', 'final_caregiver')->first();
+        $final_caregivers =  DB::table('service_requests_attributes')->select('service_requests_attributes.value', 'users.name', 'users.email')->Join('users', 'users.id', '=', 'service_requests_attributes.value')->where('service_request_id', '=', $id)->where('service_requests_attributes.type', '=', 'caregiver_list')->first();
 
         $upload_docs = DB::table('service_requests_attributes')->select('service_requests_attributes.*')->where('service_request_id', '=', $id)->where('type', '=', 'carepack_docs')->orderBy('id', 'desc')->get();
         return view('service_request.view', compact('services', 'final_caregivers', 'upload_docs'));
@@ -223,6 +223,17 @@ class ServiceRequestController extends Controller{
             $picked_cargiver_id = $picked_caregiver->value;
         }
 
+        $picked_caregiver = array();
+        if($srvc->status > 4){
+            $picked_caregiver = DB::table('service_requests_attributes')->select('service_requests_attributes.value', 'users.name', 'users.email')->Join('users', 'users.id', '=', 'service_requests_attributes.value')->where('service_request_id', '=', $id)->where('service_requests_attributes.type', '=', 'final_caregiver')->first();
+        }    
+        
+        $picked_cargiver_id = 0;
+        $picked_caregivers = DB::table('service_requests_attributes')->where('service_request_id', '=', $id)->where('type', '=', 'final_caregiver')->first();
+        if(!empty($picked_caregivers)){
+            $picked_cargiver_id = $picked_caregivers->value;
+        }
+        
         return view('service_request.caregiverslist', compact('services', 'caregivers', 'select_caregiver', 'final_caregivers', 'picked_caregiver', 'picked_cargiver_id'));
     }
 
@@ -321,11 +332,12 @@ class ServiceRequestController extends Controller{
         $objDemo->sender = env('APP_NAME');
         $objDemo->receiver = ucfirst($patient->name);
         $objDemo->type = 'basic_carepack_confirm';
+        $objDemo->format = 'basic';
         $objDemo->subject = 'Basic Care Service Pack Mail';
         $objDemo->mail_from = env('MAIL_FROM_EMAIL');
         $objDemo->mail_from_name = env('MAIL_FROM_NAME');
         $objDemo->weburl = env('APP_URL')."confirm_careservice/".$token;
-        $patient->email = 'sonu.shokeen@saffrontech.net';
+        //$patient->email = 'sonu.shokeen@saffrontech.net';
         $issemd = Mail::to($patient->email)->send(new MailHelper($objDemo));
 
         //redirect back to list page
@@ -416,5 +428,40 @@ class ServiceRequestController extends Controller{
 
         $upload_docs = DB::table('service_requests_attributes')->select('service_requests_attributes.*')->where('service_request_id', '=', $id)->where('type', '=', 'carepack_docs')->orderBy('id', 'desc')->get();
         return view('service_request.view', compact('services', 'final_caregivers', 'upload_docs'));
+    }
+
+    public function resendmail($id){
+        $srvc = Service_requests::find($id);
+        if(empty($srvc)){
+            flash()->success("Invalid Request."); 
+            return redirect()->route('service_request.index'); 
+        }
+
+        $patient = User::find($srvc->user_id);
+        if(empty($patient)){
+            flash()->success("Invalid Patient."); 
+            return redirect()->route('service_request.index'); 
+        }
+
+        $token = md5(uniqid(rand(), true));
+        
+        $service_request = DB::table('service_requests')->where('id', '=', $id)->update(array('status' =>  '5', 'token' => $token));
+        //$service_request = DB::table('service_requests')->where('id', '=', $id)->update(array('token' => $token));
+        
+        $objDemo = new \stdClass();
+        $objDemo->sender = env('APP_NAME');
+        $objDemo->receiver = ucfirst($patient->name);
+        $objDemo->type = 'resend_basic_carepack_confirm';
+        $objDemo->format = 'basic';
+        $objDemo->subject = 'Basic Care Service Pack Mail';
+        $objDemo->mail_from = env('MAIL_FROM_EMAIL');
+        $objDemo->mail_from_name = env('MAIL_FROM_NAME');
+        $objDemo->weburl = env('APP_URL')."confirm_careservice/".$token;
+        //$patient->email = 'sonu.shokeen@saffrontech.net';
+        $issemd = Mail::to($patient->email)->send(new MailHelper($objDemo));
+
+        //redirect back to list page
+        flash()->success("Basic Care Service Pack mail resend to Patient sent successfully."); 
+        return redirect()->route('service_request.show',['id' => $id]); 
     }
 }

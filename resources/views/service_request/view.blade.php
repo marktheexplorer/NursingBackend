@@ -39,9 +39,7 @@
                                                 if(empty($final_caregivers)){
                                                     echo "NA";
                                                 }else{
-                                                    foreach($final_caregivers as $user){
-                                                        echo ucfirst($user->name)." (".$user->email.")<br/>";
-                                                    }
+                                                    echo ucfirst($final_caregivers->name)." (".$final_caregivers->email.")<br/>";
                                                 }?>
                                             </div>    
                                         </div>
@@ -113,7 +111,7 @@
                                                                     @if($count == 1 && $services->status == 6)
                                                                         <td>
                                                                             <a href="{{ url('admin/service_request/confirm_doc/'.$services->id) }}" class="btn-sm btn-success" title="Approved">Approved</a> &nbsp;&nbsp;&nbsp;&nbsp;
-                                                                            <a href="{{ env('APP_URL') }}" class="btn-sm btn-primary" title="click here">Dis-approved</a>
+                                                                            <a href="{{ url('admin/service_request/resendmail/'.$services->id) }}" class="btn-sm btn-primary" title="click here">Dis-approved</a>
                                                                         </td>
                                                                     @endif    
                                                                     <td></td>

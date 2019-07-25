@@ -47,7 +47,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function()
 	Route::get('caregiver/locationfromzip', 'CaregiverController@locationfromzip');	
 	Route::resource('caregiver', 'CaregiverController');
 	
-	
+	Route::get('service_request/resendmail/{id}', 'ServiceRequestController@resendmail')->name('service_request.resendmail');
 	Route::get('service_request/confirm_doc/{id}', 'ServiceRequestController@confirm_doc')->name('service_request.confirm_doc');
 	Route::get('service_request/reschedule/{id}', 'ServiceRequestController@reschedule')->name('service_request.reschedule');
 	Route::post('service_request/confirm_caregiver', 'ServiceRequestController@confirm_caregiver')->name('service_request.confirm_caregiver');
