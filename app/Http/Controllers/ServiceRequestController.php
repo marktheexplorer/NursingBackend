@@ -102,7 +102,7 @@ class ServiceRequestController extends Controller{
             return redirect()->route('service_request.index');  
         }
 
-        $final_caregivers = DB::table('service_requests_attributes')->select('service_requests_attributes.value', 'users.name', 'users.email')->Join('users', 'users.id', '=', 'service_requests_attributes.value')->where('service_request_id', '=', $id)->where('service_requests_attributes.type', '=', 'final_caregiver')->get();        
+        $final_caregivers =  $picked_caregiver = DB::table('service_requests_attributes')->where('service_request_id', '=', $id)->where('type', '=', 'final_caregiver')->first();
 
         $upload_docs = DB::table('service_requests_attributes')->select('service_requests_attributes.*')->where('service_request_id', '=', $id)->where('type', '=', 'carepack_docs')->orderBy('id', 'desc')->get();
         return view('service_request.view', compact('services', 'final_caregivers', 'upload_docs'));
@@ -216,7 +216,14 @@ class ServiceRequestController extends Controller{
         }
 
         $picked_caregiver = DB::table('service_requests_attributes')->select('service_requests_attributes.value', 'users.name', 'users.email')->Join('users', 'users.id', '=', 'service_requests_attributes.value')->where('service_request_id', '=', $id)->where('service_requests_attributes.type', '=', 'final_caregiver')->first();
-        return view('service_request.caregiverslist', compact('services', 'caregivers', 'select_caregiver', 'final_caregivers', 'picked_caregiver'));
+
+        $picked_cargiver_id = 0;
+        $picked_caregiver = DB::table('service_requests_attributes')->where('service_request_id', '=', $id)->where('type', '=', 'final_caregiver')->first();
+        if(!empty($picked_caregiver)){
+            $picked_cargiver_id = $picked_caregiver->value;
+        }
+
+        return view('service_request.caregiverslist', compact('services', 'caregivers', 'select_caregiver', 'final_caregivers', 'picked_caregiver', 'picked_cargiver_id'));
     }
 
     public function assign(Request $request){
