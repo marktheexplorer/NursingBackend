@@ -105,6 +105,52 @@
                                     </li>
                                 </ul>
                             </div>
+                        </div>  
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 col-lg-12" >   
+                <div class="ibox">
+                    <div class="ibox-body">
+                        <div class="tab-content">
+                            <p><h3>Services Requested</h3></p>
+                            <table class="table table-striped table-bordered table-hover" id="data-table" cellspacing="0" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>Service</th>
+                                        <th>Caregiver Assigned</th>
+                                        <th>Price Range</th>
+                                        <th>Location</th>
+                                        <th>Shift</th>
+                                        <th>Created At</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>Service</th>
+                                        <th>Caregiver Assigned</th>
+                                        <th>Price Range</th>
+                                        <th>Location</th>
+                                        <th>Shift</th>
+                                        <th>Created At</th>
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+                                @foreach($services as $key => $service)
+                                    <tr>
+                                        <td>{{ ++$key }}</td>
+                                        <td>{{ ucfirst($service->title) }}</td>
+                                        <td>{{ ucfirst($service->name) }}</td>
+                                        <td>{{ "$".$service->min_expected_bill ."- $". $service->max_expected_bill }}</td>
+                                        <td>{{ $service->location.", ".$service->city.", ".$service->state.", ".$service->country.", ".$service->zip  }} </td>
+                                        <td>{{ substr_replace( $service->start_time, ":", 2, 0)." - ".substr_replace( $service->end_time, ":", 2, 0) }}</td>
+                                        <td>{{ date_format(date_create($service->created_at), 'd M, y')}}</td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -113,3 +159,11 @@
     </div>
 </div>
 @endsection
+@section('footer-scripts')
+<script type="text/javascript">
+    $(document).ready( function () {
+        $('#data-table').DataTable();
+    });
+</script>
+@endsection
+

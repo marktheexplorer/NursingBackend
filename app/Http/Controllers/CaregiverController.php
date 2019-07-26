@@ -18,7 +18,7 @@ class CaregiverController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        $caregivers = DB::table('users')->select('users.id', 'name', 'email', 'mobile_number', 'profile_image', 'is_blocked', 'users.created_at', 'service', 'min_price', 'max_price', 'gender', 'dob')->Join('caregiver', 'caregiver.user_id', '=', 'users.id')->where('users.id','>', '1')->where('users.type', '=', 1)->orderBy('users.id', 'desc')->get();
+        $caregivers = User::select('users.*','service','min_price','max_price')->Join('caregiver', 'caregiver.user_id', '=', 'users.id')->where('users.id','>', '1')->where('type', 'caregiver')->orderBy('users.id', 'desc')->get();
         return view('caregiver.index', compact('caregivers'));
     }
 
