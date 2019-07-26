@@ -9,6 +9,7 @@ use App\Us_location;
 use App\Nonservice_zipcode;
 use Validator;
 use App\State;
+use App\Service_requests_attributes;
 use DB;
 
 class CaregiverController extends Controller{
@@ -167,6 +168,7 @@ class CaregiverController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function show($id){
+
         $user  = DB::table('users')->select('users.*', 'caregiver.service', 'caregiver.min_price', 'caregiver.max_price', 'caregiver.description', 'caregiver.zipcode')->Join('caregiver', 'caregiver.user_id', '=', 'users.id')->where('users.id','=', $id)->where('users.type', '=', 1)->orderBy('users.id', 'desc')->first();
         if(empty($user)){
             flash()->error('Un-authorized user.');
@@ -181,7 +183,16 @@ class CaregiverController extends Controller{
 
         $user->non_service_zipcodes = DB::table('caregiver_attributes')->select('us_location.zip', 'us_location.city')->Join('us_location', 'us_location.zip', '=', 'caregiver_attributes.value')->where('caregiver_attributes.type', '=', 'non_service_zipcodes')->where('caregiver_attributes.caregiver_id', '=', $id)->orderBy('us_location.zip', 'asc')->get();
 
-        return view('caregiver.view', compact('user'));
+        $services = DB::table('service_requests_attributes AS sra')
+                    ->join('service_requests' , 'service_requests.id' , 'service_request_id')
+                    ->join('services' ,'services.id','service_requests.service')
+                    ->join('users','users.id','service_requests.user_id')
+                    ->select('service_requests.*','services.title','users.name')
+                    ->where('value',$id)
+                    ->where('sra.type','final_caregiver')
+                    ->get();
+
+        return view('caregiver.view', compact('user' , 'services'));
     }
 
     /**

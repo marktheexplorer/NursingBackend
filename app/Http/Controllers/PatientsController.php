@@ -187,8 +187,13 @@ class PatientsController extends Controller
 
     public function show($id){
         $user = User::findOrFail($id);
-        $services = Service_requests::select('service_requests.*' ,'services.title' , 'users.name' ,'service_requests_attributes.type')->where('user_id',$user->id)->where('service_requests_attributes.type','final_caregiver')->join('services' ,'services.id','service_requests.service')->join('service_requests_attributes' , 'service_requests_attributes.service_request_id' , 'service_requests.id')->join('users' , 'users.id' , 'service_requests_attributes.value')->get();
-        // dd($services);
+        $services = DB::table('service_requests')
+                    ->join('services' ,'services.id','service_requests.service')
+                    ->join('service_requests_attributes AS ser_att' , 'ser_att.service_request_id' , 'service_requests.id')
+                    ->join('users' , 'users.id' , 'ser_att.value')
+                    ->select('service_requests.*' ,'services.title' , 'users.name' ,'ser_att.type')
+                    ->where('user_id',$user->id)
+                    ->where('ser_att.type','final_caregiver')->get();
 
         if($user->patient){
             $diagnosis = Diagnose::where('id',$user->patient->diagnose_id)->first();
