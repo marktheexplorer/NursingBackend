@@ -14,7 +14,10 @@
     </div>
     @include('flash::message')
     <div class="page-content fade-in-up">
-    	<a href="{{ route('caregiver.create') }}"><button class="btn btn-info "><i class="fas fa-plus"></i> Add</button></a>
+    	<div style="text-align: right;">
+            <a href="{{ route('caregiver.create') }}"><button class="btn btn-info "><i class="fas fa-plus"></i> Add</button></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="{{ route('caregiver.download_excel') }}" style="" target="_blank"><button class="btn btn-info "><i class="fas fa-plus"></i> Download</button></a>
+        </div>    
         <div class="ibox">
             <div class="ibox-head">
                 <div class="ibox-title">Caregivers Data</div>

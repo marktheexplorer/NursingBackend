@@ -24,11 +24,14 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function()
 	Route::get('user/blocked/{userId}', 'UserController@block');
 	Route::get('user/blocklist', 'UserController@blocklist')->name('users.blocklist');
 	Route::resource('users', 'UserController');
+
+	Route::get('patients/download_excel', 'PatientsController@download_excel')->name('patients.download_excel');
 	Route::get('patients/active', 'PatientsController@activePatients')->name('patients.active');
 	Route::get('patients/inactive', 'PatientsController@inactivePatients')->name('patients.inactive');
 	Route::get('patients/locationfromzip', 'PatientsController@locationfromzip');	
 	Route::get('patients/blocked/{userId}', 'PatientsController@block');
 	Route::resource('patients', 'PatientsController');
+
 	Route::get('services/blocked/{userId}', 'ServiceController@block');
 	Route::resource('services', 'ServiceController');
 	Route::get('qualifications/blocked/{userId}', 'QualificationController@block');
@@ -41,12 +44,14 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function()
 	Route::resource('cms', 'CmsPageController');
 	Route::resource('enquiries', 'EnquiryController');
 
-	//caregiver controller it automatically route the default route
+	//caregiver controller it automatically route the default route	
+	Route::get('caregiver/download_excel', 'CaregiverController@download_excel')->name('caregiver.download_excel');
 	Route::get('caregiver/blocked/{userId}', 'CaregiverController@blocked');
 	Route::get('caregiver/searchzip', 'CaregiverController@searchzip');
 	Route::get('caregiver/locationfromzip', 'CaregiverController@locationfromzip');	
 	Route::resource('caregiver', 'CaregiverController');
 	
+	Route::get('service_request/download_excel', 'ServiceRequestController@download_excel')->name('service_request.download_excel');
 	Route::get('service_request/resendmail/{id}', 'ServiceRequestController@resendmail')->name('service_request.resendmail');
 	Route::get('service_request/confirm_doc/{id}', 'ServiceRequestController@confirm_doc')->name('service_request.confirm_doc');
 	Route::get('service_request/reschedule/{id}', 'ServiceRequestController@reschedule')->name('service_request.reschedule');
