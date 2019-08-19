@@ -19,10 +19,6 @@
                         <div class="ibox">
                             <div class="ibox-head">
                                 <div class="ibox-title">Change Password</div>
-                                <!-- <div class="ibox-tools">
-                                    <a class="ibox-collapse"><i class="fa fa-minus"></i></a>
-                                    <a class="fullscreen-link"><i class="fa fa-expand"></i></a>
-                                </div> -->
                             </div>
                             <div class="ibox-body">
                                 

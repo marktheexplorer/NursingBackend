@@ -244,7 +244,6 @@ a,
                                                 <option disabled="true" selected="true"> -- Select Gender --</option>
                                                 <option value="Male" {{ $user->gender == 'Male' ? 'selected':'' }} >Male</option>
                                                 <option value="Female" {{ $user->gender == 'Female' ? 'selected':'' }}>Female</option>
-                                                <option value="Other" {{ $user->gender == 'Other' ? 'selected':'' }}>Other</option>
                                             </select>
                                             @if ($errors->has('gender'))
                                                 <span class="invalid-feedback" role="alert">

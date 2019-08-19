@@ -73,7 +73,6 @@
                                             <select class="form-control" name="gender">
                                                <option value="Male" {{ ($user->gender?$user->gender:old('gender')) == 'Male' ? 'selected' : '' }}>Male</option>
                                                <option value="Female" {{ ($user->gender?$user->gender:old('gender')) == 'Female' ? 'selected' : '' }}>Female</option>
-                                               <option value="Others" {{ ($user->gender?$user->gender:old('gender')) == 'Others' ? 'selected' : '' }}>Others</option>
                                             </select>
                                             @if ($errors->has('gender'))
                                                 <span class="text-danger">

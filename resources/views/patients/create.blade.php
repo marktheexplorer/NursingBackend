@@ -73,7 +73,6 @@
                                        <select class="form-control" name="gender">
                                           <option value="Male">Male</option>
                                           <option value="Female">Female</option>
-                                          <option value="Others">Others</option>
                                        </select>
                                        @if ($errors->has('gender'))
                                        <span class="text-danger">
