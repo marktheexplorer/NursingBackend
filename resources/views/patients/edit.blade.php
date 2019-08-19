@@ -92,7 +92,7 @@
                                         </div>
                                         <div class="col-sm-4 form-group">
                                            <label>Pin Code</label>
-                                           <input type="text" class="form-control {{ $errors->has('pin_code') ? ' is-invalid' : '' }}" name="pin_code" placeholder="Pin Code" value="{{ old('pin_code' ,$user->patient ?$user->patient->pin_code:'') }}"/>
+                                           <input type="text" class="form-control {{ $errors->has('pin_code') ? ' is-invalid' : '' }}" name="pin_code" placeholder="Pin Code" value="{{ old('pin_code' ,$user->patient ?$user->patient->pin_code:'') }}" id="pin_code" />
                                            @if ($errors->has('pin_code'))
                                            <span class="text-danger">
                                            <strong>{{ $errors->first('pin_code') }}</strong>
@@ -101,7 +101,7 @@
                                         </div>
                                         <div class="col-sm-4 form-group">
                                             <label>City</label>
-                                            <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" placeholder="City" value="{{ old('city', $user->city) }}" readonly/>
+                                            <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" placeholder="City" value="{{ old('city', $user->city) }}" id="city" readonly/>
                                             @if ($errors->has('city'))
                                                 <span class="text-danger">
                                                     <strong>{{ $errors->first('city') }}</strong>
@@ -110,7 +110,7 @@
                                         </div> 
                                         <div class="col-sm-4 form-group">
                                             <label>State</label>
-                                            <input type="text" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" placeholder="State" value="{{ old('state', $user->state) }}" readonly />
+                                            <input type="text" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" placeholder="State" value="{{ old('state', $user->state) }}" id="state" readonly />
                                             @if ($errors->has('state'))
                                                 <span class="text-danger">
                                                     <strong>{{ $errors->first('state') }}</strong>
@@ -119,7 +119,7 @@
                                         </div>
                                         <div class="col-sm-4 form-group">
                                             <label>Country</label>
-                                            <input type="text" class="form-control {{ $errors->has('country') ? ' is-invalid' : '' }}" name="country" placeholder="Country" value="{{ old('country', $user->country) }}" readonly />
+                                            <input type="text" class="form-control {{ $errors->has('country') ? ' is-invalid' : '' }}" name="country" placeholder="Country" value="{{ old('country', $user->country) }}" id="country" readonly />
                                             @if ($errors->has('country'))
                                                 <span class="text-danger">
                                                     <strong>{{ $errors->first('country') }}</strong>
@@ -211,7 +211,7 @@
     $('#pin_code').blur(function(){
         pin = $(this).val();
         $.ajax({
-            url: 'locationfromzip',
+            url: '{{ route("locationfromzip") }}',
             type: 'GET',
             dataType: 'json',
             data:{pin_code:pin},
