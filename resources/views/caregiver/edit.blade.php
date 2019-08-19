@@ -293,13 +293,13 @@ a,
                                     </div>    
                                     <div class="row">
                                         <div class="col-sm-6  form-group">
-                                            <label>Qualification</label><?php
+                                            <label>Discipline</label><?php
                                                 $qualification_array = array();
                                                 foreach($user->qualification as $qlf){
                                                     $qualification_array[] = $qlf->id;
                                                 } ?>
                                             <select name="qualification[]" class="form-control {{ $errors->has('qualification') ? ' is-invalid' : '' }}" multiple="true">
-                                                <option disabled="true" > -- Select Qualification --</option>
+                                                <option disabled="true" > -- Select Discipline --</option>
                                                 @foreach($qualification as $qlf)
                                                     <option value="{{ $qlf->id }}" <?php if(in_array($qlf->id, $qualification_array)){ echo 'selected'; } ?> >{{ $qlf->name }}</option>
                                                 @endforeach

@@ -87,7 +87,7 @@
                                         </div>
                                     </li>               
                                     <li class="media">
-                                        <div class="media-img">Qualification</div>
+                                        <div class="media-img">Discipline</div>
                                         <div class="media-body">
                                             <div class="media-heading"><?php 
                                                 if(empty($user->qualification)){

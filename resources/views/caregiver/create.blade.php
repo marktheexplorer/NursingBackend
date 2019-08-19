@@ -283,9 +283,9 @@ a,
                                     </div>    
                                     <div class="row">
                                         <div class="col-sm-6  form-group">
-                                            <label>Qualification</label>
+                                            <label>Discipline</label>
                                             <select name="qualification[]" class="form-control {{ $errors->has('qualification') ? ' is-invalid' : '' }}" multiple="true">
-                                                <option disabled="true" > -- Select Qualification --</option>
+                                                <option disabled="true" > -- Select Discipline --</option>
                                                 @foreach($qualification as $qlf)
                                                     <option value="{{ $qlf->id }}" {{ (collect(old('qualification'))->contains($qlf->id)) ? 'selected':'' }} >{{ $qlf->name }}</option>
                                                 @endforeach
