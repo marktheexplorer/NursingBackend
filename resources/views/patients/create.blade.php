@@ -152,9 +152,40 @@
                                        </span>
                                        @endif
                                     </div>
+                                    <div class="col-sm-4 form-group">
+                                       <label>Pets</label>
+                                       <div>
+                                        <input type="radio" id="yes"
+                                         name="pets" value="yes" {{ old('pets') == 'yes' ? 'checked' : '' }}>
+                                        <label for="yes">Yes</label>
+
+                                        <input type="radio" id="no"
+                                         name="pets" value="no" {{ old('pets') == 'no' ? 'checked' : '' }}>
+                                        <label for="no">No</label>
+                                      </div>
+                                       @if ($errors->has('pets'))
+                                       <span class="text-danger">
+                                       <strong>{{ $errors->first('pets') }}</strong>
+                                       </span>
+                                       @endif
+                                    </div>
+                                    <div class="form-group col-md-8 yes describe">
+                                        <label>Please Describe</label>
+                                        <textarea class="form-control" name="pets_description" rows="3">{{ old('pets_description') }}</textarea>
+                                         @if ($errors->has('pets_description'))
+                                         <span class="text-danger">
+                                         <strong>{{ $errors->first('pets_description') }}</strong>
+                                         </span>
+                                         @endif
+                                    </div>
                                     <div class="form-group col-md-12">
                                         <label>Additional Information</label>
                                         <textarea class="form-control" name="additional_info" rows="5">{{ old('additional_info') }}</textarea>
+                                         @if ($errors->has('additional_info'))
+                                         <span class="text-danger">
+                                         <strong>{{ $errors->first('additional_info') }}</strong>
+                                         </span>
+                                         @endif
                                     </div>
                                  </div>
                               </div>
@@ -235,5 +266,21 @@
             }
         });
     });
+
+    
+    if($('input[name=pets]:checked').val() == 'no' || (!$('input[name=pets]:checked').val()))
+        {  
+            $('.describe').hide();
+        }
+    $('input[type="radio"]').click(function(){
+
+      var inputValue = $(this).attr("value");
+      var targetBox = $("." + inputValue);
+      $(".describe").not(targetBox).hide();
+      $(targetBox).show();
+
+    });
+
+
 </script>
 @endsection

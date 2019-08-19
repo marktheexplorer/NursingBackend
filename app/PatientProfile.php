@@ -13,6 +13,6 @@ class PatientProfile extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id', 'dob', 'diagnose_id','range','availability','gender','pin_code','additional_info'
+        'user_id', 'dob', 'diagnose_id','range','availability','gender','pin_code','additional_info','pets','pets_description'
     ];
 }

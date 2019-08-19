@@ -104,7 +104,19 @@
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img">Additional_info</div>
+                                        <div class="media-img">Pets</div>
+                                        <div class="media-body">
+                                            <div class="media-heading">{{ $user->patient ? ($user->patient->pets == 1? 'Yes' : 'No'):'' }}</div>
+                                        </div>
+                                    </li>
+                                    <li class="media">
+                                        <div class="media-img">Pets Description</div>
+                                        <div class="media-body">
+                                            <div class="media-heading">{{ $user->patient ? $user->patient->pets_description :'' }}</div>
+                                        </div>
+                                    </li>
+                                    <li class="media">
+                                        <div class="media-img">Additional Information</div>
                                         <div class="media-body">
                                             <div class="media-heading">{{ $user->patient ? $user->patient->additional_info : ''}}</div>
                                         </div>
