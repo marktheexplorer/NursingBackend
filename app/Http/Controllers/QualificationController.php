@@ -49,7 +49,7 @@ class QualificationController extends Controller
                 $input['name'] = $input['name'];
                 $service = Qualification::create($input);
 
-                flash()->success('New Qualification added successfully');
+                flash()->success('New Discipline added successfully');
                 return redirect()->route('qualifications.index');
     }
 
@@ -99,7 +99,7 @@ class QualificationController extends Controller
                 $qualification->name = $input['name'];
                 $qualification->save();
 
-                flash()->success('Qualification updated successfully');
+                flash()->success('Discipline updated successfully');
                 return redirect()->route('qualifications.index');
     }
 
@@ -115,12 +115,12 @@ class QualificationController extends Controller
         if ($service->delete()) {
             $response = array(
                 'status' => 'success',
-                'message' => 'Service deleted successfully',
+                'message' => 'Discipline deleted successfully',
             );
         } else {
             $response = array(
                 'status' => 'error',
-                'message' => 'Service can not be deleted.Please try again',
+                'message' => 'Discipline can not be deleted.Please try again',
             );
         }
         return json_encode($response);
@@ -132,9 +132,9 @@ class QualificationController extends Controller
         $qualification->save();
        
         if ($qualification->is_blocked)
-            flash()->success("Qualification blocked successfully."); 
+            flash()->success("Discipline blocked successfully."); 
         else 
-            flash()->success("Qualification Unblocked successfully."); 
+            flash()->success("Discipline Unblocked successfully."); 
 
         return redirect()->route('qualifications.index');  
     }

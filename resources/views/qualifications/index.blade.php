@@ -4,19 +4,19 @@
 <div class="content-wrapper">
     <!-- START PAGE CONTENT-->
     <div class="page-heading">
-        <h1 class="page-title">Qualification Management</h1>
+        <h1 class="page-title">Discipline Management</h1>
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
                 <a href="{{ route('dashboard') }}"><i class="fas fa-home"></i></a>
             </li>
-            <li class="breadcrumb-item">Qualifications</li>
+            <li class="breadcrumb-item">Disciplines</li>
         </ol>
     </div>
     @include('flash::message')
     <div class="page-content fade-in-up">
         <div class="ibox">
             <div class="ibox-head">
-                <div class="ibox-title">Qualification Data</div>
+                <div class="ibox-title">Discipline Data</div>
                 <a href="{{ route('qualifications.create') }}"><button class="btn btn-info pull-right"><i class="fas fa-plus"></i> Add</button></a>
             </div>
             <div class="ibox-body">
@@ -49,12 +49,7 @@
 	              						<a href="{{ route('qualifications.edit',['id' => $qualification->id]) }}">
 	              							<button class="btn-sm btn-primary btn-cir" title="Edit"><i class="fas fa-pencil-alt"></i></button>
 	              						</a>
-	              					</li><!--
-	              					<li>
-	              						<a href="{{ route('qualifications.show',['id' => $qualification->id]) }}">
-	              							<button class="btn-sm btn-warning btn-cir" title="View"><i class="fas fa-eye"></i></button>
-	              						</a>
-	              					</li>-->	              					
+	              					</li>	              					
                                     <li>
                                         <a href="{{ url('admin/qualifications/blocked/'.$qualification->id) }}">
                                         @if($qualification->is_blocked)
@@ -128,7 +123,7 @@
                     }
                 });
             } else {
-                swal("Cancelled", title+" service will not be deleted.", "error");
+                swal("Cancelled", title+" discipline will not be deleted.", "error");
             }
         });
     }

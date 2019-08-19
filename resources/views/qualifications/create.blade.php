@@ -4,12 +4,12 @@
 <div class="content-wrapper">
     <!-- START PAGE CONTENT-->
     <div class="page-heading">
-        <h1 class="page-title">Add Qualification</h1>
+        <h1 class="page-title">Add Discipline</h1>
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
                 <a href="{{ route('dashboard') }}"><i class="fas fa-home"></i></a>
             </li>
-            <li class="breadcrumb-item"><a href="{{ route('qualifications.index') }}">Qualification</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('qualifications.index') }}">Discipline</a></li>
         </ol>
     </div>
     <div class="page-content fade-in-up">
@@ -20,7 +20,7 @@
                     <div class="ibox-body">
                         <ul class="nav nav-tabs tabs-line">
                             <li class="nav-item">
-                                <a class="nav-link active" href="#tab-2" data-toggle="tab"><i class="fas fa-plus"></i> Add Qualification</a>
+                                <a class="nav-link active" href="#tab-2" data-toggle="tab"><i class="fas fa-plus"></i> Add Discipline</a>
                             </li>
                         </ul>
                         <div class="tab-content">
