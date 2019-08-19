@@ -101,7 +101,7 @@
                                         </div>
                                         <div class="col-sm-4 form-group">
                                             <label>City</label>
-                                            <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" placeholder="City" value="{{ old('city', $user->city) }}"/>
+                                            <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" placeholder="City" value="{{ old('city', $user->city) }}" readonly/>
                                             @if ($errors->has('city'))
                                                 <span class="text-danger">
                                                     <strong>{{ $errors->first('city') }}</strong>
@@ -110,7 +110,7 @@
                                         </div> 
                                         <div class="col-sm-4 form-group">
                                             <label>State</label>
-                                            <input type="text" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" placeholder="State" value="{{ old('state', $user->state) }}"/>
+                                            <input type="text" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" placeholder="State" value="{{ old('state', $user->state) }}" readonly />
                                             @if ($errors->has('state'))
                                                 <span class="text-danger">
                                                     <strong>{{ $errors->first('state') }}</strong>
@@ -119,7 +119,7 @@
                                         </div>
                                         <div class="col-sm-4 form-group">
                                             <label>Country</label>
-                                            <input type="text" class="form-control {{ $errors->has('country') ? ' is-invalid' : '' }}" name="country" placeholder="Country" value="{{ old('country', $user->country) }}"/>
+                                            <input type="text" class="form-control {{ $errors->has('country') ? ' is-invalid' : '' }}" name="country" placeholder="Country" value="{{ old('country', $user->country) }}" readonly />
                                             @if ($errors->has('country'))
                                                 <span class="text-danger">
                                                     <strong>{{ $errors->first('country') }}</strong>
@@ -207,5 +207,29 @@
             reader.readAsDataURL(input.files[0]);
         }
     }
+
+    $('#pin_code').blur(function(){
+        pin = $(this).val();
+        $.ajax({
+            url: 'locationfromzip',
+            type: 'GET',
+            dataType: 'json',
+            data:{pin_code:pin},
+            success: function (res) {
+                if(res['error']){
+                    $("#city").val('');
+                    $("#state").val('');
+                    $("#country").val('');
+                    $('#pin_code').val('');
+                    swal("Oops", "Invalid Zip Code", "error");
+                    //$('#zipcode').focus();
+                }else{
+                    $("#city").val(res['city']);
+                    $("#state").val(res['state']);
+                    $("#country").val('USA');
+                }
+            }
+        });
+    });
 </script>
 @endsection
