@@ -31,7 +31,7 @@
                                  <div class="row">
                                     <div class="col-sm-4 form-group">
                                        <label>Name</label>
-                                       <input type="text" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" placeholder="Title" value="{{ old('name') }}"/>
+                                       <input type="text" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" placeholder="Name" value="{{ old('name') }}"/>
                                        @if ($errors->has('name'))
                                        <span class="text-danger">
                                        <strong>{{ $errors->first('name') }}</strong>
@@ -146,12 +146,15 @@
                                           <option value="12-hours(Day shift)">12-hours(Day shift)</option>
                                           <option value="12-hours(Night shift)">12-hours(Night shift)</option>
                                        </select>
-                                       <input type="text" class="form-control {{ $errors->has('availability') ? ' is-invalid' : '' }}" name="availability" placeholder="Availability" value="{{ old('country') }}"/>
                                        @if ($errors->has('availability'))
                                        <span class="text-danger">
                                        <strong>{{ $errors->first('availability') }}</strong>
                                        </span>
                                        @endif
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <label>Additional Information</label>
+                                        <textarea class="form-control" name="additional_info" rows="5">{{ old('additional_info') }}</textarea>
                                     </div>
                                  </div>
                               </div>

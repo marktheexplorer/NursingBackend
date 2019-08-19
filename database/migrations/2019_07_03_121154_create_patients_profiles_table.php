@@ -20,6 +20,7 @@ class CreatePatientsProfilesTable extends Migration
             $table->string('range');
             $table->string('availability');
             $table->string('pin_code');
+            $table->text('additional_info')->nullable();
             $table->timestamps();
         });
 

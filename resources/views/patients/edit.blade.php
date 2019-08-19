@@ -152,6 +152,10 @@
                                                 </span>
                                             @endif
                                         </div>
+                                        <div class="form-group col-md-12">
+                                            <label>Additional Information</label>
+                                            <textarea class="form-control" name="additional_info" rows="5">{{ old('additional_info', $user->patient? $user->patient->additional_info:'') }}</textarea>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-sm-3 form-group">

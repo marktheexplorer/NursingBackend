@@ -64,7 +64,8 @@ class PatientsController extends Controller
             'country' => 'required|string',
             'diagnose_id' => 'required',
             'availability' => 'required|string',
-            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg'
+            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg',
+            'addtional_info' => 'nullable|max:2000'
         ]);
 
         if ($validator->fails()) {
@@ -98,6 +99,7 @@ class PatientsController extends Controller
                     $userProfile['pin_code'] = $input['pin_code'];
                     $userProfile['diagnose_id'] = $input['diagnose_id'];
                     $userProfile['availability'] = $input['availability'];
+                    $userProfile['additional_info'] = $input['additional_info'];
                     $userProfile->save();
                 }else{
                     $profile['user_id'] = $user->id;
@@ -105,6 +107,7 @@ class PatientsController extends Controller
                     $profile['pin_code'] = $input['pin_code'];
                     $profile['diagnose_id'] = $input['diagnose_id'];
                     $profile['availability'] = $input['availability'];
+                    $profile['additional_info'] = $input['additional_info'];
                     $profile = PatientProfile::create($profile);
                 }
 
@@ -145,7 +148,8 @@ class PatientsController extends Controller
             'country' => 'required|string',
             'diagnose_id' => 'required',
             'availability' => 'required|string',
-            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg'
+            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg',
+            'addtional_info' => 'nullable|max:2000'
         ]);
 
          if ($validator->fails()) {
@@ -168,7 +172,7 @@ class PatientsController extends Controller
             $input['city'] = $input['city'];
             $input['state'] = $input['state'];
             $input['country'] = $input['country'];
-            $input['type'] = $input['patient'];
+            $input['type'] = 'patient';
             $input['password'] = Hash::make('123456');
             $input['dob'] = date("Y-m-d", strtotime($input['dob']));
             $input['gender'] = $input['gender'];
@@ -179,6 +183,7 @@ class PatientsController extends Controller
             $profile['pin_code'] = $input['pin_code'];
             $profile['diagnose_id'] = $input['diagnose_id'];
             $profile['availability'] = $input['availability'];
+            $profile['additional_info'] = $input['additional_info'];
             $profile = PatientProfile::create($profile);
 
             flash()->success('New Patient added successfully');

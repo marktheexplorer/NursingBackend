@@ -103,6 +103,12 @@
                                             <div class="media-heading">{{ $user->patient ? $user->patient->availability : ''}}</div>
                                         </div>
                                     </li>
+                                    <li class="media">
+                                        <div class="media-img">Additional_info</div>
+                                        <div class="media-body">
+                                            <div class="media-heading">{{ $user->patient ? $user->patient->additional_info : ''}}</div>
+                                        </div>
+                                    </li>
                                 </ul>
                             </div>
                         </div>  
