@@ -32,3 +32,17 @@ input[type='number'] {
 
 input[type=file]{
 padding:10px;}
+
+.price{
+  display:inline-block;
+  position: relative;
+  }
+.price input{
+  padding-left:15px;
+  }
+.price:before {
+  position: absolute;
+    content:"$";
+    left:5px;
+    top:7px;
+  }

@@ -82,7 +82,9 @@
                                     </div>
                                     <div class="col-sm-4 form-group">
                                        <label>Expected cost</label>
-                                       <input type="text" class="form-control {{ $errors->has('range') ? ' is-invalid' : '' }}" name="range" placeholder="Range" value="{{ old('range') }}"/>
+                                       <span class="price">
+                                          <input type="text" class="form-control {{ $errors->has('range') ? ' is-invalid' : '' }} " name="range" placeholder="Range" value="{{ old('range') }}" onkeypress="return validateFloatKeyPress(this,event);"/>
+                                       </span>
                                        @if ($errors->has('range'))
                                        <span class="text-danger">
                                        <strong>{{ $errors->first('range') }}</strong>
@@ -281,12 +283,41 @@
 
     });
 
+    /*Validation for mobile number format*/
     var phones = [{ "mask": "(###) ###-####"}];
     $('#mobile_number').inputmask({ 
         mask: phones, 
         greedy: false, 
         definitions: { '#': { validator: "[0-9]", cardinality: 1}}
     });
+    
+    /*Validation for price field for 2 decimal places*/
+    function validateFloatKeyPress(el, evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode;
+        var number = el.value.split('.');
+        if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        //just one dot
+        if(number.length>1 && charCode == 46){
+             return false;
+        }
+        //get the carat position
+        var caratPos = getSelectionStart(el);
+        var dotPos = el.value.indexOf(".");
+        if( caratPos > dotPos && dotPos>-1 && (number[1].length > 1)){
+            return false;
+        }
+        return true;
+    }
+    function getSelectionStart(o) {
+      if (o.createTextRange) {
+        var r = document.selection.createRange().duplicate()
+        r.moveEnd('character', o.value.length)
+        if (r.text == '') return o.value.length
+        return o.value.lastIndexOf(r.text)
+      } else return o.selectionStart
+    }
 
 
 </script>

@@ -183,10 +183,7 @@ a,
                             </li>
                         </ul>
                         <div class="tab-content">
-                            <div class="tab-pane fade show active" id="tab-2"><!--
-                                @foreach ($errors->all() as $error)
-                                    <div>{{ $error }}</div>
-                                @endforeach -->
+                            <div class="tab-pane fade show active" id="tab-2">
                                 <form action="{{ route('caregiver.store') }}" method="post" class="form-horizontal" enctype="multipart/form-data">
                                 @csrf
                                     <div class="row">
@@ -253,8 +250,10 @@ a,
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-3  form-group">
-                                            <label>Min Price</label>
-                                            <input type="number" class="form-control {{ $errors->has('min_price') ? ' is-invalid' : '' }}" placeholder="Minimum" name="min_price" value="{{ old('min_price')}}" min="0" id="min_price">
+                                            <label>Min Price</label>                                           
+                                            <span class="price">
+                                                <input type="text" class="form-control {{ $errors->has('min_price') ? ' is-invalid' : '' }}" placeholder="Minimum" name="min_price" value="{{ old('min_price')}}" min="0" id="min_price" onkeypress="return validateFloatKeyPress(this,event);">
+                                            </span>
                                             @if ($errors->has('min_price'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('min_price') }}</strong>
@@ -263,7 +262,9 @@ a,
                                         </div>
                                         <div class="col-sm-3  form-group">
                                             <label>Max Price</label>
-                                            <input type="number" class="form-control {{ $errors->has('max_price') ? ' is-invalid' : '' }}" placeholder="Price" name="max_price" value="{{ old('max_price')}}" min="0" id="max_price">
+                                            <span class="price">
+                                                <input type="text" class="form-control {{ $errors->has('max_price') ? ' is-invalid' : '' }}" placeholder="Price" name="max_price" value="{{ old('max_price')}}" min="0" id="max_price" onkeypress="return validateFloatKeyPress(this,event);">
+                                            </span>
                                             @if ($errors->has('max_price'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('max_price') }}</strong>
@@ -508,11 +509,40 @@ a,
         });
     });
 
+    /*Validation for mobile number format*/
     var phones = [{ "mask": "(###) ###-####"}];
     $('#mobile_number').inputmask({ 
         mask: phones, 
         greedy: false, 
         definitions: { '#': { validator: "[0-9]", cardinality: 1}}
     });
+
+    /*Validation for price field for 2 decimal places*/
+    function validateFloatKeyPress(el, evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode;
+        var number = el.value.split('.');
+        if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        //just one dot
+        if(number.length>1 && charCode == 46){
+             return false;
+        }
+        //get the carat position
+        var caratPos = getSelectionStart(el);
+        var dotPos = el.value.indexOf(".");
+        if( caratPos > dotPos && dotPos>-1 && (number[1].length > 1)){
+            return false;
+        }
+        return true;
+    }
+    function getSelectionStart(o) {
+      if (o.createTextRange) {
+        var r = document.selection.createRange().duplicate()
+        r.moveEnd('character', o.value.length)
+        if (r.text == '') return o.value.length
+        return o.value.lastIndexOf(r.text)
+      } else return o.selectionStart
+    }
 </script>
 @endsection

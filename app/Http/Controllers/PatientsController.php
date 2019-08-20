@@ -21,7 +21,7 @@ class PatientsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        $patients = User::where('role_id','3')->get();
+        $patients = User::where('role_id','3')->orderBy('created_at', 'DESC')->get();
         return view('patients.index', compact('patients'));
     }
 
