@@ -222,7 +222,7 @@ a,
                                     <div class="row">    
                                         <div class="col-sm-3  form-group">
                                             <label>Mobile Number</label>
-                                            <input type="number" class="form-control {{ $errors->has('mobile_number') ? ' is-invalid' : '' }}" placeholder="Mobile Number" name="mobile_number" value="{{ $user->mobile_number }}">
+                                            <input type="text" class="form-control {{ $errors->has('mobile_number') ? ' is-invalid' : '' }}" placeholder="Mobile Number" name="mobile_number" value="{{ $user->mobile_number }}" id="mobile_number">
                                             @if ($errors->has('mobile_number'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('mobile_number') }}</strong>
@@ -432,10 +432,10 @@ a,
     </div>
 </div>
 
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"><!--
-<link rel="stylesheet" href="/resources/demos/style.css">-->
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.1.62/jquery.inputmask.bundle.js"></script>
 <script>
     $(function(){
         function split( val ) {
@@ -532,6 +532,13 @@ a,
             maxDate: maxBirthdayDate,
             yearRange: '1919:'+maxBirthdayDate.getFullYear(),
         });
+    });
+
+    var phones = [{ "mask": "(###) ###-####"}];
+    $('#mobile_number').inputmask({ 
+        mask: phones, 
+        greedy: false, 
+        definitions: { '#': { validator: "[0-9]", cardinality: 1}}
     });
 </script>
 @endsection

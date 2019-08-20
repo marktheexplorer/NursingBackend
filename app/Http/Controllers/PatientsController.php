@@ -54,7 +54,7 @@ class PatientsController extends Controller
         $validator = validator::make($input,[
             'name' => 'required|string|max:60',
             'email' => 'required|string|max:60',
-            'mobile_number' => 'required|numeric',
+            'mobile_number' => 'required',
             'dob' => 'required',
             'gender' => 'required',
             'range' => 'required|numeric',
@@ -149,7 +149,7 @@ class PatientsController extends Controller
         $validator = validator::make($input,[
             'name' => 'required|string|max:60',
             'email' => 'required|string|max:60|unique:users',
-            'mobile_number' => 'required|numeric|unique:users',
+            'mobile_number' => 'required|unique:users',
             'dob' => 'required',
             'gender' => 'required',
             'range' => 'required|numeric',
