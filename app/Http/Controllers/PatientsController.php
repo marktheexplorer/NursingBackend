@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Hash;
 use App\User;
 use App\Diagnose;
+use App\Service_requests;
 use Validator;
 use App\PatientProfile;
 use Carbon\Carbon;
@@ -13,14 +14,9 @@ use DB;
 use Illuminate\Http\Request;
 
 class PatientsController extends Controller{
-	/**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index(){
         $patients = User::where('role_id','3')->get();
-    	return view('patients.index', compact('patients'));
+        return view('patients.index', compact('patients'));
     }
 
     public function activePatients(){
@@ -34,9 +30,9 @@ class PatientsController extends Controller{
     }
 
     public function edit($id){
-    	$user = User::findOrFail($id);
+        $user = User::findOrFail($id);
         $diagnosis = Diagnose::get();
-    	return view('patients.edit' , compact('user','diagnosis'));
+        return view('patients.edit' , compact('user','diagnosis'));
     }
 
     /**
@@ -166,7 +162,7 @@ class PatientsController extends Controller{
             $input['city'] = $input['city'];
             $input['state'] = $input['state'];
             $input['country'] = $input['country'];
-            $input['type'] = 'patient';
+            $input['type'] = $input['patient'];
             $input['password'] = Hash::make('123456');
             $input['dob'] = date("Y-m-d", strtotime($input['dob']));
             $input['gender'] = $input['gender'];
@@ -185,12 +181,20 @@ class PatientsController extends Controller{
 
     public function show($id){
         $user = User::findOrFail($id);
+        $services = DB::table('service_requests')
+                    ->join('services' ,'services.id','service_requests.service')
+                    ->join('service_requests_attributes AS ser_att' , 'ser_att.service_request_id' , 'service_requests.id')
+                    ->join('users' , 'users.id' , 'ser_att.value')
+                    ->select('service_requests.*' ,'services.title' , 'users.name' ,'ser_att.type')
+                    ->where('user_id',$user->id)
+                    ->where('ser_att.type','final_caregiver')->get();
+
         if($user->patient){
             $diagnosis = Diagnose::where('id',$user->patient->diagnose_id)->first();
         }else{
             $diagnosis = '';
         }
-        return view('patients.view', compact('user','diagnosis'));
+        return view('patients.view', compact('user','diagnosis','services'));
     }
 
     public function locationfromzip(Request $request){

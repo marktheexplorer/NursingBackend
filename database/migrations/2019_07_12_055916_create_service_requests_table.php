@@ -31,6 +31,7 @@ class CreateServiceRequestsTable extends Migration
             $table->longText('description');
             $table->unsignedInteger('schedule_request_id')->comment(' if 0 it would be rescheduled ');
             $table->smallInteger('status')->comment(' 0 for init, 1 for reject, 2 for approved, 3 for multiple caregiver picked, 4 for assign to caregiver, 5 for rescheduled ');
+            $table->string('token')->comment('used to redirect from mail to website for upload documents');
             $table->timestamps();
         });
 

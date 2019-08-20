@@ -39,7 +39,7 @@ class ForgotPasswordController extends Controller
         $this->validate($request, ['email' => 'required|email']);
         $user_check = User::where('email', $request->email)->first();
 
-        if ($user_check->role_id != 1) {
+        if ( isset($user_check->role_id) && $user_check->role_id != 1) {
             return back()->with('status', 'Invalid Email Address.');
         } else {
             $response = $this->broker()->sendResetLink(

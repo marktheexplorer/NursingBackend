@@ -23,7 +23,7 @@
                 </div>
                 <div>
                     <a href="{{ route('patients.create') }}"><button class="btn btn-info"><i class="fas fa-plus"></i> Add</button></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="{{ route('patients.download_excel') }}" style="" target="_blank"><button class="btn btn-info "><i class="fas fa-plus"></i> Download</button></a>
+                    <a href="{{ route('patients.download_excel') }}" style="" target="_blank"><button class="btn btn-info "><i class="fas fa-download"></i> Download</button></a>
                 </div>
             </div>
             <div class="ibox-body">

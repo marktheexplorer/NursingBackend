@@ -127,8 +127,8 @@
                                        @endif
                                     </div>
                                     <div class="col-sm-4 form-group">
-                                       <label>Diagnose</label>
-                                       <select class="form-control" name="diagnose_id">
+                                       <label>Health Conditions</label>
+                                       <select class="form-control" name="diagnose_id" multiple="true">
                                           @foreach($diagnosis as $diagnose)
                                           <option value="{{ $diagnose->id }}">{{ $diagnose->title }}</option>
                                           @endforeach
