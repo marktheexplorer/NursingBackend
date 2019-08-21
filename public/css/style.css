@@ -39,6 +39,7 @@ padding:10px;}
   }
 .price input{
   padding-left:15px;
+  width: 230px;
   }
 .price:before {
   position: absolute;
