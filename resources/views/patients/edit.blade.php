@@ -49,7 +49,7 @@
                                         </div>
                                         <div class="col-sm-4 form-group">
                                            <label>Mobile number</label>
-                                           <input type="text" class="form-control {{ $errors->has('mobile_number') ? ' is-invalid' : '' }}" name="mobile_number" placeholder="Mobile Number" value="{{ old('mobile_number', $user->mobile_number) }}" readonly />
+                                           <input type="text" class="form-control {{ $errors->has('mobile_number') ? ' is-invalid' : '' }}" name="mobile_number" placeholder="Mobile Number" value="{{ old('mobile_number', $user->mobile_number) }}" id="mobile_number" readonly />
                                             @if ($errors->has('mobile_number'))
                                                <span class="text-danger">
                                                <strong>{{ $errors->first('mobile_number') }}</strong>
@@ -73,7 +73,6 @@
                                             <select class="form-control" name="gender">
                                                <option value="Male" {{ ($user->gender?$user->gender:old('gender')) == 'Male' ? 'selected' : '' }}>Male</option>
                                                <option value="Female" {{ ($user->gender?$user->gender:old('gender')) == 'Female' ? 'selected' : '' }}>Female</option>
-                                               <option value="Others" {{ ($user->gender?$user->gender:old('gender')) == 'Others' ? 'selected' : '' }}>Others</option>
                                             </select>
                                             @if ($errors->has('gender'))
                                                 <span class="text-danger">
@@ -83,7 +82,9 @@
                                         </div>
                                         <div class="col-sm-4 form-group">
                                             <label>Expected cost</label>
-                                            <input type="text" class="form-control {{ $errors->has('range') ? ' is-invalid' : '' }}" name="range" placeholder="Range" value="{{ old('range', $user->patient?$user->patient->range:'') }}"/>
+                                            <span class="price">
+                                              <input type="text" class="form-control {{ $errors->has('range') ? ' is-invalid' : '' }} " name="range" placeholder="Range" value="{{ old('range', $user->patient?$user->patient->range:'') }}" onkeypress="return validateFloatKeyPress(this,event);" />
+                                            </span>
                                             @if ($errors->has('range'))
                                                 <span class="text-danger">
                                                     <strong>{{ $errors->first('range') }}</strong>
@@ -92,7 +93,7 @@
                                         </div>
                                         <div class="col-sm-4 form-group">
                                            <label>Pin Code</label>
-                                           <input type="text" class="form-control {{ $errors->has('pin_code') ? ' is-invalid' : '' }}" name="pin_code" placeholder="Pin Code" value="{{ old('pin_code' ,$user->patient ?$user->patient->pin_code:'') }}"/>
+                                           <input type="text" class="form-control {{ $errors->has('pin_code') ? ' is-invalid' : '' }}" name="pin_code" placeholder="Pin Code" value="{{ old('pin_code' ,$user->patient ?$user->patient->pin_code:'') }}" id="pin_code" />
                                            @if ($errors->has('pin_code'))
                                            <span class="text-danger">
                                            <strong>{{ $errors->first('pin_code') }}</strong>
@@ -101,7 +102,7 @@
                                         </div>
                                         <div class="col-sm-4 form-group">
                                             <label>City</label>
-                                            <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" placeholder="City" value="{{ old('city', $user->city) }}"/>
+                                            <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" placeholder="City" value="{{ old('city', $user->city) }}" id="city" readonly/>
                                             @if ($errors->has('city'))
                                                 <span class="text-danger">
                                                     <strong>{{ $errors->first('city') }}</strong>
@@ -110,7 +111,7 @@
                                         </div> 
                                         <div class="col-sm-4 form-group">
                                             <label>State</label>
-                                            <input type="text" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" placeholder="State" value="{{ old('state', $user->state) }}"/>
+                                            <input type="text" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" placeholder="State" value="{{ old('state', $user->state) }}" id="state" readonly />
                                             @if ($errors->has('state'))
                                                 <span class="text-danger">
                                                     <strong>{{ $errors->first('state') }}</strong>
@@ -119,7 +120,7 @@
                                         </div>
                                         <div class="col-sm-4 form-group">
                                             <label>Country</label>
-                                            <input type="text" class="form-control {{ $errors->has('country') ? ' is-invalid' : '' }}" name="country" placeholder="Country" value="{{ old('country', $user->country) }}"/>
+                                            <input type="text" class="form-control {{ $errors->has('country') ? ' is-invalid' : '' }}" name="country" placeholder="Country" value="{{ old('country', $user->country) }}" id="country" readonly />
                                             @if ($errors->has('country'))
                                                 <span class="text-danger">
                                                     <strong>{{ $errors->first('country') }}</strong>
@@ -152,6 +153,67 @@
                                                 </span>
                                             @endif
                                         </div>
+                                        <div class="col-sm-6  form-group">
+                                            <label>Discipline</label>
+                                            <select name="qualification[]" class="form-control {{ $errors->has('qualification') ? ' is-invalid' : '' }} multiple" multiple="multiple">
+                                                <option disabled="true" > -- Select Discipline --</option>
+                                                @foreach($qualifications as $qualification)
+                                                  <option value="{{ $qualification->id }}" <?php if (in_array($qualification->id, $selected_disciplines)) {
+                                                    echo 'selected';
+                                                  } ?> >{{ $qualification->name }}</option>
+                                                @endforeach
+                                            </select>
+                                            @if ($errors->has('qualification'))
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $errors->first('qualification') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                        <div class="col-sm-6 form-group">
+                                           <label>Long Term Care insuranc</label>
+                                           <div>
+                                            <input type="radio" name="long_term" value="yes" {{ ($user->patient?$user->patient->long_term:old('long_term')) == '1' ? 'checked' : '' }}>
+                                            <label for="yes">Yes</label>
+
+                                            <input type="radio" name="long_term" value="no" {{ ($user->patient?$user->patient->long_term:old('long_term')) == '0' ? 'checked' : '' }}>
+                                            <label for="no">No</label>
+                                          </div>
+                                           @if ($errors->has('long_term'))
+                                           <span class="text-danger">
+                                           <strong>{{ $errors->first('long_term') }}</strong>
+                                           </span>
+                                           @endif
+                                        </div>
+                                        <div class="col-sm-4 form-group">
+                                           <label>Pets</label>
+                                           <div>
+                                            <input type="radio" id="yes"
+                                             name="pets" value="yes" {{ ($user->patient?$user->patient->pets:old('pets')) == '1' ? 'checked' : '' }}>
+                                            <label for="yes">Yes</label>
+
+                                            <input type="radio" id="no"
+                                             name="pets" value="no" {{ ($user->patient?$user->patient->pets:old('pets')) == '0' ? 'checked' : '' }}>
+                                            <label for="no">No</label>
+                                          </div>
+                                           @if ($errors->has('pets'))
+                                           <span class="text-danger">
+                                           <strong>{{ $errors->first('pets') }}</strong>
+                                           </span>
+                                           @endif
+                                        </div>
+                                        <div class="form-group col-md-8 yes describe">
+                                            <label>Please Describe</label>
+                                            <textarea class="form-control" name="pets_description" rows="3">{{ old('pets_description', $user->patient? $user->patient->pets_description:'') }}</textarea>
+                                             @if ($errors->has('pets_description'))
+                                             <span class="text-danger">
+                                             <strong>{{ $errors->first('pets_description') }}</strong>
+                                             </span>
+                                             @endif
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <label>Additional Information</label>
+                                            <textarea class="form-control" name="additional_info" rows="5">{{ old('additional_info', $user->patient? $user->patient->additional_info:'') }}</textarea>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-sm-3 form-group">
@@ -178,7 +240,10 @@
 @endsection
 @section('footer-scripts')
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/css/select2.min.css" rel="stylesheet" />
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.1.62/jquery.inputmask.bundle.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
 <script>
    $( function(){
         var maxBirthdayDate = new Date();
@@ -203,5 +268,79 @@
             reader.readAsDataURL(input.files[0]);
         }
     }
+
+    $('#pin_code').blur(function(){
+        pin = $(this).val();
+        $.ajax({
+            url: '{{ route("locationfromzip") }}',
+            type: 'GET',
+            dataType: 'json',
+            data:{pin_code:pin},
+            success: function (res) {
+                if(res['error']){
+                    $("#city").val('');
+                    $("#state").val('');
+                    $("#country").val('');
+                    $('#pin_code').val('');
+                    swal("Oops", "Invalid Zip Code", "error");
+                    //$('#zipcode').focus();
+                }else{
+                    $("#city").val(res['city']);
+                    $("#state").val(res['state']);
+                    $("#country").val('USA');
+                }
+            }
+        });
+    });
+    if($('input[name=pets]:checked').val() == 'no')
+        {  
+            $('.describe').hide();
+        }
+    $('input[name=pets]').click(function(){
+
+      var inputValue = $(this).attr("value");
+      var targetBox = $("." + inputValue);
+      $(".describe").not(targetBox).hide();
+      $(targetBox).show();
+
+    });
+
+    /*Validation for mobile number format*/
+    var phones = [{ "mask": "(###) ###-####"}];
+    $('#mobile_number').inputmask({ 
+        mask: phones, 
+        greedy: false, 
+        definitions: { '#': { validator: "[0-9]", cardinality: 1}}
+    });
+
+    /*Validation for price field for 2 decimal places*/
+    function validateFloatKeyPress(el, evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode;
+        var number = el.value.split('.');
+        if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        //just one dot
+        if(number.length>1 && charCode == 46){
+             return false;
+        }
+        //get the carat position
+        var caratPos = getSelectionStart(el);
+        var dotPos = el.value.indexOf(".");
+        if( caratPos > dotPos && dotPos>-1 && (number[1].length > 1)){
+            return false;
+        }
+        return true;
+    }
+    function getSelectionStart(o) {
+      if (o.createTextRange) {
+        var r = document.selection.createRange().duplicate()
+        r.moveEnd('character', o.value.length)
+        if (r.text == '') return o.value.length
+        return o.value.lastIndexOf(r.text)
+      } else return o.selectionStart
+    }
+
+    $('.multiple').select2();
 </script>
 @endsection

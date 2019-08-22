@@ -1,164 +1,4 @@
 @extends('layouts.app')
-<style>
-    /*
-Theme Name: jqueryui-com
-Template: jquery
-*/
-
-a,
-.title {
-    color: #b24926;
-}
-
-#content a:hover {
-    color: #333;
-}
-
-#banner-secondary p.intro {
-    padding: 0;
-    float: left;
-    width: 50%;
-}
-
-#banner-secondary .download-box {
-    border: 1px solid #aaa;
-    background: #333;
-    background: -webkit-linear-gradient(left, #333 0%, #444 100%);
-    background: linear-gradient(to right, #333 0%, #444 100%);
-    float: right;
-    width: 40%;
-    text-align: center;
-    font-size: 20px;
-    padding: 10px;
-    border-radius: 5px;
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
-}
-
-#banner-secondary .download-box h2 {
-    color: #71d1ff;
-    font-size: 26px;
-}
-
-#banner-secondary .download-box .button {
-    float: none;
-    display: block;
-    margin-top: 15px;
-}
-
-#banner-secondary .download-box p {
-    margin: 15px 0 5px;
-}
-
-#banner-secondary .download-option {
-    width: 45%;
-    float: left;
-    font-size: 16px;
-}
-
-#banner-secondary .download-legacy {
-    float: right;
-}
-
-#banner-secondary .download-option span {
-    display: block;
-    font-size: 14px;
-    color: #71d1ff;
-}
-
-#content .dev-links {
-    float: right;
-    width: 30%;
-    margin: -15px -25px .5em 1em;
-    padding: 1em;
-    border: 1px solid #666;
-    border-width: 0 0 1px 1px;
-    border-radius: 0 0 0 5px;
-    box-shadow: -2px 2px 10px -2px #666;
-}
-
-#content .dev-links ul {
-    margin: 0;
-}
-
-#content .dev-links li {
-    padding: 0;
-    margin: .25em 0 .25em 1em;
-    background-image: none;
-}
-
-.demo-list {
-    float: right;
-    width: 25%;
-}
-
-.demo-list h2 {
-    font-weight: normal;
-    margin-bottom: 0;
-}
-
-#content .demo-list ul {
-    width: 100%;
-    border-top: 1px solid #ccc;
-    margin: 0;
-}
-
-#content .demo-list li {
-    border-bottom: 1px solid #ccc;
-    margin: 0;
-    padding: 0;
-    background: #eee;
-}
-
-#content .demo-list .active {
-    background: #fff;
-}
-
-#content .demo-list a {
-    text-decoration: none;
-    display: block;
-    font-weight: bold;
-    font-size: 13px;
-    color: #3f3f3f;
-    text-shadow: 1px 1px #fff;
-    padding: 2% 4%;
-}
-
-.demo-frame {
-    width: 70%;
-    height: 420px;
-}
-
-.view-source a {
-    cursor: pointer;
-}
-
-.view-source > div {
-    overflow: hidden;
-    display: none;
-}
-
-@media all and (max-width: 600px) {
-    #banner-secondary p.intro,
-    #banner-secondary .download-box {
-        float: none;
-        width: auto;
-    }
-
-    #banner-secondary .download-box {
-        overflow: auto;
-    }
-}
-
-@media only screen and (max-width: 480px) {
-    #content .dev-links {
-        width: 55%;
-        margin: -15px -29px .5em 1em;
-        overflow: hidden;
-    }
-}
-
-.ui-autocomplete-loading {background: white url("images/ui-anim_basic_16x16.gif") right center no-repeat;}
-</style>
 @section('content')
 <div class="content-wrapper">
     <!-- START PAGE CONTENT-->
@@ -183,10 +23,7 @@ a,
                             </li>
                         </ul>
                         <div class="tab-content">
-                            <div class="tab-pane fade show active" id="tab-2"><!--
-                                @foreach ($errors->all() as $error)
-                                    <div>{{ $error }}</div>
-                                @endforeach -->
+                            <div class="tab-pane fade show active" id="tab-2">
                                 <form action="{{ route('caregiver.store') }}" method="post" class="form-horizontal" enctype="multipart/form-data">
                                 @csrf
                                     <div class="row">
@@ -239,7 +76,7 @@ a,
                                         </div>
                                         <div class="col-sm-3  form-group">
                                             <label>Mobile Number</label>
-                                            <input type="number" class="form-control {{ $errors->has('mobile_number') ? ' is-invalid' : '' }}" placeholder="Mobile Number" name="mobile_number" value="{{ old('mobile_number')}}">
+                                            <input type="text" class="form-control {{ $errors->has('mobile_number') ? ' is-invalid' : '' }}" placeholder="Mobile Number" name="mobile_number" value="{{ old('mobile_number')}}" id="mobile_number">
                                             @if ($errors->has('mobile_number'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('mobile_number') }}</strong>
@@ -261,7 +98,6 @@ a,
                                                 <option disabled="true" selected="true"> -- Select Gender --</option>
                                                 <option value="Male" {{ old('gender') == 'Male' ? 'selected':'' }}>Male</option>
                                                 <option value="Female" {{ old('gender') == 'Female' ? 'selected':'' }}>Female</option>
-                                                <option value="Other" {{ old('gender') == 'Other' ? 'selected':'' }}>Other</option>
                                             </select>
                                             @if ($errors->has('gender'))
                                                 <span class="invalid-feedback" role="alert">
@@ -319,7 +155,9 @@ a,
                                         </div>
                                         <div class="col-sm-2  form-group">
                                             <label>Max Price</label>
-                                            <input type="number" class="form-control {{ $errors->has('max_price') ? ' is-invalid' : '' }}" placeholder="Price" name="max_price" value="{{ old('max_price')}}" min="0" id="max_price">
+                                            <span class="price">
+                                                <input type="text" class="form-control {{ $errors->has('max_price') ? ' is-invalid' : '' }}" placeholder="Price" name="max_price" value="{{ old('max_price')}}" min="0" id="max_price" onkeypress="return validateFloatKeyPress(this,event);">
+                                            </span>
                                             @if ($errors->has('max_price'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('max_price') }}</strong>
@@ -329,9 +167,9 @@ a,
                                     </div>    
                                     <div class="row">
                                         <div class="col-sm-6  form-group">
-                                            <label>Qualification</label>
+                                            <label>Discipline</label>
                                             <select name="qualification[]" class="form-control {{ $errors->has('qualification') ? ' is-invalid' : '' }}" multiple="true">
-                                                <option disabled="true" > -- Select Qualification --</option>
+                                                <option disabled="true" > -- Select Discipline --</option>
                                                 @foreach($qualification as $qlf)
                                                     <option value="{{ $qlf->id }}" {{ (collect(old('qualification'))->contains($qlf->id)) ? 'selected':'' }} >{{ $qlf->name }}</option>
                                                 @endforeach
@@ -455,10 +293,10 @@ a,
     </div>
 </div>
 
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"><!--
-<link rel="stylesheet" href="/resources/demos/style.css">-->
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.1.62/jquery.inputmask.bundle.js"></script>
 <script>
     $(function(){
         function split( val ) {
@@ -591,5 +429,41 @@ a,
             yearRange: '1919:'+maxBirthdayDate.getFullYear(),
         });
     });
+
+    /*Validation for mobile number format*/
+    var phones = [{ "mask": "(###) ###-####"}];
+    $('#mobile_number').inputmask({ 
+        mask: phones, 
+        greedy: false, 
+        definitions: { '#': { validator: "[0-9]", cardinality: 1}}
+    });
+
+    /*Validation for price field for 2 decimal places*/
+    function validateFloatKeyPress(el, evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode;
+        var number = el.value.split('.');
+        if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        //just one dot
+        if(number.length>1 && charCode == 46){
+             return false;
+        }
+        //get the carat position
+        var caratPos = getSelectionStart(el);
+        var dotPos = el.value.indexOf(".");
+        if( caratPos > dotPos && dotPos>-1 && (number[1].length > 1)){
+            return false;
+        }
+        return true;
+    }
+    function getSelectionStart(o) {
+      if (o.createTextRange) {
+        var r = document.selection.createRange().duplicate()
+        r.moveEnd('character', o.value.length)
+        if (r.text == '') return o.value.length
+        return o.value.lastIndexOf(r.text)
+      } else return o.selectionStart
+    }
 </script>
 @endsection

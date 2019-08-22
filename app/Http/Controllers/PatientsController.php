@@ -7,6 +7,7 @@ use App\Diagnose;
 use App\Service_requests;
 use Validator;
 use App\PatientProfile;
+use App\Qualification;
 use Carbon\Carbon;
 use Image;
 use DB;
@@ -15,7 +16,7 @@ use Illuminate\Http\Request;
 
 class PatientsController extends Controller{
     public function index(){
-        $patients = User::where('role_id','3')->get();
+        $patients = User::where('role_id','3')->orderBy('created_at', 'DESC')->get();
         return view('patients.index', compact('patients'));
     }
 
@@ -32,7 +33,9 @@ class PatientsController extends Controller{
     public function edit($id){
         $user = User::findOrFail($id);
         $diagnosis = Diagnose::get();
-        return view('patients.edit' , compact('user','diagnosis'));
+        $qualifications = Qualification::orderBy('name', 'asc')->get();
+        $selected_disciplines = explode(',', $user->patient? $user->patient->disciplines: '');
+        return view('patients.edit' , compact('user','diagnosis','qualifications','selected_disciplines'));
     }
 
     /**
@@ -48,7 +51,7 @@ class PatientsController extends Controller{
         $validator = validator::make($input,[
             'name' => 'required|string|max:60',
             'email' => 'required|string|max:60',
-            'mobile_number' => 'required|numeric',
+            'mobile_number' => 'required',
             'dob' => 'required',
             'gender' => 'required',
             'range' => 'required|numeric',
@@ -58,8 +61,18 @@ class PatientsController extends Controller{
             'country' => 'required|string',
             'diagnose_id' => 'required',
             'availability' => 'required|string',
-            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg'
+            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg',
+            'addtional_info' => 'nullable|max:2000',
+            'qualification' => 'required',
+            'long_term' => 'required',
+            'pets' => 'required',
+            'pets_description' => 'nullable|max:2000'
         ]);
+        if(isset($input['pets']) && $input['pets'] == 'yes'){
+            $this->validate($request, [
+              'pets_description' => 'required|max:2000'
+            ]);
+        }
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
@@ -92,6 +105,11 @@ class PatientsController extends Controller{
                     $userProfile['pin_code'] = $input['pin_code'];
                     $userProfile['diagnose_id'] = $input['diagnose_id'];
                     $userProfile['availability'] = $input['availability'];
+                    $userProfile['disciplines'] = implode(',', $input['qualification']) ;
+                    $userProfile['long_term'] = $input['long_term'] == 'yes'? 1 : 0;
+                    $userProfile['pets'] = $input['pets'] == 'yes'? 1 : 0;
+                    $userProfile['pets_description'] = $input['pets'] == 'yes'? $input['pets_description'] : '';
+                    $userProfile['additional_info'] = $input['additional_info'];
                     $userProfile->save();
                 }else{
                     $profile['user_id'] = $user->id;
@@ -99,6 +117,11 @@ class PatientsController extends Controller{
                     $profile['pin_code'] = $input['pin_code'];
                     $profile['diagnose_id'] = $input['diagnose_id'];
                     $profile['availability'] = $input['availability'];
+                    $profile['disciplines'] = implode(',', $input['qualification']) ;
+                    $profile['long_term'] = $input['long_term'] == 'yes'? 1 : 0;
+                    $profile['pets'] = $input['pets'] == 'yes'? 1 : 0;
+                    $profile['pets_description'] = $input['pets_description'];
+                    $profile['additional_info'] = $input['additional_info'];
                     $profile = PatientProfile::create($profile);
                 }
 
@@ -121,7 +144,8 @@ class PatientsController extends Controller{
     
     public function create(){
         $diagnosis = Diagnose::get();
-        return view('patients.create', compact('diagnosis'));
+        $qualifications = Qualification::orderBy('name', 'asc')->get();
+        return view('patients.create', compact('diagnosis','qualifications'));
     }
 
     public function store(Request $request){
@@ -129,7 +153,7 @@ class PatientsController extends Controller{
         $validator = validator::make($input,[
             'name' => 'required|string|max:60',
             'email' => 'required|string|max:60|unique:users',
-            'mobile_number' => 'required|numeric|unique:users',
+            'mobile_number' => 'required|unique:users',
             'dob' => 'required',
             'gender' => 'required',
             'range' => 'required|numeric',
@@ -139,8 +163,18 @@ class PatientsController extends Controller{
             'country' => 'required|string',
             'diagnose_id' => 'required',
             'availability' => 'required|string',
-            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg'
+            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg',
+            'addtional_info' => 'nullable|max:2000',
+            'qualification' => 'required',
+            'pets' => 'required',
+            'pets_description' => 'max:2000',
+            'long_term' => 'required'
         ]);
+        if(!empty($input['pets']) && $input['pets'] == 'yes'){
+            $this->validate($request, [
+              'pets_description' => 'required|max:2000'
+            ]);
+        }
 
          if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
@@ -162,7 +196,7 @@ class PatientsController extends Controller{
             $input['city'] = $input['city'];
             $input['state'] = $input['state'];
             $input['country'] = $input['country'];
-            $input['type'] = $input['patient'];
+            $input['type'] = 'patient';
             $input['password'] = Hash::make('123456');
             $input['dob'] = date("Y-m-d", strtotime($input['dob']));
             $input['gender'] = $input['gender'];
@@ -173,6 +207,11 @@ class PatientsController extends Controller{
             $profile['pin_code'] = $input['pin_code'];
             $profile['diagnose_id'] = $input['diagnose_id'];
             $profile['availability'] = $input['availability'];
+            $profile['disciplines'] = implode(',', $input['qualification']) ;
+            $profile['long_term'] = $input['long_term'] == 'yes'? 1 : 0;
+            $profile['pets'] = $input['pets'] == 'yes'? 1 : 0;
+            $profile['pets_description'] = $input['pets'] == 'yes'? $input['pets_description'] : '';
+            $profile['additional_info'] = $input['additional_info'];
             $profile = PatientProfile::create($profile);
 
             flash()->success('New Patient added successfully');
@@ -191,10 +230,15 @@ class PatientsController extends Controller{
 
         if($user->patient){
             $diagnosis = Diagnose::where('id',$user->patient->diagnose_id)->first();
+            $disciplines = explode(',', $user->patient->disciplines) ; 
+            foreach ($disciplines as $key => $value) {
+                $disciplines_name[] = Qualification::where('id',$value)->first();
+            }          
         }else{
             $diagnosis = '';
+            $disciplines = '';
         }
-        return view('patients.view', compact('user','diagnosis','services'));
+        return view('patients.view', compact('user','diagnosis','services','disciplines_name'));
     }
 
     public function locationfromzip(Request $request){

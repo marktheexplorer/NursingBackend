@@ -31,7 +31,7 @@
                                  <div class="row">
                                     <div class="col-sm-4 form-group">
                                        <label>Name</label>
-                                       <input type="text" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" placeholder="Title" value="{{ old('name') }}"/>
+                                       <input type="text" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" placeholder="Name" value="{{ old('name') }}"/>
                                        @if ($errors->has('name'))
                                        <span class="text-danger">
                                        <strong>{{ $errors->first('name') }}</strong>
@@ -49,7 +49,7 @@
                                     </div>
                                     <div class="col-sm-4 form-group">
                                        <label>Mobile number</label>
-                                       <input type="text" class="form-control {{ $errors->has('mobile_number') ? ' is-invalid' : '' }}" name="mobile_number" placeholder="Mobile Number" value="{{ old('mobile_number') }}"/>
+                                       <input type="text" class="form-control {{ $errors->has('mobile_number') ? ' is-invalid' : '' }}" name="mobile_number" placeholder="Mobile Number" value="{{ old('mobile_number') }}" id="mobile_number" />
                                        @if ($errors->has('mobile_number'))
                                        <span class="text-danger">
                                        <strong>{{ $errors->first('mobile_number') }}</strong>
@@ -73,7 +73,6 @@
                                        <select class="form-control" name="gender">
                                           <option value="Male">Male</option>
                                           <option value="Female">Female</option>
-                                          <option value="Others">Others</option>
                                        </select>
                                        @if ($errors->has('gender'))
                                        <span class="text-danger">
@@ -83,7 +82,9 @@
                                     </div>
                                     <div class="col-sm-4 form-group">
                                        <label>Expected cost</label>
-                                       <input type="text" class="form-control {{ $errors->has('range') ? ' is-invalid' : '' }}" name="range" placeholder="Range" value="{{ old('range') }}"/>
+                                       <span class="price">
+                                          <input type="text" class="form-control {{ $errors->has('range') ? ' is-invalid' : '' }} " name="range" placeholder="Range" value="{{ old('range') }}" onkeypress="return validateFloatKeyPress(this,event);"/>
+                                       </span>
                                        @if ($errors->has('range'))
                                        <span class="text-danger">
                                        <strong>{{ $errors->first('range') }}</strong>
@@ -146,12 +147,75 @@
                                           <option value="12-hours(Day shift)">12-hours(Day shift)</option>
                                           <option value="12-hours(Night shift)">12-hours(Night shift)</option>
                                        </select>
-                                       <input type="text" class="form-control {{ $errors->has('availability') ? ' is-invalid' : '' }}" name="availability" placeholder="Availability" value="{{ old('country') }}"/>
                                        @if ($errors->has('availability'))
                                        <span class="text-danger">
                                        <strong>{{ $errors->first('availability') }}</strong>
                                        </span>
                                        @endif
+                                    </div>
+                                    <div class="col-sm-6  form-group">
+                                        <label>Discipline</label>
+                                        <select name="qualification[]" class="form-control {{ $errors->has('qualification') ? ' is-invalid' : '' }} multiple" multiple="multiple">
+                                            <option disabled="true" > -- Select Discipline --</option>
+                                            @foreach($qualifications as $qualification)
+                                              <option value="{{ $qualification->id }}" {{ (collect(old('qualification'))->contains($qualification->id)) ? 'selected':'' }} >{{ $qualification->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @if ($errors->has('qualification'))
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $errors->first('qualification') }}</strong>
+                                            </span>
+                                        @endif
+                                    </div>
+                                    <div class="col-sm-6 form-group">
+                                       <label>Long Term Care insurance</label>
+                                       <div>
+                                        <input type="radio" name="long_term" value="yes" {{ old('long_term') == 'yes' ? 'checked' : '' }}>
+                                        <label for="yes">Yes</label>
+
+                                        <input type="radio" name="long_term" value="no" {{ old('long_term') == 'no' ? 'checked' : '' }}>
+                                        <label for="no">No</label>
+                                      </div>
+                                       @if ($errors->has('long_term'))
+                                       <span class="text-danger">
+                                       <strong>{{ $errors->first('long_term') }}</strong>
+                                       </span>
+                                       @endif
+                                    </div>
+                                    <div class="col-sm-4 form-group">
+                                       <label>Pets</label>
+                                       <div>
+                                        <input type="radio" id="yes"
+                                         name="pets" value="yes" {{ old('pets') == 'yes' ? 'checked' : '' }}>
+                                        <label for="yes">Yes</label>
+
+                                        <input type="radio" id="no"
+                                         name="pets" value="no" {{ old('pets') == 'no' ? 'checked' : '' }}>
+                                        <label for="no">No</label>
+                                      </div>
+                                       @if ($errors->has('pets'))
+                                       <span class="text-danger">
+                                       <strong>{{ $errors->first('pets') }}</strong>
+                                       </span>
+                                       @endif
+                                    </div>
+                                    <div class="form-group col-md-8 yes describe">
+                                        <label>Please Describe</label>
+                                        <textarea class="form-control" name="pets_description" rows="3">{{ old('pets_description') }}</textarea>
+                                         @if ($errors->has('pets_description'))
+                                         <span class="text-danger">
+                                         <strong>{{ $errors->first('pets_description') }}</strong>
+                                         </span>
+                                         @endif
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <label>Additional Information</label>
+                                        <textarea class="form-control" name="additional_info" rows="5">{{ old('additional_info') }}</textarea>
+                                         @if ($errors->has('additional_info'))
+                                         <span class="text-danger">
+                                         <strong>{{ $errors->first('additional_info') }}</strong>
+                                         </span>
+                                         @endif
                                     </div>
                                  </div>
                               </div>
@@ -183,7 +247,10 @@
 @endsection
 @section('footer-scripts')
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/css/select2.min.css" rel="stylesheet" />
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.1.62/jquery.inputmask.bundle.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
 <script>
    $( function(){
         var maxBirthdayDate = new Date();
@@ -232,5 +299,57 @@
             }
         });
     });
+
+    
+    if($('input[name=pets]:checked').val() == 'no' || (!$('input[name=pets]:checked').val()))
+        {  
+            $('.describe').hide();
+        }
+    $('input[name=pets]').click(function(){
+
+      var inputValue = $(this).attr("value");
+      var targetBox = $("." + inputValue);
+      $(".describe").not(targetBox).hide();
+      $(targetBox).show();
+
+    });
+
+    /*Validation for mobile number format*/
+    var phones = [{ "mask": "(###) ###-####"}];
+    $('#mobile_number').inputmask({ 
+        mask: phones, 
+        greedy: false, 
+        definitions: { '#': { validator: "[0-9]", cardinality: 1}}
+    });
+    
+    /*Validation for price field for 2 decimal places*/
+    function validateFloatKeyPress(el, evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode;
+        var number = el.value.split('.');
+        if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        //just one dot
+        if(number.length>1 && charCode == 46){
+             return false;
+        }
+        //get the carat position
+        var caratPos = getSelectionStart(el);
+        var dotPos = el.value.indexOf(".");
+        if( caratPos > dotPos && dotPos>-1 && (number[1].length > 1)){
+            return false;
+        }
+        return true;
+    }
+    function getSelectionStart(o) {
+      if (o.createTextRange) {
+        var r = document.selection.createRange().duplicate()
+        r.moveEnd('character', o.value.length)
+        if (r.text == '') return o.value.length
+        return o.value.lastIndexOf(r.text)
+      } else return o.selectionStart
+    }
+
+    $('.multiple').select2();
 </script>
 @endsection

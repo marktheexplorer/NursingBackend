@@ -103,6 +103,36 @@
                                             <div class="media-heading">{{ $user->patient ? $user->patient->availability : ''}}</div>
                                         </div>
                                     </li>
+                                    <li class="media">
+                                        <div class="media-img">Disciplines</div>
+                                        <div class="media-body">
+                                            <div class="media-heading"> <?php foreach($disciplines_name as $key => $value){ echo $value->name.',  ' ;} ?> </div>
+                                        </div>
+                                    </li>
+                                    <li class="media">
+                                        <div class="media-img">Long Term Care insurance</div>
+                                        <div class="media-body">
+                                            <div class="media-heading">{{ $user->patient ? ($user->patient->long_term == 1? 'Yes' : 'No'):'' }}</div>
+                                        </div>
+                                    </li>
+                                    <li class="media">
+                                        <div class="media-img">Pets</div>
+                                        <div class="media-body">
+                                            <div class="media-heading">{{ $user->patient ? ($user->patient->pets == 1? 'Yes' : 'No'):'' }}</div>
+                                        </div>
+                                    </li>
+                                    <li class="media">
+                                        <div class="media-img">Pets Description</div>
+                                        <div class="media-body">
+                                            <div class="media-heading">{{ $user->patient ? $user->patient->pets_description :'' }}</div>
+                                        </div>
+                                    </li>
+                                    <li class="media">
+                                        <div class="media-img">Additional Information</div>
+                                        <div class="media-body">
+                                            <div class="media-heading">{{ $user->patient ? $user->patient->additional_info : ''}}</div>
+                                        </div>
+                                    </li>
                                 </ul>
                             </div>
                         </div>  

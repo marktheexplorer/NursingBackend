@@ -31,7 +31,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function()
 	Route::get('patients/download_excel', 'PatientsController@download_excel')->name('patients.download_excel');
 	Route::get('patients/active', 'PatientsController@activePatients')->name('patients.active');
 	Route::get('patients/inactive', 'PatientsController@inactivePatients')->name('patients.inactive');
-	Route::get('patients/locationfromzip', 'PatientsController@locationfromzip');	
+	Route::get('patients/locationfromzip', 'PatientsController@locationfromzip')->name('locationfromzip');	
 	Route::get('patients/blocked/{userId}', 'PatientsController@block');
 	Route::resource('patients', 'PatientsController');
 

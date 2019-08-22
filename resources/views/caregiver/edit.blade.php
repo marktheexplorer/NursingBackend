@@ -249,7 +249,7 @@ a,
                                         </div>
                                         <div class="col-sm-3  form-group">
                                             <label>Mobile Number</label>
-                                            <input type="number" class="form-control {{ $errors->has('mobile_number') ? ' is-invalid' : '' }}" placeholder="Mobile Number" name="mobile_number" value="{{ $user->mobile_number }}">
+                                            <input type="text" class="form-control {{ $errors->has('mobile_number') ? ' is-invalid' : '' }}" placeholder="Mobile Number" name="mobile_number" value="{{ $user->mobile_number }}" id="mobile_number">
                                             @if ($errors->has('mobile_number'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('mobile_number') }}</strong>
@@ -271,7 +271,6 @@ a,
                                                 <option disabled="true" selected="true"> -- Select Gender --</option>
                                                 <option value="Male" {{ $user->gender == 'Male' ? 'selected':'' }} >Male</option>
                                                 <option value="Female" {{ $user->gender == 'Female' ? 'selected':'' }}>Female</option>
-                                                <option value="Other" {{ $user->gender == 'Other' ? 'selected':'' }}>Other</option>
                                             </select>
                                             @if ($errors->has('gender'))
                                                 <span class="invalid-feedback" role="alert">
@@ -321,7 +320,9 @@ a,
                                         </div>
                                         <div class="col-sm-2  form-group">
                                             <label>Min Price</label>
-                                            <input type="number" class="form-control {{ $errors->has('min_price') ? ' is-invalid' : '' }}" placeholder="Minimum" name="min_price" value="{{ $user->min_price }}" min="0" id="min_price">
+                                            <span class="price">
+                                                <input type="text" class="form-control {{ $errors->has('min_price') ? ' is-invalid' : '' }}" placeholder="Minimum" name="min_price" value="{{ $user->min_price }}" min="0" id="min_price" onkeypress="return validateFloatKeyPress(this,event);">
+                                            </span>
                                             @if ($errors->has('min_price'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('min_price') }}</strong>
@@ -330,7 +331,9 @@ a,
                                         </div>
                                         <div class="col-sm-2  form-group">
                                             <label>Max Price</label>
-                                            <input type="number" class="form-control {{ $errors->has('max_price') ? ' is-invalid' : '' }}" placeholder="Price" name="max_price" value="{{ $user->max_price }}" min="0" id="max_price">
+                                            <span class="price">
+                                                <input type="text" class="form-control {{ $errors->has('max_price') ? ' is-invalid' : '' }} " placeholder="Price" name="max_price" value="{{ $user->max_price }}" min="0" id="max_price" onkeypress="return validateFloatKeyPress(this,event);">
+                                            </span>
                                             @if ($errors->has('max_price'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('max_price') }}</strong>
@@ -340,13 +343,13 @@ a,
                                     </div>    
                                     <div class="row">
                                         <div class="col-sm-6  form-group">
-                                            <label>Qualification</label><?php
+                                            <label>Discipline</label><?php
                                                 $qualification_array = array();
                                                 foreach($user->qualification as $qlf){
                                                     $qualification_array[] = $qlf->id;
                                                 } ?>
                                             <select name="qualification[]" class="form-control {{ $errors->has('qualification') ? ' is-invalid' : '' }}" multiple="true">
-                                                <option disabled="true" > -- Select Qualification --</option>
+                                                <option disabled="true" > -- Select Discipline --</option>
                                                 @foreach($qualification as $qlf)
                                                     <option value="{{ $qlf->id }}" <?php if(in_array($qlf->id, $qualification_array)){ echo 'selected'; } ?> >{{ $qlf->name }}</option>
                                                 @endforeach
@@ -486,10 +489,10 @@ a,
     </div>
 </div>
 
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"><!--
-<link rel="stylesheet" href="/resources/demos/style.css">-->
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.1.62/jquery.inputmask.bundle.js"></script>
 <script>
     $(function(){
         function split( val ) {
@@ -622,5 +625,48 @@ a,
             yearRange: '1919:'+maxBirthdayDate.getFullYear(),
         });
     });
+
+    /*Validation for mobile number format*/
+    var phones = [{ "mask": "(###) ###-####"}];
+    $('#mobile_number').inputmask({ 
+        mask: phones, 
+        greedy: false, 
+        definitions: { '#': { validator: "[0-9]", cardinality: 1}}
+    });
+
+    /*Validation for $sign in price field*/
+    $('input.price').keyup(function() {
+       $(this).val(function(i,v) {
+         return '$' + v.replace('$',''); //remove exisiting, add back.
+       });
+     });
+
+    /*Validation for price field for 2 decimal places*/
+    function validateFloatKeyPress(el, evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode;
+        var number = el.value.split('.');
+        if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        //just one dot
+        if(number.length>1 && charCode == 46){
+             return false;
+        }
+        //get the carat position
+        var caratPos = getSelectionStart(el);
+        var dotPos = el.value.indexOf(".");
+        if( caratPos > dotPos && dotPos>-1 && (number[1].length > 1)){
+            return false;
+        }
+        return true;
+    }
+    function getSelectionStart(o) {
+      if (o.createTextRange) {
+        var r = document.selection.createRange().duplicate()
+        r.moveEnd('character', o.value.length)
+        if (r.text == '') return o.value.length
+        return o.value.lastIndexOf(r.text)
+      } else return o.selectionStart
+    }
 </script>
 @endsection
