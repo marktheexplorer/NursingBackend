@@ -21,12 +21,12 @@ class EnquiryController extends Controller{
         if ($enquiry->delete()) {
             $response = array(
                 'status' => 'success',
-                'message' => 'Enquiry deleted successfully',
+                'message' => 'Inquiry deleted successfully',
             );
         } else {
             $response = array(
                 'status' => 'error',
-                'message' => 'Enquiry can not be deleted.Please try again',
+                'message' => 'Inquiry can not be deleted, Please try again',
             );
         }
         return json_encode($response);

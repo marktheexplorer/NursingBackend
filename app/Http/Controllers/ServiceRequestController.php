@@ -210,6 +210,18 @@ class ServiceRequestController extends Controller{
 
         $final_caregivers = DB::table('service_requests_attributes')->select('service_requests_attributes.value', 'users.name', 'users.email')->Join('users', 'users.id', '=', 'service_requests_attributes.value')->where('service_request_id', '=', $id)->where('service_requests_attributes.type', '=', 'caregiver_list')->get();
 
+        $caregivers = DB::table('users')->select('users.id', 'name', 'email', 'mobile_number', 'profile_image', 'users.is_blocked', 'users.created_at', 'min_price', 'max_price', 'gender', 'zipcode')->Join('caregiver', 'caregiver.user_id', '=', 'users.id')->Join('caregiver_attributes', 'caregiver_attributes.caregiver_id', '=', 'users.id')->where('users.id','>', '1')->where('caregiver_attributes.type', '=', 'service')->where('caregiver_attributes.value', '=', $srvc->service)->orderBy('users.name', 'asc')->get();
+
+        $query = "select users.id, name, email, mobile_number, profile_image, users.is_blocked, users.created_at, min_price, max_price, gender, zipcode from users join caregiver on caregiver.user_id = users.id join caregiver_attributes on caregiver_attributes.caregiver_id = users.id where users.id > 1 and caregiver_attributes.type = 'service' and caregiver_attributes.value = '".$srvc->service."' and NOT EXISTS (select request_booking.start_date from request_booking where caregiver_id = users.id and (request_booking.start_date >= '".$srvc->start_date."' and request_booking.start_date <= '".$srvc->end_date."') || (request_booking.end_date >= '".$srvc->start_date."' and request_booking.end_date <= '".$srvc->end_date."') limit 1) order by users.name asc";
+        
+        //$caregivers = DB::select($query);
+        //exists(select * from request_booking where caregiver_id = users.id and (request_booking.start_date >= '".$srvc->start_date."' AND request_booking.start_date <= '".$srvc->start_date."') || (request_booking.end_date >= '".$srvc->start_date."' AND request_booking.end_date <= '".$srvc->start_date."'))
+
+        /* echo "<pre>";
+        print_r($services);
+        print_r($caregivers);
+        die; */
+
         $select_caregiver = array(0);
         foreach($final_caregivers as $scr){
             $select_caregiver[] = $scr->value;
@@ -463,5 +475,104 @@ class ServiceRequestController extends Controller{
         //redirect back to list page
         flash()->success("Basic Care Service Pack mail resend to Patient sent successfully."); 
         return redirect()->route('service_request.show',['id' => $id]); 
+    }
+
+    public function download_excel(){
+        $services = DB::table('service_requests')->select('service_requests.id', 'service_requests.description', 'service_requests.created_at', 'service_requests.start_time', 'service_requests.end_time', 'service_requests.service', 'service_requests.id', 'service_requests.user_id', 'service_requests.location', 'service_requests.city', 'service_requests.state', 'service_requests.zip', 'service_requests.country', 'service_requests.min_expected_bill', 'service_requests.max_expected_bill', 'service_requests.start_date', 'service_requests.end_date', 'service_requests.status', 'users.name', 'users.email', 'users.mobile_number', 'users.name', 'users.name', 'users.is_blocked', 'services.title')->Join('users', 'service_requests.user_id', '=', 'users.id')->Join('services', 'services.id', '=', 'service_requests.service')->get();
+        
+        $filename = "Requests.xls";
+        header("Content-Type: application/vnd.ms-excel");
+        header("Content-Disposition: attachment; filename=\"$filename\"");
+
+        if(empty($services)){
+            echo 'No records Found...';
+        }{
+            $isPrintHeader = false;
+            $header = array(
+                'S. No.', 
+                'Patient Name', 
+                'Caregiver Name', 
+                'Street',
+                'City',
+                'State',
+                'Country',
+                'Pin Code',
+                'Price Range',
+                'Shift',
+                'From',
+                'To',
+                'status',
+                'Created On',
+            );
+
+            $count = 1;
+            foreach ($services as $row) {
+                if (!$isPrintHeader) {
+                    echo implode("\t", array_values($header)) . "\n";
+                    $isPrintHeader = true;
+                }
+
+                $caregivername = 'NA';
+                if(!empty($final_caregivers)){
+                    $caregivername = ucfirst($final_caregivers->name)." (".$final_caregivers->email.")<br/>";
+                }
+
+                $request_status = 'dddddddd';
+                switch($row->status){
+                    case '0':
+                        $request_status = "Pending";
+                        break;
+                    case '1':
+                        $request_status = "Reject";
+                        break;    
+                    case '2':
+                        $request_status = "Approved";
+                        break;    
+                    case '3':
+                        $request_status = "Caregiver not Assign";
+                        break;
+                    case '4':
+                        $request_status = "Assign to Caregiver"; 
+                        break;       
+                    case '5':
+                        $request_status = "Caregiver confirm and sent mail of basic careservice pack";
+                        break;    
+                    case '6':
+                        $request_status = "Document upload by patient, but document not varified";
+                        break;        
+                    case '7':
+                        $request_status = "Uploaded document varified";
+                        break;            
+                    case '8':
+                        $request_status = "Re-schedule";
+                    case '9':
+                        $request_status = "Close";    
+                        break;  
+                }
+
+                $range = "$".$row->min_expected_bill." to $".$row->max_expected_bill;
+                $shift = substr_replace($row->start_time, ":", 2, 0)." to ".substr_replace($row->end_time,  ":", 2, 0);
+                        
+                $temp = array(
+                    $count.".", 
+                    ucfirst(str_replace(",", " ", $row->name)), 
+                    $caregivername,
+                    $row->location,
+                    $row->city,
+                    $row->state,
+                    $row->country,
+                    $row->zip,
+                    $range,
+                    $shift,
+                    date_format(date_create($row->start_date), 'd M, Y'),
+                    date_format(date_create($row->start_date), 'd M, Y'),
+                    $request_status,
+                    date_format(date_create($row->created_at), 'd M, Y')
+                );
+                echo implode("\t", array_values($temp)) . "\n";
+                $count++;
+            }
+        }
+        exit();        
     }
 }

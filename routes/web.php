@@ -11,6 +11,9 @@
 |
 */
 
+define('PROFILE_HEIGHT', ["5'","5' 1","5' 2'","5' 3'","5' 4'","5' 5'","5' 6'","5' 7'","5' 8'","5' 9'","5' 10'","5' 11'","6'","6' 1'","6' 2'","6' 3'","6' 4'","6' 5'"]);
+define('PROFILE_WEIGHT', ["90 lbs - 120 lbs", "121 lbs - 150 lbs", "151 lbs - 180 lbs", "181 lbs - 200 lbs", "201+ lbs"]);
+
 Route::get('/', 'HomeController@home')->name('admin');
 Auth::routes();
 Route::get('signup/activate/{token}', 'API\v1\UserController@signupActivate');
@@ -24,11 +27,14 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function()
 	Route::get('user/blocked/{userId}', 'UserController@block');
 	Route::get('user/blocklist', 'UserController@blocklist')->name('users.blocklist');
 	Route::resource('users', 'UserController');
+
+	Route::get('patients/download_excel', 'PatientsController@download_excel')->name('patients.download_excel');
 	Route::get('patients/active', 'PatientsController@activePatients')->name('patients.active');
 	Route::get('patients/inactive', 'PatientsController@inactivePatients')->name('patients.inactive');
 	Route::get('patients/locationfromzip', 'PatientsController@locationfromzip')->name('locationfromzip');	
 	Route::get('patients/blocked/{userId}', 'PatientsController@block');
 	Route::resource('patients', 'PatientsController');
+
 	Route::get('services/blocked/{userId}', 'ServiceController@block');
 	Route::resource('services', 'ServiceController');
 	Route::get('qualifications/blocked/{userId}', 'QualificationController@block');
@@ -41,12 +47,17 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function()
 	Route::resource('cms', 'CmsPageController');
 	Route::resource('enquiries', 'EnquiryController');
 
-	//caregiver controller it automatically route the default route
+	//caregiver controller it automatically route the default route	
+	Route::get('caregiver/getzip', 'CaregiverController@getzip');
+	Route::get('caregiver/searchcity', 'CaregiverController@searchcity');
+	Route::get('caregiver/statefromcity', 'CaregiverController@statefromcity');
+	Route::get('caregiver/download_excel', 'CaregiverController@download_excel')->name('caregiver.download_excel');
 	Route::get('caregiver/blocked/{userId}', 'CaregiverController@blocked');
 	Route::get('caregiver/searchzip', 'CaregiverController@searchzip');
 	Route::get('caregiver/locationfromzip', 'CaregiverController@locationfromzip');	
 	Route::resource('caregiver', 'CaregiverController');
 	
+	Route::get('service_request/download_excel', 'ServiceRequestController@download_excel')->name('service_request.download_excel');
 	Route::get('service_request/resendmail/{id}', 'ServiceRequestController@resendmail')->name('service_request.resendmail');
 	Route::get('service_request/confirm_doc/{id}', 'ServiceRequestController@confirm_doc')->name('service_request.confirm_doc');
 	Route::get('service_request/reschedule/{id}', 'ServiceRequestController@reschedule')->name('service_request.reschedule');

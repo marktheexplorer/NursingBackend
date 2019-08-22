@@ -86,7 +86,7 @@
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img">Diagnosis</div>
+                                        <div class="media-img">Health Conditions</div>
                                         <div class="media-body">
                                             <div class="media-heading">{{ $diagnosis ? $diagnosis->title : ''}}</div>
                                         </div>

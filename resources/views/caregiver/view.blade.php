@@ -109,6 +109,18 @@
                                         </div>
                                     </li>                                    
                                     <li class="media">
+                                        <div class="media-img">Height</div>
+                                        <div class="media-body">
+                                            <div class="media-heading">{{ $user->height }}</div>
+                                        </div>
+                                    </li>                                    
+                                    <li class="media">
+                                        <div class="media-img">Weight</div>
+                                        <div class="media-body">
+                                            <div class="media-heading">{{ $user->weight }}</div>
+                                        </div>
+                                    </li>                                    
+                                    <li class="media">
                                         <div class="media-img">Date of Birth</div>
                                         <div class="media-body">
                                             <div class="media-heading">{{ date_format(date_create($user->dob), 'd M, Y') }} </div>
@@ -194,17 +206,23 @@
                                     </tr>
                                 </tfoot>
                                 <tbody>
-                                @foreach($services as $key => $service)
+                                @if(count($services) > 0)
+                                    @foreach($services as $key => $service)
+                                        <tr>
+                                            <td>{{ ++$key }}</td>
+                                            <td>{{ ucfirst($service->title) }}</td>
+                                            <td>{{ ucfirst($service->name) }}</td>
+                                            <td>{{ "$".$service->min_expected_bill ."- $". $service->max_expected_bill }}</td>
+                                            <td>{{ $service->location.", ".$service->city.", ".$service->state.", ".$service->country.", ".$service->zip  }} </td>
+                                            <td>{{ substr_replace( $service->start_time, ":", 2, 0)." - ".substr_replace( $service->end_time, ":", 2, 0) }}</td>
+                                            <td>{{ date_format(date_create($service->created_at), 'd M, y')}}</td>
+                                        </tr>
+                                    @endforeach
+                                @else
                                     <tr>
-                                        <td>{{ ++$key }}</td>
-                                        <td>{{ ucfirst($service->title) }}</td>
-                                        <td>{{ ucfirst($service->name) }}</td>
-                                        <td>{{ "$".$service->min_expected_bill ."- $". $service->max_expected_bill }}</td>
-                                        <td>{{ $service->location.", ".$service->city.", ".$service->state.", ".$service->country.", ".$service->zip  }} </td>
-                                        <td>{{ substr_replace( $service->start_time, ":", 2, 0)." - ".substr_replace( $service->end_time, ":", 2, 0) }}</td>
-                                        <td>{{ date_format(date_create($service->created_at), 'd M, y')}}</td>
+                                        <td colspan="7" style="text-align: center;"><strong>No record found.</strong></td>
                                     </tr>
-                                @endforeach
+                                @endif    
                                 </tbody>
                             </table>
                         </div>
