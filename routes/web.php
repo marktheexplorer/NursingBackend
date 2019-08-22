@@ -11,6 +11,9 @@
 |
 */
 
+define('PROFILE_HEIGHT', ["5'","5' 1","5' 2'","5' 3'","5' 4'","5' 5'","5' 6'","5' 7'","5' 8'","5' 9'","5' 10'","5' 11'","6'","6' 1'","6' 2'","6' 3'","6' 4'","6' 5'"]);
+define('PROFILE_WEIGHT', ["90 lbs - 120 lbs", "121 lbs - 150 lbs", "151 lbs - 180 lbs", "181 lbs - 200 lbs", "201+ lbs"]);
+
 Route::get('/', 'HomeController@home')->name('admin');
 Auth::routes();
 Route::get('signup/activate/{token}', 'API\v1\UserController@signupActivate');
@@ -45,6 +48,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function()
 	Route::resource('enquiries', 'EnquiryController');
 
 	//caregiver controller it automatically route the default route	
+	Route::get('caregiver/getzip', 'CaregiverController@getzip');
+	Route::get('caregiver/searchcity', 'CaregiverController@searchcity');
+	Route::get('caregiver/statefromcity', 'CaregiverController@statefromcity');
 	Route::get('caregiver/download_excel', 'CaregiverController@download_excel')->name('caregiver.download_excel');
 	Route::get('caregiver/blocked/{userId}', 'CaregiverController@blocked');
 	Route::get('caregiver/searchzip', 'CaregiverController@searchzip');

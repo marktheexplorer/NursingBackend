@@ -190,16 +190,45 @@ a,
                                 <form action="{{ route('caregiver.store') }}" method="post" class="form-horizontal" enctype="multipart/form-data">
                                 @csrf
                                     <div class="row">
-                                        <div class="col-sm-6 form-group">
-                                            <label>Name</label>
-                                            <input type="text" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" placeholder="Name" value="{{ old('name') }}" />
-                                            @if ($errors->has('name'))
+                                        <div class="form-group col-sm-6" >
+                                            <label>Profile Image</label><br/>
+                                            <input type="file" class="{{ $errors->has('profile_image') ? ' is-invalid' : '' }}" name="profile_image" placeholder="Profile Image" value="{{ old('profile_image') }}" accept="image/*"/ style="padding-left:0px;">
+                                            @if ($errors->has('profile_image'))
                                                 <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('name') }}</strong>
+                                                    <strong>{{ $errors->first('profile_image') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>  
+                                        <div class="col-sm-2 form-group">
+                                            <label>First Name</label>
+                                            <input type="text" class="form-control {{ $errors->has('fname') ? ' is-invalid' : '' }}" name="fname" placeholder="First Name" value="{{ old('fname') }}" />
+                                            @if ($errors->has('fname'))
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $errors->first('fname') }}</strong>
                                                 </span>
                                             @endif
                                         </div>
-                                        <div class="col-sm-6  form-group">
+                                        <div class="col-sm-2 form-group">
+                                            <label>Middle Name</label>
+                                            <input type="text" class="form-control {{ $errors->has('mname') ? ' is-invalid' : '' }}" name="mname" placeholder="Middle Name" value="{{ old('mname') }}" />
+                                            @if ($errors->has('mname'))
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $errors->first('mname') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                        <div class="col-sm-2 form-group">
+                                            <label>Last Name</label>
+                                            <input type="text" class="form-control {{ $errors->has('lname') ? ' is-invalid' : '' }}" name="lname" placeholder="Last Name" value="{{ old('lname') }}" />
+                                            @if ($errors->has('lname'))
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $errors->first('lname') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="row">    
+                                        <div class="col-sm-3  form-group">
                                             <label>Email</label>
                                             <input type="text" name="email" placeholder="Email" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" />
                                             @if ($errors->has('email'))
@@ -208,8 +237,6 @@ a,
                                                 </span>
                                             @endif
                                         </div>
-                                    </div>
-                                    <div class="row">    
                                         <div class="col-sm-3  form-group">
                                             <label>Mobile Number</label>
                                             <input type="number" class="form-control {{ $errors->has('mobile_number') ? ' is-invalid' : '' }}" placeholder="Mobile Number" name="mobile_number" value="{{ old('mobile_number')}}">
@@ -242,18 +269,46 @@ a,
                                                 </span>
                                             @endif
                                         </div>
-                                        <div class="form-group col-sm-3" >
+                                        <div class="form-group col-sm-4" >
                                             <label>Date of Birth</label>
-                                            <input type="text" class="form-control {{ $errors->has('dob') ? ' is-invalid' : '' }}" name="dob" placeholder="Date of Birth" value="{{ old('dob') }}" id="dob"/>
+                                            <input type="text" class="form-control {{ $errors->has('dob') ? ' is-invalid' : '' }}" name="dob" placeholder="Date of Birth" value="{{ old('dob') }}" id="dob" autocomplete="off" />
                                             @if ($errors->has('dob'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('dob')}}</strong>
                                                 </span>
                                             @endif
                                         </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-3  form-group">
+                                         <div class="col-sm-2  form-group">
+                                            <label>Height</label>
+                                            <select name="height" class="form-control {{ $errors->has('height') ? ' is-invalid' : '' }}">
+                                                <option disabled="true" selected="true"> -- Select Height --</option>
+                                                @foreach(PROFILE_HEIGHT as $val)
+                                                    <option value="{{ $val }}">{{$val}}</option>
+                                                @endforeach
+                                            </select>
+                                            @if ($errors->has('height'))
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $errors->first('height') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+
+                                        <div class="col-sm-2 form-group">
+                                            <label>Weight</label>
+                                            <select name="weight" class="form-control {{ $errors->has('weight') ? ' is-invalid' : '' }}">
+                                                <option disabled="true" selected="true"> -- Select Weight --</option>
+                                                @foreach(PROFILE_WEIGHT as $val)
+                                                    <option value="{{ $val }}">{{$val}}</option>
+                                                @endforeach
+                                            </select>
+                                            @if ($errors->has('weight'))
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $errors->first('weight') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+
+                                        <div class="col-sm-2  form-group">
                                             <label>Min Price</label>
                                             <input type="number" class="form-control {{ $errors->has('min_price') ? ' is-invalid' : '' }}" placeholder="Minimum" name="min_price" value="{{ old('min_price')}}" min="0" id="min_price">
                                             @if ($errors->has('min_price'))
@@ -262,7 +317,7 @@ a,
                                                 </span>
                                             @endif
                                         </div>
-                                        <div class="col-sm-3  form-group">
+                                        <div class="col-sm-2  form-group">
                                             <label>Max Price</label>
                                             <input type="number" class="form-control {{ $errors->has('max_price') ? ' is-invalid' : '' }}" placeholder="Price" name="max_price" value="{{ old('max_price')}}" min="0" id="max_price">
                                             @if ($errors->has('max_price'))
@@ -270,16 +325,7 @@ a,
                                                     <strong>{{ $errors->first('max_price') }}</strong>
                                                 </span>
                                             @endif
-                                        </div>
-                                        <div class="form-group col-sm-6" >
-                                            <label>Profile Image</label><br/>
-                                            <input type="file" class="{{ $errors->has('profile_image') ? ' is-invalid' : '' }}" name="profile_image" placeholder="Profile Image" value="{{ old('profile_image') }}" accept="image/*"/>
-                                            @if ($errors->has('profile_image'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('profile_image') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>                                        
+                                        </div>                                                                              
                                     </div>    
                                     <div class="row">
                                         <div class="col-sm-6  form-group">
@@ -314,7 +360,7 @@ a,
                                     <div class="row">    
                                         <div class="form-group col-sm-6" >
                                             <label>Street </label>
-                                            <input type="text" class="form-control {{ $errors->has('location') ? ' is-invalid' : '' }}" name="location" placeholder="Location" value="{{ old('location') }}" />
+                                            <input type="text" class="form-control {{ $errors->has('location') ? ' is-invalid' : '' }}" name="location" placeholder="Location" value="{{ old('location') }}" autocomplete="off" />
                                             @if ($errors->has('location'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('location') }}</strong>
@@ -322,17 +368,8 @@ a,
                                             @endif
                                         </div>
                                         <div class="form-group col-sm-2" >
-                                            <label>Zip Code </label>
-                                            <input type="text" class="form-control {{ $errors->has('zipcode') ? ' is-invalid' : '' }}" name="zipcode" placeholder="Zip code" value="{{ old('zipcode') }}" id="zipcode" />
-                                            @if ($errors->has('zipcode'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('zipcode') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                        <div class="form-group col-sm-2" >
-                                            <label>City </label>
-                                            <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" placeholder="city" value="{{ old('city') }}" id="city" readonly="true" />
+                                            <label>City</label>
+                                            <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" placeholder="city" value="{{ old('city') }}" id="citysuggest" autocomplete="off" />
                                             @if ($errors->has('city'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('city') }}</strong>
@@ -340,11 +377,22 @@ a,
                                             @endif
                                         </div>
                                         <div class="form-group col-sm-2" >
-                                            <label>State </label>
-                                            <input type="text" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" placeholder="state" value="{{ old('state') }}"  id="state" readonly="true" />
+                                            <label>state </label>
+                                            <select name="state" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" readonly="true" id="state">
+                                                <option disabled="true" selected=""> -- Select State --</option>
+                                            </select>    
                                             @if ($errors->has('state'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('state') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                        <div class="form-group col-sm-2" >
+                                            <label>Zip Code </label>
+                                            <input type="text" class="form-control {{ $errors->has('zipcode') ? ' is-invalid' : '' }}" name="zipcode" placeholder="Zip code" value="{{ old('zipcode') }}" id="zipcode" readonly="true"  />
+                                            @if ($errors->has('zipcode'))
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $errors->first('zipcode') }}</strong>
                                                 </span>
                                             @endif
                                         </div>
@@ -381,7 +429,7 @@ a,
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-sm-12" >
-                                            <label>Bio </label>
+                                            <label>Additional Information </label>
                                             <textarea class="form-control {{ $errors->has('description') ? ' is-invalid' : '' }}" rows="5" name="description" id="description" placeholder="Description"></textarea>
                                             @if ($errors->has('description'))
                                                 <span class="invalid-feedback" role="alert">
@@ -429,21 +477,21 @@ a,
         }
 
         // don't navigate away from the field on tab when selecting an item                
-        $( ".zipcodesuggest" ).on( "keydown", function( event ) {
-            if(event.keyCode === $.ui.keyCode.TAB && $( this ).autocomplete( "instance" ).menu.active ) {
+        $( "#citysuggest" ).on( "keydown", function( event ) {
+            if(event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active){
                 event.preventDefault();
             }
         }).autocomplete({
             source: function( request, response ) {
-                $.getJSON( "searchzip", {
-                    term: extractLast( request.term)
+                $.getJSON( "searchcity", {
+                    term: request.term
                 }, response );
             },
             
             search: function() {
                 // custom minLength
-                var term = extractLast( this.value );
-                if ( term.length < 4 ) {
+                var term = this.value;
+                if ( term.length < 2){
                     return false;
                 }
             },
@@ -454,20 +502,55 @@ a,
             },
 
             select: function( event, ui ) {
-                var terms = split( this.value );
-                // remove the current input
-                terms.pop();
-                // add the selected item
-                terms.push( ui.item.value );
-                // add placeholder to get the comma-and-space at the end
-                terms.push( "" );
-                this.value = terms.join( ", " );
+                $( "#citysuggest" ).val(ui.item.value)
+                $( "#citysuggest" ).autocomplete("close");
+
+                //remove all options from select box
+                $("#state").find("option:gt(0)").remove();
+                $("#state").prop("selectedIndex", 0);
+                setstateoptions();
                 return false;
             }
         });
     }); 
 
-    $('#zipcode').blur(function(){
+    function setstateoptions(){
+        zip = $("#citysuggest").val();
+        $.ajax({
+            url: 'statefromcity',
+            type: 'GET',
+            dataType: 'json',
+            data:{term:zip},
+            success: function (res) {
+                if(res['error']){
+                    //swal("Oops", "Invalid City", "error");
+                    $("#citysuggest").val('');
+                    $("#citysuggest").focus();
+                }else{
+                    $.each(res['list'], function( index, value ) {
+                        //alert( index + ": " + value );
+                        $('#state').append($("<option></option>").attr(value, value).text(value)); 
+                    });
+                }
+            }
+        });
+        $("#state").attr("readonly", false);
+    }
+
+    $("#state").change(function () {
+        stateoption = $("#state option:selected").val();
+        cityoption = $("#citysuggest").val();
+        $.ajax({
+            url: 'getzip',
+            type: 'GET',
+            data:{city:cityoption, state:stateoption},
+            success: function (res) {
+                $("#zipcode").val(res);
+            }
+        });
+    })
+
+    /*$('#zipcode').blur(function(){
         zip = $(this).val();
         $.ajax({
             url: '{{ env("APP_URL") }}admin/caregiver/locationfromzip',
@@ -487,7 +570,7 @@ a,
                 }
             }
         });
-    });    
+    });    */
 
     $('#max_price').blur(function(){
         minprice = $("#min_price").val();

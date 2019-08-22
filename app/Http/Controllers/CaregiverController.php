@@ -44,13 +44,16 @@ class CaregiverController extends Controller{
         $input = $request->input(); 
 
         $validator =  Validator::make($input,[
-            'name' => 'required|string|max:255|min:4',
+            'fname' => 'required|string|max:255|min:4',
+            'lname' => 'required|string|max:255|min:4',
             'email' => 'required|string|unique:users,email',
             'mobile_number' => 'required|unique:users,mobile_number|numeric',
             'service' => 'required|not_in:0',
             'password' => 'required|min:6',
             'gender' => 'required',
             'dob' => 'required',
+            'height' => 'required',
+            'weight' => 'required',
             'min_price' => 'required|min:0',
             'max_price' => 'required|min:1',
             'location' => 'required',
@@ -77,9 +80,15 @@ class CaregiverController extends Controller{
             $upload_image =  "/uploads/profile_images/".$imageName;
         }
      
+        $name = $input['fname'];
+        if(!empty($input['mname'])){
+            $name .= " ".$input['mname'];
+        }
+        $name .= " ".$input['lname'];
+
         $user = new User();
         $user->role_id = 2;
-        $user->name = $input['name'];
+        $user->name = $name;
         $user->email = $input['email'];
         $user->email_verified = 1;
         $user->mobile_number = $input['mobile_number'];
@@ -101,6 +110,11 @@ class CaregiverController extends Controller{
             $caregiver->service = 'NAN';
             $caregiver->min_price = $input['min_price'];
             $caregiver->max_price = $input['max_price'];
+            $caregiver->height = $input['height'];
+            $caregiver->weight = $input['weight'];
+            $caregiver->first_name = $input['fname'];
+            $caregiver->middle_name = $input['mname'];
+            $caregiver->last_name = $input['lname'];
             $caregiver->description = $input['description'];
             $caregiver->zipcode = $input['zipcode'];            
             $caregiver->save();
@@ -169,7 +183,7 @@ class CaregiverController extends Controller{
      */
     public function show($id){
 
-        $user  = DB::table('users')->select('users.*', 'caregiver.service', 'caregiver.min_price', 'caregiver.max_price', 'caregiver.description', 'caregiver.zipcode')->Join('caregiver', 'caregiver.user_id', '=', 'users.id')->where('users.id','=', $id)->where('users.type', '=', 1)->orderBy('users.id', 'desc')->first();
+        $user  = DB::table('users')->select('users.*', 'caregiver.height', 'caregiver.weight', 'caregiver.service', 'caregiver.min_price', 'caregiver.max_price', 'caregiver.description', 'caregiver.zipcode')->Join('caregiver', 'caregiver.user_id', '=', 'users.id')->where('users.id','=', $id)->where('users.type', '=', 1)->orderBy('users.id', 'desc')->first();
         if(empty($user)){
             flash()->error('Un-authorized user.');
             return redirect()->route('caregiver.index');
@@ -202,7 +216,7 @@ class CaregiverController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function edit($id){
-        $user  = DB::table('users')->select('users.*', 'caregiver.service', 'caregiver.min_price', 'caregiver.max_price', 'caregiver.description', 'caregiver.zipcode')->Join('caregiver', 'caregiver.user_id', '=', 'users.id')->where('users.id','=', $id)->where('users.type', '=', 1)->orderBy('users.id', 'desc')->first();
+        $user  = DB::table('users')->select('users.*', 'caregiver.first_name', 'caregiver.middle_name', 'caregiver.last_name', 'caregiver.height', 'caregiver.weight', 'caregiver.service', 'caregiver.min_price', 'caregiver.max_price', 'caregiver.description', 'caregiver.zipcode')->Join('caregiver', 'caregiver.user_id', '=', 'users.id')->where('users.id','=', $id)->where('users.type', '=', 1)->orderBy('users.id', 'desc')->first();
         if(empty($user)){
             flash()->error('Un-authorized user.');
             return redirect()->route('caregiver.index');
@@ -218,7 +232,9 @@ class CaregiverController extends Controller{
 
         $service_list = DB::table('services')->orderBy('title', 'asc')->get();
         $qualification = DB::table('qualifications')->orderBy('name', 'asc')->get();
-        return view('caregiver.edit', compact('user', 'qualification', 'service_list'));
+        $city_state = DB::table('us_location')->select('state_code')->where('city', '=', $user->city)->orderBy('state_code', 'asc')->get();
+
+        return view('caregiver.edit', compact('user', 'qualification', 'service_list', 'city_state'));
     }
 
     /**
@@ -232,12 +248,15 @@ class CaregiverController extends Controller{
         $input = $request->input();
 
         $validator =  Validator::make($input,[
-            'name' => 'required|string|max:255|min:4',
+            'first_name' => 'required|string|max:255|min:4',
+            'last_name' => 'required|string|max:255|min:4',
             'email' => 'required|string',
             'mobile_number' => 'required|numeric',
             'service' => 'required|not_in:0',
             'gender' => 'required',
             'dob' => 'required',
+            'height' => 'required',
+            'weight' => 'required',
             'min_price' => 'required|min:0',
             'max_price' => 'required|min:1',
             'location' => 'required',
@@ -253,10 +272,16 @@ class CaregiverController extends Controller{
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-        
+
+        $name = $input['first_name'];
+        if(!empty($input['middle_name'])){
+            $name .= " ".$input['middle_name']; 
+        }
+        $name .= " ".$input['last_name']; 
+
         $user = User::findOrFail($id);
         $user->role_id = 2;
-        $user->name = $input['name'];
+        $user->name = $name;
         $user->email = $input['email'];
         $user->email_verified = 1;
         $user->mobile_number = $input['mobile_number'];
@@ -288,8 +313,13 @@ class CaregiverController extends Controller{
         $caregiver->service = '';
         $caregiver->min_price = $input['min_price'];
         $caregiver->max_price = $input['max_price'];
+        $caregiver->first_name = $input['first_name'];
+        $caregiver->middle_name = $input['middle_name'];
+        $caregiver->last_name = $input['last_name'];
+        $caregiver->height = $input['height'];
+        $caregiver->weight = $input['weight'];
         $caregiver->description = $input['description'];
-        $caregiver->zipcode = $input['zipcode'];            
+        $caregiver->zipcode = $input['zipcode']; 
         $caregiver->save();
 
         //remove all old zipcode, services, qualifications, non service zipcode, srvice zipcode
@@ -357,6 +387,44 @@ class CaregiverController extends Controller{
         //
     }
 
+    public function searchcity(Request $request){
+        DB::enableQueryLog();
+        $fieldval = $request->input('term');
+        $search_zipx = array();
+
+        $search_city = Us_location::select('city')->Where("city","like","{$fieldval}%")->groupBy('city')->orderBy("city","asc")->get();
+
+        $response = array();
+        $response['error'] = false;
+        if(empty($search_city)){
+            $response['error'] = true;
+            $response['msg'] = 'Invalid City';
+        }else{
+            foreach($search_city as $row){
+                array_push($response, $row->city);
+            }
+        }
+        echo json_encode($response, true);
+    }
+
+    public function statefromcity(Request $request){
+        $fieldval = $request->input('term');
+        $search_city = Us_location::select('state_code')->Where("city","=","{$fieldval}")->orderBy("state_code","ASC")->get();
+
+        $response = array();
+        $response['error'] = false;
+        $response['list'] = array();
+        if(empty($search_city)){
+            $response['error'] = true;
+            $response['msg'] = 'Invalid City';
+        }else{
+            foreach ($search_city as $row) {
+                array_push($response['list'], $row->state_code);
+            }
+        }
+        echo json_encode($response, true);
+    }
+
     public function searchzip(Request $request){
         DB::enableQueryLog();
 
@@ -379,6 +447,29 @@ class CaregiverController extends Controller{
 
     public function locationfromzip(Request $request){
         $zipcode = $request->input('zipcode');
+        $search_zipx = DB::select( DB::raw("SELECT * FROM `us_location` where zip = '".$zipcode."'")); 
+
+        $response = array();
+        $response['error'] = false;
+        if(empty($search_zipx)){
+            $response['error'] = true;
+            $response['msg'] = 'Invalid zipcode';
+        }else{
+            $response['city'] = $search_zipx[0]->city;
+            $response['state'] = $search_zipx[0]->state_code;
+        }
+        echo json_encode($response, true);
+    }
+
+    public function getzip(Request $request){
+        $city = $request->input('city');
+        $state = $request->input('state');
+        $zipcode = DB::select( DB::raw("SELECT zip FROM `us_location` where city = '".$city."' and state_code = '".$state."'")); 
+        echo $zipcode[0]->zip;
+    }
+
+    public function locationfromcity(Request $request){
+        $zipcode = $request->input('city');
         $search_zipx = DB::select( DB::raw("SELECT * FROM `us_location` where zip = '".$zipcode."'")); 
 
         $response = array();

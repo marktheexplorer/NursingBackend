@@ -195,21 +195,50 @@ a,
                                             if(empty($user->profile_image)){ ?>
                                                 <img class="img-circle" src="{{ asset('admin/assets/img/admin-avatar.png') }}" /><?php
                                             }else{ ?>
-                                                <img class="img-circle" style="height:150px;width: 150px;" src="<?php echo asset($user->profile_image); ?>" /><?php
+                                                <img class="img-circle" style="height:150px;width: 150;" src="<?php echo asset($user->profile_image); ?>" /><?php
                                             }   ?> 
                                         </div>                                        
                                     </div>
                                     <div class="row">
-                                        <div class="col-sm-6 form-group">
-                                            <label>Name</label>
-                                            <input type="text" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" placeholder="Name" value="{{ $user->name }}" />
-                                            @if ($errors->has('name'))
+                                        <div class="form-group col-sm-6" >
+                                            <label>Change Profile Image</label><br/>
+                                            <input type="file" class=" {{ $errors->has('profile_image') ? ' is-invalid' : '' }}" name="profile_image" placeholder="Profile Image" value="{{ old('profile_image') }}" accept="image/*" style="padding-left:0px;"/>
+                                            @if ($errors->has('profile_image'))
                                                 <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('name') }}</strong>
+                                                    <strong>{{ $errors->first('profile_image') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>   
+                                        <div class="col-sm-2 form-group">
+                                            <label>First Name</label>
+                                            <input type="text" class="form-control {{ $errors->has('first_name') ? ' is-invalid' : '' }}" name="first_name" placeholder="First Name" value="{{ $user->first_name }}" />
+                                            @if ($errors->has('first_name'))
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $errors->first('first_name') }}</strong>
                                                 </span>
                                             @endif
                                         </div>
-                                        <div class="col-sm-6  form-group">
+                                        <div class="col-sm-2 form-group">
+                                            <label>Middle Name</label>
+                                            <input type="text" class="form-control {{ $errors->has('middle_name') ? ' is-invalid' : '' }}" name="middle_name" placeholder="Middle Name" value="{{ $user->middle_name }}" />
+                                            @if ($errors->has('middle_name'))
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $errors->first('middle_name') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                        <div class="col-sm-2 form-group">
+                                            <label>Last Name</label>
+                                            <input type="text" class="form-control {{ $errors->has('last_name') ? ' is-invalid' : '' }}" name="last_name" placeholder="Last Name" value="{{ $user->last_name }}" />
+                                            @if ($errors->has('last_name'))
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $errors->first('last_name') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="row">    
+                                        <div class="col-sm-3  form-group">
                                             <label>Email</label>
                                             <input type="text" name="email" placeholder="Email" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ $user->email }}" />
                                             @if ($errors->has('email'))
@@ -218,8 +247,6 @@ a,
                                                 </span>
                                             @endif
                                         </div>
-                                    </div>
-                                    <div class="row">    
                                         <div class="col-sm-3  form-group">
                                             <label>Mobile Number</label>
                                             <input type="number" class="form-control {{ $errors->has('mobile_number') ? ' is-invalid' : '' }}" placeholder="Mobile Number" name="mobile_number" value="{{ $user->mobile_number }}">
@@ -252,7 +279,9 @@ a,
                                                 </span>
                                             @endif
                                         </div>
-                                        <div class="form-group col-sm-3" >
+                                    </div>
+                                    <div class="row">    
+                                        <div class="form-group col-sm-4" >
                                             <label>Date of Birth</label>
                                             <input type="text" class="form-control {{ $errors->has('dob') ? ' is-invalid' : '' }}" name="dob" placeholder="Date of Birth" value="{{ date('d/m/Y', strtotime($user->dob)) }}" id="dob"/>
                                             @if ($errors->has('dob'))
@@ -261,9 +290,36 @@ a,
                                                 </span>
                                             @endif
                                         </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-3  form-group">
+                                        <div class="col-sm-2  form-group">
+                                            <label>Height</label>
+                                            <select name="height" class="form-control {{ $errors->has('height') ? ' is-invalid' : '' }}">
+                                                <option disabled="true" selected="true"> -- Select Height --</option>
+                                                @foreach(PROFILE_HEIGHT as $val)
+                                                    <option value="{{ $val }}" <?php if($user->height == $val){ echo 'selected'; } ?>>{{$val}}</option>
+                                                @endforeach
+                                            </select>
+                                            @if ($errors->has('height'))
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $errors->first('height') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+
+                                        <div class="col-sm-2 form-group">
+                                            <label>Weight</label>
+                                            <select name="weight" class="form-control {{ $errors->has('weight') ? ' is-invalid' : '' }}">
+                                                <option disabled="true" selected="true"> -- Select Weight --</option>
+                                                @foreach(PROFILE_WEIGHT as $val)
+                                                    <option value="{{ $val }}" <?php if($user->weight == $val){ echo 'selected'; } ?>>{{$val}}</option>
+                                                @endforeach
+                                            </select>
+                                            @if ($errors->has('weight'))
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $errors->first('weight') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                        <div class="col-sm-2  form-group">
                                             <label>Min Price</label>
                                             <input type="number" class="form-control {{ $errors->has('min_price') ? ' is-invalid' : '' }}" placeholder="Minimum" name="min_price" value="{{ $user->min_price }}" min="0" id="min_price">
                                             @if ($errors->has('min_price'))
@@ -272,7 +328,7 @@ a,
                                                 </span>
                                             @endif
                                         </div>
-                                        <div class="col-sm-3  form-group">
+                                        <div class="col-sm-2  form-group">
                                             <label>Max Price</label>
                                             <input type="number" class="form-control {{ $errors->has('max_price') ? ' is-invalid' : '' }}" placeholder="Price" name="max_price" value="{{ $user->max_price }}" min="0" id="max_price">
                                             @if ($errors->has('max_price'))
@@ -280,16 +336,7 @@ a,
                                                     <strong>{{ $errors->first('max_price') }}</strong>
                                                 </span>
                                             @endif
-                                        </div>
-                                        <div class="form-group col-sm-6" >
-                                            <label>Change Profile Image</label><br/>
-                                            <input type="file" class=" {{ $errors->has('profile_image') ? ' is-invalid' : '' }}" name="profile_image" placeholder="Profile Image" value="{{ old('profile_image') }}" accept="image/*"/>
-                                            @if ($errors->has('profile_image'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('profile_image') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>                                        
+                                        </div>                                                                             
                                     </div>    
                                     <div class="row">
                                         <div class="col-sm-6  form-group">
@@ -340,6 +387,29 @@ a,
                                             @endif
                                         </div>
                                         <div class="form-group col-sm-2" >
+                                            <label>City </label>
+                                            <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" placeholder="city" value="{{ $user->city }}"  id="citysuggest" autocomplete="off"/>
+                                            @if ($errors->has('city'))
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $errors->first('city') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                        <div class="form-group col-sm-2" >
+                                            <label>state </label>
+                                            <select name="state" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" readonly="true" id="state"">
+                                                <option disabled="true" selected=""> -- Select State --</option>
+                                                @foreach($city_state as $row)
+                                                    <option <?php if($row->state_code == $user->state){ echo 'selected'; } ?> >{{ $row->state_code }}</option>
+                                                @endforeach
+                                            </select>    
+                                            @if ($errors->has('state'))
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $errors->first('state') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                        <div class="form-group col-sm-2" >
                                             <label>Zip Code </label>
                                             <input type="text" class="form-control {{ $errors->has('zipcode') ? ' is-invalid' : '' }}" name="zipcode" placeholder="Zip code" value="{{ $user->zipcode }}" id="zipcode" />
                                             @if ($errors->has('zipcode'))
@@ -348,24 +418,7 @@ a,
                                                 </span>
                                             @endif
                                         </div>
-                                        <div class="form-group col-sm-2" >
-                                            <label>City </label>
-                                            <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" placeholder="city" value="{{ $user->city }}" id="city" readonly="true" />
-                                            @if ($errors->has('city'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('city') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                        <div class="form-group col-sm-2" >
-                                            <label>State </label>
-                                            <input type="text" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" placeholder="state" value="{{ $user->state }}"  id="state" readonly="true" />
-                                            @if ($errors->has('state'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('state') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
+                                        
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-sm-12" >
@@ -403,11 +456,11 @@ a,
                                                     <strong id="non_service_zipcode_msg"></strong>
                                                 </span>
                                             @endif
-                                        </div>    
+                                        </div>
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-sm-12" >
-                                            <label>Bio </label>
+                                            <label>Additional Information </label>
                                             <textarea class="form-control {{ $errors->has('description') ? ' is-invalid' : '' }}" rows="5" name="description" id="description" placeholder="Description">{{$user->description}}</textarea>
                                             @if ($errors->has('description'))
                                                 <span class="invalid-feedback" role="alert">
@@ -455,21 +508,21 @@ a,
         }
 
         // don't navigate away from the field on tab when selecting an item                
-        $( ".zipcodesuggest" ).on( "keydown", function( event ) {
-            if(event.keyCode === $.ui.keyCode.TAB && $( this ).autocomplete( "instance" ).menu.active ) {
+        $( "#citysuggest" ).on( "keydown", function( event ) {
+            if(event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active){
                 event.preventDefault();
             }
         }).autocomplete({
             source: function( request, response ) {
-                $.getJSON( "http://localhost/careservice/public/index.php/admin/caregiver/searchzip", {
-                    term: extractLast( request.term)
+                $.getJSON( "{{ env('APP_URL') }}admin/caregiver/searchcity", {
+                    term: request.term
                 }, response );
             },
             
             search: function() {
                 // custom minLength
-                var term = extractLast( this.value );
-                if ( term.length < 4 ) {
+                var term = this.value;
+                if ( term.length < 2){
                     return false;
                 }
             },
@@ -480,20 +533,55 @@ a,
             },
 
             select: function( event, ui ) {
-                var terms = split( this.value );
-                // remove the current input
-                terms.pop();
-                // add the selected item
-                terms.push( ui.item.value );
-                // add placeholder to get the comma-and-space at the end
-                terms.push( "" );
-                this.value = terms.join( ", " );
+                $( "#citysuggest" ).val(ui.item.value)
+                $( "#citysuggest" ).autocomplete("close");
+
+                //remove all options from select box
+                $("#state").find("option:gt(0)").remove();
+                $("#state").prop("selectedIndex", 0);
+                setstateoptions();
                 return false;
             }
         });
     }); 
 
-    $('#zipcode').blur(function(){
+    function setstateoptions(){
+        zip = $("#citysuggest").val();
+        $.ajax({
+            url: '{{ env('APP_URL') }}admin/caregiver/statefromcity',
+            type: 'GET',
+            dataType: 'json',
+            data:{term:zip},
+            success: function (res) {
+                if(res['error']){
+                    //swal("Oops", "Invalid City", "error");
+                    $("#citysuggest").val('');
+                    $("#citysuggest").focus();
+                }else{
+                    $.each(res['list'], function( index, value ) {
+                        //alert( index + ": " + value );
+                        $('#state').append($("<option></option>").attr(value, value).text(value)); 
+                    });
+                }
+            }
+        });
+        $("#state").attr("readonly", false);
+    }
+
+    $("#state").change(function () {
+        stateoption = $("#state option:selected").val();
+        cityoption = $("#citysuggest").val();
+        $.ajax({
+            url: '{{ env('APP_URL') }}admin/caregiver/getzip',
+            type: 'GET',
+            data:{city:cityoption, state:stateoption},
+            success: function (res) {
+                $("#zipcode").val(res);
+            }
+        });
+    })
+
+    /*$('#zipcode').blur(function(){
         zip = $(this).val();
         $.ajax({
             url: '{{ env("APP_URL") }}admin/caregiver/locationfromzip',
@@ -513,7 +601,7 @@ a,
                 }
             }
         });
-    });    
+    });    */
 
     $('#max_price').blur(function(){
         minprice = $("#min_price").val();
