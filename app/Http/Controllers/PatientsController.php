@@ -7,6 +7,7 @@ use App\Diagnose;
 use App\Service_requests;
 use Validator;
 use App\PatientProfile;
+use App\Qualification;
 use Carbon\Carbon;
 use Image;
 use DB;
@@ -38,7 +39,9 @@ class PatientsController extends Controller
     public function edit($id){
         $user = User::findOrFail($id);
         $diagnosis = Diagnose::get();
-        return view('patients.edit' , compact('user','diagnosis'));
+        $qualifications = Qualification::orderBy('name', 'asc')->get();
+        $selected_disciplines = explode(',', $user->patient? $user->patient->disciplines: '');
+        return view('patients.edit' , compact('user','diagnosis','qualifications','selected_disciplines'));
     }
 
     /**
@@ -66,10 +69,11 @@ class PatientsController extends Controller
             'availability' => 'required|string',
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg',
             'addtional_info' => 'nullable|max:2000',
+            'qualification' => 'required',
             'pets' => 'required',
             'pets_description' => 'nullable|max:2000'
         ]);
-        if($input['pets'] == 'yes'){
+        if(isset($input['pets']) && $input['pets'] == 'yes'){
             $this->validate($request, [
               'pets_description' => 'required|max:2000'
             ]);
@@ -106,6 +110,7 @@ class PatientsController extends Controller
                     $userProfile['pin_code'] = $input['pin_code'];
                     $userProfile['diagnose_id'] = $input['diagnose_id'];
                     $userProfile['availability'] = $input['availability'];
+                    $userProfile['disciplines'] = implode(',', $input['qualification']) ;
                     $userProfile['pets'] = $input['pets'] == 'yes'? 1 : 0;
                     $userProfile['pets_description'] = $input['pets'] == 'yes'? $input['pets_description'] : '';
                     $userProfile['additional_info'] = $input['additional_info'];
@@ -116,6 +121,7 @@ class PatientsController extends Controller
                     $profile['pin_code'] = $input['pin_code'];
                     $profile['diagnose_id'] = $input['diagnose_id'];
                     $profile['availability'] = $input['availability'];
+                    $profile['disciplines'] = implode(',', $input['qualification']) ;
                     $profile['pets'] = $input['pets'] == 'yes'? 1 : 0;
                     $profile['pets_description'] = $input['pets_description'];
                     $profile['additional_info'] = $input['additional_info'];
@@ -141,7 +147,8 @@ class PatientsController extends Controller
     
     public function create(){
         $diagnosis = Diagnose::get();
-        return view('patients.create', compact('diagnosis'));
+        $qualifications = Qualification::orderBy('name', 'asc')->get();
+        return view('patients.create', compact('diagnosis','qualifications'));
     }
 
     public function store(Request $request){
@@ -161,6 +168,7 @@ class PatientsController extends Controller
             'availability' => 'required|string',
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg',
             'addtional_info' => 'nullable|max:2000',
+            'qualification' => 'required',
             'pets' => 'required',
             'pets_description' => 'max:2000'
         ]);
@@ -201,6 +209,7 @@ class PatientsController extends Controller
             $profile['pin_code'] = $input['pin_code'];
             $profile['diagnose_id'] = $input['diagnose_id'];
             $profile['availability'] = $input['availability'];
+            $profile['disciplines'] = implode(',', $input['qualification']) ;
             $profile['pets'] = $input['pets'] == 'yes'? 1 : 0;
             $profile['pets_description'] = $input['pets'] == 'yes'? $input['pets_description'] : '';
             $profile['additional_info'] = $input['additional_info'];
@@ -222,10 +231,15 @@ class PatientsController extends Controller
 
         if($user->patient){
             $diagnosis = Diagnose::where('id',$user->patient->diagnose_id)->first();
+            $disciplines = explode(',', $user->patient->disciplines) ; 
+            foreach ($disciplines as $key => $value) {
+                $disciplines_name[] = Qualification::where('id',$value)->first();
+            }          
         }else{
             $diagnosis = '';
+            $disciplines = '';
         }
-        return view('patients.view', compact('user','diagnosis','services'));
+        return view('patients.view', compact('user','diagnosis','services','disciplines_name'));
     }
 
     public function locationfromzip(Request $request){

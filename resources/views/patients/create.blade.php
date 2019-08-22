@@ -153,7 +153,21 @@
                                        </span>
                                        @endif
                                     </div>
-                                    <div class="col-sm-4 form-group">
+                                    <div class="col-sm-4  form-group">
+                                        <label>Discipline</label>
+                                        <select name="qualification[]" class="form-control {{ $errors->has('qualification') ? ' is-invalid' : '' }} multiple" multiple="multiple">
+                                            <option disabled="true" > -- Select Discipline --</option>
+                                            @foreach($qualifications as $qualification)
+                                              <option value="{{ $qualification->id }}" {{ (collect(old('qualification'))->contains($qualification->id)) ? 'selected':'' }} >{{ $qualification->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @if ($errors->has('qualification'))
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $errors->first('qualification') }}</strong>
+                                            </span>
+                                        @endif
+                                    </div>
+                                    <div class="col-sm-2 form-group">
                                        <label>Pets</label>
                                        <div>
                                         <input type="radio" id="yes"
@@ -170,7 +184,7 @@
                                        </span>
                                        @endif
                                     </div>
-                                    <div class="form-group col-md-8 yes describe">
+                                    <div class="form-group col-md-6 yes describe">
                                         <label>Please Describe</label>
                                         <textarea class="form-control" name="pets_description" rows="3">{{ old('pets_description') }}</textarea>
                                          @if ($errors->has('pets_description'))
@@ -218,8 +232,10 @@
 @endsection
 @section('footer-scripts')
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/css/select2.min.css" rel="stylesheet" />
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.1.62/jquery.inputmask.bundle.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
 <script>
    $( function(){
         var maxBirthdayDate = new Date();
@@ -319,6 +335,6 @@
       } else return o.selectionStart
     }
 
-
+    $('.multiple').select2();
 </script>
 @endsection

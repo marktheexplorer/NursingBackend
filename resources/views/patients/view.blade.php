@@ -104,6 +104,12 @@
                                         </div>
                                     </li>
                                     <li class="media">
+                                        <div class="media-img">Disciplines</div>
+                                        <div class="media-body">
+                                            <div class="media-heading"> <?php foreach($disciplines_name as $key => $value){ echo $value->name.',  ' ;} ?> </div>
+                                        </div>
+                                    </li>
+                                    <li class="media">
                                         <div class="media-img">Pets</div>
                                         <div class="media-body">
                                             <div class="media-heading">{{ $user->patient ? ($user->patient->pets == 1? 'Yes' : 'No'):'' }}</div>
