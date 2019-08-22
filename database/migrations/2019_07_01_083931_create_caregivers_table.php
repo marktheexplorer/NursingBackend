@@ -20,6 +20,11 @@ class CreateCaregiversTable extends Migration
             $table->float('max_price');
             $table->longText('description');
             $table->string('zipcode');
+            $table->string('height');
+            $table->string('weight');
+            $table->string('first_name');
+            $table->string('middle_name');
+            $table->string('last_name');
             $table->timestamps();
         });
 
