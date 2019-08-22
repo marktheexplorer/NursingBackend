@@ -153,7 +153,7 @@
                                                 </span>
                                             @endif
                                         </div>
-                                        <div class="col-sm-4  form-group">
+                                        <div class="col-sm-6  form-group">
                                             <label>Discipline</label>
                                             <select name="qualification[]" class="form-control {{ $errors->has('qualification') ? ' is-invalid' : '' }} multiple" multiple="multiple">
                                                 <option disabled="true" > -- Select Discipline --</option>
@@ -169,7 +169,22 @@
                                                 </span>
                                             @endif
                                         </div>
-                                        <div class="col-sm-2 form-group">
+                                        <div class="col-sm-6 form-group">
+                                           <label>Long Term Care insuranc</label>
+                                           <div>
+                                            <input type="radio" name="long_term" value="yes" {{ ($user->patient?$user->patient->long_term:old('long_term')) == '1' ? 'checked' : '' }}>
+                                            <label for="yes">Yes</label>
+
+                                            <input type="radio" name="long_term" value="no" {{ ($user->patient?$user->patient->long_term:old('long_term')) == '0' ? 'checked' : '' }}>
+                                            <label for="no">No</label>
+                                          </div>
+                                           @if ($errors->has('long_term'))
+                                           <span class="text-danger">
+                                           <strong>{{ $errors->first('long_term') }}</strong>
+                                           </span>
+                                           @endif
+                                        </div>
+                                        <div class="col-sm-4 form-group">
                                            <label>Pets</label>
                                            <div>
                                             <input type="radio" id="yes"
@@ -186,7 +201,7 @@
                                            </span>
                                            @endif
                                         </div>
-                                        <div class="form-group col-md-6 yes describe">
+                                        <div class="form-group col-md-8 yes describe">
                                             <label>Please Describe</label>
                                             <textarea class="form-control" name="pets_description" rows="3">{{ old('pets_description', $user->patient? $user->patient->pets_description:'') }}</textarea>
                                              @if ($errors->has('pets_description'))
@@ -281,7 +296,7 @@
         {  
             $('.describe').hide();
         }
-    $('input[type="radio"]').click(function(){
+    $('input[name=pets]').click(function(){
 
       var inputValue = $(this).attr("value");
       var targetBox = $("." + inputValue);

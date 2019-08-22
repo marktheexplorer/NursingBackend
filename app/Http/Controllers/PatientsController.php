@@ -70,6 +70,7 @@ class PatientsController extends Controller
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg',
             'addtional_info' => 'nullable|max:2000',
             'qualification' => 'required',
+            'long_term' => 'required',
             'pets' => 'required',
             'pets_description' => 'nullable|max:2000'
         ]);
@@ -111,6 +112,7 @@ class PatientsController extends Controller
                     $userProfile['diagnose_id'] = $input['diagnose_id'];
                     $userProfile['availability'] = $input['availability'];
                     $userProfile['disciplines'] = implode(',', $input['qualification']) ;
+                    $userProfile['long_term'] = $input['long_term'] == 'yes'? 1 : 0;
                     $userProfile['pets'] = $input['pets'] == 'yes'? 1 : 0;
                     $userProfile['pets_description'] = $input['pets'] == 'yes'? $input['pets_description'] : '';
                     $userProfile['additional_info'] = $input['additional_info'];
@@ -122,6 +124,7 @@ class PatientsController extends Controller
                     $profile['diagnose_id'] = $input['diagnose_id'];
                     $profile['availability'] = $input['availability'];
                     $profile['disciplines'] = implode(',', $input['qualification']) ;
+                    $profile['long_term'] = $input['long_term'] == 'yes'? 1 : 0;
                     $profile['pets'] = $input['pets'] == 'yes'? 1 : 0;
                     $profile['pets_description'] = $input['pets_description'];
                     $profile['additional_info'] = $input['additional_info'];
@@ -170,7 +173,8 @@ class PatientsController extends Controller
             'addtional_info' => 'nullable|max:2000',
             'qualification' => 'required',
             'pets' => 'required',
-            'pets_description' => 'max:2000'
+            'pets_description' => 'max:2000',
+            'long_term' => 'required'
         ]);
         if(!empty($input['pets']) && $input['pets'] == 'yes'){
             $this->validate($request, [
@@ -210,6 +214,7 @@ class PatientsController extends Controller
             $profile['diagnose_id'] = $input['diagnose_id'];
             $profile['availability'] = $input['availability'];
             $profile['disciplines'] = implode(',', $input['qualification']) ;
+            $profile['long_term'] = $input['long_term'] == 'yes'? 1 : 0;
             $profile['pets'] = $input['pets'] == 'yes'? 1 : 0;
             $profile['pets_description'] = $input['pets'] == 'yes'? $input['pets_description'] : '';
             $profile['additional_info'] = $input['additional_info'];

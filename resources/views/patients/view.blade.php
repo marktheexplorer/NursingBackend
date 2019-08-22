@@ -110,6 +110,12 @@
                                         </div>
                                     </li>
                                     <li class="media">
+                                        <div class="media-img">Long Term Care insurance</div>
+                                        <div class="media-body">
+                                            <div class="media-heading">{{ $user->patient ? ($user->patient->long_term == 1? 'Yes' : 'No'):'' }}</div>
+                                        </div>
+                                    </li>
+                                    <li class="media">
                                         <div class="media-img">Pets</div>
                                         <div class="media-body">
                                             <div class="media-heading">{{ $user->patient ? ($user->patient->pets == 1? 'Yes' : 'No'):'' }}</div>
