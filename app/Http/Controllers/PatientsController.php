@@ -105,6 +105,8 @@ class PatientsController extends Controller{
                     $userProfile['pin_code'] = $input['pin_code'];
                     $userProfile['diagnose_id'] = $input['diagnose_id'];
                     $userProfile['availability'] = $input['availability'];
+                    $userProfile['height'] = $input['height'];
+                    $userProfile['weight'] = $input['weight'];
                     $userProfile['disciplines'] = implode(',', $input['qualification']) ;
                     $userProfile['long_term'] = $input['long_term'] == 'yes'? 1 : 0;
                     $userProfile['pets'] = $input['pets'] == 'yes'? 1 : 0;
@@ -117,6 +119,8 @@ class PatientsController extends Controller{
                     $profile['pin_code'] = $input['pin_code'];
                     $profile['diagnose_id'] = $input['diagnose_id'];
                     $profile['availability'] = $input['availability'];
+                    $profile['height'] = $input['height'];
+                    $profile['weight'] = $input['weight'];
                     $profile['disciplines'] = implode(',', $input['qualification']) ;
                     $profile['long_term'] = $input['long_term'] == 'yes'? 1 : 0;
                     $profile['pets'] = $input['pets'] == 'yes'? 1 : 0;
@@ -167,6 +171,8 @@ class PatientsController extends Controller{
             'addtional_info' => 'nullable|max:2000',
             'qualification' => 'required',
             'pets' => 'required',
+            'height' => 'required',
+            'weight' => 'required',
             'pets_description' => 'max:2000',
             'long_term' => 'required'
         ]);
@@ -207,6 +213,8 @@ class PatientsController extends Controller{
             $profile['pin_code'] = $input['pin_code'];
             $profile['diagnose_id'] = $input['diagnose_id'];
             $profile['availability'] = $input['availability'];
+            $profile['height'] = $input['height'];
+            $profile['weight'] = $input['weight'];
             $profile['disciplines'] = implode(',', $input['qualification']) ;
             $profile['long_term'] = $input['long_term'] == 'yes'? 1 : 0;
             $profile['pets'] = $input['pets'] == 'yes'? 1 : 0;

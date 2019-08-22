@@ -68,6 +68,34 @@
                                        </span>
                                        @endif
                                     </div>
+                                     <div class="col-sm-4  form-group">
+                                        <label>Height</label>
+                                        <select name="height" class="form-control {{ $errors->has('height') ? ' is-invalid' : '' }} select2">
+                                            <option disabled="true" selected="true"> -- Select Height --</option>
+                                            @foreach(PROFILE_HEIGHT as $val)
+                                                <option value="{{ $val }}">{{$val}}</option>
+                                            @endforeach
+                                        </select>
+                                        @if ($errors->has('height'))
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $errors->first('height') }}</strong>
+                                            </span>
+                                        @endif
+                                    </div>
+                                    <div class="col-sm-4 form-group">
+                                        <label>Weight</label>
+                                        <select name="weight" class="form-control {{ $errors->has('weight') ? ' is-invalid' : '' }} select2">
+                                            <option disabled="true" selected="true"> -- Select Weight --</option>
+                                            @foreach(PROFILE_WEIGHT as $val)
+                                                <option value="{{ $val }}">{{$val}}</option>
+                                            @endforeach
+                                        </select>
+                                        @if ($errors->has('weight'))
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $errors->first('weight') }}</strong>
+                                            </span>
+                                        @endif
+                                    </div>
                                     <div class="col-sm-4 form-group">
                                        <label>Gender</label>
                                        <select class="form-control" name="gender">
@@ -129,7 +157,7 @@
                                     </div>
                                     <div class="col-sm-4 form-group">
                                        <label>Health Conditions</label>
-                                       <select class="form-control" name="diagnose_id" multiple="true">
+                                       <select class="form-control" name="diagnose_id">
                                           @foreach($diagnosis as $diagnose)
                                           <option value="{{ $diagnose->id }}">{{ $diagnose->title }}</option>
                                           @endforeach
@@ -153,12 +181,12 @@
                                        </span>
                                        @endif
                                     </div>
-                                    <div class="col-sm-6  form-group">
+                                    <div class="col-sm-4  form-group">
                                         <label>Discipline</label>
-                                        <select name="qualification[]" class="form-control {{ $errors->has('qualification') ? ' is-invalid' : '' }} multiple" multiple="multiple">
-                                            <option disabled="true" > -- Select Discipline --</option>
-                                            @foreach($qualifications as $qualification)
-                                              <option value="{{ $qualification->id }}" {{ (collect(old('qualification'))->contains($qualification->id)) ? 'selected':'' }} >{{ $qualification->name }}</option>
+                                        <select name="qualification[]" class="form-control {{ $errors->has('qualification') ? ' is-invalid' : '' }} select2" multiple="multiple">
+                                          <option disabled="true" > -- Select Discipline --</option>
+                                          @foreach($qualifications as $qualification)
+                                            <option value="{{ $qualification->id }}" {{ (collect(old('qualification'))->contains($qualification->id)) ? 'selected':'' }} >{{ $qualification->name }}</option>
                                             @endforeach
                                         </select>
                                         @if ($errors->has('qualification'))
@@ -167,7 +195,7 @@
                                             </span>
                                         @endif
                                     </div>
-                                    <div class="col-sm-6 form-group">
+                                    <div class="col-sm-4 form-group">
                                        <label>Long Term Care insurance</label>
                                        <div>
                                         <input type="radio" name="long_term" value="yes" {{ old('long_term') == 'yes' ? 'checked' : '' }}>
@@ -182,7 +210,7 @@
                                        </span>
                                        @endif
                                     </div>
-                                    <div class="col-sm-4 form-group">
+                                    <div class="col-sm-2 form-group">
                                        <label>Pets</label>
                                        <div>
                                         <input type="radio" id="yes"
@@ -199,7 +227,7 @@
                                        </span>
                                        @endif
                                     </div>
-                                    <div class="form-group col-md-8 yes describe">
+                                    <div class="form-group col-md-6 yes describe">
                                         <label>Please Describe</label>
                                         <textarea class="form-control" name="pets_description" rows="3">{{ old('pets_description') }}</textarea>
                                          @if ($errors->has('pets_description'))
@@ -350,6 +378,6 @@
       } else return o.selectionStart
     }
 
-    $('.multiple').select2();
+    $('.select2').select2();
 </script>
 @endsection

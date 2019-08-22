@@ -20,6 +20,8 @@ class CreatePatientsProfilesTable extends Migration
             $table->string('range');
             $table->string('availability');
             $table->string('pin_code');
+            $table->string('height');
+            $table->string('weight');
             $table->string('disciplines')->nullable();
             $table->boolean('long_term')->default(0);
             $table->boolean('pets')->default(0);
