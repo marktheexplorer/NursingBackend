@@ -75,3 +75,5 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function()
 Route::get('cms/{token}', 'CmsPageController@view_cms');
 Route::get('confirm_careservice/{token}', 'ServiceRequestController@confirm_careservice');
 Route::post('upload_carepack_docs', 'ServiceRequestController@upload_carepack_docs');
+Route::get('set_password/{token}', 'CaregiverController@set_password');
+Route::post('caregiver/savepassword', 'CaregiverController@savepassword');

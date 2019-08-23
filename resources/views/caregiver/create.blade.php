@@ -84,8 +84,12 @@
                                             @endif
                                         </div>
                                         <div class="form-group col-sm-3" >
-                                            <label>Password</label>
-                                            <input type="password" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" placeholder="Password" value="{{ old('password') }}"/>
+                                            <label>
+                                                <span style="color:blue;cursor: pointer;" onclick="generatepassword()">Generate Password</span>
+                                                <span style="margin-left:75px;color:blue;cursor: pointer;" onclick="setmail()">Send Mail</span>
+                                            </label>
+                                            <input type="hidden" value="0" name="issentmail" id="issentmail">
+                                            <input type="text" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" placeholder="Password" value="{{ old('password') }}" id="newpassword" />
                                             @if ($errors->has('password'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('password') }}</strong>
@@ -444,6 +448,19 @@
         if (r.text == '') return o.value.length
         return o.value.lastIndexOf(r.text)
       } else return o.selectionStart
+    }
+
+    generatepassword();
+    function generatepassword(){
+        $("#issentmail").val('0');
+        newpassword = Math.random().toString(36).substr(2, 14);
+        $("#newpassword").val(newpassword);
+        $("#newpassword").attr("readonly", false);
+    }
+
+    function setmail(){
+        $("#newpassword").attr("readonly", true);
+        $("#issentmail").val('1');
     }
 </script>
 @endsection

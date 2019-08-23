@@ -37,6 +37,12 @@ class MailHelper extends Mailable{
             //return $this->view('mail.basic_carepack_confirmed', compact('objDemo'));
             return $this->from($this->objDemo->mail_from, $this->objDemo->mail_from_name)->subject($this->objDemo->subject)->view('mail.basic_carepack_confirmed', compact('objDemo'));
         }
+
+        if($this->objDemo->type == 'password_reset_mail'){
+
+          echo "all condition is mateched...";
+          die;
+        }
     }
 
     /*public function basic_email() {
