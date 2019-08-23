@@ -74,6 +74,12 @@
                                         </div>
                                     </li>
                                     <li class="media">
+                                        <div class="media-img">Street</div>
+                                        <div class="media-body">
+                                            <div class="media-heading">{{ $user->street}}</div>
+                                        </div>
+                                    </li>
+                                    <li class="media">
                                         <div class="media-img">City</div>
                                         <div class="media-body">
                                             <div class="media-heading">{{ $user->city}}</div>
@@ -86,13 +92,7 @@
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img">Country</div>
-                                        <div class="media-body">
-                                            <div class="media-heading">{{ $user->country}}</div>
-                                        </div>
-                                    </li>
-                                    <li class="media">
-                                        <div class="media-img">Zip Code</div>
+                                        <div class="media-img">Pin Code</div>
                                         <div class="media-body">
                                             <div class="media-heading">{{ $user->patient ? $user->patient->pin_code : ''}}</div>
                                         </div>
