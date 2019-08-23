@@ -150,7 +150,9 @@
 
                                         <div class="col-sm-2  form-group">
                                             <label>Min Price</label>
-                                            <input type="number" class="form-control {{ $errors->has('min_price') ? ' is-invalid' : '' }}" placeholder="Minimum" name="min_price" value="{{ old('min_price')}}" min="0" id="min_price">
+                                            <span class="price">
+                                                <input type="text" class="form-control {{ $errors->has('min_price') ? ' is-invalid' : '' }}" placeholder="Min Price" name="min_price" value="{{ old('min_price')}}" min="0" id="min_price" onkeypress="return validateFloatKeyPress(this,event);">
+                                            </span>
                                             @if ($errors->has('min_price'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('min_price') }}</strong>
@@ -160,7 +162,7 @@
                                         <div class="col-sm-2  form-group">
                                             <label>Max Price</label>
                                             <span class="price">
-                                                <input type="text" class="form-control {{ $errors->has('max_price') ? ' is-invalid' : '' }}" placeholder="Price" name="max_price" value="{{ old('max_price')}}" min="0" id="max_price" onkeypress="return validateFloatKeyPress(this,event);">
+                                                <input type="text" class="form-control {{ $errors->has('max_price') ? ' is-invalid' : '' }}" placeholder="Max Price" name="max_price" value="{{ old('max_price')}}" min="0" id="max_price" onkeypress="return validateFloatKeyPress(this,event);">
                                             </span>
                                             @if ($errors->has('max_price'))
                                                 <span class="invalid-feedback" role="alert">
@@ -333,7 +335,7 @@
             search: function() {
                 // custom minLength
                 var term = this.value;
-                if ( term.length < 2){
+                if ( term.length < 1){
                     return false;
                 }
             },
@@ -391,28 +393,6 @@
             }
         });
     })
-
-    /*$('#zipcode').blur(function(){
-        zip = $(this).val();
-        $.ajax({
-            url: '{{ env("APP_URL") }}admin/caregiver/locationfromzip',
-            type: 'GET',
-            dataType: 'json',
-            data:{zipcode:zip},
-            success: function (res) {
-                if(res['error']){
-                    $("#city").val('');
-                    $("#state").val('');
-                    $('#zipcode').val('');
-                    swal("Oops", "Invalid Zip Code", "error");
-                    //$('#zipcode').focus();
-                }else{
-                    $("#city").val(res['city']);
-                    $("#state").val(res['state']);
-                }
-            }
-        });
-    });    */
 
     $('#max_price').blur(function(){
         minprice = $("#min_price").val();

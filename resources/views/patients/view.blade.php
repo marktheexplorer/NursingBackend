@@ -62,6 +62,18 @@
                                         </div>
                                     </li>
                                     <li class="media">
+                                        <div class="media-img">Height</div>
+                                        <div class="media-body">
+                                            <div class="media-heading">{{ $user->patient ? $user->patient->height : ''}}</div>
+                                        </div>
+                                    </li>
+                                    <li class="media">
+                                        <div class="media-img">Weight</div>
+                                        <div class="media-body">
+                                            <div class="media-heading">{{ $user->patient ? $user->patient->weight : ''}}</div>
+                                        </div>
+                                    </li>
+                                    <li class="media">
                                         <div class="media-img">City</div>
                                         <div class="media-body">
                                             <div class="media-heading">{{ $user->city}}</div>
