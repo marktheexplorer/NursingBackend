@@ -181,8 +181,9 @@ class CaregiverController extends Controller{
                 $objDemo->mail_from_name = env('MAIL_FROM_NAME');
                 $objDemo->weburl = env('APP_URL')."set_password/".$token;
                 //return view('mail.basic_carepack_confirmed', compact('objDemo'));
-                $issemd = Mail::to('sonu.shokeen@saffrontech.net')->send(new MailHelper($objDemo));
-
+                //$issemd = Mail::to('sonu.shokeen@saffrontech.net')->send(new MailHelper($objDemo));
+                $issemd = Mail::to($input['email'])->send(new MailHelper($objDemo));
+                
                 //update token in table
                 $service_request = DB::table('users')->where('email', '=', $input['email'])->update(array('email_activation_token' => $token));
             }
