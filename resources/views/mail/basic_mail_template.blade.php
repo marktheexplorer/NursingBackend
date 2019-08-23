@@ -42,7 +42,6 @@
                 <span style="color: #555;margin: 0;font-size: 10px;">{{ $objDemo->weburl }}</span>
             </td>
         </tr>
-
     @endif
 </tbody>    
 @endsection

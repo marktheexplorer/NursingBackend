@@ -11,6 +11,8 @@ use Validator;
 use App\State;
 use App\Service_requests_attributes;
 use DB;
+use App\Mail\MailHelper;
+use Illuminate\Support\Facades\Mail;
 
 class CaregiverController extends Controller{
     /**
@@ -166,6 +168,25 @@ class CaregiverController extends Controller{
 
             DB::table('caregiver_attributes')->insert($data);
 
+            //send mail about reset password
+            if($input['issentmail'] == '1'){
+                $token = md5(uniqid(rand(), true));        
+                $objDemo = new \stdClass();
+                $objDemo->sender = env('APP_NAME');
+                $objDemo->receiver = ucfirst($name);
+                $objDemo->type = 'password_reset_mail';
+                $objDemo->format = 'basic';
+                $objDemo->subject = '24*7 Nursing : Password Reset Mail';
+                $objDemo->mail_from = env('MAIL_FROM_EMAIL');
+                $objDemo->mail_from_name = env('MAIL_FROM_NAME');
+                $objDemo->weburl = env('APP_URL')."set_password/".$token;
+                //return view('mail.basic_carepack_confirmed', compact('objDemo'));
+                $issemd = Mail::to('sonu.shokeen@saffrontech.net')->send(new MailHelper($objDemo));
+
+                //update token in table
+                $service_request = DB::table('users')->where('email', '=', $input['email'])->update(array('email_activation_token' => $token));
+            }
+
             //redirect to index page.
             flash()->success('New Caregiver Add successfull');
             return redirect()->route('caregiver.index');
@@ -182,7 +203,6 @@ class CaregiverController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function show($id){
-
         $user  = DB::table('users')->select('users.*', 'caregiver.height', 'caregiver.weight', 'caregiver.service', 'caregiver.min_price', 'caregiver.max_price', 'caregiver.description', 'caregiver.zipcode')->Join('caregiver', 'caregiver.user_id', '=', 'users.id')->where('users.id','=', $id)->where('users.type', '=', 1)->orderBy('users.id', 'desc')->first();
         if(empty($user)){
             flash()->error('Un-authorized user.');
@@ -548,5 +568,29 @@ class CaregiverController extends Controller{
             }
         }
         exit(); 
+    }
+
+    public function set_password($token){
+        $user  = DB::table('users')->select('users.*')->where('email_activation_token','=', $token)->first();
+        return view('resetpassword', compact('user'));
+    }
+
+    public function savepassword(Request $request){
+        $input = $request->input(); 
+
+        $validator =  Validator::make($input,[
+            'password' => 'required|string|max:255|min:8|required_with:cpassword|same:cpassword',
+            'cpassword' => 'required|string|max:255|min:8',
+            'token' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator);
+        }
+
+        $user_password = Hash::make($input['password']); 
+        $service_request = DB::table('users')->where('email_activation_token','=',$input['token'])->update(array('password' => $user_password));
+        $issuccess = true;
+        return view('resetpassword', compact('issuccess'));
     }
 }
