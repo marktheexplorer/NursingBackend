@@ -8,6 +8,7 @@ use App\Service_requests;
 use Validator;
 use App\PatientProfile;
 use App\Qualification;
+use App\Us_location;
 use Carbon\Carbon;
 use Image;
 use DB;
@@ -35,7 +36,8 @@ class PatientsController extends Controller{
         $diagnosis = Diagnose::get();
         $qualifications = Qualification::orderBy('name', 'asc')->get();
         $selected_disciplines = explode(',', $user->patient? $user->patient->disciplines: '');
-        return view('patients.edit' , compact('user','diagnosis','qualifications','selected_disciplines'));
+        $city_state = DB::table('us_location')->select('state_code')->where('city', '=', $user->city)->orderBy('state_code', 'asc')->get();
+        return view('patients.edit' , compact('user','diagnosis','qualifications','selected_disciplines','city_state'));
     }
 
     /**
@@ -49,7 +51,9 @@ class PatientsController extends Controller{
     {
         $input = $request->input();
         $validator = validator::make($input,[
-            'name' => 'required|string|max:60',
+            'f_name' => 'required|string|max:60|alpha_dash',
+            'm_name' => 'nullable|string|max:60|alpha_dash',
+            'l_name' => 'required|string|max:60|alpha_dash',
             'email' => 'required|string|max:60',
             'mobile_number' => 'required',
             'dob' => 'required',
@@ -58,7 +62,7 @@ class PatientsController extends Controller{
             'pin_code' => 'required|numeric',
             'city' => 'required|string',
             'state' => 'required|string',
-            'country' => 'required|string',
+            'street' => 'required|string',
             'diagnose_id' => 'required',
             'availability' => 'required|string',
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg',
@@ -89,18 +93,21 @@ class PatientsController extends Controller{
                 $image->move($destinationPath, $input['profile_image']);
             }
                 $user = User::findOrFail($id);
-                $user->name = $input['name'];
+                $user->name = $input['f_name'].' '.$input['m_name'].' '.$input['l_name'];
                 $user->email = $input['email'];
                 $user->mobile_number = $input['mobile_number'];
                 $user->city = $input['city'];
                 $user->state = $input['state'];
-                $user->country = $input['country'];
+                $user->street = $input['street'];
                 $user->dob = date("Y-m-d", strtotime($input['dob']));
                 $user->gender = $input['gender'];
                 $user->save();
 
                 $userProfile = PatientProfile::where('user_id',$id)->first();
                 if($userProfile){
+                    $userProfile['f_name'] = $input['f_name'];
+                    $userProfile['m_name'] = $input['m_name'];
+                    $userProfile['l_name'] = $input['l_name'];
                     $userProfile['range'] = $input['range'];
                     $userProfile['pin_code'] = $input['pin_code'];
                     $userProfile['diagnose_id'] = $input['diagnose_id'];
@@ -115,6 +122,9 @@ class PatientsController extends Controller{
                     $userProfile->save();
                 }else{
                     $profile['user_id'] = $user->id;
+                    $profile['f_name'] = $input['f_name'];
+                    $profile['m_name'] = $input['m_name'];
+                    $profile['l_name'] = $input['l_name'];
                     $profile['range'] = $input['range'];
                     $profile['pin_code'] = $input['pin_code'];
                     $profile['diagnose_id'] = $input['diagnose_id'];
@@ -155,7 +165,9 @@ class PatientsController extends Controller{
     public function store(Request $request){
         $input = $request->input();
         $validator = validator::make($input,[
-            'name' => 'required|string|max:60',
+            'f_name' => 'required|string|max:60|alpha_dash',
+            'm_name' => 'nullable|string|max:60|alpha_dash',
+            'l_name' => 'required|string|max:60|alpha_dash',
             'email' => 'required|string|max:60|unique:users',
             'mobile_number' => 'required|unique:users',
             'dob' => 'required',
@@ -164,7 +176,7 @@ class PatientsController extends Controller{
             'pin_code' => 'required|numeric',
             'city' => 'required|string',
             'state' => 'required|string',
-            'country' => 'required|string',
+            'street' => 'required|string',
             'diagnose_id' => 'required',
             'availability' => 'required|string',
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg',
@@ -195,13 +207,13 @@ class PatientsController extends Controller{
                 $image->move($destinationPath, $input['profile_image']);
             }
 
-            $input['name'] = $input['name'];
+            $input['name'] = $input['f_name'].' '.$input['m_name'].' '.$input['l_name'];
             $input['role_id'] = 3;
             $input['email'] = $input['email'];
             $input['mobile_number'] = $input['mobile_number'];
             $input['city'] = $input['city'];
             $input['state'] = $input['state'];
-            $input['country'] = $input['country'];
+            $input['street'] = $input['street'];
             $input['type'] = 'patient';
             $input['password'] = Hash::make('123456');
             $input['dob'] = date("Y-m-d", strtotime($input['dob']));
@@ -209,6 +221,9 @@ class PatientsController extends Controller{
             $patient = User::create($input);
 
             $profile['user_id'] = $patient->id;
+            $profile['f_name'] = $input['f_name'];
+            $profile['m_name'] = $input['m_name'];
+            $profile['l_name'] = $input['l_name'];
             $profile['range'] = $input['range'];
             $profile['pin_code'] = $input['pin_code'];
             $profile['diagnose_id'] = $input['diagnose_id'];
@@ -247,22 +262,6 @@ class PatientsController extends Controller{
             $disciplines = '';
         }
         return view('patients.view', compact('user','diagnosis','services','disciplines_name'));
-    }
-
-    public function locationfromzip(Request $request){
-        $pincode = $request->input('pin_code');
-        $search_pin = DB::select( DB::raw("SELECT * FROM `us_location` where zip = '".$pincode."'")); 
-
-        $response = array();
-        $response['error'] = false;
-        if(empty($search_pin)){
-            $response['error'] = true;
-            $response['msg'] = 'Invalid zipcode';
-        }else{
-            $response['city'] = $search_pin[0]->city;
-            $response['state'] = $search_pin[0]->state_code;
-        }
-        echo json_encode($response, true);
     }
 
     public function download_excel(){
@@ -313,5 +312,49 @@ class PatientsController extends Controller{
             }
         }
         exit(); 
+    }
+    public function searchcity(Request $request){
+        DB::enableQueryLog();
+        $fieldval = $request->input('term');
+        $search_zipx = array();
+
+        $search_city = Us_location::select('city')->Where("city","like","{$fieldval}%")->groupBy('city')->orderBy("city","asc")->get();
+
+        $response = array();
+        $response['error'] = false;
+        if(empty($search_city)){
+            $response['error'] = true;
+            $response['msg'] = 'Invalid City';
+        }else{
+            foreach($search_city as $row){
+                array_push($response, $row->city);
+            }
+        }
+        echo json_encode($response, true);
+    }
+
+    public function statefromcity(Request $request){
+        $fieldval = $request->input('term');
+        $search_city = Us_location::select('state_code')->Where("city","=","{$fieldval}")->orderBy("state_code","ASC")->distinct('state_code')->get();
+
+        $response = array();
+        $response['error'] = false;
+        $response['list'] = array();
+        if(empty($search_city)){
+            $response['error'] = true;
+            $response['msg'] = 'Invalid City';
+        }else{
+            foreach ($search_city as $row) {
+                array_push($response['list'], $row->state_code);
+            }
+        }
+        echo json_encode($response, true);
+    }
+
+    public function getzip(Request $request){
+        $city = $request->input('city');
+        $state = $request->input('state');
+        $zipcode = DB::select( DB::raw("SELECT zip FROM `us_location` where city = '".$city."' and state_code = '".$state."'")); 
+        echo $zipcode[0]->zip;
     }
 }

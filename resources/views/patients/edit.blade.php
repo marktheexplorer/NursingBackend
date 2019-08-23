@@ -30,11 +30,29 @@
                                 <div class="tab-pane fade show active col-md-9" id="tab-2">
                                     <div class="row">
                                        <div class="col-sm-4 form-group">
-                                            <label>Name</label>
-                                            <input type="text" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" placeholder="Title" value="{{ old('name', $user->name) }}"/>
-                                            @if ($errors->has('name'))
+                                            <label>First Name</label>
+                                            <input type="text" class="form-control {{ $errors->has('f_name') ? ' is-invalid' : '' }}" name="f_name" placeholder="Title" value="{{ old('f_name', $user->patient?$user->patient->f_name:'') }}"/>
+                                            @if ($errors->has('f_name'))
                                                 <span class="text-danger">
-                                                    <strong>{{ $errors->first('name') }}</strong>
+                                                    <strong>{{ $errors->first('f_name') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                        <div class="col-sm-4 form-group">
+                                            <label>Middle Name</label>
+                                            <input type="text" class="form-control {{ $errors->has('m_name') ? ' is-invalid' : '' }}" name="m_name" placeholder="Title" value="{{ old('m_name', $user->patient?$user->patient->m_name:'') }}"/>
+                                            @if ($errors->has('m_name'))
+                                                <span class="text-danger">
+                                                    <strong>{{ $errors->first('m_name') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                        <div class="col-sm-4 form-group">
+                                            <label>Last Name</label>
+                                            <input type="text" class="form-control {{ $errors->has('l_name') ? ' is-invalid' : '' }}" name="l_name" placeholder="Title" value="{{ old('l_name', $user->patient?$user->patient->l_name:'') }}"/>
+                                            @if ($errors->has('l_name'))
+                                                <span class="text-danger">
+                                                    <strong>{{ $errors->first('l_name') }}</strong>
                                                 </span>
                                             @endif
                                         </div>
@@ -120,17 +138,17 @@
                                             @endif
                                         </div>
                                         <div class="col-sm-4 form-group">
-                                           <label>Pin Code</label>
-                                           <input type="text" class="form-control {{ $errors->has('pin_code') ? ' is-invalid' : '' }}" name="pin_code" placeholder="Pin Code" value="{{ old('pin_code' ,$user->patient ?$user->patient->pin_code:'') }}" id="pin_code" />
-                                           @if ($errors->has('pin_code'))
-                                           <span class="text-danger">
-                                           <strong>{{ $errors->first('pin_code') }}</strong>
-                                           </span>
-                                           @endif
+                                            <label>Street</label>
+                                            <input type="text" class="form-control {{ $errors->has('street') ? ' is-invalid' : '' }}" name="street" placeholder="street" value="{{ old('street', $user->street) }}" id="street" readonly />
+                                            @if ($errors->has('street'))
+                                                <span class="text-danger">
+                                                    <strong>{{ $errors->first('street') }}</strong>
+                                                </span>
+                                            @endif
                                         </div>
                                         <div class="col-sm-4 form-group">
                                             <label>City</label>
-                                            <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" placeholder="City" value="{{ old('city', $user->city) }}" id="city" readonly/>
+                                            <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" placeholder="City" value="{{ old('city', $user->city) }}" id="citysuggest"/>
                                             @if ($errors->has('city'))
                                                 <span class="text-danger">
                                                     <strong>{{ $errors->first('city') }}</strong>
@@ -139,7 +157,12 @@
                                         </div> 
                                         <div class="col-sm-4 form-group">
                                             <label>State</label>
-                                            <input type="text" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" placeholder="State" value="{{ old('state', $user->state) }}" id="state" readonly />
+                                            <select name="state" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" readonly="true" id="state">
+                                                <option disabled="true" selected=""> -- Select State --</option>
+                                                @foreach($city_state as $row)
+                                                    <option <?php if($row->state_code == $user->state){ echo 'selected'; } ?> >{{ $row->state_code }}</option>
+                                                @endforeach
+                                            </select>  
                                             @if ($errors->has('state'))
                                                 <span class="text-danger">
                                                     <strong>{{ $errors->first('state') }}</strong>
@@ -147,13 +170,13 @@
                                             @endif
                                         </div>
                                         <div class="col-sm-4 form-group">
-                                            <label>Country</label>
-                                            <input type="text" class="form-control {{ $errors->has('country') ? ' is-invalid' : '' }}" name="country" placeholder="Country" value="{{ old('country', $user->country) }}" id="country" readonly />
-                                            @if ($errors->has('country'))
-                                                <span class="text-danger">
-                                                    <strong>{{ $errors->first('country') }}</strong>
-                                                </span>
-                                            @endif
+                                           <label>Pin Code</label>
+                                           <input type="text" class="form-control {{ $errors->has('pin_code') ? ' is-invalid' : '' }}" name="pin_code" placeholder="Pin Code" value="{{ old('pin_code' ,$user->patient ?$user->patient->pin_code:'') }}" id="pin_code" />
+                                           @if ($errors->has('pin_code'))
+                                           <span class="text-danger">
+                                           <strong>{{ $errors->first('pin_code') }}</strong>
+                                           </span>
+                                           @endif
                                         </div>
                                         <div class="col-sm-4 form-group">
                                             <label>Health Conditions</label>
@@ -296,30 +319,94 @@
             reader.readAsDataURL(input.files[0]);
         }
     }
+ $(function(){
+    function split( val ) {
+        return val.split( /,\s*/ );
+    }
 
-    $('#pin_code').blur(function(){
-        pin = $(this).val();
-        $.ajax({
-            url: '{{ route("locationfromzip") }}',
-            type: 'GET',
-            dataType: 'json',
-            data:{pin_code:pin},
-            success: function (res) {
-                if(res['error']){
-                    $("#city").val('');
-                    $("#state").val('');
-                    $("#country").val('');
-                    $('#pin_code').val('');
-                    swal("Oops", "Invalid Zip Code", "error");
-                    //$('#zipcode').focus();
-                }else{
-                    $("#city").val(res['city']);
-                    $("#state").val(res['state']);
-                    $("#country").val('USA');
-                }
+    function extractLast( term ) {
+        //return split( term ).pop();  
+        temp = $.trim($("#pin_code").val());
+        fnd = ','
+        if(temp.indexOf(fnd) != -1){
+            term =  temp+" "+term;
+        }
+        console.log(term);
+        return term;
+    }
+
+    // don't navigate away from the field on tab when selecting an item                
+    $( "#citysuggest" ).on( "keydown", function( event ) {
+        if(event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active){
+            event.preventDefault();
+        }
+    }).autocomplete({
+        source: function( request, response ) {
+            $.getJSON( "{{ env('APP_URL') }}admin/patients/searchcity", {
+                term: request.term
+            }, response );
+        },
+        search: function() {
+            // custom minLength
+            var term = this.value;
+            if ( term.length < 1){
+                return false;
             }
-        });
+        },
+
+        focus: function() {
+            // prevent value inserted on focus
+            return false;
+        },
+
+        select: function( event, ui ) {
+            $( "#citysuggest" ).val(ui.item.value)
+            $( "#citysuggest" ).autocomplete("close");
+
+            //remove all options from select box
+            $("#state").find("option:gt(0)").remove();
+            $("#state").prop("selectedIndex", 0);
+            setstateoptions();
+            return false;
+        }
     });
+}); 
+
+function setstateoptions(){
+    zip = $("#citysuggest").val();
+    $.ajax({
+        url: "{{ env('APP_URL') }}admin/patients/statefromcity",
+        type: 'GET',
+        dataType: 'json',
+        data:{term:zip},
+        success: function (res) {
+            if(res['error']){
+                //swal("Oops", "Invalid City", "error");
+                $("#citysuggest").val('');
+                $("#citysuggest").focus();
+            }else{
+                $.each(res['list'], function( index, value ) {
+                    //alert( index + ": " + value );
+                    $('#state').append($("<option></option>").attr(value, value).text(value)); 
+                });
+            }
+        }
+    });
+    $("#state").attr("readonly", false);
+}
+
+$("#state").change(function () {
+    stateoption = $("#state option:selected").val();
+    cityoption = $("#citysuggest").val();
+    $.ajax({
+        url: "{{ env('APP_URL') }}admin/patients/getzip",
+        type: 'GET',
+        data:{city:cityoption, state:stateoption},
+        success: function (res) {
+            $("#pin_code").val(res);
+        }
+    });
+})
     if($('input[name=pets]:checked').val() == 'no')
         {  
             $('.describe').hide();
