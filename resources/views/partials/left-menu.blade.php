@@ -39,7 +39,7 @@
                 <a href="javascript:;"><i class="sidebar-item-icon fas fa-list"></i><span class="nav-label">Master List</span><i class="fa fa-angle-left arrow"></i></a>
                 <ul class="nav-2-level collapse" aria-expanded="false">
                     <li>
-                        <a href="{{ route('county.index') }}"><i class="sidebar-item-icon fas fa fa-user"></i>County</a>
+                        <a href="{{ route('county.index') }}"><i class="sidebar-item-icon fas fa-map-signs"></i>County</a>
                     </li>
                     <li>
                         <a href="{{ route('services.index') }}"><i class="sidebar-item-icon fas fa fa-user"></i>Services</a>
