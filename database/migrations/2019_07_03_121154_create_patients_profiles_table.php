@@ -17,6 +17,9 @@ class CreatePatientsProfilesTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('diagnose_id')->nullable();
+            $table->string('f_name');
+            $table->string('m_name');
+            $table->string('l_name');
             $table->string('range');
             $table->string('availability');
             $table->string('pin_code');

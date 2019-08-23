@@ -38,6 +38,12 @@
                                 <h5 class="text-info m-b-20 m-t-20"><i class="fa fa-bullhorn"></i> Details</h5>
                                 <ul class="media-list media-list-divider m-0">
                                     <li class="media">
+                                        <div class="media-img">Name</div>
+                                        <div class="media-body">
+                                            <div class="media-heading text-warning">{{ $user->name }}</div>
+                                        </div>
+                                    </li>
+                                    <li class="media">
                                         <div class="media-img">Email Id</div>
                                         <div class="media-body">
                                             <div class="media-heading text-warning">{{ $user->email }}</div>

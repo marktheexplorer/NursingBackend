@@ -30,11 +30,29 @@
                               <div class="tab-pane fade show active col-md-9" id="tab-2">
                                  <div class="row">
                                     <div class="col-sm-4 form-group">
-                                       <label>Name</label>
-                                       <input type="text" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" placeholder="Name" value="{{ old('name') }}"/>
-                                       @if ($errors->has('name'))
+                                       <label>First Name</label>
+                                       <input type="text" class="form-control {{ $errors->has('f_name') ? ' is-invalid' : '' }}" name="f_name" placeholder="Name" value="{{ old('f_name') }}"/>
+                                       @if ($errors->has('f_name'))
                                        <span class="text-danger">
-                                       <strong>{{ $errors->first('name') }}</strong>
+                                       <strong>{{ $errors->first('f_name') }}</strong>
+                                       </span>
+                                       @endif
+                                    </div>
+                                    <div class="col-sm-4 form-group">
+                                       <label>Middle Name</label>
+                                       <input type="text" class="form-control {{ $errors->has('m_name') ? ' is-invalid' : '' }}" name="m_name" placeholder="Name" value="{{ old('m_name') }}"/>
+                                       @if ($errors->has('m_name'))
+                                       <span class="text-danger">
+                                       <strong>{{ $errors->first('m_name') }}</strong>
+                                       </span>
+                                       @endif
+                                    </div>
+                                    <div class="col-sm-4 form-group">
+                                       <label>Last Name</label>
+                                       <input type="text" class="form-control {{ $errors->has('l_name') ? ' is-invalid' : '' }}" name="l_name" placeholder="Name" value="{{ old('l_name') }}"/>
+                                       @if ($errors->has('l_name'))
+                                       <span class="text-danger">
+                                       <strong>{{ $errors->first('l_name') }}</strong>
                                        </span>
                                        @endif
                                     </div>
@@ -212,7 +230,7 @@
                                        </span>
                                        @endif
                                     </div>
-                                    <div class="col-sm-2 form-group">
+                                    <div class="col-sm-4 form-group">
                                        <label>Pets</label>
                                        <div>
                                         <input type="radio" id="yes"
@@ -229,7 +247,7 @@
                                        </span>
                                        @endif
                                     </div>
-                                    <div class="form-group col-md-6 yes describe">
+                                    <div class="form-group col-md-8 yes describe">
                                         <label>Please Describe</label>
                                         <textarea class="form-control" name="pets_description" rows="3">{{ old('pets_description') }}</textarea>
                                          @if ($errors->has('pets_description'))

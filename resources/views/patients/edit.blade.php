@@ -30,11 +30,29 @@
                                 <div class="tab-pane fade show active col-md-9" id="tab-2">
                                     <div class="row">
                                        <div class="col-sm-4 form-group">
-                                            <label>Name</label>
-                                            <input type="text" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" placeholder="Title" value="{{ old('name', $user->name) }}"/>
-                                            @if ($errors->has('name'))
+                                            <label>First Name</label>
+                                            <input type="text" class="form-control {{ $errors->has('f_name') ? ' is-invalid' : '' }}" name="f_name" placeholder="Title" value="{{ old('f_name', $user->patient?$user->patient->f_name:'') }}"/>
+                                            @if ($errors->has('f_name'))
                                                 <span class="text-danger">
-                                                    <strong>{{ $errors->first('name') }}</strong>
+                                                    <strong>{{ $errors->first('f_name') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                        <div class="col-sm-4 form-group">
+                                            <label>Middle Name</label>
+                                            <input type="text" class="form-control {{ $errors->has('m_name') ? ' is-invalid' : '' }}" name="m_name" placeholder="Title" value="{{ old('m_name', $user->patient?$user->patient->m_name:'') }}"/>
+                                            @if ($errors->has('m_name'))
+                                                <span class="text-danger">
+                                                    <strong>{{ $errors->first('m_name') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                        <div class="col-sm-4 form-group">
+                                            <label>Last Name</label>
+                                            <input type="text" class="form-control {{ $errors->has('l_name') ? ' is-invalid' : '' }}" name="l_name" placeholder="Title" value="{{ old('l_name', $user->patient?$user->patient->l_name:'') }}"/>
+                                            @if ($errors->has('l_name'))
+                                                <span class="text-danger">
+                                                    <strong>{{ $errors->first('l_name') }}</strong>
                                                 </span>
                                             @endif
                                         </div>
