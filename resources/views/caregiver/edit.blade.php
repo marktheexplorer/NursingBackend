@@ -421,28 +421,6 @@
         });
     })
 
-    /*$('#zipcode').blur(function(){
-        zip = $(this).val();
-        $.ajax({
-            url: '{{ env("APP_URL") }}admin/caregiver/locationfromzip',
-            type: 'GET',
-            dataType: 'json',
-            data:{zipcode:zip},
-            success: function (res) {
-                if(res['error']){
-                    $("#city").val('');
-                    $("#state").val('');
-                    $('#zipcode').val('');
-                    swal("Oops", "Invalid Zip Code", "error");
-                    //$('#zipcode').focus();
-                }else{
-                    $("#city").val(res['city']);
-                    $("#state").val(res['state']);
-                }
-            }
-        });
-    });    */
-
     $('#max_price').blur(function(){
         minprice = $("#min_price").val();
         maxprice = $("#max_price").val();

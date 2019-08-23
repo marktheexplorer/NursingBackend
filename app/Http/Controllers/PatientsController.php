@@ -8,6 +8,7 @@ use App\Service_requests;
 use Validator;
 use App\PatientProfile;
 use App\Qualification;
+use App\Us_location;
 use Carbon\Carbon;
 use Image;
 use DB;
@@ -35,7 +36,8 @@ class PatientsController extends Controller{
         $diagnosis = Diagnose::get();
         $qualifications = Qualification::orderBy('name', 'asc')->get();
         $selected_disciplines = explode(',', $user->patient? $user->patient->disciplines: '');
-        return view('patients.edit' , compact('user','diagnosis','qualifications','selected_disciplines'));
+        $city_state = DB::table('us_location')->select('state_code')->where('city', '=', $user->city)->orderBy('state_code', 'asc')->get();
+        return view('patients.edit' , compact('user','diagnosis','qualifications','selected_disciplines','city_state'));
     }
 
     /**
@@ -58,7 +60,7 @@ class PatientsController extends Controller{
             'pin_code' => 'required|numeric',
             'city' => 'required|string',
             'state' => 'required|string',
-            'country' => 'required|string',
+            'street' => 'required|string',
             'diagnose_id' => 'required',
             'availability' => 'required|string',
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg',
@@ -94,7 +96,7 @@ class PatientsController extends Controller{
                 $user->mobile_number = $input['mobile_number'];
                 $user->city = $input['city'];
                 $user->state = $input['state'];
-                $user->country = $input['country'];
+                $user->street = $input['street'];
                 $user->dob = date("Y-m-d", strtotime($input['dob']));
                 $user->gender = $input['gender'];
                 $user->save();
@@ -164,7 +166,7 @@ class PatientsController extends Controller{
             'pin_code' => 'required|numeric',
             'city' => 'required|string',
             'state' => 'required|string',
-            'country' => 'required|string',
+            'street' => 'required|string',
             'diagnose_id' => 'required',
             'availability' => 'required|string',
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg',
@@ -201,7 +203,7 @@ class PatientsController extends Controller{
             $input['mobile_number'] = $input['mobile_number'];
             $input['city'] = $input['city'];
             $input['state'] = $input['state'];
-            $input['country'] = $input['country'];
+            $input['street'] = $input['street'];
             $input['type'] = 'patient';
             $input['password'] = Hash::make('123456');
             $input['dob'] = date("Y-m-d", strtotime($input['dob']));
@@ -247,22 +249,6 @@ class PatientsController extends Controller{
             $disciplines = '';
         }
         return view('patients.view', compact('user','diagnosis','services','disciplines_name'));
-    }
-
-    public function locationfromzip(Request $request){
-        $pincode = $request->input('pin_code');
-        $search_pin = DB::select( DB::raw("SELECT * FROM `us_location` where zip = '".$pincode."'")); 
-
-        $response = array();
-        $response['error'] = false;
-        if(empty($search_pin)){
-            $response['error'] = true;
-            $response['msg'] = 'Invalid zipcode';
-        }else{
-            $response['city'] = $search_pin[0]->city;
-            $response['state'] = $search_pin[0]->state_code;
-        }
-        echo json_encode($response, true);
     }
 
     public function download_excel(){
@@ -313,5 +299,49 @@ class PatientsController extends Controller{
             }
         }
         exit(); 
+    }
+    public function searchcity(Request $request){
+        DB::enableQueryLog();
+        $fieldval = $request->input('term');
+        $search_zipx = array();
+
+        $search_city = Us_location::select('city')->Where("city","like","{$fieldval}%")->groupBy('city')->orderBy("city","asc")->get();
+
+        $response = array();
+        $response['error'] = false;
+        if(empty($search_city)){
+            $response['error'] = true;
+            $response['msg'] = 'Invalid City';
+        }else{
+            foreach($search_city as $row){
+                array_push($response, $row->city);
+            }
+        }
+        echo json_encode($response, true);
+    }
+
+    public function statefromcity(Request $request){
+        $fieldval = $request->input('term');
+        $search_city = Us_location::select('state_code')->Where("city","=","{$fieldval}")->orderBy("state_code","ASC")->distinct('state_code')->get();
+
+        $response = array();
+        $response['error'] = false;
+        $response['list'] = array();
+        if(empty($search_city)){
+            $response['error'] = true;
+            $response['msg'] = 'Invalid City';
+        }else{
+            foreach ($search_city as $row) {
+                array_push($response['list'], $row->state_code);
+            }
+        }
+        echo json_encode($response, true);
+    }
+
+    public function getzip(Request $request){
+        $city = $request->input('city');
+        $state = $request->input('state');
+        $zipcode = DB::select( DB::raw("SELECT zip FROM `us_location` where city = '".$city."' and state_code = '".$state."'")); 
+        echo $zipcode[0]->zip;
     }
 }

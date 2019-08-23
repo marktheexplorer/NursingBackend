@@ -118,19 +118,19 @@
                                        <strong>{{ $errors->first('range') }}</strong>
                                        </span>
                                        @endif
-                                    </div>
+                                    </div>                                    
                                     <div class="col-sm-4 form-group">
-                                       <label>Pin Code</label>
-                                       <input type="text" class="form-control {{ $errors->has('pin_code') ? ' is-invalid' : '' }}" id="pin_code" name="pin_code" placeholder="Pin Code" value="{{ old('pin_code') }}"/>
-                                       @if ($errors->has('pin_code'))
+                                       <label>Street</label>
+                                       <input type="text" class="form-control {{ $errors->has('street') ? ' is-invalid' : '' }}" name="street" id="street" placeholder="street" value="{{ old('street') }}" />
+                                       @if ($errors->has('street'))
                                        <span class="text-danger">
-                                       <strong>{{ $errors->first('pin_code') }}</strong>
+                                       <strong>{{ $errors->first('street') }}</strong>
                                        </span>
                                        @endif
                                     </div>
                                     <div class="col-sm-4 form-group">
                                        <label>City</label>
-                                       <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" id="city" placeholder="City" value="{{ old('city') }}" readonly />
+                                       <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" id="citysuggest" placeholder="City" value="{{ old('city') }}" />
                                        @if ($errors->has('city'))
                                        <span class="text-danger">
                                        <strong>{{ $errors->first('city') }}</strong>
@@ -139,7 +139,9 @@
                                     </div>
                                     <div class="col-sm-4 form-group">
                                        <label>State</label>
-                                       <input type="text" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" id="state" placeholder="State" value="{{ old('state') }}" readonly />
+                                       <select name="state" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" readonly="true" id="state">
+                                            <option disabled="true" selected=""> -- Select State --</option>
+                                        </select>
                                        @if ($errors->has('state'))
                                        <span class="text-danger">
                                        <strong>{{ $errors->first('state') }}</strong>
@@ -147,11 +149,11 @@
                                        @endif
                                     </div>
                                     <div class="col-sm-4 form-group">
-                                       <label>Country</label>
-                                       <input type="text" class="form-control {{ $errors->has('country') ? ' is-invalid' : '' }}" name="country" id="country" placeholder="Country" value="{{ old('country') }}" readonly />
-                                       @if ($errors->has('country'))
+                                       <label>Pin Code</label>
+                                       <input type="text" class="form-control {{ $errors->has('pin_code') ? ' is-invalid' : '' }}" id="pin_code" name="pin_code" placeholder="Pin Code" value="{{ old('pin_code') }}" readonly/>
+                                       @if ($errors->has('pin_code'))
                                        <span class="text-danger">
-                                       <strong>{{ $errors->first('country') }}</strong>
+                                       <strong>{{ $errors->first('pin_code') }}</strong>
                                        </span>
                                        @endif
                                     </div>
@@ -280,104 +282,168 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.1.62/jquery.inputmask.bundle.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
 <script>
-   $( function(){
-        var maxBirthdayDate = new Date();
-        maxBirthdayDate.setFullYear( maxBirthdayDate.getFullYear() - 18,11,31);
-        $( "#dob" ).datepicker({
-            changeMonth: true,
-            changeYear: true,
-            maxDate: maxBirthdayDate,
-            yearRange: '1919:'+maxBirthdayDate.getFullYear(),
-        });
-    });
+ $( function(){
+      var maxBirthdayDate = new Date();
+      maxBirthdayDate.setFullYear( maxBirthdayDate.getFullYear() - 18,11,31);
+      $( "#dob" ).datepicker({
+          changeMonth: true,
+          changeYear: true,
+          maxDate: maxBirthdayDate,
+          yearRange: '1919:'+maxBirthdayDate.getFullYear(),
+      });
+  });
    
-    function readURL(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-   
-            reader.onload = function (e) {
-                $('#preview').css('display', 'block');
-                $('#preview').attr('src', e.target.result);
-            };
-   
-            reader.readAsDataURL(input.files[0]);
-        }
+  function readURL(input) {
+      if (input.files && input.files[0]) {
+          var reader = new FileReader();
+ 
+          reader.onload = function (e) {
+              $('#preview').css('display', 'block');
+              $('#preview').attr('src', e.target.result);
+          };
+ 
+          reader.readAsDataURL(input.files[0]);
+      }
+  }
+
+ $(function(){
+    function split( val ) {
+        return val.split( /,\s*/ );
     }
 
-    $('#pin_code').blur(function(){
-        pin = $(this).val();
-        $.ajax({
-            url: 'locationfromzip',
-            type: 'GET',
-            dataType: 'json',
-            data:{pin_code:pin},
-            success: function (res) {
-                if(res['error']){
-                    $("#city").val('');
-                    $("#state").val('');
-                    $("#country").val('');
-                    $('#pin_code').val('');
-                    swal("Oops", "Invalid Zip Code", "error");
-                    //$('#zipcode').focus();
-                }else{
-                    $("#city").val(res['city']);
-                    $("#state").val(res['state']);
-                    $("#country").val('USA');
-                }
+    function extractLast( term ) {
+        //return split( term ).pop();  
+        temp = $.trim($("#pin_code").val());
+        fnd = ','
+        if(temp.indexOf(fnd) != -1){
+            term =  temp+" "+term;
+        }
+        console.log(term);
+        return term;
+    }
+
+    // don't navigate away from the field on tab when selecting an item                
+    $( "#citysuggest" ).on( "keydown", function( event ) {
+        if(event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active){
+            event.preventDefault();
+        }
+    }).autocomplete({
+        source: function( request, response ) {
+            $.getJSON( "searchcity", {
+                term: request.term
+            }, response );
+        },
+        search: function() {
+            // custom minLength
+            var term = this.value;
+            if ( term.length < 1){
+                return false;
             }
-        });
-    });
+        },
 
-    
-    if($('input[name=pets]:checked').val() == 'no' || (!$('input[name=pets]:checked').val()))
-        {  
-            $('.describe').hide();
-        }
-    $('input[name=pets]').click(function(){
+        focus: function() {
+            // prevent value inserted on focus
+            return false;
+        },
 
-      var inputValue = $(this).attr("value");
-      var targetBox = $("." + inputValue);
-      $(".describe").not(targetBox).hide();
-      $(targetBox).show();
+        select: function( event, ui ) {
+            $( "#citysuggest" ).val(ui.item.value)
+            $( "#citysuggest" ).autocomplete("close");
 
-    });
-
-    /*Validation for mobile number format*/
-    var phones = [{ "mask": "(###) ###-####"}];
-    $('#mobile_number').inputmask({ 
-        mask: phones, 
-        greedy: false, 
-        definitions: { '#': { validator: "[0-9]", cardinality: 1}}
-    });
-    
-    /*Validation for price field for 2 decimal places*/
-    function validateFloatKeyPress(el, evt) {
-        var charCode = (evt.which) ? evt.which : event.keyCode;
-        var number = el.value.split('.');
-        if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+            //remove all options from select box
+            $("#state").find("option:gt(0)").remove();
+            $("#state").prop("selectedIndex", 0);
+            setstateoptions();
             return false;
         }
-        //just one dot
-        if(number.length>1 && charCode == 46){
-             return false;
-        }
-        //get the carat position
-        var caratPos = getSelectionStart(el);
-        var dotPos = el.value.indexOf(".");
-        if( caratPos > dotPos && dotPos>-1 && (number[1].length > 1)){
-            return false;
-        }
-        return true;
-    }
-    function getSelectionStart(o) {
-      if (o.createTextRange) {
-        var r = document.selection.createRange().duplicate()
-        r.moveEnd('character', o.value.length)
-        if (r.text == '') return o.value.length
-        return o.value.lastIndexOf(r.text)
-      } else return o.selectionStart
-    }
+    });
+}); 
 
-    $('.select2').select2();
+function setstateoptions(){
+    zip = $("#citysuggest").val();
+    $.ajax({
+        url: 'statefromcity',
+        type: 'GET',
+        dataType: 'json',
+        data:{term:zip},
+        success: function (res) {
+            if(res['error']){
+                //swal("Oops", "Invalid City", "error");
+                $("#citysuggest").val('');
+                $("#citysuggest").focus();
+            }else{
+                $.each(res['list'], function( index, value ) {
+                    //alert( index + ": " + value );
+                    $('#state').append($("<option></option>").attr(value, value).text(value)); 
+                });
+            }
+        }
+    });
+    $("#state").attr("readonly", false);
+}
+
+$("#state").change(function () {
+    stateoption = $("#state option:selected").val();
+    cityoption = $("#citysuggest").val();
+    $.ajax({
+        url: 'getzip',
+        type: 'GET',
+        data:{city:cityoption, state:stateoption},
+        success: function (res) {
+            $("#pin_code").val(res);
+        }
+    });
+})
+    
+if($('input[name=pets]:checked').val() == 'no' || (!$('input[name=pets]:checked').val()))
+    {  
+        $('.describe').hide();
+    }
+$('input[name=pets]').click(function(){
+
+  var inputValue = $(this).attr("value");
+  var targetBox = $("." + inputValue);
+  $(".describe").not(targetBox).hide();
+  $(targetBox).show();
+
+});
+
+/*Validation for mobile number format*/
+var phones = [{ "mask": "(###) ###-####"}];
+$('#mobile_number').inputmask({ 
+    mask: phones, 
+    greedy: false, 
+    definitions: { '#': { validator: "[0-9]", cardinality: 1}}
+});
+    
+/*Validation for price field for 2 decimal places*/
+function validateFloatKeyPress(el, evt) {
+    var charCode = (evt.which) ? evt.which : event.keyCode;
+    var number = el.value.split('.');
+    if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+        return false;
+    }
+    //just one dot
+    if(number.length>1 && charCode == 46){
+         return false;
+    }
+    //get the carat position
+    var caratPos = getSelectionStart(el);
+    var dotPos = el.value.indexOf(".");
+    if( caratPos > dotPos && dotPos>-1 && (number[1].length > 1)){
+        return false;
+    }
+    return true;
+}
+function getSelectionStart(o) {
+  if (o.createTextRange) {
+    var r = document.selection.createRange().duplicate()
+    r.moveEnd('character', o.value.length)
+    if (r.text == '') return o.value.length
+    return o.value.lastIndexOf(r.text)
+  } else return o.selectionStart
+}
+
+$('.select2').select2();
 </script>
 @endsection

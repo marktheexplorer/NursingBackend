@@ -409,7 +409,7 @@ class CaregiverController extends Controller{
 
     public function statefromcity(Request $request){
         $fieldval = $request->input('term');
-        $search_city = Us_location::select('state_code')->Where("city","=","{$fieldval}")->orderBy("state_code","ASC")->get();
+        $search_city = Us_location::select('state_code')->Where("city","=","{$fieldval}")->orderBy("state_code","ASC")->distinct('state_code')->get();
 
         $response = array();
         $response['error'] = false;
