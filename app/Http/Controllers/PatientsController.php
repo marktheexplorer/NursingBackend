@@ -51,7 +51,9 @@ class PatientsController extends Controller{
     {
         $input = $request->input();
         $validator = validator::make($input,[
-            'name' => 'required|string|max:60',
+            'f_name' => 'required|string|max:60|alpha_dash',
+            'm_name' => 'nullable|string|max:60|alpha_dash',
+            'l_name' => 'required|string|max:60|alpha_dash',
             'email' => 'required|string|max:60',
             'mobile_number' => 'required',
             'dob' => 'required',
@@ -91,7 +93,7 @@ class PatientsController extends Controller{
                 $image->move($destinationPath, $input['profile_image']);
             }
                 $user = User::findOrFail($id);
-                $user->name = $input['name'];
+                $user->name = $input['f_name'].' '.$input['m_name'].' '.$input['l_name'];
                 $user->email = $input['email'];
                 $user->mobile_number = $input['mobile_number'];
                 $user->city = $input['city'];
@@ -103,6 +105,9 @@ class PatientsController extends Controller{
 
                 $userProfile = PatientProfile::where('user_id',$id)->first();
                 if($userProfile){
+                    $userProfile['f_name'] = $input['f_name'];
+                    $userProfile['m_name'] = $input['m_name'];
+                    $userProfile['l_name'] = $input['l_name'];
                     $userProfile['range'] = $input['range'];
                     $userProfile['pin_code'] = $input['pin_code'];
                     $userProfile['diagnose_id'] = $input['diagnose_id'];
@@ -117,6 +122,9 @@ class PatientsController extends Controller{
                     $userProfile->save();
                 }else{
                     $profile['user_id'] = $user->id;
+                    $profile['f_name'] = $input['f_name'];
+                    $profile['m_name'] = $input['m_name'];
+                    $profile['l_name'] = $input['l_name'];
                     $profile['range'] = $input['range'];
                     $profile['pin_code'] = $input['pin_code'];
                     $profile['diagnose_id'] = $input['diagnose_id'];
@@ -157,7 +165,9 @@ class PatientsController extends Controller{
     public function store(Request $request){
         $input = $request->input();
         $validator = validator::make($input,[
-            'name' => 'required|string|max:60',
+            'f_name' => 'required|string|max:60|alpha_dash',
+            'm_name' => 'nullable|string|max:60|alpha_dash',
+            'l_name' => 'required|string|max:60|alpha_dash',
             'email' => 'required|string|max:60|unique:users',
             'mobile_number' => 'required|unique:users',
             'dob' => 'required',
@@ -197,7 +207,7 @@ class PatientsController extends Controller{
                 $image->move($destinationPath, $input['profile_image']);
             }
 
-            $input['name'] = $input['name'];
+            $input['name'] = $input['f_name'].' '.$input['m_name'].' '.$input['l_name'];
             $input['role_id'] = 3;
             $input['email'] = $input['email'];
             $input['mobile_number'] = $input['mobile_number'];
@@ -211,6 +221,9 @@ class PatientsController extends Controller{
             $patient = User::create($input);
 
             $profile['user_id'] = $patient->id;
+            $profile['f_name'] = $input['f_name'];
+            $profile['m_name'] = $input['m_name'];
+            $profile['l_name'] = $input['l_name'];
             $profile['range'] = $input['range'];
             $profile['pin_code'] = $input['pin_code'];
             $profile['diagnose_id'] = $input['diagnose_id'];
