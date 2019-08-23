@@ -31,11 +31,15 @@ class MailHelper extends Mailable{
      * @return $this
      */
     public function build(){
-        if($this->objDemo->format == 'basic'){
+        if($this->objDemo->type == 'basic_carepack_confirm'){
             //send mail when patient confirmed caregiver, mail about Basic Care Pack and Confirmation
             $objDemo = $this->objDemo;
             //return $this->view('mail.basic_carepack_confirmed', compact('objDemo'));
             return $this->from($this->objDemo->mail_from, $this->objDemo->mail_from_name)->subject($this->objDemo->subject)->view('mail.basic_mail_template', compact('objDemo'));
+        }else if($this->objDemo->type == 'password_reset_mail'){
+          //send password reset mail from caregiver create form
+            $objDemo = $this->objDemo;
+            return $this->from($this->objDemo->mail_from, $this->objDemo->mail_from_name)->subject($this->objDemo->subject)->view('mail.basic_carepack_confirmed', compact('objDemo'));
         }
     }
 
