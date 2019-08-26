@@ -80,6 +80,12 @@
                                         </div>
                                     </li>
                                     <li class="media">
+                                        <div class="media-img">Language</div>
+                                        <div class="media-body">
+                                            <div class="media-heading">{{ $user->patient ? $user->patient->language : ''}}</div>
+                                        </div>
+                                    </li>
+                                    <li class="media">
                                         <div class="media-img">Street</div>
                                         <div class="media-body">
                                             <div class="media-heading">{{ $user->street}}</div>
@@ -124,7 +130,7 @@
                                     <li class="media">
                                         <div class="media-img">Disciplines</div>
                                         <div class="media-body">
-                                            <div class="media-heading"> <?php foreach($disciplines_name as $key => $value){ echo $value->name.',  ' ;} ?> </div>
+                                            <div class="media-heading"> <?php if($disciplines_name){ foreach($disciplines_name as $key => $value){ echo $value->name.',  ' ;} }?> </div>
                                         </div>
                                     </li>
                                     <li class="media">

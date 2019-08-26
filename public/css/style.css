@@ -33,7 +33,7 @@ input[type='number'] {
 input[type=file]{
 padding:10px;}
 
-.price{
+.price, .patient_price{
   display:inline-block;
   position: relative;
   }
@@ -45,4 +45,14 @@ padding:10px;}
     content:"$";
     left:5px;
     top:7px;
+  }
+ .patient_price:before{
+  position: absolute;
+    content:"$";
+    left:5px;
+    top:7px;
+  }
+.patient_price input{
+  padding-left:15px;
+  width: 230px;
   }
