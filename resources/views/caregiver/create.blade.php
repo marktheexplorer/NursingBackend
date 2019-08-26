@@ -27,7 +27,7 @@
                                 <form action="{{ route('caregiver.store') }}" method="post" class="form-horizontal" enctype="multipart/form-data">
                                 @csrf
                                     <div class="row">
-                                        <div class="form-group col-sm-6" >
+                                        <div class="form-group col-sm-4" >
                                             <label>Profile Image</label><br/>
                                             <input type="file" class="{{ $errors->has('profile_image') ? ' is-invalid' : '' }}" name="profile_image" placeholder="Profile Image" value="{{ old('profile_image') }}" accept="image/*"/ style="padding-left:0px;">
                                             @if ($errors->has('profile_image'))
@@ -63,6 +63,20 @@
                                                 </span>
                                             @endif
                                         </div>
+                                        <div class="col-sm-2  form-group">
+                                            <label>Language</label>
+                                            <select name="language" class="form-control {{ $errors->has('language') ? ' is-invalid' : '' }}">
+                                                <option disabled="true" selected="true"> -- Select Language --</option>
+                                                @foreach(PROFILE_LANGUAGE as $val)
+                                                    <option value="{{ $val }}">{{$val}}</option>
+                                                @endforeach
+                                            </select>
+                                            @if ($errors->has('language'))
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $errors->first('language') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
                                     </div>
                                     <div class="row">    
                                         <div class="col-sm-3  form-group">
@@ -83,10 +97,10 @@
                                                 </span>
                                             @endif
                                         </div>
-                                        <div class="form-group col-sm-3" >
+                                        <div class="form-group col-sm-4" >
                                             <label>
                                                 <span style="color:blue;cursor: pointer;" onclick="generatepassword()">Generate Password</span>
-                                                <span style="margin-left:75px;color:blue;cursor: pointer;" onclick="setmail()">Send Mail</span>
+                                                <span style="margin-left:45px;color:blue;cursor: pointer;" onclick="setmail()">Send Mail</span>
                                             </label>
                                             <input type="hidden" value="0" name="issentmail" id="issentmail">
                                             <input type="text" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" placeholder="Password" value="{{ old('password') }}" id="newpassword" />
@@ -96,7 +110,7 @@
                                                 </span>
                                             @endif
                                         </div>
-                                        <div class="col-sm-2  form-group">
+                                        <div class="col-sm-3  form-group">
                                             <label>Gender</label>
                                             <select name="gender" class="form-control {{ $errors->has('gender') ? ' is-invalid' : '' }}">
                                                 <option disabled="true" selected="true"> -- Select Gender --</option>
@@ -106,20 +120,6 @@
                                             @if ($errors->has('gender'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('gender') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                        <div class="col-sm-2  form-group">
-                                            <label>Language</label>
-                                            <select name="language" class="form-control {{ $errors->has('language') ? ' is-invalid' : '' }}">
-                                                <option disabled="true" selected="true"> -- Select Language --</option>
-                                                @foreach(PROFILE_LANGUAGE as $val)
-                                                    <option value="{{ $val }}">{{$val}}</option>
-                                                @endforeach
-                                            </select>
-                                            @if ($errors->has('language'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('language') }}</strong>
                                                 </span>
                                             @endif
                                         </div>
