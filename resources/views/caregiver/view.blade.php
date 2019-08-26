@@ -101,6 +101,12 @@
                                                 } ?>
                                             </div>
                                         </div>
+                                    </li>               
+                                    <li class="media">
+                                        <div class="media-img">Language</div>
+                                        <div class="media-body">
+                                            <div class="media-heading">{{ $user->language }} </div>
+                                        </div>
                                     </li>                     
                                     <li class="media">
                                         <div class="media-img">Gender</div>
@@ -127,15 +133,15 @@
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img">Servicable Zipcodes</div>
+                                        <div class="media-img">Servicable Area</div>
                                         <div class="media-body">
                                             <div class="media-heading"><?php 
-                                                if(empty($user->service_zipcodes)){
+                                                if(empty($user->service_area)){
                                                     echo "NA";
                                                 }else{
                                                     $count = 1;
-                                                    foreach($user->service_zipcodes as $zip){
-                                                        echo $count.". ".$zip->zip." (".$zip->city.")<br/>";
+                                                    foreach($user->service_area as $row){
+                                                        echo $count.". ".ucfirst($row->area)."<br/>";
                                                         $count++;
                                                     }
                                                 } ?>
@@ -146,12 +152,12 @@
                                         <div class="media-img">Non Servicable Zipcodes</div>
                                         <div class="media-body">
                                             <div class="media-heading"><?php 
-                                                if(empty($user->non_service_zipcodes)){
+                                                if(empty($user->non_service_area)){
                                                     echo "NA";
                                                 }else{
                                                     $count = 1;
-                                                    foreach($user->non_service_zipcodes as $zip){
-                                                        echo $count.". ".$zip->zip." (".$zip->city.")<br/>";
+                                                    foreach($user->non_service_area as $row){
+                                                        echo $count.". ".ucfirst($row->area)."<br/>";
                                                         $count++;
                                                     }
                                                 } ?>

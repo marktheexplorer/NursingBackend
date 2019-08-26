@@ -75,7 +75,7 @@
                                         </div>
                                     </div>
                                     <div class="row">    
-                                        <div class="col-sm-3  form-group">
+                                        <div class="col-sm-2  form-group">
                                             <label>Email</label>
                                             <input type="text" name="email" placeholder="Email" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ $user->email }}" />
                                             @if ($errors->has('email'))
@@ -102,7 +102,7 @@
                                                 </span>
                                             @endif
                                         </div>
-                                        <div class="col-sm-3  form-group">
+                                        <div class="col-sm-2  form-group">
                                             <label>Gender</label>
                                             <select name="gender" class="form-control {{ $errors->has('gender') ? ' is-invalid' : '' }}">
                                                 <option disabled="true" selected="true"> -- Select Gender --</option>
@@ -112,6 +112,20 @@
                                             @if ($errors->has('gender'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('gender') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                        <div class="col-sm-2  form-group">
+                                            <label>Language</label>
+                                            <select name="language" class="form-control {{ $errors->has('language') ? ' is-invalid' : '' }}">
+                                                <option disabled="true" selected="true"> -- Select Language --</option>
+                                                @foreach(PROFILE_LANGUAGE as $val)
+                                                    <option value="{{ $val }}" <?php if($val == $user->language){ echo 'selected'; } ?>>{{$val}}</option>
+                                                @endforeach
+                                            </select>
+                                            @if ($errors->has('language'))
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $errors->first('language') }}</strong>
                                                 </span>
                                             @endif
                                         </div>
@@ -262,41 +276,39 @@
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-sm-12" >
-                                            <label>Servicable ZipCode </label><?php
-                                            $szip = '';
-                                            foreach($user->service_zipcodes as $zip){
-                                                $szip .= $zip->zip.", ";
-                                            }?>
-                                            <input type="text" class="form-control {{ $errors->has('service_zipcode') ? ' is-invalid' : '' }} zipcodesuggest" name="service_zipcode" placeholder="Service Zip code" value="{{ $szip }}" id="service_zipcode"/>
-                                            @if ($errors->has('service_zipcode'))
+                                            <label>Service Area </label>
+                                            <select name="service_area[]" class="form-control {{ $errors->has('service_area') ? ' is-invalid' : '' }} select2" multiple="multiple" id="servicearea">
+                                                <option disabled="true" > -- Select Service Area --</option>
+                                                @foreach($service_area_list as $row)
+                                                    <option value="{{ $row->id }}" <?php if(in_array($row->id, $user->service_area) ){ echo 'selected'; } ?>>
+                                                        {{ $row->area }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            @if ($errors->has('service_area'))
                                                 <span class="invalid-feedback" role="alert">
-                                                    <strong id="service_zipcode_msg">{{ $errors->first('service_zipcode') }}</strong>
-                                                </span>
-                                            @else 
-                                                <span class="invalid-feedback" role="alert" style="display: inline;">
-                                                    <strong id="service_zipcode_msg"></strong>
+                                                    <strong>{{ $errors->first('service_area') }}</strong>
                                                 </span>
                                             @endif
                                         </div>    
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-sm-12" >
-                                            <label>Non Servicable ZipCode </label><?php
-                                            $nszip = '';
-                                            foreach($user->non_service_zipcodes as $zip){
-                                                $nszip .= $zip->zip.", ";
-                                            }?>
-                                            <input type="text" class="form-control {{ $errors->has('non_service_zipcode') ? ' is-invalid' : '' }} zipcodesuggest" name="non_service_zipcode" placeholder="Non-Service Zip code" value="{{ $nszip }}" id="non_service_zipcode"/>
-                                            @if ($errors->has('non_service_zipcode'))
+                                            <label>Non Servicable Area </label>
+                                            <select name="non_service_area[]" class="form-control {{ $errors->has('non_service_area') ? ' is-invalid' : '' }} select2" multiple="multiple" id="nonservicearea">
+                                                <option disabled="true" > -- Select Non Service Area --</option>
+                                                @foreach($service_area_list as $row)
+                                                    <option value="{{ $row->id }}" <?php if(in_array($row->id, $user->non_service_area) ){ echo 'selected'; } ?>>
+                                                        {{ $row->area }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            @if ($errors->has('non_service_area'))
                                                 <span class="invalid-feedback" role="alert">
-                                                    <strong id="non_service_zipcode_msg">{{ $errors->first('non_service_zipcode') }}</strong>
-                                                </span>
-                                            @else 
-                                                <span class="invalid-feedback" role="alert" style="display: inline;">
-                                                    <strong id="non_service_zipcode_msg"></strong>
+                                                    <strong>{{ $errors->first('non_service_area') }}</strong>
                                                 </span>
                                             @endif
-                                        </div>
+                                        </div>    
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-sm-12" >
@@ -327,11 +339,27 @@
 </div>
 
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/css/select2.min.css" rel="stylesheet" />
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.1.62/jquery.inputmask.bundle.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
 <script>
     $(function(){
+        $("#servicearea").select2({
+        }).on("change", function (e) {
+            // show data in separate div when item is selected
+            $("#nonservicearea").select2('destroy').val("").select2();
+            $('#nonservicearea option').removeAttr('disabled').removeProp('disabled');
+
+            var myTest = new Array();
+            myTest = $("#servicearea").val();
+            $.each(myTest, function( key, value){
+                $("#nonservicearea option[value="+value+"]").attr('disabled',true);
+            });
+        });
+        $("#nonservicearea").select2();
+
         function split( val ) {
             return val.split( /,\s*/ );
         }

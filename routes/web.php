@@ -11,6 +11,7 @@
 |
 */
 
+define('PROFILE_LANGUAGE', ["Creole", "English", "French", "Portuguese", "Spanish"]);
 define('PROFILE_HEIGHT', ["5'","5' 1","5' 2'","5' 3'","5' 4'","5' 5'","5' 6'","5' 7'","5' 8'","5' 9'","5' 10'","5' 11'","6'","6' 1'","6' 2'","6' 3'","6' 4'","6' 5'"]);
 define('PROFILE_WEIGHT', ["90 lbs - 120 lbs", "121 lbs - 150 lbs", "151 lbs - 180 lbs", "181 lbs - 200 lbs", "201+ lbs"]);
 define('LANGUAGES', ["English","Spanish","French","Creole","Portuguese"]);

@@ -27,7 +27,7 @@
                                 <form action="{{ route('caregiver.store') }}" method="post" class="form-horizontal" enctype="multipart/form-data">
                                 @csrf
                                     <div class="row">
-                                        <div class="form-group col-sm-6" >
+                                        <div class="form-group col-sm-4" >
                                             <label>Profile Image</label><br/>
                                             <input type="file" class="{{ $errors->has('profile_image') ? ' is-invalid' : '' }}" name="profile_image" placeholder="Profile Image" value="{{ old('profile_image') }}" accept="image/*"/ style="padding-left:0px;">
                                             @if ($errors->has('profile_image'))
@@ -63,6 +63,20 @@
                                                 </span>
                                             @endif
                                         </div>
+                                        <div class="col-sm-2  form-group">
+                                            <label>Language</label>
+                                            <select name="language" class="form-control {{ $errors->has('language') ? ' is-invalid' : '' }}">
+                                                <option disabled="true" selected="true"> -- Select Language --</option>
+                                                @foreach(PROFILE_LANGUAGE as $val)
+                                                    <option value="{{ $val }}">{{$val}}</option>
+                                                @endforeach
+                                            </select>
+                                            @if ($errors->has('language'))
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $errors->first('language') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
                                     </div>
                                     <div class="row">    
                                         <div class="col-sm-3  form-group">
@@ -74,7 +88,7 @@
                                                 </span>
                                             @endif
                                         </div>
-                                        <div class="col-sm-3  form-group">
+                                        <div class="col-sm-2  form-group">
                                             <label>Mobile Number</label>
                                             <input type="text" class="form-control {{ $errors->has('mobile_number') ? ' is-invalid' : '' }}" placeholder="Mobile Number" name="mobile_number" value="{{ old('mobile_number')}}" id="mobile_number">
                                             @if ($errors->has('mobile_number'))
@@ -83,10 +97,10 @@
                                                 </span>
                                             @endif
                                         </div>
-                                        <div class="form-group col-sm-3" >
+                                        <div class="form-group col-sm-4" >
                                             <label>
                                                 <span style="color:blue;cursor: pointer;" onclick="generatepassword()">Generate Password</span>
-                                                <span style="margin-left:75px;color:blue;cursor: pointer;" onclick="setmail()">Send Mail</span>
+                                                <span style="margin-left:45px;color:blue;cursor: pointer;" onclick="setmail()">Send Mail</span>
                                             </label>
                                             <input type="hidden" value="0" name="issentmail" id="issentmail">
                                             <input type="text" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" placeholder="Password" value="{{ old('password') }}" id="newpassword" />
@@ -109,6 +123,8 @@
                                                 </span>
                                             @endif
                                         </div>
+                                    </div>
+                                    <div class="row">
                                         <div class="form-group col-sm-4" >
                                             <label>Date of Birth</label>
                                             <input type="text" class="form-control {{ $errors->has('dob') ? ' is-invalid' : '' }}" name="dob" placeholder="Date of Birth" value="{{ old('dob') }}" id="dob" autocomplete="off" />
@@ -243,30 +259,36 @@
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-sm-12" >
-                                            <label>Servicable ZipCode </label>
-                                            <input type="text" class="form-control {{ $errors->has('service_zipcode') ? ' is-invalid' : '' }} zipcodesuggest" name="service_zipcode" placeholder="Service Zip code" value="{{ old('service_zipcode') }}" id="service_zipcode"/>
-                                            @if ($errors->has('service_zipcode'))
+                                            <label>Service Area </label>
+                                            <select name="service_area[]" class="form-control {{ $errors->has('service_area') ? ' is-invalid' : '' }} select2" multiple="multiple" id="servicearea">
+                                                <option disabled="true" > -- Select Service Area --</option>
+                                                @foreach($service_area_list as $row)
+                                                    <option value="{{ $row->id }}" >
+                                                        {{ $row->area }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            @if ($errors->has('service_area'))
                                                 <span class="invalid-feedback" role="alert">
-                                                    <strong id="service_zipcode_msg">{{ $errors->first('service_zipcode') }}</strong>
-                                                </span>
-                                            @else 
-                                                <span class="invalid-feedback" role="alert" style="display: inline;">
-                                                    <strong id="service_zipcode_msg"></strong>
+                                                    <strong>{{ $errors->first('service_area') }}</strong>
                                                 </span>
                                             @endif
                                         </div>    
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-sm-12" >
-                                            <label>Non Servicable ZipCode </label>
-                                            <input type="text" class="form-control {{ $errors->has('non_service_zipcode') ? ' is-invalid' : '' }} zipcodesuggest" name="non_service_zipcode" placeholder="Non-Service Zip code" value="{{ old('non_service_zipcode') }}" id="non_service_zipcode"/>
-                                            @if ($errors->has('non_service_zipcode'))
+                                            <label>Non Servicable Area </label>
+                                            <select name="non_service_area[]" class="form-control {{ $errors->has('non_service_area') ? ' is-invalid' : '' }} select2" multiple="multiple" id="nonservicearea">
+                                                <option disabled="true" > -- Select Non Service Area --</option>
+                                                @foreach($service_area_list as $row)
+                                                    <option value="{{ $row->id }}" id="non{{ $row->id }}">
+                                                        {{ ucfirst($row->area) }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            @if ($errors->has('non_service_area'))
                                                 <span class="invalid-feedback" role="alert">
-                                                    <strong id="non_service_zipcode_msg">{{ $errors->first('non_service_zipcode') }}</strong>
-                                                </span>
-                                            @else 
-                                                <span class="invalid-feedback" role="alert" style="display: inline;">
-                                                    <strong id="non_service_zipcode_msg"></strong>
+                                                    <strong>{{ $errors->first('non_service_area') }}</strong>
                                                 </span>
                                             @endif
                                         </div>    
@@ -300,11 +322,27 @@
 </div>
 
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/css/select2.min.css" rel="stylesheet" />
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.1.62/jquery.inputmask.bundle.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
 <script>
     $(function(){
+        $("#servicearea").select2({
+        }).on("change", function (e) {
+            // show data in separate div when item is selected
+            $("#nonservicearea").select2('destroy').val("").select2();
+            $('#nonservicearea option').removeAttr('disabled').removeProp('disabled');
+
+            var myTest = new Array();
+            myTest = $("#servicearea").val();
+            $.each(myTest, function( key, value){
+                $("#nonservicearea option[value="+value+"]").attr('disabled',true);
+            });
+        });
+        $("#nonservicearea").select2();
+
         function split( val ) {
             return val.split( /,\s*/ );
         }
