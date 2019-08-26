@@ -39,6 +39,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function()
 
 	Route::get('services/blocked/{userId}', 'ServiceController@block');
 	Route::resource('services', 'ServiceController');
+
+	Route::get('county/delete_area/{id}', 'CountyareaController@delete_area');
+	Route::post('county/store_area', 'CountyareaController@store_area')->name('county.store_area');
+	Route::get('county/blocked/{id}', 'CountyareaController@blocked');
+	Route::resource('county', 'CountyareaController');
+
 	Route::get('qualifications/blocked/{userId}', 'QualificationController@block');
 	Route::resource('qualifications', 'QualificationController');
 	Route::get('diagnosis/blocked/{userId}', 'DiagnoseController@block');
