@@ -127,8 +127,22 @@
                                        @endif
                                     </div>
                                     <div class="col-sm-4 form-group">
+                                        <label>Language</label>
+                                        <select name="language" class="form-control {{ $errors->has('language') ? ' is-invalid' : '' }} select2">
+                                            <option disabled="true" selected="true"> -- Select Language --</option>
+                                            @foreach(LANGUAGES as $val)
+                                                <option value="{{ $val }}">{{$val}}</option>
+                                            @endforeach
+                                        </select>
+                                        @if ($errors->has('language'))
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $errors->first('language') }}</strong>
+                                            </span>
+                                        @endif
+                                    </div>
+                                    <div class="col-sm-4 form-group">
                                        <label>Expected cost</label>
-                                       <span class="price">
+                                       <span class="patient_price">
                                           <input type="text" class="form-control {{ $errors->has('range') ? ' is-invalid' : '' }} " name="range" placeholder="Range" value="{{ old('range') }}" onkeypress="return validateFloatKeyPress(this,event);"/>
                                        </span>
                                        @if ($errors->has('range'))
@@ -230,7 +244,7 @@
                                        </span>
                                        @endif
                                     </div>
-                                    <div class="col-sm-4 form-group">
+                                    <div class="col-sm-2 form-group">
                                        <label>Pets</label>
                                        <div>
                                         <input type="radio" id="yes"
@@ -247,7 +261,7 @@
                                        </span>
                                        @endif
                                     </div>
-                                    <div class="form-group col-md-8 yes describe">
+                                    <div class="form-group col-md-6 yes describe">
                                         <label>Please Describe</label>
                                         <textarea class="form-control" name="pets_description" rows="3">{{ old('pets_description') }}</textarea>
                                          @if ($errors->has('pets_description'))
