@@ -218,7 +218,7 @@
                                         </div>
                                     </div>
                                     <div class="row">    
-                                        <div class="form-group col-sm-6" >
+                                        <div class="form-group col-sm-4" >
                                             <label>Street </label>
                                             <input type="text" class="form-control {{ $errors->has('location') ? ' is-invalid' : '' }}" name="location" placeholder="Location" value="{{ old('location') }}" autocomplete="off" />
                                             @if ($errors->has('location'))
@@ -237,10 +237,10 @@
                                             @endif
                                         </div>
                                         <div class="form-group col-sm-2" >
-                                            <label>state </label>
+                                            <label>State </label>
                                             <select name="state" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" readonly="true" id="state">
                                                 <option disabled="true" selected=""> -- Select State --</option>
-                                            </select>    
+                                            </select>
                                             @if ($errors->has('state'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('state') }}</strong>
@@ -329,8 +329,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
 <script>
     $(function(){
-        $("#servicearea").select2({
-        }).on("change", function (e) {
+        $("#servicearea").select2().on("change", function (e) {
             // show data in separate div when item is selected
             $("#nonservicearea").select2('destroy').val("").select2();
             $('#nonservicearea option').removeAttr('disabled').removeProp('disabled');
