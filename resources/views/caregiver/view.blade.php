@@ -61,7 +61,7 @@
                                     <li class="media">
                                         <div class="media-img">Address</div>
                                         <div class="media-body">
-                                            <div class="media-heading">{{ $user->location.", ".$user->city.", ".$user->state.", ".$user->country.", ".$user->zipcode  }} </div>
+                                            <div class="media-heading">{{ $user->location.", ".$user->city.", ".$user->state.", ".$user->zipcode  }} </div>
                                         </div>
                                     </li>
                                     <li class="media">
