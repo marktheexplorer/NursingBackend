@@ -105,7 +105,7 @@ class CaregiverController extends Controller{
         $user->location = $input['location'];
         $user->city = $input['city'];
         $user->state = $input['state'];
-        $user->country = 'USA';
+        //$user->country = 'USA';
         $user->password = Hash::make($input['password']);
         if($user->save()){
             //save caregiver profile info
@@ -329,7 +329,7 @@ class CaregiverController extends Controller{
         $user->location = $input['location'];
         $user->city = $input['city'];
         $user->state = $input['state'];
-        $user->country = 'USA';
+        //$user->country = 'USA';
         $user->gender = $input['gender'];
         $user->dob = date("Y-m-d", strtotime($input['dob']));
         if ($input['password'] != null) {
@@ -554,7 +554,6 @@ class CaregiverController extends Controller{
                 'Zip Code',
                 'City',
                 'State',
-                'Country',
                 'Price Range',
                 'Created On',
             );
@@ -573,7 +572,7 @@ class CaregiverController extends Controller{
                     $row->mobile_number,
                     $row->gender,
                     date("d-m-Y", strtotime($row->dob)),
-                    ucfirst($row->location).", ".$row->city.", ".$row->state.", ".$row->country.", ".$row->zipcode,
+                    ucfirst($row->location).", ".$row->city.", ".$row->state.", ".$row->zipcode,
                     "$".$row->min_price." - $".$row->max_price,
                     date("d-m-Y", strtotime($row->created_at))
                 );
