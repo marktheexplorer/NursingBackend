@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Countyareas;
 use Illuminate\Http\Request;
 use Validator;
+use App\Rules\UniqueArea;
 
 class CountyareaController extends Controller{
     /**
@@ -34,8 +35,9 @@ class CountyareaController extends Controller{
      */
     public function store(Request $request){
         $input = $request->input();
+
         $validator = validator::make($input,[
-            'county' => 'required|string|max:60|min:4',
+            'county' => "required|string|max:60|min:4|unique:county_areas",
         ]);
 
         if ($validator->fails()) {
@@ -75,6 +77,12 @@ class CountyareaController extends Controller{
         if(empty($county)){
             flash()->success('Invalid County');
             return redirect()->route('county.index');
+        }
+
+        $countyarea = Countyareas::where('area', '=', $input['area'])->where('county', '=', $input['countyid'])->first();
+        if(!empty($countyarea)){
+            $validator->errors()->add('area', 'The area in this county has already been taken.');
+            return redirect()->back()->withErrors($validator)->withInput();
         }
 
         if($input['areaid'] == 0){

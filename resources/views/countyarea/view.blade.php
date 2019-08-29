@@ -31,7 +31,7 @@
                         <input type="text" class="form-control {{ $errors->has('area') ? ' is-invalid' : '' }}" name="area" placeholder="Add Area" value="{{ old('area') }}" style="width:30%;float:right;" id="area"/>
                         @if ($errors->has('area'))
                             <span class="text-danger">
-                                <strong>{{ $errors->first('area') }}</strong>
+                                <strong style="line-height: 2.5;margin-right:20px;">{{ $errors->first('area') }}</strong>
                             </span>
                         @endif
                     </form>
@@ -108,6 +108,7 @@
     function editcarea(id, area){
         $("#area").val(area);
         $("#areaid").val(id);
+        $("#area").focus();
     }
 </script>
 @endsection

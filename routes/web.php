@@ -25,9 +25,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function()
 	Route::post('/profile/update/{id}', 'ProfileController@updateProfile')->name('update.profile');
 	Route::get('change-password', 'ProfileController@changePassword')->name('change.password');
 	Route::post('change-password', 'ProfileController@updatePassword')->name('update.password');
-	Route::get('user/blocked/{userId}', 'UserController@block');
-	Route::get('user/blocklist', 'UserController@blocklist')->name('users.blocklist');
-	Route::resource('users', 'UserController');
+	//Route::get('user/blocked/{userId}', 'UserController@block');
+	//Route::get('user/blocklist', 'UserController@blocklist')->name('users.blocklist');
+	//Route::resource('users', 'UserController');
 
 	Route::get('patients/download_excel', 'PatientsController@download_excel')->name('patients.download_excel');
 	Route::get('patients/active', 'PatientsController@activePatients')->name('patients.active');

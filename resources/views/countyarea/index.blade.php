@@ -29,7 +29,7 @@
                         <input type="text" class="form-control {{ $errors->has('county') ? ' is-invalid' : '' }}" name="county" placeholder="Add County" value="{{ old('county') }}" style="width:30%;float:right;" id="county"/>
                         @if ($errors->has('county'))
                             <span class="text-danger">
-                                <strong>{{ $errors->first('county') }}</strong>
+                                <strong style="line-height: 2.5;margin-right:20px;">{{ $errors->first('county') }}</strong>
                             </span>
                         @endif
                     </form>
@@ -105,6 +105,7 @@
     function editcountry(id, county){
         $("#county").val(county);
         $("#countyid").val(id);
+        $("#county").focus();
     }
 </script>
 @endsection
