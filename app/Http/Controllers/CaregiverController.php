@@ -117,7 +117,10 @@ class CaregiverController extends Controller{
             $caregiver->height = $input['height'];
             $caregiver->weight = $input['weight'];
             $caregiver->first_name = $input['fname'];
-            $caregiver->middle_name = $input['mname'];
+            if(!empty($input['mname'])){
+                $caregiver->middle_name = $input['mname'];
+            } 
+            
             $caregiver->last_name = $input['lname'];
             $caregiver->language = $input['language'];
             $caregiver->description = $input['description'];
@@ -352,7 +355,9 @@ class CaregiverController extends Controller{
         $caregiver->min_price = $input['min_price'];
         $caregiver->max_price = $input['max_price'];
         $caregiver->first_name = $input['first_name'];
-        $caregiver->middle_name = $input['middle_name'];
+        if(!empty($input['mname'])){
+            $caregiver->middle_name = $input['mname'];
+        } 
         $caregiver->last_name = $input['last_name'];
         $caregiver->height = $input['height'];
         $caregiver->weight = $input['weight'];
