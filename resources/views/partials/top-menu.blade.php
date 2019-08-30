@@ -16,7 +16,11 @@
         <ul class="nav navbar-toolbar">
             <li class="dropdown dropdown-user">
                 <a class="nav-link dropdown-toggle link" data-toggle="dropdown">
-                    <img src="{{ asset('admin/assets/img/admin-avatar.png') }}">
+                    @if(empty(Auth::user()->profile_image))
+                        <img src="{{ asset('admin/assets/img/admin-avatar.png') }}">
+                    @else
+                        <img class="img-circle" src="{{ asset(Auth::user()->profile_image) }}" style="width:20px;height:20px;" />
+                    @endif
                     <span></span>{{ ucfirst(Auth::user()->name) }}<i class="fa fa-angle-down m-l-5"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-right">

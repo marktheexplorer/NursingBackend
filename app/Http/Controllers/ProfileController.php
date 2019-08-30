@@ -20,19 +20,29 @@ class ProfileController extends Controller
     	return view('profile.edit');
     }
 
-    public function updateProfile(Request $request, $id)
-    {
+    public function updateProfile(Request $request, $id){
     	$input = $request->input();
     	$validator =  Validator::make($input,[
     		'name' => 'required|string|max:30',
     		'mobile_number' => 'required|numeric',
-    		'location' => 'nullable|string|max:50'
+    		'location' => 'nullable|string|max:100',
+            'profile_image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
     	]);
 
-    	if ($validator->fails()) {
+        if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
        	}
 
+        $upload_image = '';
+        $profile_image = $request->file('profile_image');
+        if(!empty($profile_image)){
+            $imageName = time().'.'.$profile_image->getClientOriginalExtension();
+            $destinationPath = public_path('/uploads/profile_images');
+            $imagePath = $destinationPath. "/".  $imageName;
+            $profile_image->move($destinationPath, $imageName);
+            $input['profile_image'] =  "/uploads/profile_images/".$imageName;
+        }
+        
        	$user = User::findOrFail($id);
        	$user->fill($input);
        	$user->save();
