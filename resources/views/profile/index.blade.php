@@ -19,7 +19,11 @@
                 <div class="ibox">
                     <div class="ibox-body text-center">
                         <div class="m-t-20">
-                            <img class="img-circle" src="{{ asset('admin/assets/img/admin-avatar.png') }}" />
+                            @if(empty(Auth::user()->profile_image))
+                                <img class="img-circle" src="{{ asset('admin/assets/img/admin-avatar.png') }}" />
+                            @else
+                                <img class="img-circle" src="{{ asset(Auth::user()->profile_image) }}" style="width:113px;height:113px;" />
+                            @endif                            
                         </div>
                         <h5 class="font-strong m-b-10 m-t-10">{{ ucfirst(Auth::user()->name) }}</h5>
                         <div class="m-b-20 text-muted">Administrator</div>
@@ -62,7 +66,7 @@
                                 </ul>
                             </div>
                             <div class="tab-pane fade @if(count($errors) > 0) show active @endif" id="tab-2">
-                                <form action="{{ route('update.profile', ['id' => Auth::id()]) }}" method="post" class="form-horizontal">
+                                <form action="{{ route('update.profile', ['id' => Auth::id()]) }}" method="post" class="form-horizontal" enctype="multipart/form-data">
                                 @csrf
                                     <div class="row">
                                         <div class="col-sm-6 form-group">
@@ -74,10 +78,20 @@
                                                 </span>
                                             @endif
                                         </div>
+                                        <div class="col-sm-6 form-group">
+                                            <label>Change Profile Image</label><br/>
+                                            <input type="file" class=" {{ $errors->has('profile_image') ? ' is-invalid' : '' }}" name="profile_image" placeholder="Profile Image" value="{{ old('profile_image') }}" accept="image/*" style="padding-left:0px;" />
+                                            @if ($errors->has('profile_image'))
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $errors->first('profile_image') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="row">    
                                         <div class="col-sm-6  form-group">
                                             <label>Email</label>
                                             <input type="text" class="form-control" value=" {{ Auth::user()->email }}" readonly="readonly" />
-                                             <span class="help-block">Email address cant be change</span>
                                         </div>
                                         <div class="col-sm-6  form-group">
                                             <label>Mobile Number</label>

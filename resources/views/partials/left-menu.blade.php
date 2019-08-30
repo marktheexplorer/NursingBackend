@@ -2,7 +2,11 @@
     <div id="sidebar-collapse">
         <div class="admin-block d-flex">
             <div>
-                <img src="{{ asset('admin/assets/img/admin-avatar.png') }}" width="45px">
+                @if(empty(Auth::user()->profile_image))
+                    <img src="{{ asset('admin/assets/img/admin-avatar.png') }}" width="45px">
+                @else
+                    <img class="img-circle" src="{{ asset(Auth::user()->profile_image) }}" style="width:40px;height:40px;" />
+                @endif
             </div>
             <div class="admin-info">
                 <div class="font-strong">{{ ucfirst(Auth::user()->name) }}</div><small>Administrator</small>
@@ -10,14 +14,17 @@
         </div>
         <ul class="side-menu metismenu">
             <li>
-                <a class="active" href="{{ route('dashboard') }}"><i class="sidebar-item-icon fa fa-th-large"></i>
+                <a class="active" href="{{ route('dashboard') }}" style="{{ (request()->is('admin/dashboard*')) ? 'background-color:#3498db;color:#fff;' : '' }}"><i class="sidebar-item-icon fa fa-th-large"></i>
                     <span class="nav-label">Dashboard</span>
                 </a>
             </li>
             <li class="heading">FEATURES</li>
             <li>
-                <a href="javascript:;"><i class="sidebar-item-icon fas fa-user-nurse"></i>
-                    <span class="nav-label">Caregiver</span><i class="fa fa-angle-left arrow"></i></a>
+                <a href="javascript:;" style="{{ (request()->is('admin/caregiver*')) ? 'background-color:#3498db;color:#fff;' : '' }}">
+                    <i class="sidebar-item-icon fas fa-user-nurse"></i>
+                    <span class="nav-label">Caregiver</span>
+                    <i class="fa fa-angle-left arrow"></i>
+                </a>
                 <ul class="nav-2-level collapse" aria-expanded="false">
                     <li>
                         <a href="{{ route('caregiver.create') }}"><i class="sidebar-item-icon fas fa-plus"></i>Add Caregiver</a>
@@ -28,15 +35,19 @@
                 </ul>
             </li>
             <li>
-                <a href="{{ route('patients.index') }}"><i class="sidebar-item-icon fas fa fa-wheelchair"></i>
+                <a href="{{ route('patients.index') }}" style="{{ (request()->is('admin/patients*')) ? 'background-color:#3498db;color:#fff;' : '' }}"><i class="sidebar-item-icon fas fa fa-wheelchair"></i>
                     <span class="nav-label">Patient</span></a>
             </li>
             <li>
-                <a href="{{ route('service_request.index') }}"><i class="sidebar-item-icon fas fa-book-medical"></i>
+                <a href="{{ route('service_request.index') }}" style="{{ (request()->is('admin/service_request*')) ? 'background-color:#3498db;color:#fff;' : '' }}"><i class="sidebar-item-icon fas fa-book-medical"></i>
                     <span class="nav-label">Requests</span></a>
             </li>
             <li>
-                <a href="javascript:;"><i class="sidebar-item-icon fas fa-list"></i><span class="nav-label">Master List</span><i class="fa fa-angle-left arrow"></i></a>
+                @if((request()->is('admin/county*')) || (request()->is('admin/services*')) || (request()->is('admin/qualifications*')) || (request()->is('admin/diagnosis*')))
+                    <a href="javascript:;"  style="background-color:#3498db;color:#fff"><i class="sidebar-item-icon fas fa-list"></i><span class="nav-label">Master List</span><i class="fa fa-angle-left arrow"></i></a>
+                @else
+                    <a href="javascript:;"><i class="sidebar-item-icon fas fa-list"></i><span class="nav-label">Master List</span><i class="fa fa-angle-left arrow"></i></a>
+                @endif    
                 <ul class="nav-2-level collapse" aria-expanded="false">
                     <li>
                         <a href="{{ route('county.index') }}"><i class="sidebar-item-icon fas fa-map-signs"></i>County</a>
@@ -54,7 +65,7 @@
                 </ul>  
             </li>
             <li>
-                <a href="javascript:;"><i class="sidebar-item-icon fas fa-question"></i>
+                <a href="javascript:;" style="{{ (request()->is('admin/faqs*')) ? 'background-color:#3498db;color:#fff;' : '' }}"><i class="sidebar-item-icon fas fa-question"></i>
                     <span class="nav-label">FAQs</span><i class="fa fa-angle-left arrow"></i>
                 </a>
                 <ul class="nav-2-level collapse" aria-expanded="false">
@@ -70,7 +81,7 @@
                 </ul>
             </li>
             <li>
-                <a href="javascript:;"><i class="sidebar-item-icon far fa-file-alt"></i>
+                <a href="javascript:;" style="{{ (request()->is('admin/cms*')) ? 'background-color:#3498db;color:#fff;' : '' }}"><i class="sidebar-item-icon far fa-file-alt"></i>
                     <span class="nav-label">CMS Pages</span><i class="fa fa-angle-left arrow"></i></a>
                 <ul class="nav-2-level collapse" aria-expanded="false">
                     <li>
@@ -82,7 +93,7 @@
                 </ul>
             </li>
             <li>
-                <a href="{{ route('enquiries.index') }}"><i class="sidebar-item-icon fas fa-mail-bulk"></i>         
+                <a href="{{ route('enquiries.index') }}" style="{{ (request()->is('admin/enquiries*')) ? 'background-color:#3498db;color:#fff;' : '' }}"><i class="sidebar-item-icon fas fa-mail-bulk"></i>         
                     <span class="nav-label">Inquiry</span>
                 </a>
             </li>

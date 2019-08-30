@@ -120,7 +120,7 @@ class CaregiverController extends Controller{
             if(!empty($input['mname'])){
                 $caregiver->middle_name = $input['mname'];
             } 
-            
+
             $caregiver->last_name = $input['lname'];
             $caregiver->language = $input['language'];
             $caregiver->description = $input['description'];
@@ -311,7 +311,8 @@ class CaregiverController extends Controller{
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
+            //return redirect()->back()->withInput($request->all())->withErrors($validator->errors()); // will return only the errors
+            return redirect()->back()->withInput($request->all())->withErrors($validator);
         }
 
         $name = $input['first_name'];

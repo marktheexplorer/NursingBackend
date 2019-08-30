@@ -24,290 +24,313 @@
                         </ul>
                         <div class="tab-content">
                             <div class="tab-pane fade show active" id="tab-2">
-                                <form action="{{ route('caregiver.store') }}" method="post" class="form-horizontal" enctype="multipart/form-data">
-                                @csrf
-                                    <div class="row">
-                                        <div class="form-group col-sm-4" >
-                                            <label>Profile Image</label><br/>
-                                            <input type="file" class="{{ $errors->has('profile_image') ? ' is-invalid' : '' }}" name="profile_image" placeholder="Profile Image" value="{{ old('profile_image') }}" accept="image/*"/ style="padding-left:0px;">
-                                            @if ($errors->has('profile_image'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('profile_image') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>  
-                                        <div class="col-sm-2 form-group">
-                                            <label>First Name</label>
-                                            <input type="text" class="form-control {{ $errors->has('fname') ? ' is-invalid' : '' }}" name="fname" placeholder="First Name" value="{{ old('fname') }}" />
-                                            @if ($errors->has('fname'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('fname') }}</strong>
-                                                </span>
-                                            @endif
+                               <form action="{{ route('caregiver.store') }}" method="post" class="form-horizontal" enctype="multipart/form-data">
+                                @csrf    
+                                    <div class="card">
+                                        <div class="card-header" style="background-color: #ddd;">
+                                            <h5>Persona Info</h5>
                                         </div>
-                                        <div class="col-sm-2 form-group">
-                                            <label>Middle Name</label>
-                                            <input type="text" class="form-control {{ $errors->has('mname') ? ' is-invalid' : '' }}" name="mname" placeholder="Middle Name" value="{{ old('mname') }}" />
-                                            @if ($errors->has('mname'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('mname') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                        <div class="col-sm-2 form-group">
-                                            <label>Last Name</label>
-                                            <input type="text" class="form-control {{ $errors->has('lname') ? ' is-invalid' : '' }}" name="lname" placeholder="Last Name" value="{{ old('lname') }}" />
-                                            @if ($errors->has('lname'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('lname') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                        <div class="col-sm-2  form-group">
-                                            <label>Language</label>
-                                            <select name="language" class="form-control {{ $errors->has('language') ? ' is-invalid' : '' }}">
-                                                <option disabled="true" selected="true"> -- Select Language --</option>
-                                                @foreach(PROFILE_LANGUAGE as $val)
-                                                    <option value="{{ $val }}">{{$val}}</option>
-                                                @endforeach
-                                            </select>
-                                            @if ($errors->has('language'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('language') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                    <div class="row">    
-                                        <div class="col-sm-3  form-group">
-                                            <label>Email</label>
-                                            <input type="text" name="email" placeholder="Email" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" />
-                                            @if ($errors->has('email'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('email') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                        <div class="col-sm-2  form-group">
-                                            <label>Mobile Number</label>
-                                            <input type="text" class="form-control {{ $errors->has('mobile_number') ? ' is-invalid' : '' }}" placeholder="Mobile Number" name="mobile_number" value="{{ old('mobile_number')}}" id="mobile_number">
-                                            @if ($errors->has('mobile_number'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('mobile_number') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                        <div class="form-group col-sm-4" >
-                                            <label>
-                                                <span style="color:blue;cursor: pointer;" onclick="generatepassword()">Generate Password</span>
-                                                <span style="margin-left:45px;color:blue;cursor: pointer;" onclick="setmail()">Send Mail</span>
-                                            </label>
-                                            <input type="hidden" value="0" name="issentmail" id="issentmail">
-                                            <input type="text" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" placeholder="Password" value="{{ old('password') }}" id="newpassword" />
-                                            @if ($errors->has('password'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('password') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                        <div class="col-sm-3  form-group">
-                                            <label>Gender</label>
-                                            <select name="gender" class="form-control {{ $errors->has('gender') ? ' is-invalid' : '' }}">
-                                                <option disabled="true" selected="true"> -- Select Gender --</option>
-                                                <option value="Male" {{ old('gender') == 'Male' ? 'selected':'' }}>Male</option>
-                                                <option value="Female" {{ old('gender') == 'Female' ? 'selected':'' }}>Female</option>
-                                            </select>
-                                            @if ($errors->has('gender'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('gender') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="form-group col-sm-4" >
-                                            <label>Date of Birth</label>
-                                            <input type="text" class="form-control {{ $errors->has('dob') ? ' is-invalid' : '' }}" name="dob" placeholder="Date of Birth" value="{{ old('dob') }}" id="dob" autocomplete="off" />
-                                            @if ($errors->has('dob'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('dob')}}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                         <div class="col-sm-2  form-group">
-                                            <label>Height</label>
-                                            <select name="height" class="form-control {{ $errors->has('height') ? ' is-invalid' : '' }}">
-                                                <option disabled="true" selected="true"> -- Select Height --</option>
-                                                @foreach(PROFILE_HEIGHT as $val)
-                                                    <option value="{{ $val }}">{{$val}}</option>
-                                                @endforeach
-                                            </select>
-                                            @if ($errors->has('height'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('height') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-sm-3 form-group">
+                                                    <label>First Name</label>
+                                                    <input type="text" class="form-control {{ $errors->has('fname') ? ' is-invalid' : '' }}" name="fname" placeholder="First Name" value="{{ old('fname') }}" />
+                                                    @if ($errors->has('fname'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('fname') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                                <div class="col-sm-3 form-group">
+                                                    <label>Middle Name</label>
+                                                    <input type="text" class="form-control {{ $errors->has('mname') ? ' is-invalid' : '' }}" name="mname" placeholder="Middle Name" value="{{ old('mname') }}" />
+                                                    @if ($errors->has('mname'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('mname') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                                <div class="col-sm-3 form-group">
+                                                    <label>Last Name</label>
+                                                    <input type="text" class="form-control {{ $errors->has('lname') ? ' is-invalid' : '' }}" name="lname" placeholder="Last Name" value="{{ old('lname') }}" />
+                                                    @if ($errors->has('lname'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('lname') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                                <div class="col-sm-3  form-group">
+                                                    <label>Gender</label>
+                                                    <select name="gender" class="form-control {{ $errors->has('gender') ? ' is-invalid' : '' }}">
+                                                        <option disabled="true" selected="true"> -- Select Gender --</option>
+                                                        <option value="Male" {{ old('gender') == 'Male' ? 'selected':'' }}>Male</option>
+                                                        <option value="Female" {{ old('gender') == 'Female' ? 'selected':'' }}>Female</option>
+                                                        <option value="Other" {{ old('gender') == 'Other' ? 'selected':'' }}>Other</option>
+                                                    </select>
+                                                    @if ($errors->has('gender'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('gender') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                            <div class="row">    
+                                                <div class="col-sm-3  form-group">
+                                                    <label>Email</label>
+                                                    <input type="text" name="email" placeholder="Email" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" />
+                                                    @if ($errors->has('email'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('email') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>                                                
+                                                <div class="form-group col-sm-3" >
+                                                    <label>
+                                                        <span style="color:blue;cursor: pointer;" onclick="generatepassword()">Generate Password</span>
+                                                        <span style="margin-left:45px;color:blue;cursor: pointer;" onclick="setmail()">Send Mail</span>
+                                                    </label>
+                                                    <input type="hidden" value="0" name="issentmail" id="issentmail">
+                                                    <input type="text" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" placeholder="Password" value="{{ old('password') }}" id="newpassword" />
+                                                    @if ($errors->has('password'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('password') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                                <div class="col-sm-3  form-group">
+                                                    <label>Mobile Number</label>
+                                                    <input type="text" class="form-control {{ $errors->has('mobile_number') ? ' is-invalid' : '' }}" placeholder="Mobile Number" name="mobile_number" value="{{ old('mobile_number')}}" id="mobile_number">
+                                                    @if ($errors->has('mobile_number'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('mobile_number') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>                                            
+                                                <div class="form-group col-sm-3" >
+                                                    <label>Date of Birth</label>
+                                                    <input type="text" class="form-control {{ $errors->has('dob') ? ' is-invalid' : '' }}" name="dob" placeholder="Date of Birth" value="{{ old('dob') }}" id="dob" autocomplete="off" />
+                                                    @if ($errors->has('dob'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('dob')}}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                 <div class="col-sm-3  form-group">
+                                                    <label>Height</label>
+                                                    <select name="height" class="form-control {{ $errors->has('height') ? ' is-invalid' : '' }}">
+                                                        <option disabled="true" selected="true"> -- Select Height --</option>
+                                                        @foreach(PROFILE_HEIGHT as $val)
+                                                            <option value="{{ $val }}" {{ old('height') == $val ? 'selected':'' }}>
+                                                                {{$val}}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                    @if ($errors->has('height'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('height') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
 
-                                        <div class="col-sm-2 form-group">
-                                            <label>Weight</label>
-                                            <select name="weight" class="form-control {{ $errors->has('weight') ? ' is-invalid' : '' }}">
-                                                <option disabled="true" selected="true"> -- Select Weight --</option>
-                                                @foreach(PROFILE_WEIGHT as $val)
-                                                    <option value="{{ $val }}">{{$val}}</option>
-                                                @endforeach
-                                            </select>
-                                            @if ($errors->has('weight'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('weight') }}</strong>
-                                                </span>
-                                            @endif
+                                                <div class="col-sm-3 form-group">
+                                                    <label>Weight</label>
+                                                    <select name="weight" class="form-control {{ $errors->has('weight') ? ' is-invalid' : '' }}">
+                                                        <option disabled="true" selected="true"> -- Select Weight --</option>
+                                                        @foreach(PROFILE_WEIGHT as $val)
+                                                            <option value="{{ $val }}" {{ old('weight') == $val ? 'selected':'' }}>
+                                                            {{  $val }}
+                                                        </option>
+                                                        @endforeach
+                                                    </select>
+                                                    @if ($errors->has('weight'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('weight') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                                <div class="col-sm-3  form-group">
+                                                    <label>Language</label>
+                                                    <select name="language" class="form-control {{ $errors->has('language') ? ' is-invalid' : '' }}">
+                                                        <option disabled="true" selected="true"> -- Select Language --</option>
+                                                        @foreach(PROFILE_LANGUAGE as $val)
+                                                            <option value="{{ $val }}" {{ old('language') == $val ? 'selected':'' }}>
+                                                                {{ $val }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                    @if ($errors->has('language'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('language') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                                <div class="form-group col-sm-3" >
+                                                    <label>Profile Image</label><br/>
+                                                    <input type="file" class="{{ $errors->has('profile_image') ? ' is-invalid' : '' }}" name="profile_image" placeholder="Profile Image" value="{{ old('profile_image') }}" accept="image/*"/ style="padding-left:0px;">
+                                                    @if ($errors->has('profile_image'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('profile_image') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div> 
+                                            </div>    
+                                            <div class="row">    
+                                                <div class="form-group col-sm-6" >
+                                                    <label>Street </label>
+                                                    <input type="text" class="form-control {{ $errors->has('location') ? ' is-invalid' : '' }}" name="location" placeholder="Location" value="{{ old('location') }}" autocomplete="off" />
+                                                    @if ($errors->has('location'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('location') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                                <div class="form-group col-sm-2" >
+                                                    <label>City</label>
+                                                    <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" placeholder="city" value="{{ old('city') }}" id="citysuggest" autocomplete="off" />
+                                                    @if ($errors->has('city'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('city') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                                <div class="form-group col-sm-2" >
+                                                    <label>State </label>
+                                                    <select name="state" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" readonly="true" id="state">
+                                                        <option disabled="true" selected=""> -- Select State --</option>
+                                                        @if (!empty(old('state')))
+                                                            <option selected="" value="{{ old('state') }}">
+                                                                {{ old('state') }}
+                                                            </option>
+                                                        @endif
+                                                    </select>
+                                                    @if ($errors->has('state'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('state') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                                <div class="form-group col-sm-2" >
+                                                    <label>Zip Code </label>
+                                                    <input type="text" class="form-control {{ $errors->has('zipcode') ? ' is-invalid' : '' }}" name="zipcode" placeholder="Zip code" value="{{ old('zipcode') }}" id="zipcode" readonly="true"  />
+                                                    @if ($errors->has('zipcode'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('zipcode') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                            </div>
                                         </div>
-
-                                        <div class="col-sm-2  form-group">
-                                            <label>Min Price</label>
-                                            <span class="price">
-                                                <input type="text" class="form-control {{ $errors->has('min_price') ? ' is-invalid' : '' }}" placeholder="Min Price" name="min_price" value="{{ old('min_price')}}" min="0" id="min_price" onkeypress="return validateFloatKeyPress(this,event);">
-                                            </span>
-                                            @if ($errors->has('min_price'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('min_price') }}</strong>
-                                                </span>
-                                            @endif
+                                    </div><br/>
+                                    <div class="card">
+                                        <div class="card-header" style="background-color: #ddd;">
+                                            <h5>Service Info</h5>
                                         </div>
-                                        <div class="col-sm-2  form-group">
-                                            <label>Max Price</label>
-                                            <span class="price">
-                                                <input type="text" class="form-control {{ $errors->has('max_price') ? ' is-invalid' : '' }}" placeholder="Max Price" name="max_price" value="{{ old('max_price')}}" min="0" id="max_price" onkeypress="return validateFloatKeyPress(this,event);">
-                                            </span>
-                                            @if ($errors->has('max_price'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('max_price') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>                                                                              
-                                    </div>    
-                                    <div class="row">
-                                        <div class="col-sm-6  form-group">
-                                            <label>Discipline</label>
-                                            <select name="qualification[]" class="form-control {{ $errors->has('qualification') ? ' is-invalid' : '' }}" multiple="true">
-                                                <option disabled="true" > -- Select Discipline --</option>
-                                                @foreach($qualification as $qlf)
-                                                    <option value="{{ $qlf->id }}" {{ (collect(old('qualification'))->contains($qlf->id)) ? 'selected':'' }} >{{ $qlf->name }}</option>
-                                                @endforeach
-                                            </select>
-                                            @if ($errors->has('qualification'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('qualification') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                        <div class="col-sm-6  form-group">
-                                            <label>Service</label>
-                                            <select name="service[]" class="form-control {{ $errors->has('service') ? ' is-invalid' : '' }}" multiple="true">
-                                                <option disabled="true" > -- Select Service --</option>
-                                                @foreach($service_list as $srvc)
-                                                    <option value="{{ $srvc->id }}" {{ (collect(old('service'))->contains($srvc->id)) ? 'selected':'' }}>{{ $srvc->title }}</option>
-                                                @endforeach
-                                            </select>
-                                            @if ($errors->has('service'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('service') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                    <div class="row">    
-                                        <div class="form-group col-sm-4" >
-                                            <label>Street </label>
-                                            <input type="text" class="form-control {{ $errors->has('location') ? ' is-invalid' : '' }}" name="location" placeholder="Location" value="{{ old('location') }}" autocomplete="off" />
-                                            @if ($errors->has('location'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('location') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                        <div class="form-group col-sm-2" >
-                                            <label>City</label>
-                                            <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" placeholder="city" value="{{ old('city') }}" id="citysuggest" autocomplete="off" />
-                                            @if ($errors->has('city'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('city') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                        <div class="form-group col-sm-2" >
-                                            <label>State </label>
-                                            <select name="state" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" readonly="true" id="state">
-                                                <option disabled="true" selected=""> -- Select State --</option>
-                                            </select>
-                                            @if ($errors->has('state'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('state') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                        <div class="form-group col-sm-2" >
-                                            <label>Zip Code </label>
-                                            <input type="text" class="form-control {{ $errors->has('zipcode') ? ' is-invalid' : '' }}" name="zipcode" placeholder="Zip code" value="{{ old('zipcode') }}" id="zipcode" readonly="true"  />
-                                            @if ($errors->has('zipcode'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('zipcode') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="form-group col-sm-12" >
-                                            <label>Service Area </label>
-                                            <select name="service_area[]" class="form-control {{ $errors->has('service_area') ? ' is-invalid' : '' }} select2" multiple="multiple" id="servicearea">
-                                                <option disabled="true" > -- Select Service Area --</option>
-                                                @foreach($service_area_list as $row)
-                                                    <option value="{{ $row->id }}" >
-                                                        {{ $row->area }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                            @if ($errors->has('service_area'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('service_area') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>    
-                                    </div>
-                                    <div class="row">
-                                        <div class="form-group col-sm-12" >
-                                            <label>Non Servicable Area </label>
-                                            <select name="non_service_area[]" class="form-control {{ $errors->has('non_service_area') ? ' is-invalid' : '' }} select2" multiple="multiple" id="nonservicearea">
-                                                <option disabled="true" > -- Select Non Service Area --</option>
-                                                @foreach($service_area_list as $row)
-                                                    <option value="{{ $row->id }}" id="non{{ $row->id }}">
-                                                        {{ ucfirst($row->area) }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                            @if ($errors->has('non_service_area'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('non_service_area') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>    
-                                    </div>
-                                    <div class="row">
-                                        <div class="form-group col-sm-12" >
-                                            <label>Additional Information </label>
-                                            <textarea class="form-control {{ $errors->has('description') ? ' is-invalid' : '' }}" rows="5" name="description" id="description" placeholder="Description"></textarea>
-                                            @if ($errors->has('description'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('description') }}</strong>
-                                                </span>
-                                            @endif
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-sm-6 form-group">
+                                                    <label>Min Price ($)</label>
+                                                    <input type="text" class="form-control {{ $errors->has('min_price') ? ' is-invalid' : '' }}" placeholder="Min Price" name="min_price" value="{{ old('min_price')}}" min="0" id="min_price" onkeypress="return validateFloatKeyPress(this,event);">
+                                                    @if ($errors->has('min_price'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('min_price') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                                <div class="form-group col-sm-6">
+                                                    <label>Max Price ($)</label>
+                                                    <input type="text" class="form-control {{ $errors->has('max_price') ? ' is-invalid' : '' }}" placeholder="Max Price" name="max_price" value="{{ old('max_price')}}" min="0" id="max_price" onkeypress="return validateFloatKeyPress(this,event);">
+                                                    @if ($errors->has('max_price'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('max_price') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>                                                                              
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-6  form-group">
+                                                    <label>Discipline</label>
+                                                    <select name="qualification[]" class="form-control {{ $errors->has('qualification') ? ' is-invalid' : '' }}" multiple="true">
+                                                        <option disabled="true" > -- Select Discipline --</option>
+                                                        @foreach($qualification as $qlf)
+                                                            <option value="{{ $qlf->id }}" {{ (collect(old('qualification'))->contains($qlf->id)) ? 'selected':'' }} >{{ ucfirst($qlf->name) }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    @if ($errors->has('qualification'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('qualification') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                                <div class="col-sm-6  form-group">
+                                                    <label>Service</label>
+                                                    <select name="service[]" class="form-control {{ $errors->has('service') ? ' is-invalid' : '' }}" multiple="true">
+                                                        <option disabled="true" > -- Select Service --</option>
+                                                        @foreach($service_list as $srvc)
+                                                            <option value="{{ $srvc->id }}" {{ (collect(old('service'))->contains($srvc->id)) ? 'selected':'' }}>{{ ucfirst($srvc->title) }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    @if ($errors->has('service'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('service') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                            </div>                                            
+                                            <div class="row">
+                                                <div class="form-group col-sm-12" >
+                                                    <label>Service Area </label>
+                                                    <select name="service_area[]" class="form-control {{ $errors->has('service_area') ? ' is-invalid' : '' }} select2" multiple="multiple" id="servicearea">
+                                                        <option disabled="true" > -- Select Service Area --</option>
+                                                        @foreach($service_area_list as $row)
+                                                            <option value="{{ $row->id }}" {{ (collect(old('service_area'))->contains($row->id)) ? 'selected':'' }} >
+                                                                {{ $row->area }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                    @if ($errors->has('service_area'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('service_area') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>    
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-sm-12" >
+                                                    <label>Non Servicable Area </label>
+                                                    <select name="non_service_area[]" class="form-control {{ $errors->has('non_service_area') ? ' is-invalid' : '' }} select2" multiple="multiple" id="nonservicearea">
+                                                        <option disabled="true" > -- Select Non Service Area --</option>
+                                                        @foreach($service_area_list as $row)
+                                                            <option value="{{ $row->id }}" id="non{{ $row->id }}" {{ (collect(old('non_service_area'))->contains($row->id)) ? 'selected':'' }}>
+                                                                {{ ucfirst($row->area) }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                    @if ($errors->has('non_service_area'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('non_service_area') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>    
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-sm-12" >
+                                                    <label>Additional Information </label>
+                                                    <textarea class="form-control {{ $errors->has('description') ? ' is-invalid' : '' }}" rows="5" name="description" id="description" placeholder="Description">{{ trim(old('description')) }}</textarea>
+                                                    @if ($errors->has('description'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('description') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                            </div> 
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-sm-5 pull-right"></div>
-                                        <div class="form-group col-sm-2 pull-right">
-                                            <button class="btn btn-default pull-right" type="submit">Submit</button>
+                                        <div class="form-group col-sm-2 pull-right"><br/>
+                                            <button class="btn btn-primary pull-right" type="submit">Submit</button>
                                         </div>
                                         <div class="form-group col-sm-5 pull-right"></div>
                                     </div>        
