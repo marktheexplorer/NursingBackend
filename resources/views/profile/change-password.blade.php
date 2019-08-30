@@ -61,7 +61,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <div class="col-sm-10 ml-sm-auto">
+                                        <div class="col-sm-12 ml-sm-auto" style="text-align: center;">
                                             <button class="btn btn-info" type="submit">Submit</button>
                                         </div>
                                     </div>
