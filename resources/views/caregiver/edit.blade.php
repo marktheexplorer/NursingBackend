@@ -53,7 +53,7 @@
                                                 </div>
                                                 <div class="col-sm-3 form-group">
                                                     <label>Middle Name</label>
-                                                    <input type="text" class="form-control {{ $errors->has('middle_name') ? ' is-invalid' : '' }}" name="middle_name" placeholder="Middle Name" value="{{ old('middle', $user->middle_name) }}" />
+                                                    <input type="text" class="form-control {{ $errors->has('middle_name') ? ' is-invalid' : '' }}" name="middle_name" placeholder="Middle Name" value="{{ old('middle_name', $user->middle_name) }}" />
                                                     @if ($errors->has('middle_name'))
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $errors->first('middle_name') }}</strong>
@@ -75,6 +75,7 @@
                                                         <option disabled="true" selected="true"> -- Select Gender --</option>
                                                         <option value="Male" {{ old('gender', $user->gender) == 'Male' ? 'selected':'' }} >Male</option>
                                                         <option value="Female" {{ old('gender', $user->gender) == 'Female' ? 'selected':'' }}>Female</option>
+                                                        <option value="Other" {{ old('gender', $user->gender) == 'Other' ? 'selected':'' }}>Other</option>
                                                     </select>
                                                     @if ($errors->has('gender'))
                                                         <span class="invalid-feedback" role="alert">
@@ -94,8 +95,12 @@
                                                     @endif
                                                 </div>
                                                 <div class="form-group col-sm-3" >
-                                                    <label>Password</label>
-                                                    <input type="password" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" placeholder="Password" value="{{ old('password') }}"/>
+                                                    <label>
+                                                        <span style="color:blue;cursor: pointer;" onclick="generatepassword()">Generate Password</span>
+                                                        <span style="margin-left:30px;color:blue;cursor: pointer;" onclick="setmail()">Send Mail</span>
+                                                    </label>
+                                                    <input type="hidden" value="0" name="issentmail" id="issentmail">
+                                                    <input type="text" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" placeholder="Password" value="{{ old('password') }}" id="newpassword"/>
                                                     @if ($errors->has('password'))
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $errors->first('password') }}</strong>
@@ -167,7 +172,7 @@
                                                 </div>  
                                                 <div class="form-group col-sm-3" >
                                                     <label>Change Profile Image</label><br/>
-                                                    <input type="file" class=" {{ $errors->has('profile_image') ? ' is-invalid' : '' }}" name="profile_image" placeholder="Profile Image" value="{{ old('profile_image') }}" accept="image/*" style="padding-left:0px;"/>
+                                                    <input type="file" class=" {{ $errors->has('profile_image') ? ' is-invalid' : '' }} form-control" name="profile_image" placeholder="Profile Image" value="{{ old('profile_image') }}" accept="image/*" style="padding-left:0px;padding:0px;border:0px;"/>
                                                     @if ($errors->has('profile_image'))
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $errors->first('profile_image') }}</strong>
@@ -178,7 +183,7 @@
                                             <div class="row">
                                                 <div class="form-group col-sm-6" >
                                                     <label>Street </label>
-                                                    <input type="text" class="form-control {{ $errors->has('location') ? ' is-invalid' : '' }}" name="location" placeholder="Location" value="{{ $user->location }}" />
+                                                    <input type="text" class="form-control {{ $errors->has('location') ? ' is-invalid' : '' }}" name="location" placeholder="Location" value="{{ old('location', $user->location) }}" />
                                                     @if ($errors->has('location'))
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $errors->first('location') }}</strong>
@@ -295,7 +300,6 @@
                                                 <div class="form-group col-sm-12" >
                                                     <label>Service Area </label>
                                                     <select name="service_area[]" class="form-control {{ $errors->has('service_area') ? ' is-invalid' : '' }} select2" multiple="multiple" id="servicearea">
-                                                        <option disabled="true" > -- Select Service Area --</option>
                                                         @foreach($service_area_list as $row)
                                                             <option value="{{ $row->id }}" <?php if(in_array($row->id, old('service_area', $user->service_area)) ){ echo 'selected'; } ?>>
                                                                 {{ $row->area }}
@@ -313,7 +317,6 @@
                                                 <div class="form-group col-sm-12" >
                                                     <label>Non Servicable Area </label>
                                                     <select name="non_service_area[]" class="form-control {{ $errors->has('non_service_area') ? ' is-invalid' : '' }} select2" multiple="multiple" id="nonservicearea">
-                                                        <option disabled="true" > -- Select Non Service Area --</option>
                                                         @foreach($service_area_list as $row)
                                                             <option value="{{ $row->id }}" <?php if(in_array($row->id, old('non_service_area', $user->non_service_area))){ echo 'selected'; } ?>>
                                                                 {{ $row->area }}
@@ -366,6 +369,10 @@
 <script>
     $(function(){
         $("#servicearea").select2({
+            placeholder: {
+                id: '-1', // the value of the option
+                text: 'Select Service Area'
+            }
         }).on("change", function (e) {
             // show data in separate div when item is selected
             $("#nonservicearea").select2('destroy').val("").select2();
@@ -377,7 +384,13 @@
                 $("#nonservicearea option[value="+value+"]").attr('disabled',true);
             });
         });
-        $("#nonservicearea").select2();
+
+        $("#nonservicearea").select2({
+            placeholder: {
+                id: '-1', // the value of the option
+                text: 'Select Non Service Area'
+            }
+        });
 
         function split( val ) {
             return val.split( /,\s*/ );
@@ -476,6 +489,11 @@
         }
     });
 
+    $("#dob").keydown(function(e){
+        //make non edidatble field
+        e.preventDefault();
+    });
+
     //date picker field
     $( function(){
         var maxBirthdayDate = new Date();
@@ -530,5 +548,22 @@
         return o.value.lastIndexOf(r.text)
       } else return o.selectionStart
     }
+
+    function generatepassword(){
+        $("#issentmail").val('0');
+        newpassword = Math.random().toString(36).substr(2, 14);
+        $("#newpassword").val(newpassword);
+        $("#newpassword").attr("readonly", false);
+    }
+
+    function setmail(){
+        $("#newpassword").attr("readonly", true);
+        $("#issentmail").val('1');
+    }
+
+    $("#newpassword").keydown(function(e){
+        //make non edidatble field
+        e.preventDefault();
+    });
 </script>
 @endsection
