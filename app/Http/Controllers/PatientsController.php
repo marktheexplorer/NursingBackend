@@ -51,9 +51,9 @@ class PatientsController extends Controller{
     {
         $input = $request->input();
         $validator = validator::make($input,[
-            'f_name' => 'required|string|max:60|alpha_dash',
-            'm_name' => 'nullable|string|max:60|alpha_dash',
-            'l_name' => 'required|string|max:60|alpha_dash',
+            'f_name' => 'required|string|max:20',
+            'm_name' => 'nullable|string|max:20',
+            'l_name' => 'required|string|max:20',
             'email' => 'required|string|max:60',
             'mobile_number' => 'required',
             'dob' => 'required',
@@ -66,7 +66,7 @@ class PatientsController extends Controller{
             'diagnose_id' => 'required',
             'availability' => 'required|string',
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg',
-            'addtional_info' => 'nullable|max:2000',
+            'addtional_info' => 'nullable|max:200',
             'qualification' => 'required',
             'long_term' => 'required',
             'height' => 'required',
@@ -170,9 +170,9 @@ class PatientsController extends Controller{
     public function store(Request $request){
         $input = $request->input();
         $validator = validator::make($input,[
-            'f_name' => 'required|string|max:60|alpha_dash',
-            'm_name' => 'nullable|string|max:60|alpha_dash',
-            'l_name' => 'required|string|max:60|alpha_dash',
+            'f_name' => 'required|string|max:20',
+            'm_name' => 'nullable|string|max:20',
+            'l_name' => 'required|string|max:20',
             'email' => 'required|string|max:60|unique:users',
             'mobile_number' => 'required|unique:users',
             'dob' => 'required',
@@ -185,7 +185,7 @@ class PatientsController extends Controller{
             'diagnose_id' => 'required',
             'availability' => 'required|string',
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg',
-            'addtional_info' => 'nullable|max:2000',
+            'addtional_info' => 'nullable|max:200',
             'qualification' => 'required',
             'pets' => 'required',
             'height' => 'required',
