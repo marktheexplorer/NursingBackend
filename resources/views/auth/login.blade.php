@@ -31,13 +31,12 @@
                     </span>
                 @endif
             </div>
-        </div>
-        <div class="form-group d-flex justify-content-between">
-            
+        </div><!--
+        <div class="form-group d-flex justify-content-between">            
              @if (Route::has('password.request'))
                 <a href="{{ route('password.request') }}" id="to-recover">Forget password?</a>
             @endif
-        </div>
+        </div>-->
         <div class="form-group">
             <button class="btn btn-info btn-block" type="submit">Login</button>
         </div>

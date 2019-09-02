@@ -36,12 +36,24 @@
                                         </div>
                                         <div class="card-body">
                                               <div class="row">
-                                                <div class="col-sm-12 form-group center" style="text-align: center;"><?php
+                                                <div class="col-sm-12 form-group center" style="text-align: center;">
+                                                    
+                                                    <input type="file" class=" {{ $errors->has('profile_image') ? ' is-invalid' : '' }} form-control" name="profile_image" placeholder="Profile Image" value="{{ old('profile_image') }}" accept="image/*" style="display: none;" id="upload_image" />
+
+                                                    <span style="text-align: center;position: absolute;top: 120px;margin-left: 101px;" >
+                                                        <button class="btn-sm btn-primary btn-cir" title="Edit" id="upload_image_icon" onclick="event.preventDefault();"><i class="fas fa-pencil-alt"></i></button>
+                                                    </span><?php
                                                     if(empty($user->profile_image)){ ?>
                                                         <img class="img-circle" src="{{ asset('admin/assets/img/admin-avatar.png') }}" /><?php
                                                     }else{ ?>
                                                         <img class="img-circle" style="height:150px;width: 150px;" src="<?php echo asset($user->profile_image); ?>" /><?php
                                                     }   ?> 
+                                                    @if ($errors->has('profile_image'))
+                                                        <div class="clearfix;"></div>
+                                                        <span class="invalid-feedback" role="alert" style="text-align: center;">
+                                                            <strong>{{ $errors->first('profile_image') }} </strong>
+                                                        </span>
+                                                    @endif
                                                 </div> 
                                             </div>
                                             <div class="row">  
@@ -173,15 +185,6 @@
                                                         </span>
                                                     @endif
                                                 </div>  
-                                                <div class="form-group col-sm-3" >
-                                                    <label>Change Profile Image</label><br/>
-                                                    <input type="file" class=" {{ $errors->has('profile_image') ? ' is-invalid' : '' }} form-control" name="profile_image" placeholder="Profile Image" value="{{ old('profile_image') }}" accept="image/*" style="padding-left:0px;padding:0px;border:0px;"/>
-                                                    @if ($errors->has('profile_image'))
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $errors->first('profile_image') }}</strong>
-                                                        </span>
-                                                    @endif
-                                                </div>                                                                              
                                             </div>    
                                             <div class="row">
                                                 <div class="form-group col-sm-6" >
@@ -567,6 +570,11 @@
     $("#newpassword").keydown(function(e){
         //make non edidatble field
         e.preventDefault();
+    });
+
+    $("#upload_image_icon").click(function(){
+        $("#upload_image").click();
+        //e.preventDefault();
     });
 </script>
 @endsection
