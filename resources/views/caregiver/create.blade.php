@@ -87,7 +87,7 @@
                                                 <div class="form-group col-sm-3" >
                                                     <label>
                                                         <span style="color:blue;cursor: pointer;" onclick="generatepassword()">Generate Password</span>
-                                                        <span style="margin-left:45px;color:blue;cursor: pointer;" onclick="setmail()">Send Mail</span>
+                                                        <span style="margin-left:30px;color:blue;cursor: pointer;" onclick="setmail()">Send Mail</span>
                                                     </label>
                                                     <input type="hidden" value="0" name="issentmail" id="issentmail">
                                                     <input type="text" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" placeholder="Password" value="{{ old('password') }}" id="newpassword" />
