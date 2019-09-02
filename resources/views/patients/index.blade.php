@@ -18,8 +18,8 @@
             <div class="ibox-head">
                 <div class="ibox-title">Patient Data</div>
                 <div>                    
-                    <a href="{{ route('patients.active') }}"><button class="btn btn-primary">Active</button></a>
-                    <a href="{{ route('patients.inactive') }}"><button class="btn btn-primary">Inactive</button></a>
+                    <a href="{{ route('patients.active') }}"><button class="btn btn-primary">Active Patients</button></a>
+                    <a href="{{ route('patients.inactive') }}"><button class="btn btn-primary">Inactive Patients</button></a>
                 </div>
                 <div>
                     <a href="{{ route('patients.create') }}"><button class="btn btn-info"><i class="fas fa-plus"></i> Add</button></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -38,16 +38,6 @@
 	                  		<th>Actions</th>
                         </tr>
                     </thead>
-                    <tfoot>
-                        <tr>
-                            <th>Id</th>
-              				<th>Name</th>
-	                  		<th>Email</th>
-	                  		<th>Mobile no</th>
-	                  		<th>Created At</th>
-	                  		<th>Actions</th>
-                        </tr>
-                    </tfoot>
                     <tbody>
                  	@foreach($patients as $key => $patient)
 	            		<tr>

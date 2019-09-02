@@ -31,7 +31,7 @@
                                  <div class="row">
                                     <div class="col-sm-4 form-group">
                                        <label>First Name</label>
-                                       <input type="text" class="form-control {{ $errors->has('f_name') ? ' is-invalid' : '' }}" name="f_name" placeholder="Name" value="{{ old('f_name') }}"/>
+                                       <input type="text" class="form-control {{ $errors->has('f_name') ? ' is-invalid' : '' }}" name="f_name" placeholder="First Name" value="{{ old('f_name') }}"/>
                                        @if ($errors->has('f_name'))
                                        <span class="text-danger">
                                        <strong>{{ $errors->first('f_name') }}</strong>
@@ -40,7 +40,7 @@
                                     </div>
                                     <div class="col-sm-4 form-group">
                                        <label>Middle Name</label>
-                                       <input type="text" class="form-control {{ $errors->has('m_name') ? ' is-invalid' : '' }}" name="m_name" placeholder="Name" value="{{ old('m_name') }}"/>
+                                       <input type="text" class="form-control {{ $errors->has('m_name') ? ' is-invalid' : '' }}" name="m_name" placeholder="Middle Name" value="{{ old('m_name') }}"/>
                                        @if ($errors->has('m_name'))
                                        <span class="text-danger">
                                        <strong>{{ $errors->first('m_name') }}</strong>
@@ -49,7 +49,7 @@
                                     </div>
                                     <div class="col-sm-4 form-group">
                                        <label>Last Name</label>
-                                       <input type="text" class="form-control {{ $errors->has('l_name') ? ' is-invalid' : '' }}" name="l_name" placeholder="Name" value="{{ old('l_name') }}"/>
+                                       <input type="text" class="form-control {{ $errors->has('l_name') ? ' is-invalid' : '' }}" name="l_name" placeholder="Last Name" value="{{ old('l_name') }}"/>
                                        @if ($errors->has('l_name'))
                                        <span class="text-danger">
                                        <strong>{{ $errors->first('l_name') }}</strong>
@@ -218,7 +218,6 @@
                                     <div class="col-sm-4  form-group">
                                         <label>Discipline</label>
                                         <select name="qualification[]" class="form-control {{ $errors->has('qualification') ? ' is-invalid' : '' }} select2" multiple="multiple">
-                                          <option disabled="true" > -- Select Discipline --</option>
                                           @foreach($qualifications as $qualification)
                                             <option value="{{ $qualification->id }}" {{ (collect(old('qualification'))->contains($qualification->id)) ? 'selected':'' }} >{{ $qualification->name }}</option>
                                             @endforeach
@@ -272,7 +271,7 @@
                                     </div>
                                     <div class="form-group col-md-12">
                                         <label>Additional Information</label>
-                                        <textarea class="form-control" name="additional_info" rows="5">{{ old('additional_info') }}</textarea>
+                                        <textarea class="form-control" name="additional_info" rows="5" placeholder="Additional Information">{{ old('additional_info') }}</textarea>
                                          @if ($errors->has('additional_info'))
                                          <span class="text-danger">
                                          <strong>{{ $errors->first('additional_info') }}</strong>
@@ -281,17 +280,15 @@
                                     </div>
                                  </div>
                               </div>
-                              <div class="col-md-3">
+                              <div class="form-group col-md-3">
                                  <label>  Select Image:</label>
-                                 <div class="col-sm-12 form-group">
-                                    <input type="file" name="profile_image" class="" onchange="readURL(this);"><br/><br/>
+                                    <input type="file" name="profile_image" class="{{ $errors->has('profile_image') ? ' is-invalid' : '' }} form-control" placeholder="Profile Image" value="{{ old('profile_image') }}" onchange="readURL(this);" accept="image/*"/ style="padding-left:0px;padding:0px;border:0px;"><br/><br/>
                                     <img  id="preview" alt="No Image Selected" style="display:none;">
                                     @if ($errors->has('profile_image'))
                                     <span class="text-danger">
                                     <strong>{{ $errors->first('profile_image') }}</strong>
                                     </span>
                                     @endif
-                                 </div>
                               </div>
                            </div>
                            <div class="form-group">
@@ -476,6 +473,11 @@ function getSelectionStart(o) {
   } else return o.selectionStart
 }
 
-$('.select2').select2();
+$('.select2').select2({
+   placeholder: {
+    id: '-1', 
+    text: '-- Select Discipline --'
+  }
+});
 </script>
 @endsection
