@@ -45,11 +45,13 @@ class CaregiverController extends Controller{
      */
     public function store(Request $request){
         $input = $request->input(); 
+        $profile_image = $request->file('profile_image');
 
+        //make validation
         $validator =  Validator::make($input,[
-            'fname' => 'required|string|max:255|min:4',
-            'lname' => 'required|string|max:255|min:4',
-            'email' => 'required|string|unique:users,email',
+            'fname' => 'required|string|max:255',
+            'lname' => 'required|string|max:255',
+            'email' => 'email|required|string|unique:users,email',
             'mobile_number' => 'required|unique:users,mobile_number',
             'service' => 'required|not_in:0',
             'password' => 'required|min:6',
@@ -66,7 +68,7 @@ class CaregiverController extends Controller{
             'state' => 'required',
             'service_area' => 'required',
             'non_service_area' => 'required',
-            'description' => 'required',
+            'description' => 'required|max:300',
             'qualification' => 'required|not_in:0',
         ]);
 
@@ -75,7 +77,6 @@ class CaregiverController extends Controller{
         }
 
         $upload_image = '';
-        $profile_image = $request->file('profile_image');
         if(!empty($profile_image)){
             $imageName = time().'.'.$profile_image->getClientOriginalExtension();
             $destinationPath = public_path('/uploads/profile_images');
@@ -288,14 +289,15 @@ class CaregiverController extends Controller{
         $input = $request->input();
 
         $validator =  Validator::make($input,[
-            'first_name' => 'required|string|max:255|min:4',
-            'last_name' => 'required|string|max:255|min:4',
-            'email' => 'required|string',
-            'mobile_number' => 'required',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'email|required|string',
+            'mobile_number' => 'required:min:8|max:15',
             'service' => 'required|not_in:0',
             'gender' => 'required',
             'language' => 'required',
             'dob' => 'required',
+            //'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'height' => 'required',
             'weight' => 'required',
             'min_price' => 'required|min:0',
@@ -306,7 +308,7 @@ class CaregiverController extends Controller{
             'state' => 'required',
             'service_area' => 'required',
             'non_service_area' => 'required',
-            'description' => 'required',
+            'description' => 'required|max:300',
             'qualification' => 'required|not_in:0',
         ]);
 
@@ -350,14 +352,34 @@ class CaregiverController extends Controller{
         }
         $user->save();
 
+        //send mail about reset password
+        if($input['issentmail'] == '1'){
+            $token = md5(uniqid(rand(), true));        
+            $objDemo = new \stdClass();
+            $objDemo->sender = env('APP_NAME');
+            $objDemo->receiver = ucfirst($name);
+            $objDemo->type = 'password_reset_mail';
+            $objDemo->format = 'basic';
+            $objDemo->subject = '24*7 Nursing : Password Reset Mail';
+            $objDemo->mail_from = env('MAIL_FROM_EMAIL');
+            $objDemo->mail_from_name = env('MAIL_FROM_NAME');
+            $objDemo->weburl = env('APP_URL')."set_password/".$token;
+            //return view('mail.basic_carepack_confirmed', compact('objDemo'));
+            //$issemd = Mail::to('sonu.shokeen@saffrontech.net')->send(new MailHelper($objDemo));
+            $issemd = Mail::to($input['email'])->send(new MailHelper($objDemo));
+            
+            //update token in table
+            $service_request = DB::table('users')->where('email', '=', $input['email'])->update(array('email_activation_token' => $token));
+        }
+
         $caregiverid = DB::table('caregiver')->select('id')->where('user_id','=', $id)->first();
         $caregiver = Caregiver::findOrFail($caregiverid->id);
         $caregiver->service = '';
         $caregiver->min_price = $input['min_price'];
         $caregiver->max_price = $input['max_price'];
         $caregiver->first_name = $input['first_name'];
-        if(!empty($input['mname'])){
-            $caregiver->middle_name = $input['mname'];
+        if(!empty($input['middle_name'])){
+            $caregiver->middle_name = $input['middle_name'];
         } 
         $caregiver->last_name = $input['last_name'];
         $caregiver->height = $input['height'];

@@ -25,7 +25,7 @@
                 </a>
                 <ul class="dropdown-menu dropdown-menu-right">
                     <a class="dropdown-item" href="{{ route('profile') }}"><i class="fa fa-user"></i>Profile</a>
-                    <a class="dropdown-item" href="{{ route('change.password') }}"><i class="fa fa-cog"></i>Change<br> Password</a>
+                    <a class="dropdown-item" href="{{ route('change.password') }}"><i class="fa fa-key"></i>Change Password</a>
                     <li class="dropdown-divider"></li>
                     <a  class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
                             document.getElementById('logout-form').submit();">

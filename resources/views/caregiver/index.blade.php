@@ -19,14 +19,10 @@
             <a href="{{ route('caregiver.download_excel') }}" style="" target="_blank"><button class="btn btn-info "><i class="fas fa-download"></i> Download</button></a>
         </div>    
         <div class="ibox">
-            <div class="ibox-head">
-                <div class="ibox-title">Caregivers Data</div>
-            </div>
             <div class="ibox-body">
                 <table class="table table-striped table-bordered table-hover" id="data-table" cellspacing="0" width="100%">
                     <thead>
                         <tr>
-                            <th>Id</th>
               				<th>Name</th>
 	                  		<th>Email</th>
 	                  		<th>Mobile no</th>
@@ -35,21 +31,9 @@
 	                  		<th>Actions</th>
                         </tr>
                     </thead>
-                    <tfoot>
-                        <tr>
-                            <th>Id</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Mobile no</th>
-                            <th>Price Range</th>
-                            <th>Created At</th>
-                            <th>Actions</th>
-                        </tr>
-                    </tfoot>
                     <tbody>
                  	@foreach($caregivers as $key => $user)
 	            		<tr>
-	            			<td>{{ ++$key }}</td>
 	              			<td>{{ ucfirst($user->name) }}</td>
 	              			<td>{{ $user->email }}</td>
 	              			<td>{{ $user->mobile_number }}</td>
