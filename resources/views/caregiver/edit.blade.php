@@ -1,5 +1,8 @@
 @extends('layouts.app')
 @section('content')
+<style type="text/css">
+    .ui-autocomplete{max-height: 300px !important;overflow-y: scroll !important;overflow-x: hidden !important;}
+</style>
 <div class="content-wrapper">
     <!-- START PAGE CONTENT-->
     <div class="page-heading">
@@ -39,8 +42,6 @@
                                                     }else{ ?>
                                                         <img class="img-circle" style="height:150px;width: 150px;" src="<?php echo asset($user->profile_image); ?>" /><?php
                                                     }   ?> 
-                                                    <div class="row"></div>
-                                                    <span title="Chagne image" style="cursor:pointer;"><i class="fas fa-pencil-alt"></i></span>
                                                 </div> 
                                             </div>
                                             <div class="row">  
@@ -513,7 +514,7 @@
     $('#mobile_number').inputmask({ 
         mask: phones, 
         greedy: false, 
-        definitions: { '#': { validator: "[0-9]", cardinality: 1}}
+        definitions: { '#': { validator: "[0-9]", cardinality: 1}},
     });
 
     /*Validation for $sign in price field*/
