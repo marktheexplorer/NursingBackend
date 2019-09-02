@@ -280,17 +280,15 @@
                                     </div>
                                  </div>
                               </div>
-                              <div class="col-md-3">
+                              <div class="form-group col-md-3">
                                  <label>  Select Image:</label>
-                                 <div class="col-sm-12 form-group">
-                                    <input type="file" name="profile_image" class="" onchange="readURL(this);"><br/><br/>
+                                    <input type="file" name="profile_image" class="{{ $errors->has('profile_image') ? ' is-invalid' : '' }} form-control" placeholder="Profile Image" value="{{ old('profile_image') }}" onchange="readURL(this);" accept="image/*"/ style="padding-left:0px;padding:0px;border:0px;"><br/><br/>
                                     <img  id="preview" alt="No Image Selected" style="display:none;">
                                     @if ($errors->has('profile_image'))
                                     <span class="text-danger">
                                     <strong>{{ $errors->first('profile_image') }}</strong>
                                     </span>
                                     @endif
-                                 </div>
                               </div>
                            </div>
                            <div class="form-group">

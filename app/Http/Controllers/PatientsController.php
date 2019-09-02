@@ -88,9 +88,9 @@ class PatientsController extends Controller{
         if($request->has('profile_image') && ($request->file('profile_image') != null)) {
                 $image = $request->file('profile_image');
                 $user = User::findOrFail($id);
-                $input['profile_image'] = time().'.'.$image->getClientOriginalExtension();   
+                $input['profile_image'] = time().'.'.$image->getClientOriginalExtension(); 
                 $user->profile_image = $input['profile_image'];
-
+                $user->save();
                 $destinationPath = config('image.user_image_path');
                 $img = Image::make($image->getRealPath());
                 $image->move($destinationPath, $input['profile_image']);

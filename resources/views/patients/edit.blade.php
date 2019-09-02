@@ -283,8 +283,8 @@
                                 </div>
                                 <div class="col-sm-3 form-group">
                                     <label>Select Image:</label>
-                                    <input type="file" name="profile_image" class="" onchange="readURL(this);"><br/><br/>
-                                    <img  id="preview" src="{{ asset(config('image.user_image_url').$user->profile_image) }}" alt="your image">
+                                    <input type="file" name="profile_image" class="{{ $errors->has('profile_image') ? ' is-invalid' : '' }} form-control" value="{{ old('profile_image') }}" onchange="readURL(this);" accept="image/*"/ style="padding-left:0px;padding:0px;border:0px;"><br/><br/>
+                                    <img  id="preview" src="{{ asset(config('image.user_image_url').$user->profile_image) }}" alt="Your image">
                                     @if ($errors->has('profile_image'))
                                         <span class="text-danger">
                                             <strong>{{ $errors->first('profile_image') }}</strong>
