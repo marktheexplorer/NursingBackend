@@ -292,7 +292,7 @@ class CaregiverController extends Controller{
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'email|required|string',
-            'mobile_number' => 'required',
+            'mobile_number' => 'required:min:8|max:15',
             'service' => 'required|not_in:0',
             'gender' => 'required',
             'language' => 'required',

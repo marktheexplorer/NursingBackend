@@ -49,6 +49,7 @@
     <script src="{{ asset('admin/assets/js/app.min.js') }}" type="text/javascript"></script>
     <script>
         $('#flash-overlay-modal').modal();
+        $('.alert').delay(3000).fadeOut("slow");
     </script> 
 </body>
 </html>

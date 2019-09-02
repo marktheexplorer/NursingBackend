@@ -37,9 +37,11 @@
                                                     if(empty($user->profile_image)){ ?>
                                                         <img class="img-circle" src="{{ asset('admin/assets/img/admin-avatar.png') }}" /><?php
                                                     }else{ ?>
-                                                        <img class="img-circle" style="height:150px;width: 150;" src="<?php echo asset($user->profile_image); ?>" /><?php
+                                                        <img class="img-circle" style="height:150px;width: 150px;" src="<?php echo asset($user->profile_image); ?>" /><?php
                                                     }   ?> 
-                                                </div>                                        
+                                                    <div class="row"></div>
+                                                    <span title="Chagne image" style="cursor:pointer;"><i class="fas fa-pencil-alt"></i></span>
+                                                </div> 
                                             </div>
                                             <div class="row">  
                                                 <div class="col-sm-3 form-group">
@@ -87,7 +89,7 @@
                                             <div class="row">                                            
                                                 <div class="col-sm-3  form-group">
                                                     <label>Email</label>
-                                                    <input type="text" name="email" placeholder="Email" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email', $user->email) }}" />
+                                                    <input type="text" name="email" placeholder="Email" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email', $user->email) }}" readonly/>
                                                     @if ($errors->has('email'))
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $errors->first('email') }}</strong>
@@ -215,7 +217,7 @@
                                                 </div>
                                                 <div class="form-group col-sm-2" >
                                                     <label>Zip Code </label>
-                                                    <input type="text" class="form-control {{ $errors->has('zipcode') ? ' is-invalid' : '' }}" name="zipcode" placeholder="Zip code" value="{{ old('zipcode', $user->zipcode) }}" id="zipcode" />
+                                                    <input type="text" class="form-control {{ $errors->has('zipcode') ? ' is-invalid' : '' }}" name="zipcode" placeholder="Zip code" value="{{ old('zipcode', $user->zipcode) }}" id="zipcode" readonly />
                                                     @if ($errors->has('zipcode'))
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $errors->first('zipcode') }}</strong>
