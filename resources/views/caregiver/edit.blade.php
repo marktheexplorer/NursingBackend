@@ -38,7 +38,7 @@
                                               <div class="row">
                                                 <div class="col-sm-12 form-group center" style="text-align: center;">
                                                     
-                                                    <input type="file" class=" {{ $errors->has('profile_image') ? ' is-invalid' : '' }} form-control" name="profile_image" placeholder="Profile Image" value="{{ old('profile_image') }}" accept="image/*" style="display: none;" id="upload_image" />
+                                                    <input type="file" class=" {{ $errors->has('profile_image') ? ' is-invalid' : '' }} form-control" name="profile_image" placeholder="Profile Image" value="{{ old('profile_image') }}" accept="image/*" style="display: none;" id="upload_image" onchange="readURL(this);" />
 
                                                     <span style="text-align: center;position: absolute;top: 120px;margin-left: 101px;" >
                                                         <button class="btn-sm btn-primary btn-cir" title="Edit" id="upload_image_icon" onclick="event.preventDefault();"><i class="fas fa-pencil-alt"></i></button>
@@ -568,13 +568,25 @@
     }
 
     $("#newpassword").keydown(function(e){
-        //make non edidatble field
-        e.preventDefault();
+        var key = event.keyCode;
+        if(key != 9){
+            e.preventDefault();
+        }    
     });
 
     $("#upload_image_icon").click(function(){
         $("#upload_image").click();
         //e.preventDefault();
     });
+
+    function readURL(input) {
+        if (input.files && input.files[0]){
+            var reader = new FileReader();   
+            reader.onload = function (e) {
+                $('.img-circle').attr('src', e.target.result);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
 </script>
 @endsection

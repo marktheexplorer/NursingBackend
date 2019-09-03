@@ -75,6 +75,29 @@ class CaregiverController extends Controller{
             'qualification' => 'required|not_in:0',
         ]);
 
+        $upload_image ='';
+        if(!empty($request->file('profile_image'))){
+            $profile_image = $request->file('profile_image');
+            $prop['ext'] = $profile_image->getClientOriginalExtension();
+
+            //make image validation
+            if(!in_array($profile_image->getClientOriginalExtension(), array('jpeg', 'png', 'jpg'))){
+                $validator->after(function($validator){
+                    $validator->errors()->add('profile_image', 'Only jpeg, png, jpg type are valid for image');
+                });     
+            }else if(2097152 < $profile_image->getSize()){
+                $validator->after(function($validator){
+                    $validator->errors()->add('profile_image', 'image size should not be greater then 2MB.');
+                });     
+            }else{
+                $imageName = time().'.'.$profile_image->getClientOriginalExtension();
+                $destinationPath = public_path('/uploads/profile_images');
+                $imagePath = $destinationPath. "/".  $imageName;
+                $profile_image->move($destinationPath, $imageName);
+                $upload_image =  "/uploads/profile_images/".$imageName;
+            }
+        }
+
         if($validator->fails()){
             return redirect()->back()->withErrors($validator)->withInput($request->except('password'));
         }
@@ -88,15 +111,6 @@ class CaregiverController extends Controller{
             return redirect()->back()->withErrors($validator)->withInput($request->except('password'));
         }
 
-        $upload_image = '';
-        if(!empty($profile_image)){
-            $imageName = time().'.'.$profile_image->getClientOriginalExtension();
-            $destinationPath = public_path('/uploads/profile_images');
-            $imagePath = $destinationPath. "/".  $imageName;
-            $profile_image->move($destinationPath, $imageName);
-            $upload_image =  "/uploads/profile_images/".$imageName;
-        }
-     
         $name = $input['fname'];
         if(!empty($input['mname'])){
             $name .= " ".$input['mname'];
@@ -311,7 +325,6 @@ class CaregiverController extends Controller{
             'gender' => 'required',
             'language' => 'required',
             'dob' => 'required',
-            //'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'height' => 'required',
             'weight' => 'required',
             'min_price' => 'required|min:0',
@@ -326,18 +339,28 @@ class CaregiverController extends Controller{
             'qualification' => 'required|not_in:0',
         ]);
 
+        $upload_image ='';
+        if(!empty($request->file('profile_image'))){
+            $profile_image = $request->file('profile_image');
+            $prop['ext'] = $profile_image->getClientOriginalExtension();
 
-        //$validator->getMessageBag()->add('mobile_number', 'Input must be less then 16 charecter.');
-        //$validator->getMessageBag()->add('mobile_number', 'Input must be greater then 8 charecter.');
-
-        /*$input['mobile_number'] = str_replace(array("(", ")", "_", "-", " "), "", $input['mobile_number']);
-        if(strlen($input['mobile_number']) > 15){
-            //$validator->errors()->add('mobile_number', 'Input must be less then 16 charecter.');
-            $validator->getMessageBag()->add('mobile_number', 'Input must be less then 16 charecter.');
-        }else if(strlen($input['mobile_number']) < 8){
-            //$validator->errors()->add('mobile_number', 'Input must be greater then 8 charecter.');
-            $validator->getMessageBag()->add('mobile_number', 'Input must be greater then 8 charecter.');
-        }*/
+            //make image validation
+            if(!in_array($profile_image->getClientOriginalExtension(), array('jpeg', 'png', 'jpg'))){
+                $validator->after(function($validator){
+                    $validator->errors()->add('profile_image', 'Only jpeg, png, jpg type are valid for image');
+                });     
+            }else if(2097152 < $profile_image->getSize()){
+                $validator->after(function($validator){
+                    $validator->errors()->add('profile_image', 'image size should not be greater then 2MB.');
+                });     
+            }else{
+                $imageName = time().'.'.$profile_image->getClientOriginalExtension();
+                $destinationPath = public_path('/uploads/profile_images');
+                $imagePath = $destinationPath. "/".  $imageName;
+                $profile_image->move($destinationPath, $imageName);
+                $upload_image =  "/uploads/profile_images/".$imageName;
+            }
+        }
 
         if ($validator->fails()) {
             //return redirect()->back()->withInput($request->all())->withErrors($validator->errors()); // will return only the errors
@@ -369,14 +392,11 @@ class CaregiverController extends Controller{
             $user->password = Hash::make($input['password']);
         }
 
-        if(!empty($request->file('profile_image'))){
-            $profile_image = $request->file('profile_image');
-            $imageName = time().'.'.$profile_image->getClientOriginalExtension();
-            $destinationPath = public_path('/uploads/profile_images');
-            $imagePath = $destinationPath. "/".  $imageName;
-            $profile_image->move($destinationPath, $imageName);
-            $user->profile_image =  "/uploads/profile_images/".$imageName;
+        //upload file
+        if(!empty($upload_image)){
+            $user->profile_image =  "$upload_image";
         }
+       
         $user->save();
 
         //send mail about reset password

@@ -47,7 +47,7 @@
                                                         </span>
                                                     @endif
                                                 </div> 
-                                                <input type="file" class="{{ $errors->has('profile_image') ? ' is-invalid' : '' }} form-control" name="profile_image" placeholder="Profile Image" value="{{ old('profile_image') }}" accept="image/*"/ style="padding-left:0px;padding:0px;border:0px;display: none;" id="profile_image">
+                                                <input type="file" class="{{ $errors->has('profile_image') ? ' is-invalid' : '' }} form-control" name="profile_image" placeholder="Profile Image" value="{{ old('profile_image') }}" accept="image/*"/ style="padding-left:0px;padding:0px;border:0px;display: none;" id="profile_image" onchange="readURL(this);">
                                             </div>
                                             <div class="row">
                                                 <div class="col-sm-3 form-group">
@@ -546,13 +546,25 @@
     }
 
     $("#newpassword").keydown(function(e){
-        //make non edidatble field
-        e.preventDefault();
+        var key = event.keyCode;
+        if(key != 9){
+            e.preventDefault();
+        }    
     });
 
     $("#upload_image").click(function(){
         $("#profile_image").click();
         //e.preventDefault();
     });
+
+    function readURL(input) {
+        if (input.files && input.files[0]){
+            var reader = new FileReader();   
+            reader.onload = function (e) {
+                $('.img-circle').attr('src', e.target.result);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
 </script>
 @endsection
