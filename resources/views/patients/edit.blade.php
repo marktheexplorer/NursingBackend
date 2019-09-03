@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
+<style type="text/css">
+    .ui-autocomplete{max-height: 300px !important;overflow-y: scroll !important;overflow-x: hidden !important;}
+</style>
 <div class="content-wrapper">
     <!-- START PAGE CONTENT-->
     <div class="page-heading">
