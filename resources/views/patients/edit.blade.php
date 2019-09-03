@@ -76,7 +76,7 @@
                                         </div>
                                         <div class="col-sm-4 form-group date">
                                            <label>Date of Birth</label>
-                                           <input type="text" class="form-control {{ $errors->has('dob') ? ' is-invalid' : '' }}" name="dob" id="dob" placeholder="DOB" value="{{ old('dob', date('d/m/Y', strtotime($user->dob))) }}"/>
+                                           <input type="text" class="form-control {{ $errors->has('dob') ? ' is-invalid' : '' }}" name="dob" id="dob" placeholder="Date Of Birth" value="{{ old('dob', date('d/m/Y', strtotime($user->dob))) }}"/>
                                            <div class="input-group-addon">
                                               <span class="glyphicon glyphicon-th"></span>
                                            </div>
@@ -319,6 +319,10 @@
             maxDate: maxBirthdayDate,
             yearRange: '1919:'+maxBirthdayDate.getFullYear(),
         });
+    });
+    $("#dob").keydown(function(e){
+        //make non edidatble field
+        e.preventDefault();
     });
    
     function readURL(input) {
