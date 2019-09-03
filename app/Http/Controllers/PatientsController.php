@@ -84,6 +84,7 @@ class PatientsController extends Controller{
             'pets.required'    => 'Pets is required.',
             'long_term.required'    => 'Long terms insurance is required.',
             'qualification.required'    => 'Discipline is required.',
+            'range.required'    => 'Expected Cost is required.',
         ]);
         if(isset($input['pets']) && $input['pets'] == 'yes'){
             $this->validate($request, [
@@ -213,6 +214,7 @@ class PatientsController extends Controller{
             'pets.required'    => 'Pets is required.',
             'long_term.required'    => 'Long terms insurance is required.',
             'qualification.required'    => 'Discipline is required.',
+            'range.required'    => 'Expected Cost is required.',
         ]);
 
         
@@ -295,6 +297,7 @@ class PatientsController extends Controller{
     }
 
     public function download_excel(){
+
         $usre_data = DB::table('users')->select('users.*', 'patients_profiles.range', 'patients_profiles.pin_code')->Join('patients_profiles', 'patients_profiles.user_id', '=', 'users.id')->orderBy('users.name', 'desc')->get();
 
         $filename = "Patients.xls";
