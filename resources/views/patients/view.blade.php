@@ -145,12 +145,14 @@
                                             <div class="media-heading">{{ $user->patient ? ($user->patient->pets == 1? 'Yes' : 'No'):'' }}</div>
                                         </div>
                                     </li>
+                                    @if($user->patient?$user->patient->pets == 1:0)
                                     <li class="media">
                                         <div class="media-img">Pets Description</div>
                                         <div class="media-body">
                                             <div class="media-heading">{{ $user->patient ? $user->patient->pets_description :'' }}</div>
                                         </div>
                                     </li>
+                                    @endif
                                     <li class="media">
                                         <div class="media-img">Additional Information</div>
                                         <div class="media-body">
@@ -180,17 +182,6 @@
                                         <th>Created At</th>
                                     </tr>
                                 </thead>
-                                <tfoot>
-                                    <tr>
-                                        <th>Id</th>
-                                        <th>Service</th>
-                                        <th>Caregiver Assigned</th>
-                                        <th>Price Range</th>
-                                        <th>Location</th>
-                                        <th>Shift</th>
-                                        <th>Created At</th>
-                                    </tr>
-                                </tfoot>
                                 <tbody>
                                 @foreach($services as $key => $service)
                                     <tr>
