@@ -45,14 +45,6 @@
 	                  		<th style="min-width: 150px;">Actions</th>
                         </tr>
                     </thead>
-                    <tfoot>
-                        <tr>
-                            <th>#</th>
-                            <th>County</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </tfoot>
                     <tbody>
                  	@foreach($county as $key => $row)
 	            		<tr>

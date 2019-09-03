@@ -200,17 +200,6 @@
                                         <th>Created At</th>
                                     </tr>
                                 </thead>
-                                <tfoot>
-                                    <tr>
-                                        <th>Id</th>
-                                        <th>Service</th>
-                                        <th>Patient</th>
-                                        <th>Price Range</th>
-                                        <th>Location</th>
-                                        <th>Shift</th>
-                                        <th>Created At</th>
-                                    </tr>
-                                </tfoot>
                                 <tbody>
                                 @if(count($services) > 0)
                                     @foreach($services as $key => $service)

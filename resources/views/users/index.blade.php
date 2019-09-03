@@ -32,17 +32,6 @@
 	                  		<th>Actions</th>
                         </tr>
                     </thead>
-                    <tfoot>
-                        <tr>
-                            <th>Id</th>
-              				<th>Name</th>
-	                  		<th>Email</th>
-	                  		<th>Mobile no</th>
-	                  		<th>Number Verified</th>
-	                  		<th>Created At</th>
-	                  		<th>Actions</th>
-                        </tr>
-                    </tfoot>
                     <tbody>
                  	@foreach($users as $key => $user)
 	            		<tr>
