@@ -176,6 +176,11 @@
                                        <label>State</label>
                                        <select name="state" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" readonly="true" id="state">
                                             <option disabled="true" selected=""> -- Select State --</option>
+                                        @if (!empty(old('state')))
+                                            <option selected="" value="{{ old('state') }}">
+                                                {{ old('state') }}
+                                            </option>
+                                        @endif
                                         </select>
                                        @if ($errors->has('state'))
                                        <span class="text-danger">
