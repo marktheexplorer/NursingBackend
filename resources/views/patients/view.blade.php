@@ -22,7 +22,7 @@
                             @if(!empty($user->profile_image))
                                <img class="img-circle" src="{{ asset(config('image.user_image_url').$user->profile_image) }}" alt="No image"> 
                             @else
-                                No image uploaded.
+                                <img class="img-circle" src="{{ asset('admin/assets/img/admin-avatar.png') }}" />
                             @endif 
                         </div>
                         <h5 class="font-strong m-b-10 m-t-10">{{ ucfirst($user->name) }}</h5>
