@@ -1,5 +1,8 @@
 @extends('layouts.app')
 @section('content')
+<style type="text/css">
+    .ui-autocomplete{max-height: 300px !important;overflow-y: scroll !important;overflow-x: hidden !important;}
+</style>
 <div class="content-wrapper">
    <!-- START PAGE CONTENT-->
    <div class="page-heading">
@@ -76,7 +79,7 @@
                                     </div>
                                     <div class="col-sm-4 form-group date">
                                        <label>Date of Birth</label>
-                                       <input type="text" class="form-control {{ $errors->has('dob') ? ' is-invalid' : '' }}" name="dob" id="dob" placeholder="DOB" value="{{ old('dob') }}"/>
+                                       <input type="text" class="form-control {{ $errors->has('dob') ? ' is-invalid' : '' }}" name="dob" id="dob" placeholder="Date Of Birth" value="{{ old('dob') }}"/>
                                        <div class="input-group-addon">
                                           <span class="glyphicon glyphicon-th"></span>
                                        </div>
@@ -91,11 +94,11 @@
                                         <select name="height" class="form-control {{ $errors->has('height') ? ' is-invalid' : '' }} select2">
                                             <option disabled="true" selected="true"> -- Select Height --</option>
                                             @foreach(PROFILE_HEIGHT as $val)
-                                                <option value="{{ $val }}">{{$val}}</option>
+                                                 <option value="{{ $val }}" {{ old('height') == $val ? 'selected':'' }}>{{$val}}</option>
                                             @endforeach
                                         </select>
                                         @if ($errors->has('height'))
-                                            <span class="invalid-feedback" role="alert">
+                                            <span class="text-danger">
                                                 <strong>{{ $errors->first('height') }}</strong>
                                             </span>
                                         @endif
@@ -105,11 +108,11 @@
                                         <select name="weight" class="form-control {{ $errors->has('weight') ? ' is-invalid' : '' }} select2">
                                             <option disabled="true" selected="true"> -- Select Weight --</option>
                                             @foreach(PROFILE_WEIGHT as $val)
-                                                <option value="{{ $val }}">{{$val}}</option>
+                                                <option value="{{ $val }}" {{ old('weight') == $val ? 'selected':'' }}>{{  $val }}</option>
                                             @endforeach
                                         </select>
                                         @if ($errors->has('weight'))
-                                            <span class="invalid-feedback" role="alert">
+                                            <span class="text-danger">
                                                 <strong>{{ $errors->first('weight') }}</strong>
                                             </span>
                                         @endif
@@ -131,11 +134,11 @@
                                         <select name="language" class="form-control {{ $errors->has('language') ? ' is-invalid' : '' }} select2">
                                             <option disabled="true" selected="true"> -- Select Language --</option>
                                             @foreach(LANGUAGES as $val)
-                                                <option value="{{ $val }}">{{$val}}</option>
+                                            <option value="{{ $val }}" {{ old('language') == $val ? 'selected':'' }}>{{ $val }}</option>
                                             @endforeach
                                         </select>
                                         @if ($errors->has('language'))
-                                            <span class="invalid-feedback" role="alert">
+                                            <span class="text-danger">
                                                 <strong>{{ $errors->first('language') }}</strong>
                                             </span>
                                         @endif
@@ -173,6 +176,11 @@
                                        <label>State</label>
                                        <select name="state" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" readonly="true" id="state">
                                             <option disabled="true" selected=""> -- Select State --</option>
+                                        @if (!empty(old('state')))
+                                            <option selected="" value="{{ old('state') }}">
+                                                {{ old('state') }}
+                                            </option>
+                                        @endif
                                         </select>
                                        @if ($errors->has('state'))
                                        <span class="text-danger">
@@ -223,7 +231,7 @@
                                             @endforeach
                                         </select>
                                         @if ($errors->has('qualification'))
-                                            <span class="invalid-feedback" role="alert">
+                                            <span class="text-danger">
                                                 <strong>{{ $errors->first('qualification') }}</strong>
                                             </span>
                                         @endif
@@ -321,6 +329,10 @@
           yearRange: '1919:'+maxBirthdayDate.getFullYear(),
       });
   });
+  $("#dob").keydown(function(e){
+        //make non edidatble field
+        e.preventDefault();
+    });
    
   function readURL(input) {
       if (input.files && input.files[0]) {

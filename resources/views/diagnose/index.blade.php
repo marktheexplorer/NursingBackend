@@ -29,14 +29,6 @@
 	                  		<th style="min-width: 150px;">Actions</th>
                         </tr>
                     </thead>
-                    <tfoot>
-                        <tr>
-                            <th>Id</th>
-                            <th>Title</th>
-                            <th>Created At</th>
-                            <th>Actions</th>
-                        </tr>
-                    </tfoot>
                     <tbody>
                  	@foreach($diagnosis as $key => $diagnose)
 	            		<tr>

@@ -30,16 +30,6 @@
 	                  		<th>Actions</th>
                         </tr>
                     </thead>
-                    <tfoot>
-                        <tr>
-                            <th>Id</th>
-              				<th>Name</th>
-	                  		<th>Email</th>
-	                  		<th>Phone</th>
-                            <th>Created At</th>
-	                  		<th>Actions</th>
-                        </tr>
-                    </tfoot>
                     <tbody>
                  	@foreach($enquiries as $key => $enquiry)
 	            		<tr>

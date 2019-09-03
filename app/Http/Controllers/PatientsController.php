@@ -54,7 +54,7 @@ class PatientsController extends Controller{
             'f_name' => 'required|string|max:20',
             'm_name' => 'nullable|string|max:20',
             'l_name' => 'required|string|max:20',
-            'email' => 'required|string|max:60',
+            'email' => 'email|required|string|max:60',
             'mobile_number' => 'required',
             'dob' => 'required',
             'gender' => 'required',
@@ -74,6 +74,17 @@ class PatientsController extends Controller{
             'language' => 'required',
             'pets' => 'required',
             'pets_description' => 'nullable|max:2000'
+        ],
+        $messages = [
+            'f_name.required'    => 'The First name is required.',
+            'f_name.max'    => 'The First name may not be greater than 20 characters.',
+            'm_name.max'    => 'The Middle name may not be greater than 20 characters.',
+            'l_name.required'    => 'The Last name is required.',
+            'l_name.max'    => 'The Last name may not be greater than 20 characters.',
+            'pets.required'    => 'Pets is required.',
+            'long_term.required'    => 'Long terms insurance is required.',
+            'qualification.required'    => 'Discipline is required.',
+            'range.required'    => 'Expected Cost is required.',
         ]);
         if(isset($input['pets']) && $input['pets'] == 'yes'){
             $this->validate($request, [
@@ -173,7 +184,7 @@ class PatientsController extends Controller{
             'f_name' => 'required|string|max:20',
             'm_name' => 'nullable|string|max:20',
             'l_name' => 'required|string|max:20',
-            'email' => 'required|string|max:60|unique:users',
+            'email' => 'email|required|string|max:60|unique:users',
             'mobile_number' => 'required|unique:users',
             'dob' => 'required',
             'gender' => 'required',
@@ -193,7 +204,20 @@ class PatientsController extends Controller{
             'language' => 'required',
             'pets_description' => 'max:2000',
             'long_term' => 'required'
+        ],
+        $messages = [
+            'f_name.required'    => 'The First name is required.',
+            'f_name.max'    => 'The First name may not be greater than 20 characters.',
+            'm_name.max'    => 'The Middle name may not be greater than 20 characters.',
+            'l_name.required'    => 'The Last name is required.',
+            'l_name.max'    => 'The Last name may not be greater than 20 characters.',
+            'pets.required'    => 'Pets is required.',
+            'long_term.required'    => 'Long terms insurance is required.',
+            'qualification.required'    => 'Discipline is required.',
+            'range.required'    => 'Expected Cost is required.',
         ]);
+
+        
         if(!empty($input['pets']) && $input['pets'] == 'yes'){
             $this->validate($request, [
               'pets_description' => 'required|max:2000'
@@ -273,6 +297,7 @@ class PatientsController extends Controller{
     }
 
     public function download_excel(){
+
         $usre_data = DB::table('users')->select('users.*', 'patients_profiles.range', 'patients_profiles.pin_code')->Join('patients_profiles', 'patients_profiles.user_id', '=', 'users.id')->orderBy('users.name', 'desc')->get();
 
         $filename = "Patients.xls";

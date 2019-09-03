@@ -28,14 +28,6 @@
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tfoot>
-                        <tr>
-                            <th>Id</th>
-                            <th>Title</th>
-                            <th>Created At</th>
-                            <th>Actions</th>
-                        </tr>
-                    </tfoot>
                     <tbody>
                     @foreach($cms as $key => $page)
                         <tr>

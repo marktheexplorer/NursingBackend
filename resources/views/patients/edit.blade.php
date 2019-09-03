@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
+<style type="text/css">
+    .ui-autocomplete{max-height: 300px !important;overflow-y: scroll !important;overflow-x: hidden !important;}
+</style>
 <div class="content-wrapper">
     <!-- START PAGE CONTENT-->
     <div class="page-heading">
@@ -31,7 +34,7 @@
                                     <div class="row">
                                        <div class="col-sm-4 form-group">
                                             <label>First Name</label>
-                                            <input type="text" class="form-control {{ $errors->has('f_name') ? ' is-invalid' : '' }}" name="f_name" placeholder="Title" value="{{ old('f_name', $user->patient?$user->patient->f_name:'') }}"/>
+                                            <input type="text" class="form-control {{ $errors->has('f_name') ? ' is-invalid' : '' }}" name="f_name" placeholder="First Name" value="{{ old('f_name', $user->patient?$user->patient->f_name:'') }}"/>
                                             @if ($errors->has('f_name'))
                                                 <span class="text-danger">
                                                     <strong>{{ $errors->first('f_name') }}</strong>
@@ -40,7 +43,7 @@
                                         </div>
                                         <div class="col-sm-4 form-group">
                                             <label>Middle Name</label>
-                                            <input type="text" class="form-control {{ $errors->has('m_name') ? ' is-invalid' : '' }}" name="m_name" placeholder="Title" value="{{ old('m_name', $user->patient?$user->patient->m_name:'') }}"/>
+                                            <input type="text" class="form-control {{ $errors->has('m_name') ? ' is-invalid' : '' }}" name="m_name" placeholder="Middle Name" value="{{ old('m_name', $user->patient?$user->patient->m_name:'') }}"/>
                                             @if ($errors->has('m_name'))
                                                 <span class="text-danger">
                                                     <strong>{{ $errors->first('m_name') }}</strong>
@@ -49,7 +52,7 @@
                                         </div>
                                         <div class="col-sm-4 form-group">
                                             <label>Last Name</label>
-                                            <input type="text" class="form-control {{ $errors->has('l_name') ? ' is-invalid' : '' }}" name="l_name" placeholder="Title" value="{{ old('l_name', $user->patient?$user->patient->l_name:'') }}"/>
+                                            <input type="text" class="form-control {{ $errors->has('l_name') ? ' is-invalid' : '' }}" name="l_name" placeholder="Last Name" value="{{ old('l_name', $user->patient?$user->patient->l_name:'') }}"/>
                                             @if ($errors->has('l_name'))
                                                 <span class="text-danger">
                                                     <strong>{{ $errors->first('l_name') }}</strong>
@@ -76,7 +79,7 @@
                                         </div>
                                         <div class="col-sm-4 form-group date">
                                            <label>Date of Birth</label>
-                                           <input type="text" class="form-control {{ $errors->has('dob') ? ' is-invalid' : '' }}" name="dob" id="dob" placeholder="DOB" value="{{ old('dob', date('d/m/Y', strtotime($user->dob))) }}"/>
+                                           <input type="text" class="form-control {{ $errors->has('dob') ? ' is-invalid' : '' }}" name="dob" id="dob" placeholder="Date Of Birth" value="{{ old('dob', date('d/m/Y', strtotime($user->dob))) }}"/>
                                            <div class="input-group-addon">
                                               <span class="glyphicon glyphicon-th"></span>
                                            </div>
@@ -95,7 +98,7 @@
                                                 @endforeach
                                             </select>
                                             @if ($errors->has('height'))
-                                                <span class="invalid-feedback" role="alert">
+                                                <span class="text-danger">
                                                     <strong>{{ $errors->first('height') }}</strong>
                                                 </span>
                                             @endif
@@ -109,7 +112,7 @@
                                                 @endforeach
                                             </select>
                                             @if ($errors->has('weight'))
-                                                <span class="invalid-feedback" role="alert">
+                                                <span class="text-danger">
                                                     <strong>{{ $errors->first('weight') }}</strong>
                                                 </span>
                                             @endif
@@ -135,7 +138,7 @@
                                                 @endforeach
                                             </select>
                                             @if ($errors->has('language'))
-                                                <span class="invalid-feedback" role="alert">
+                                                <span class="text-danger">
                                                     <strong>{{ $errors->first('language') }}</strong>
                                                 </span>
                                             @endif
@@ -143,7 +146,7 @@
                                         <div class="col-sm-4 form-group">
                                             <label>Expected cost</label>
                                             <span class="patient_price">
-                                              <input type="text" class="form-control {{ $errors->has('range') ? ' is-invalid' : '' }} " name="range" placeholder="Range" value="{{ old('range', $user->patient?$user->patient->range:'') }}" onkeypress="return validateFloatKeyPress(this,event);" />
+                                              <input type="text" class="form-control {{ $errors->has('range') ? ' is-invalid' : '' }} " name="range" placeholder="Expected Cost" value="{{ old('range', $user->patient?$user->patient->range:'') }}" onkeypress="return validateFloatKeyPress(this,event);" />
                                             </span>
                                             @if ($errors->has('range'))
                                                 <span class="text-danger">
@@ -153,7 +156,7 @@
                                         </div>
                                         <div class="col-sm-4 form-group">
                                             <label>Street</label>
-                                            <input type="text" class="form-control {{ $errors->has('street') ? ' is-invalid' : '' }}" name="street" placeholder="street" value="{{ old('street', $user->street) }}" id="street" readonly />
+                                            <input type="text" class="form-control {{ $errors->has('street') ? ' is-invalid' : '' }}" name="street" placeholder="street" value="{{ old('street', $user->street) }}" id="street" />
                                             @if ($errors->has('street'))
                                                 <span class="text-danger">
                                                     <strong>{{ $errors->first('street') }}</strong>
@@ -229,7 +232,7 @@
                                                 @endforeach
                                             </select>
                                             @if ($errors->has('qualification'))
-                                                <span class="invalid-feedback" role="alert">
+                                                <span class="text-danger">
                                                     <strong>{{ $errors->first('qualification') }}</strong>
                                                 </span>
                                             @endif
@@ -319,6 +322,10 @@
             maxDate: maxBirthdayDate,
             yearRange: '1919:'+maxBirthdayDate.getFullYear(),
         });
+    });
+    $("#dob").keydown(function(e){
+        //make non edidatble field
+        e.preventDefault();
     });
    
     function readURL(input) {

@@ -105,17 +105,6 @@
                                                         <th></th>
                                                     </tr>
                                                 </thead>
-                                                <tfoot>
-                                                    <tr>
-                                                        <th>Id</th>
-                                                        <th>Name</th>
-                                                        <th>Email</th>
-                                                        <th>Mobile no</th>
-                                                        <th>Service</th>
-                                                        <th>Zip Code</th>
-                                                        <th></th>
-                                                    </tr>
-                                                </tfoot>
                                                 <tbody>
                                                     @foreach($caregivers as $key => $user)
                                                         <tr>

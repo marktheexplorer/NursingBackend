@@ -38,19 +38,6 @@
                             <th style="min-width: 165px;">Actions</th>
                         </tr>
                     </thead>
-                    <tfoot>
-                        <tr>
-                            <th>Id</th>
-                            <th>Patient</th>
-                            <th>Caregiver</th>
-                            <th>Service/Diagnos</th>
-                            <th>Location</th>
-                            <th>Price Range</th>
-                            <th>Shift</th>
-                            <th>Duration</th>
-                            <th>Actions</th>
-                        </tr>
-                    </tfoot>
                     <tbody>
                  	@foreach($services as $key => $srvc)
 	            		<tr>
