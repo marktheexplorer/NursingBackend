@@ -95,7 +95,7 @@
                                                 @endforeach
                                             </select>
                                             @if ($errors->has('height'))
-                                                <span class="invalid-feedback" role="alert">
+                                                <span class="text-danger">
                                                     <strong>{{ $errors->first('height') }}</strong>
                                                 </span>
                                             @endif
@@ -109,7 +109,7 @@
                                                 @endforeach
                                             </select>
                                             @if ($errors->has('weight'))
-                                                <span class="invalid-feedback" role="alert">
+                                                <span class="text-danger">
                                                     <strong>{{ $errors->first('weight') }}</strong>
                                                 </span>
                                             @endif
@@ -135,7 +135,7 @@
                                                 @endforeach
                                             </select>
                                             @if ($errors->has('language'))
-                                                <span class="invalid-feedback" role="alert">
+                                                <span class="text-danger">
                                                     <strong>{{ $errors->first('language') }}</strong>
                                                 </span>
                                             @endif
@@ -229,7 +229,7 @@
                                                 @endforeach
                                             </select>
                                             @if ($errors->has('qualification'))
-                                                <span class="invalid-feedback" role="alert">
+                                                <span class="text-danger">
                                                     <strong>{{ $errors->first('qualification') }}</strong>
                                                 </span>
                                             @endif
