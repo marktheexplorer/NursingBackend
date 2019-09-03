@@ -74,6 +74,16 @@ class PatientsController extends Controller{
             'language' => 'required',
             'pets' => 'required',
             'pets_description' => 'nullable|max:2000'
+        ],
+        $messages = [
+            'f_name.required'    => 'The First name is required.',
+            'f_name.max'    => 'The First name may not be greater than 20 characters.',
+            'm_name.max'    => 'The Middle name may not be greater than 20 characters.',
+            'l_name.required'    => 'The Last name is required.',
+            'l_name.max'    => 'The Last name may not be greater than 20 characters.',
+            'pets.required'    => 'Pets is required.',
+            'long_term.required'    => 'Long terms insurance is required.',
+            'qualification.required'    => 'Discipline is required.',
         ]);
         if(isset($input['pets']) && $input['pets'] == 'yes'){
             $this->validate($request, [
