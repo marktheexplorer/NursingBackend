@@ -1,5 +1,8 @@
 @extends('layouts.app')
 @section('content')
+<style type="text/css">
+    .ui-autocomplete{max-height: 300px !important;overflow-y: scroll !important;overflow-x: hidden !important;}
+</style>
 <div class="content-wrapper">
     <!-- START PAGE CONTENT-->
     <div class="page-heading">
@@ -31,6 +34,21 @@
                                             <h5>Persona Info</h5>
                                         </div>
                                         <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-sm-12 form-group center" style="text-align: center;">
+                                                     <span style="text-align: center;position: absolute;top: 120px;margin-left: 101px;" id="upload_image" onclick="event.preventDefault();">
+                                                        <button class="btn-sm btn-primary btn-cir" title="Edit"><i class="fas fa-pencil-alt"></i></button>
+                                                    </span>
+                                                    <img class="img-circle" src="{{ asset('admin/assets/img/admin-avatar.png') }}" style="width:150px;height:150px;"/>
+                                                    @if ($errors->has('profile_image'))
+                                                        <div class="clearfix;"></div>
+                                                        <span class="invalid-feedback" role="alert" style="text-align: center;display: inline;">
+                                                            <strong>{{ $errors->first('profile_image') }} there is something.....</strong>
+                                                        </span>
+                                                    @endif
+                                                </div> 
+                                                <input type="file" class="{{ $errors->has('profile_image') ? ' is-invalid' : '' }} form-control" name="profile_image" placeholder="Profile Image" value="{{ old('profile_image') }}" accept="image/*"/ style="padding-left:0px;padding:0px;border:0px;display: none;" id="profile_image">
+                                            </div>
                                             <div class="row">
                                                 <div class="col-sm-3 form-group">
                                                     <label>First Name</label>
@@ -166,15 +184,6 @@
                                                         </span>
                                                     @endif
                                                 </div>
-                                                <div class="form-group col-sm-3" >
-                                                    <label>Profile Image</label><br/>
-                                                    <input type="file" class="{{ $errors->has('profile_image') ? ' is-invalid' : '' }} form-control" name="profile_image" placeholder="Profile Image" value="{{ old('profile_image') }}" accept="image/*"/ style="padding-left:0px;padding:0px;border:0px;">
-                                                    @if ($errors->has('profile_image'))
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $errors->first('profile_image') }}</strong>
-                                                        </span>
-                                                    @endif
-                                                </div> 
                                             </div>    
                                             <div class="row">    
                                                 <div class="form-group col-sm-6" >
@@ -539,6 +548,11 @@
     $("#newpassword").keydown(function(e){
         //make non edidatble field
         e.preventDefault();
+    });
+
+    $("#upload_image").click(function(){
+        $("#profile_image").click();
+        //e.preventDefault();
     });
 </script>
 @endsection

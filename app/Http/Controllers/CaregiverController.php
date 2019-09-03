@@ -44,15 +44,18 @@ class CaregiverController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request){
+        $temp_number = str_replace(array("(", ")", "_", "-", " "), "", $request->input('mobile_number'));
+        $request->merge(array('mobile_number' => $temp_number));
+
         $input = $request->input(); 
         $profile_image = $request->file('profile_image');
 
         //make validation
         $validator =  Validator::make($input,[
-            'fname' => 'required|string|max:255',
-            'lname' => 'required|string|max:255',
+            'fname' => 'required|string|max:40',
+            'lname' => 'required|string|max:40',
             'email' => 'email|required|string|unique:users,email',
-            'mobile_number' => 'required|unique:users,mobile_number',
+            'mobile_number' => 'required|unique:users,mobile_number|min:8|max:15',
             'service' => 'required|not_in:0',
             'password' => 'required|min:6',
             'gender' => 'required',
@@ -61,7 +64,7 @@ class CaregiverController extends Controller{
             'height' => 'required',
             'weight' => 'required',
             'min_price' => 'required|min:0',
-            'max_price' => 'required|min:1',
+            'max_price' => 'required|min:1|gt:min_price',
             'location' => 'required',
             'zipcode' => 'required',
             'city' => 'required',
@@ -73,6 +76,15 @@ class CaregiverController extends Controller{
         ]);
 
         if($validator->fails()){
+            return redirect()->back()->withErrors($validator)->withInput($request->except('password'));
+        }
+
+        $input['mobile_number'] = str_replace(array("(", ")", "_", "-", " "), "", $input['mobile_number']);
+        if(strlen($input['mobile_number']) > 15){
+            $validator->errors()->add('area', 'The Mobile Number must be less then 16 charecter.');
+            return redirect()->back()->withErrors($validator)->withInput($request->except('password'));
+        }else if(strlen($input['mobile_number']) < 8){
+            $validator->errors()->add('area', 'The Mobile Number must be greater then 8 charecter.');
             return redirect()->back()->withErrors($validator)->withInput($request->except('password'));
         }
 
@@ -286,13 +298,15 @@ class CaregiverController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id){
+        $temp_number = str_replace(array("(", ")", "_", "-", " "), "", $request->input('mobile_number'));
+        $request->merge(array('mobile_number' => $temp_number));
         $input = $request->input();
 
         $validator =  Validator::make($input,[
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
+            'first_name' => 'required|string|max:40',
+            'last_name' => 'required|string|max:40',
             'email' => 'email|required|string',
-            'mobile_number' => 'required:min:8|max:15',
+            'mobile_number' => 'required|min:8|max:15',
             'service' => 'required|not_in:0',
             'gender' => 'required',
             'language' => 'required',
@@ -301,7 +315,7 @@ class CaregiverController extends Controller{
             'height' => 'required',
             'weight' => 'required',
             'min_price' => 'required|min:0',
-            'max_price' => 'required|min:1',
+            'max_price' => 'required|min:1|gt:min_price',
             'location' => 'required',
             'zipcode' => 'required',
             'city' => 'required',
@@ -311,6 +325,19 @@ class CaregiverController extends Controller{
             'description' => 'required|max:300',
             'qualification' => 'required|not_in:0',
         ]);
+
+
+        //$validator->getMessageBag()->add('mobile_number', 'Input must be less then 16 charecter.');
+        //$validator->getMessageBag()->add('mobile_number', 'Input must be greater then 8 charecter.');
+
+        /*$input['mobile_number'] = str_replace(array("(", ")", "_", "-", " "), "", $input['mobile_number']);
+        if(strlen($input['mobile_number']) > 15){
+            //$validator->errors()->add('mobile_number', 'Input must be less then 16 charecter.');
+            $validator->getMessageBag()->add('mobile_number', 'Input must be less then 16 charecter.');
+        }else if(strlen($input['mobile_number']) < 8){
+            //$validator->errors()->add('mobile_number', 'Input must be greater then 8 charecter.');
+            $validator->getMessageBag()->add('mobile_number', 'Input must be greater then 8 charecter.');
+        }*/
 
         if ($validator->fails()) {
             //return redirect()->back()->withInput($request->all())->withErrors($validator->errors()); // will return only the errors
