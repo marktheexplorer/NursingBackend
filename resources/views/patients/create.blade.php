@@ -94,7 +94,7 @@
                                         <select name="height" class="form-control {{ $errors->has('height') ? ' is-invalid' : '' }} select2">
                                             <option disabled="true" selected="true"> -- Select Height --</option>
                                             @foreach(PROFILE_HEIGHT as $val)
-                                                <option value="{{ $val }}">{{$val}}</option>
+                                                 <option value="{{ $val }}" {{ old('height') == $val ? 'selected':'' }}>{{$val}}</option>
                                             @endforeach
                                         </select>
                                         @if ($errors->has('height'))
@@ -108,7 +108,7 @@
                                         <select name="weight" class="form-control {{ $errors->has('weight') ? ' is-invalid' : '' }} select2">
                                             <option disabled="true" selected="true"> -- Select Weight --</option>
                                             @foreach(PROFILE_WEIGHT as $val)
-                                                <option value="{{ $val }}">{{$val}}</option>
+                                                <option value="{{ $val }}" {{ old('weight') == $val ? 'selected':'' }}>{{  $val }}</option>
                                             @endforeach
                                         </select>
                                         @if ($errors->has('weight'))
@@ -134,7 +134,7 @@
                                         <select name="language" class="form-control {{ $errors->has('language') ? ' is-invalid' : '' }} select2">
                                             <option disabled="true" selected="true"> -- Select Language --</option>
                                             @foreach(LANGUAGES as $val)
-                                                <option value="{{ $val }}">{{$val}}</option>
+                                            <option value="{{ $val }}" {{ old('language') == $val ? 'selected':'' }}>{{ $val }}</option>
                                             @endforeach
                                         </select>
                                         @if ($errors->has('language'))
