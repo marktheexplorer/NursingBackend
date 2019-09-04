@@ -32,8 +32,7 @@ class ServiceRequestController extends Controller{
     public function create(){
         $caregiver_list = DB::table('users')->select('users.id', 'name', 'email', 'mobile_number', 'profile_image', 'users.is_blocked', 'users.created_at', 'gender')->Join('patients_profiles', 'patients_profiles.user_id', '=', 'users.id')->where('users.id','>', '1')->where('users.type', '=', 'patient')->orderBy('users.name', 'asc')->get();
 
-        $service_list = DB::table('services')->orderBy('title', 'asc')->get();
-
+        $service_list = DB::table('services')->orderBy('title', 'asc')->get();       
         return view('service_request.create', compact('caregiver_list', 'service_list'));
     }
 

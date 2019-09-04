@@ -208,6 +208,8 @@ a,
 }
 
 .ui-autocomplete-loading {background: white url("images/ui-anim_basic_16x16.gif") right center no-repeat;}
+
+.ui-autocomplete{max-height: 300px !important;overflow-y: scroll !important;overflow-x: hidden !important;}
 </style>
 @section('content')
 <div class="content-wrapper">
@@ -356,17 +358,8 @@ a,
                                             @endif
                                         </div>
                                         <div class="form-group col-sm-2" >
-                                            <label>Zip Code </label>
-                                            <input type="text" class="form-control {{ $errors->has('zipcode') ? ' is-invalid' : '' }}" name="zipcode" placeholder="Zip code" value="" id="zipcode" />
-                                            @if ($errors->has('zipcode'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('zipcode') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                        <div class="form-group col-sm-2" >
                                             <label>City </label>
-                                            <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" placeholder="city" value="" id="city" readonly="true" />
+                                            <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" placeholder="city" value="" id="citysuggest" autocomplete="off" />
                                             @if ($errors->has('city'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('city') }}</strong>
@@ -375,10 +368,26 @@ a,
                                         </div>
                                         <div class="form-group col-sm-2" >
                                             <label>State </label>
-                                            <input type="text" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" placeholder="state" value=""  id="state" readonly="true" />
+                                            <select name="state" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" readonly="true" id="state"">
+                                                <option disabled="true" selected=""> -- Select State --</option>
+                                                @if (!empty(old('state')))
+                                                    <option selected="" value="{{ old('state') }}">
+                                                        {{ old('state') }}
+                                                    </option>
+                                                @endif
+                                            </select>                                               
                                             @if ($errors->has('state'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('state') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                        <div class="form-group col-sm-2" >
+                                            <label>Zip Code </label>
+                                            <input type="text" class="form-control {{ $errors->has('zipcode') ? ' is-invalid' : '' }}" name="zipcode" placeholder="Zip code" value="" id="zipcode" readonly="true" />
+                                            @if ($errors->has('zipcode'))
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $errors->first('zipcode') }}</strong>
                                                 </span>
                                             @endif
                                         </div>
@@ -417,83 +426,6 @@ a,
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
-    $(function(){
-        function split( val ) {
-            return val.split( /,\s*/ );
-        }
-
-        function extractLast( term ) {
-            //return split( term ).pop();  
-            temp = $.trim($("#service_zipcode").val());
-            fnd = ','
-            if(temp.indexOf(fnd) != -1){
-                term =  temp+" "+term;
-            }
-            console.log(term);
-            return term;
-        }
-
-        // don't navigate away from the field on tab when selecting an item                
-        $( ".zipcodesuggest" ).on( "keydown", function( event ) {
-            if(event.keyCode === $.ui.keyCode.TAB && $( this ).autocomplete( "instance" ).menu.active ) {
-                event.preventDefault();
-            }
-        }).autocomplete({
-            source: function( request, response ) {
-                $.getJSON( "http://localhost/careservice/public/index.php/admin/caregiver/searchzip", {
-                    term: extractLast( request.term)
-                }, response );
-            },
-            
-            search: function() {
-                // custom minLength
-                var term = extractLast( this.value );
-                if ( term.length < 4 ) {
-                    return false;
-                }
-            },
-
-            focus: function() {
-                // prevent value inserted on focus
-                return false;
-            },
-
-            select: function( event, ui ) {
-                var terms = split( this.value );
-                // remove the current input
-                terms.pop();
-                // add the selected item
-                terms.push( ui.item.value );
-                // add placeholder to get the comma-and-space at the end
-                terms.push( "" );
-                this.value = terms.join( ", " );
-                return false;
-            }
-        });
-    }); 
-
-    $('#zipcode').blur(function(){
-        zip = $(this).val();
-        $.ajax({
-            url: '{{ env("APP_URL") }}admin/caregiver/locationfromzip',
-            type: 'GET',
-            dataType: 'json',
-            data:{zipcode:zip},
-            success: function (res) {
-                if(res['error']){
-                    $("#city").val('');
-                    $("#state").val('');
-                    $('#zipcode').val('');
-                    swal("Oops", "Invalid Zip Code", "error");
-                    //$('#zipcode').focus();
-                }else{
-                    $("#city").val(res['city']);
-                    $("#state").val(res['state']);
-                }
-            }
-        });
-    });    
-
     $('#max_price').blur(function(){
         minprice = $("#min_price").val();
         maxprice = $("#max_price").val();
@@ -533,6 +465,94 @@ a,
             } 
             return date;
         }
-    });    
+    });
+
+    // don't navigate away from the field on tab when selecting an item                
+    $( "#citysuggest" ).on( "keydown", function( event ) {
+        if(event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active){
+            event.preventDefault();
+        }
+    }).autocomplete({
+        source: function( request, response ) {
+            $.getJSON( "{{ env('APP_URL') }}admin/caregiver/searchcity", {
+                term: request.term
+            }, response );
+        },
+        
+        search: function() {
+            // custom minLength
+            var term = this.value;
+            if ( term.length < 2){
+                return false;
+            }
+        },
+
+        focus: function() {
+            // prevent value inserted on focus
+            return false;
+        },
+
+        select: function( event, ui ) {
+            $( "#citysuggest" ).val(ui.item.value)
+            $( "#citysuggest" ).autocomplete("close");
+
+            //remove all options from select box
+            $("#state").find("option:gt(0)").remove();
+            $("#state").prop("selectedIndex", 0);
+            setstateoptions();
+            return false;
+        }
+    });
+
+    function setstateoptions(){
+        zip = $("#citysuggest").val();
+        $.ajax({
+            url: '{{ env('APP_URL') }}admin/caregiver/statefromcity',
+            type: 'GET',
+            dataType: 'json',
+            data:{term:zip},
+            success: function (res) {
+                if(res['error']){
+                    //swal("Oops", "Invalid City", "error");
+                    $("#citysuggest").val('');
+                    $("#citysuggest").focus();
+                }else{
+                    $.each(res['list'], function( index, value ) {
+                        //alert( index + ": " + value );
+                        $('#state').append($("<option></option>").attr(value, value).text(value)); 
+                    });
+                }
+            }
+        });
+        $("#state").attr("readonly", false);
+    }
+
+    $("#state").change(function () {
+        stateoption = $("#state option:selected").val();
+        cityoption = $("#citysuggest").val();
+        $.ajax({
+            url: '{{ env('APP_URL') }}admin/caregiver/getzip',
+            type: 'GET',
+            data:{city:cityoption, state:stateoption},
+            success: function (res) {
+                $("#zipcode").val(res);
+            }
+        });
+    })
+
+    $("#dob").keydown(function(e){
+        //make non edidatble field
+        e.preventDefault();
+    });
+
+    $("#start_date").keydown(function(e){
+        //make non edidatble field
+        e.preventDefault();
+    });
+
+    $("#end_date").keydown(function(e){
+        //make non edidatble field
+        e.preventDefault();
+    });
 </script>
 @endsection
