@@ -64,6 +64,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function()
 	Route::get('caregiver/locationfromzip', 'CaregiverController@locationfromzip');	
 	Route::resource('caregiver', 'CaregiverController');
 	
+	Route::get('service_request/getzip', 'ServiceRequestController@getzip');
+	Route::get('service_request/searchcity', 'ServiceRequestController@searchcity');
+	Route::get('service_request/statefromcity', 'ServiceRequestController@statefromcity');	
 	Route::get('service_request/download_excel', 'ServiceRequestController@download_excel')->name('service_request.download_excel');
 	Route::get('service_request/resendmail/{id}', 'ServiceRequestController@resendmail')->name('service_request.resendmail');
 	Route::get('service_request/confirm_doc/{id}', 'ServiceRequestController@confirm_doc')->name('service_request.confirm_doc');
