@@ -474,7 +474,7 @@ a,
         }
     }).autocomplete({
         source: function( request, response ) {
-            $.getJSON( "{{ env('APP_URL') }}admin/caregiver/searchcity", {
+            $.getJSON( "searchcity", {
                 term: request.term
             }, response );
         },
@@ -507,7 +507,7 @@ a,
     function setstateoptions(){
         zip = $("#citysuggest").val();
         $.ajax({
-            url: '{{ env('APP_URL') }}admin/caregiver/statefromcity',
+            url: 'statefromcity',
             type: 'GET',
             dataType: 'json',
             data:{term:zip},
@@ -531,7 +531,7 @@ a,
         stateoption = $("#state option:selected").val();
         cityoption = $("#citysuggest").val();
         $.ajax({
-            url: '{{ env('APP_URL') }}admin/caregiver/getzip',
+            url: 'getzip',
             type: 'GET',
             data:{city:cityoption, state:stateoption},
             success: function (res) {

@@ -574,4 +574,49 @@ class ServiceRequestController extends Controller{
         }
         exit();        
     }
+
+    public function searchcity(Request $request){
+        DB::enableQueryLog();
+        $fieldval = $request->input('term');
+        $search_zipx = array();
+
+        $search_city = Us_location::select('city')->Where("city","like","{$fieldval}%")->groupBy('city')->orderBy("city","asc")->get();
+
+        $response = array();
+        $response['error'] = false;
+        if(empty($search_city)){
+            $response['error'] = true;
+            $response['msg'] = 'Invalid City';
+        }else{
+            foreach($search_city as $row){
+                array_push($response, $row->city);
+            }
+        }
+        echo json_encode($response, true);
+    }
+
+    public function statefromcity(Request $request){
+        $fieldval = $request->input('term');
+        $search_city = Us_location::select('state_code')->Where("city","=","{$fieldval}")->orderBy("state_code","ASC")->distinct('state_code')->get();
+
+        $response = array();
+        $response['error'] = false;
+        $response['list'] = array();
+        if(empty($search_city)){
+            $response['error'] = true;
+            $response['msg'] = 'Invalid City';
+        }else{
+            foreach ($search_city as $row) {
+                array_push($response['list'], $row->state_code);
+            }
+        }
+        echo json_encode($response, true);
+    }
+
+    public function getzip(Request $request){
+        $city = $request->input('city');
+        $state = $request->input('state');
+        $zipcode = DB::select( DB::raw("SELECT zip FROM `us_location` where city = '".$city."' and state_code = '".$state."'")); 
+        echo $zipcode[0]->zip;
+    }
 }
