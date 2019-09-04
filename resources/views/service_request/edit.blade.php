@@ -294,11 +294,11 @@ a,
                                             @endif
                                         </div>
                                         <div class="form-group col-sm-2" >
-                                            <label>Duration</label>
+                                            <label>Start From</label>
                                             <input type="text" class="form-control {{ $errors->has('start_date') ? ' is-invalid' : '' }}" name="start_date" placeholder="Start from" value="{{ date('d/m/Y', strtotime($services->start_date)) }}" id="start_date" readonly="true" />
                                         </div>  
                                         <div class="form-group col-sm-2" >
-                                            <label>&nbsp;</label>
+                                            <label>End From</label>
                                             <input type="text" class="form-control {{ $errors->has('end_date') ? ' is-invalid' : '' }}" name="end_date" placeholder="End from" value="{{ date('d/m/Y', strtotime($services->end_date)) }}" id="end_date" readonly="true" />
                                             @if ($errors->has('end_date'))
                                                 <span class="invalid-feedback" role="alert">
@@ -307,9 +307,8 @@ a,
                                             @endif
                                         </div>
                                         <div class="form-group col-sm-2" >
-                                            <label>Shift Timing</label>
-                                            <select name="start_time" class="form-control {{ $errors->has('start_time') ? ' is-invalid' : '' }}" >
-                                                <option disabled="true" > -- Select Start time --</option>
+                                            <label>Start Time</label>
+                                            <select name="start_time" class="form-control {{ $errors->has('start_time') ? ' is-invalid' : '' }}" >                                                <option disabled="true" > -- Select Start time --</option>
                                                 @foreach($timeslot as $key => $slot)
                                                     <option value="{{ $key }}" <?php if($services->start_time ==  $key){ echo 'selected'; } ?> >{{ $slot }}</option>
                                                 @endforeach
@@ -321,7 +320,7 @@ a,
                                             @endif
                                         </div>  
                                         <div class="form-group col-sm-2" >
-                                            <label>&nbsp;</label>
+                                            <label>End Time</label>
                                             <select name="end_time" class="form-control {{ $errors->has('end_time') ? ' is-invalid' : '' }}" >
                                                 <option disabled="true" > -- Select End time --</option>
                                                 @foreach($timeslot as $key => $slot)
@@ -346,17 +345,8 @@ a,
                                             @endif
                                         </div>
                                         <div class="form-group col-sm-2" >
-                                            <label>Zip Code </label>
-                                            <input type="text" class="form-control {{ $errors->has('zipcode') ? ' is-invalid' : '' }}" name="zipcode" placeholder="Zip code" value="{{ $services->zip }}" id="zipcode" />
-                                            @if ($errors->has('zipcode'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('zipcode') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                        <div class="form-group col-sm-2" >
                                             <label>City </label>
-                                            <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" placeholder="city" value="{{ $services->city }}" id="city" readonly="true" />
+                                            <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" placeholder="city" value="{{ $services->city }}" id="citysuggest"/>
                                             @if ($errors->has('city'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('city') }}</strong>
@@ -365,10 +355,25 @@ a,
                                         </div>
                                         <div class="form-group col-sm-2" >
                                             <label>State </label>
-                                            <input type="text" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" placeholder="state" value="{{ $services->state }}"  id="state" readonly="true" />
+                                            <select name="state" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" readonly="true" id="state"">
+                                                <option disabled="true" selected=""> -- Select State --</option>
+                                                @foreach($city_state as $row)
+                                                    <option <?php if($row->state_code == $services->state){ echo 'selected'; } ?> >{{ $services->state }}</option>
+                                                @endforeach
+                                            </select>    
                                             @if ($errors->has('state'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('state') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+
+                                        <div class="form-group col-sm-2" >
+                                            <label>Zip Code </label>
+                                            <input type="text" class="form-control {{ $errors->has('zipcode') ? ' is-invalid' : '' }}" name="zipcode" placeholder="Zip code" value="{{ $services->zip }}" id="zipcode" />
+                                            @if ($errors->has('zipcode'))
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $errors->first('zipcode') }}</strong>
                                                 </span>
                                             @endif
                                         </div>
@@ -423,22 +428,30 @@ a,
             return term;
         }
 
+        $('#max_price').blur(function(){
+            minprice = $("#min_price").val();
+            maxprice = $("#max_price").val();
+            if(minprice >= maxprice){
+                $("#max_price").val(minprice);
+            }
+        });
+
         // don't navigate away from the field on tab when selecting an item                
-        $( ".zipcodesuggest" ).on( "keydown", function( event ) {
-            if(event.keyCode === $.ui.keyCode.TAB && $( this ).autocomplete( "instance" ).menu.active ) {
+        $( "#citysuggest" ).on( "keydown", function( event ) {
+            if(event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active){
                 event.preventDefault();
             }
         }).autocomplete({
             source: function( request, response ) {
-                $.getJSON( "http://localhost/careservice/public/index.php/admin/caregiver/searchzip", {
-                    term: extractLast( request.term)
+                $.getJSON( "searchcity", {
+                    term: request.term
                 }, response );
             },
             
             search: function() {
                 // custom minLength
-                var term = extractLast( this.value );
-                if ( term.length < 4 ) {
+                var term = this.value;
+                if ( term.length < 2){
                     return false;
                 }
             },
@@ -449,76 +462,67 @@ a,
             },
 
             select: function( event, ui ) {
-                var terms = split( this.value );
-                // remove the current input
-                terms.pop();
-                // add the selected item
-                terms.push( ui.item.value );
-                // add placeholder to get the comma-and-space at the end
-                terms.push( "" );
-                this.value = terms.join( ", " );
+                $( "#citysuggest" ).val(ui.item.value)
+                $( "#citysuggest" ).autocomplete("close");
+
+                //remove all options from select box
+                $("#state").find("option:gt(0)").remove();
+                $("#state").prop("selectedIndex", 0);
+                setstateoptions();
                 return false;
             }
         });
-    }); 
 
-    $('#zipcode').blur(function(){
-        zip = $(this).val();
-        $.ajax({
-            url: '{{ env("APP_URL") }}admin/caregiver/locationfromzip',
-            type: 'GET',
-            dataType: 'json',
-            data:{zipcode:zip},
-            success: function (res) {
-                if(res['error']){
-                    $("#city").val('');
-                    $("#state").val('');
-                    $('#zipcode').val('');
-                    swal("Oops", "Invalid Zip Code", "error");
-                    //$('#zipcode').focus();
-                }else{
-                    $("#city").val(res['city']);
-                    $("#state").val(res['state']);
+        function setstateoptions(){
+            zip = $("#citysuggest").val();
+            $.ajax({
+                url: 'statefromcity',
+                type: 'GET',
+                dataType: 'json',
+                data:{term:zip},
+                success: function (res) {
+                    if(res['error']){
+                        //swal("Oops", "Invalid City", "error");
+                        $("#citysuggest").val('');
+                        $("#citysuggest").focus();
+                    }else{
+                        $.each(res['list'], function( index, value ) {
+                            //alert( index + ": " + value );
+                            $('#state').append($("<option></option>").attr(value, value).text(value)); 
+                        });
+                    }
                 }
-            }
-        });
-    });    
-
-    $('#max_price').blur(function(){
-        minprice = $("#min_price").val();
-        maxprice = $("#max_price").val();
-        if(minprice >= maxprice){
-            $("#max_price").val(minprice);
+            });
+            $("#state").attr("readonly", false);
         }
+
+        $("#state").change(function () {
+            stateoption = $("#state option:selected").val();
+            cityoption = $("#citysuggest").val();
+            $.ajax({
+                url: 'getzip',
+                type: 'GET',
+                data:{city:cityoption, state:stateoption},
+                success: function (res) {
+                    $("#zipcode").val(res);
+                }
+            });
+        })
+
+        $("#dob").keydown(function(e){
+            //make non edidatble field
+            e.preventDefault();
+        });
+
+        $("#start_date").keydown(function(e){
+            //make non edidatble field
+            e.preventDefault();
+        });
+
+        $("#end_date").keydown(function(e){
+            //make non edidatble field
+            e.preventDefault();
+        });
     });
-
-    //date picker field
-    /*$( function() {
-        var dateFormat = "mm/dd/yy",
-        from = $( "#start_date").datepicker({
-            defaultDate: "+1w",
-            changeMonth: true,
-            numberOfMonths: 3
-        }).on( "change", function() {
-            to.datepicker( "option", "minDate", getDate( this ) );
-        }),
-        to = $( "#end_date" ).datepicker({
-            defaultDate: "+1w",
-            changeMonth: true,
-            numberOfMonths: 3
-        }).on( "change", function() {
-            from.datepicker( "option", "maxDate", getDate( this ) );
-        });
-
-        function getDate( element ) {
-            var date;
-            try {
-                date = $.datepicker.parseDate( dateFormat, element.value );
-            } catch( error ) {
-                date = null;
-            } 
-            return date;
-        }
-    });*/
 </script>
 @endsection

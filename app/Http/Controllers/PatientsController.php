@@ -15,6 +15,9 @@ use DB;
 
 use Illuminate\Http\Request;
 
+use App\Exports\PatientExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 class PatientsController extends Controller{
     public function index(){
         $patients = User::where('role_id','3')->orderBy('created_at', 'DESC')->get();
@@ -297,55 +300,9 @@ class PatientsController extends Controller{
     }
 
     public function download_excel(){
-
-        $usre_data = DB::table('users')->select('users.*', 'patients_profiles.range', 'patients_profiles.pin_code')->Join('patients_profiles', 'patients_profiles.user_id', '=', 'users.id')->orderBy('users.name', 'desc')->get();
-
-        $filename = "Patients.xls";
-        header("Content-Type: application/vnd.ms-excel");
-        header("Content-Disposition: attachment; filename=\"$filename\"");
-
-        if(empty($usre_data)){
-            echo 'No records Found...';
-        }{
-            $isPrintHeader = false;
-            $header = array(
-                'S. No.', 
-                'Name', 
-                'Email', 
-                'Mobile No.',
-                'Gender',
-                'Date Of Birth',
-                'Street',
-                'City',
-                'State',
-                'Country',
-                'Zip Code',                
-                'Created On',
-            );
-
-            $count = 1;
-            foreach ($usre_data as $row) {
-                if (!$isPrintHeader) {
-                    echo implode("\t", array_values($header)) . "\n";
-                    $isPrintHeader = true;
-                }
-
-                $temp = array(
-                    $count.".", 
-                    ucfirst(str_replace(",", " ", $row->name)), 
-                    $row->email,
-                    $row->mobile_number,
-                    $row->gender,
-                    date("d-m-Y", strtotime($row->dob)),
-                    ucfirst($row->location).", ".$row->city.", ".$row->state.", ".$row->country.", ".$row->pin_code,
-                    date("d-m-Y", strtotime($row->created_at))
-                );
-                echo implode("\t", array_values($temp)) . "\n";
-                $count++;
-            }
-        }
-        exit(); 
+        return Excel::download(new PatientExport, 'Patient_list.xlsx');
     }
+
     public function searchcity(Request $request){
         DB::enableQueryLog();
         $fieldval = $request->input('term');
