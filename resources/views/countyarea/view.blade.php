@@ -47,16 +47,8 @@
                             <th style="max-width: 150px;">Actions</th>
                         </tr>
                     </thead>
-                    <tfoot>
-                        <tr>
-                            <th>#</th>
-                            <th>Area</th>
-                            <th>Status</th>
-                            <th style="max-width: 150px;">Actions</th>
-                        </tr>
-                    </tfoot>
                     <tbody>
-                    @if(count($countyareas) > 0)    
+                    @if(count($countyareas) > 0)
                         @foreach($countyareas as $key => $row)
                             <tr>
                                 <td>{{ ++$key }}.
@@ -95,7 +87,7 @@
                 </table>
             </div>
         </div>
-    </div>    
+    </div>
 </div>
 @endsection
 
