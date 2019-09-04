@@ -16,8 +16,8 @@
     <div class="page-content fade-in-up">
     	<!--<a href="{{ route('caregiver.create') }}"><button class="btn btn-info "><i class="fas fa-plus"></i> Add</button></a> -->
         <div style="text-align: right;">
-            <a href="{{ route('service_request.create') }}" style="" ><button class="btn btn-info "><i class="fas fa-plus"></i> Add Request</button></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--
-                    <a href="{{ route('service_request.download_excel') }}" style="float:right;" target="_blank"><button class="btn btn-info "><i class="fas fa-download"></i> Download</button></a>-->
+            <a href="{{ route('service_request.create') }}" style="" ><button class="btn btn-info "><i class="fas fa-plus"></i> Add Request</button></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="{{ route('service_request.download_excel') }}" style="float:right;" target="_blank"><button class="btn btn-info "><i class="fas fa-download"></i> Download</button></a>
         </div>    
         <div class="ibox">
             <div class="ibox-head">

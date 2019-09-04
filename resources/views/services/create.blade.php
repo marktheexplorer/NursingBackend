@@ -48,8 +48,10 @@
                                         </div> 
                                         <div class="col-sm-12 form-group">
                                             <label>Select Image:</label>
-                                            <input type="file" name="service_image" class="form-control" onchange="readURL(this);">
-                                            <img id="preview" alt="your image" />
+                                            <input type="file" name="service_image" class="" onchange="readURL(this);">
+                                            <br/>
+                                            <img id="preview" alt="your image" style="display: none;max-width:150px;max-height:150px;" />
+                                            
                                             @if ($errors->has('service_image'))
                                                 <span class="text-danger">
                                                     <strong>{{ $errors->first('service_image') }}</strong>
@@ -57,7 +59,7 @@
                                             @endif
                                         </div>
                                         <div class="form-group">
-                                            <button class="btn btn-default" type="submit">Submit</button>
+                                            &nbsp;&nbsp;&nbsp;<button class="btn btn-default" type="submit">Submit</button>
                                         </div>
                                     </div>
                                 </form>
@@ -91,8 +93,8 @@
                 var reader = new FileReader();
 
                 reader.onload = function (e) {
-                    $('#preview')
-                        .attr('src', e.target.result);
+                    $('#preview').attr('src', e.target.result);
+                    $('#preview').css('display', 'inline');
                 };
 
                 reader.readAsDataURL(input.files[0]);

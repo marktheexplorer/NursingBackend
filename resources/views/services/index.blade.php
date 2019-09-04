@@ -35,7 +35,7 @@
 	            		<tr>
 	            			<td>{{ ++$key }}
 	              			<td>{{ ucfirst($service->title) }}</td>
-	              			<td><?php echo ucfirst(substr($service->description, 0, 80)); ?>...</td>
+	              			<td><?php echo ucfirst(substr($service->description, 0, 80)); ?> ...</td>
 	              			<td>{{ date_format(date_create($service->created_at), 'd M, y')}}
 	              			<td>
 	              				<ul class="actions-menu">
