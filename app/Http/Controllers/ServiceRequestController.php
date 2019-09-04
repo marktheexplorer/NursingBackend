@@ -10,7 +10,7 @@ use App\RequestBooking;
 use DB;
 use App\Mail\MailHelper;
 use Illuminate\Support\Facades\Mail;
-
+use App\Us_location;
 
 class ServiceRequestController extends Controller{
     /**
