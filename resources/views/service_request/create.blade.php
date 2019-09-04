@@ -294,7 +294,7 @@ a,
                                         <div class="col-sm-4  form-group">
                                             <label>Service</label>
                                             <select name="service" class="form-control {{ $errors->has('service') ? ' is-invalid' : '' }}">
-                                                <option disabled="true" > -- Select Service --</option>
+                                                <option disabled="true" selected="" > -- Select Service --</option>
                                                 @foreach($service_list as $srvc)
                                                     <option value="{{ $srvc->id }}" >{{ $srvc->title }}</option>
                                                 @endforeach
@@ -306,11 +306,11 @@ a,
                                             @endif
                                         </div>                                        
                                         <div class="form-group col-sm-2" >
-                                            <label>Duration</label>
+                                            <label>Start From</label>
                                             <input type="text" class="form-control {{ $errors->has('start_date') ? ' is-invalid' : '' }}" name="start_date" placeholder="Start from" value="{{ date('d/m/Y', time()) }}" id="start_date"  />
                                         </div>  
                                         <div class="form-group col-sm-2" >
-                                            <label>&nbsp;</label>
+                                            <label>End From</label>
                                             <input type="text" class="form-control {{ $errors->has('end_date') ? ' is-invalid' : '' }}" name="end_date" placeholder="End from" value="{{ date('d/m/Y', time()) }}" id="end_date"  />
                                             @if ($errors->has('end_date'))
                                                 <span class="invalid-feedback" role="alert">
@@ -319,9 +319,9 @@ a,
                                             @endif
                                         </div>
                                         <div class="form-group col-sm-2" >
-                                            <label>Shift Timing</label>
+                                            <label>Start Time</label>
                                             <select name="start_time" class="form-control {{ $errors->has('start_time') ? ' is-invalid' : '' }}" >
-                                                <option disabled="true" > -- Select Start time --</option>
+                                                <option disabled="true" selected=""> -- Select Start time --</option>
                                                 @foreach($timeslot as $key => $slot)
                                                     <option value="{{ $key }}" >{{ $slot }}</option>
                                                 @endforeach
@@ -333,9 +333,9 @@ a,
                                             @endif
                                         </div>  
                                         <div class="form-group col-sm-2" >
-                                            <label>&nbsp;</label>
+                                            <label>End Time</label>
                                             <select name="end_time" class="form-control {{ $errors->has('end_time') ? ' is-invalid' : '' }}" >
-                                                <option disabled="true" > -- Select End time --</option>
+                                                <option disabled="true" selected> -- Select End time --</option>
                                                 @foreach($timeslot as $key => $slot)
                                                     <option value="{{ $key }}" >{{ $slot }}</option>
                                                 @endforeach

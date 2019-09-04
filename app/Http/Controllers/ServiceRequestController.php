@@ -12,6 +12,9 @@ use App\Mail\MailHelper;
 use Illuminate\Support\Facades\Mail;
 use App\Us_location;
 
+use App\Exports\RequestExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 class ServiceRequestController extends Controller{
     /**
      * Display a listing of the resource.
@@ -45,21 +48,24 @@ class ServiceRequestController extends Controller{
     public function store(Request $request){
         $input = $request->input(); 
 
-        $validator =  Validator::make($input,[
-            'user_id' => 'required|not_in:0',
-            'service' => 'required|not_in:0',
-            'start_date' => 'required',
-            'end_date' => 'required',
-            'start_time' => 'required',
-            'end_time' => 'required',
-            'min_expected_bill' => 'required|min:0',
-            'max_expected_bill' => 'required|min:1',
-            'location' => 'required',
-            'zipcode' => 'required',
-            'city' => 'required',
-            'state' => 'required',
-            'description' => 'required'
-        ]);
+        $validator =  Validator::make($input,
+            [
+                'user_id' => 'required|not_in:0',
+                'service' => 'required|not_in:0',
+                'start_date' => 'required',
+                'end_date' => 'required',
+                'start_time' => 'required',
+                'end_time' => 'required',
+                'min_expected_bill' => 'required|min:0',
+                'max_expected_bill' => 'required|min:1',
+                'location' => 'required',
+                'zipcode' => 'required',
+                'city' => 'required',
+                'state' => 'required',
+                'description' => 'required'
+            ],
+            ['user_id.required' => 'The Patient field is required.']
+        );
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput($request->except('password'));
@@ -115,9 +121,12 @@ class ServiceRequestController extends Controller{
      */
     public function edit($id){
         $services = DB::table('service_requests')->select('service_requests.description', 'service_requests.created_at', 'service_requests.start_time', 'service_requests.end_time', 'service_requests.service', 'service_requests.id', 'service_requests.user_id', 'service_requests.location', 'service_requests.city', 'service_requests.state', 'service_requests.zip', 'service_requests.country', 'service_requests.min_expected_bill', 'service_requests.max_expected_bill', 'service_requests.start_date', 'service_requests.end_date', 'service_requests.status', 'users.name', 'users.email', 'users.mobile_number', 'users.name', 'users.name', 'users.is_blocked', 'services.title')->Join('users', 'service_requests.user_id', '=', 'users.id')->Join('services', 'services.id', '=', 'service_requests.service')->where('service_requests.id', $id)->first();
+        
         $services->caregiver_id = 'Not Assign';
         $service_list = DB::table('services')->orderBy('title', 'asc')->get();
-        return view('service_request.edit', compact('services', 'service_list'));
+        $city_state = DB::table('us_location')->select('state_code')->where('city', '=', $services->city)->orderBy('state_code', 'asc')->get();
+
+        return view('service_request.edit', compact('services', 'service_list', 'city_state'));
     }
 
     /**
@@ -477,102 +486,7 @@ class ServiceRequestController extends Controller{
     }
 
     public function download_excel(){
-        $services = DB::table('service_requests')->select('service_requests.id', 'service_requests.description', 'service_requests.created_at', 'service_requests.start_time', 'service_requests.end_time', 'service_requests.service', 'service_requests.id', 'service_requests.user_id', 'service_requests.location', 'service_requests.city', 'service_requests.state', 'service_requests.zip', 'service_requests.country', 'service_requests.min_expected_bill', 'service_requests.max_expected_bill', 'service_requests.start_date', 'service_requests.end_date', 'service_requests.status', 'users.name', 'users.email', 'users.mobile_number', 'users.name', 'users.name', 'users.is_blocked', 'services.title')->Join('users', 'service_requests.user_id', '=', 'users.id')->Join('services', 'services.id', '=', 'service_requests.service')->get();
-        
-        $filename = "Requests.xls";
-        header("Content-Type: application/vnd.ms-excel");
-        header("Content-Disposition: attachment; filename=\"$filename\"");
-
-        if(empty($services)){
-            echo 'No records Found...';
-        }{
-            $isPrintHeader = false;
-            $header = array(
-                'S. No.', 
-                'Patient Name', 
-                'Caregiver Name', 
-                'Street',
-                'City',
-                'State',
-                'Country',
-                'Pin Code',
-                'Price Range',
-                'Shift',
-                'From',
-                'To',
-                'status',
-                'Created On',
-            );
-
-            $count = 1;
-            foreach ($services as $row) {
-                if (!$isPrintHeader) {
-                    echo implode("\t", array_values($header)) . "\n";
-                    $isPrintHeader = true;
-                }
-
-                $caregivername = 'NA';
-                if(!empty($final_caregivers)){
-                    $caregivername = ucfirst($final_caregivers->name)." (".$final_caregivers->email.")<br/>";
-                }
-
-                $request_status = 'dddddddd';
-                switch($row->status){
-                    case '0':
-                        $request_status = "Pending";
-                        break;
-                    case '1':
-                        $request_status = "Reject";
-                        break;    
-                    case '2':
-                        $request_status = "Approved";
-                        break;    
-                    case '3':
-                        $request_status = "Caregiver not Assign";
-                        break;
-                    case '4':
-                        $request_status = "Assign to Caregiver"; 
-                        break;       
-                    case '5':
-                        $request_status = "Caregiver confirm and sent mail of basic careservice pack";
-                        break;    
-                    case '6':
-                        $request_status = "Document upload by patient, but document not varified";
-                        break;        
-                    case '7':
-                        $request_status = "Uploaded document varified";
-                        break;            
-                    case '8':
-                        $request_status = "Re-schedule";
-                    case '9':
-                        $request_status = "Close";    
-                        break;  
-                }
-
-                $range = "$".$row->min_expected_bill." to $".$row->max_expected_bill;
-                $shift = substr_replace($row->start_time, ":", 2, 0)." to ".substr_replace($row->end_time,  ":", 2, 0);
-                        
-                $temp = array(
-                    $count.".", 
-                    ucfirst(str_replace(",", " ", $row->name)), 
-                    $caregivername,
-                    $row->location,
-                    $row->city,
-                    $row->state,
-                    $row->country,
-                    $row->zip,
-                    $range,
-                    $shift,
-                    date_format(date_create($row->start_date), 'd M, Y'),
-                    date_format(date_create($row->start_date), 'd M, Y'),
-                    $request_status,
-                    date_format(date_create($row->created_at), 'd M, Y')
-                );
-                echo implode("\t", array_values($temp)) . "\n";
-                $count++;
-            }
-        }
-        exit();        
+        return Excel::download(new RequestExport, 'Request_list.xlsx'); 
     }
 
     public function searchcity(Request $request){

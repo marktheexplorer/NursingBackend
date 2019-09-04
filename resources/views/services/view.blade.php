@@ -23,12 +23,13 @@
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane fade show active" id="tab-1">
-                                <p><h5>Service : {{ ucfirst($service->title) }} </h5></p>
-                                <p>{!! $service->description !!} </p><br/><br/><br/>@if(!empty($service->service_image))
-                                    <div>Image : <img id="image_view" src="{{ asset(config('image.service_image_url').$service->service_image) }}" alt="No image"> </div>
+                                @if(!empty($service->service_image))
+                                    <img id="image_view" src="{{ asset(config('image.service_image_url').$service->service_image) }}" alt="No image" style="max-width:150px;max-height:150px;border-radius:50%; ">
                                 @else
                                     No image uploaded.
                                 @endif 
+                                <p><h5>Service : {{ ucfirst($service->title) }} </h5></p>
+                                <p>{!! $service->description !!} </p>
                         </div>
                     </div>
                 </div>

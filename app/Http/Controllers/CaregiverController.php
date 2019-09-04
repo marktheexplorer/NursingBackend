@@ -14,6 +14,9 @@ use DB;
 use App\Mail\MailHelper;
 use Illuminate\Support\Facades\Mail;
 
+use App\Exports\CaregiverExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 class CaregiverController extends Controller{
     /**
      * Display a listing of the resource.
@@ -607,55 +610,7 @@ class CaregiverController extends Controller{
     }
 
     public function download_excel(){
-        //download caregiver list
-        $usre_data = DB::table('users')->select('users.*', 'caregiver.service', 'caregiver.min_price', 'caregiver.max_price', 'caregiver.description', 'caregiver.zipcode')->Join('caregiver', 'caregiver.user_id', '=', 'users.id')->orderBy('users.id', 'desc')->get();
-        
-        $filename = "Caregivers.xls";
-        header("Content-Type: application/vnd.ms-excel");
-        header("Content-Disposition: attachment; filename=\"$filename\"");
-
-        if(empty($usre_data)){
-            echo 'No records Found...';
-        }{
-            $isPrintHeader = false;
-            $header = array(
-                'S. No.', 
-                'Name', 
-                'Email', 
-                'Mobile No.',
-                'Gender',
-                'Date Of Birth',
-                'Street',
-                'Zip Code',
-                'City',
-                'State',
-                'Price Range',
-                'Created On',
-            );
-
-            $count = 1;
-            foreach ($usre_data as $row) {
-                if (!$isPrintHeader) {
-                    echo implode("\t", array_values($header)) . "\n";
-                    $isPrintHeader = true;
-                }
-
-                $temp = array(
-                    $count.".", 
-                    ucfirst(str_replace(",", " ", $row->name)), 
-                    $row->email,
-                    $row->mobile_number,
-                    $row->gender,
-                    date("d-m-Y", strtotime($row->dob)),
-                    ucfirst($row->location).", ".$row->city.", ".$row->state.", ".$row->zipcode,
-                    "$".$row->min_price." - $".$row->max_price,
-                    date("d-m-Y", strtotime($row->created_at))
-                );
-                echo implode("\t", array_values($temp)) . "\n";
-                $count++;
-            }
-        }
-        exit(); 
+        return Excel::download(new CaregiverExport, 'Caregiver_list.xlsx');
     }
 
     public function set_password($token){

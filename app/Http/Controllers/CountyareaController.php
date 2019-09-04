@@ -161,9 +161,9 @@ class CountyareaController extends Controller{
         $county->save();
        
         if ($county->is_area_blocked)
-            flash()->success("Area blocked successfully."); 
-        else 
             flash()->success("Area Unblocked successfully."); 
+        else 
+            flash()->success("Area blocked successfully."); 
         return redirect()->route('county.show', [$county->county]);
     }
 
