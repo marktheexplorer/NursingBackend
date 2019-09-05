@@ -30,7 +30,7 @@
                 <table class="table table-striped table-bordered table-hover" id="data-table" cellspacing="0" width="100%">
                     <thead>
                         <tr>
-                            <th>Id</th>
+                            <th>#</th>
               				<th>Name</th>
 	                  		<th>Email</th>
 	                  		<th>Mobile no</th>
@@ -51,9 +51,9 @@
 	              					<li>
 	              						<a href="{{ url('admin/patients/blocked/'.$patient->id) }}">
 					                    @if($patient->is_blocked)
-					                    	<button type="button" class="btn-sm btn-danger btn-cir" title="Unblock"><i class="fas fa-lock-open"></i></i></button>
+					                    	<button type="button" class="btn-sm btn-danger btn-cir" title="Unblock"><i class="fas fa-lock"></i></i></button>
 					                	@else
-					                		<button type="button" class="btn-sm btn-success btn-cir" title="Block"><i class="fas fa-lock"></i></button>
+					                		<button type="button" class="btn-sm btn-success btn-cir" title="Block"><i class="fas fa-lock-open"></i></button>
 					            		@endif
                                         </a>
 	              					</li>

@@ -23,6 +23,7 @@
                 <table class="table table-striped table-bordered table-hover" id="data-table" cellspacing="0" width="100%">
                     <thead>
                         <tr>
+                            <th>#</th>
               				<th>Name</th>
 	                  		<th>Email</th>
 	                  		<th>Mobile no</th>
@@ -32,8 +33,10 @@
                         </tr>
                     </thead>
                     <tbody>
+                    <?php $count = 1; ?>
                  	@foreach($caregivers as $key => $user)
 	            		<tr>
+                            <td>{{ $count }} <?php  $count++; ?></td>
 	              			<td>{{ ucfirst($user->name) }}</td>
 	              			<td>{{ $user->email }}</td>
 	              			<td>{{ $user->mobile_number }}</td>
@@ -43,9 +46,9 @@
 	              				<ul class="actions-menu">
                                     <a href="{{ url('admin/caregiver/blocked/'.$user->id) }}">
                                         @if($user->is_blocked)
-                                            <button type="button" class="btn-sm btn-danger btn-cir" title="Unblock"><i class="fas fa-lock-open"></i></button>
+                                            <button type="button" class="btn-sm btn-danger btn-cir" title="Unblock"><i class="fas fa-lock"></i></button>
                                         @else
-                                            <button type="button" class="btn-sm btn-success btn-cir" title="Block"><i class="fas fa-lock"></i></button>
+                                            <button type="button" class="btn-sm btn-success btn-cir" title="Block"><i class="fas fa-lock-open"></i></button>
                                         @endif
                                     </a>
 	              					<li>

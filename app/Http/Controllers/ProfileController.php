@@ -59,10 +59,21 @@ class ProfileController extends Controller
     public function updatePassword(Request $request)
     {
     	$input = $request->input();
-    	$validator = Validator::make($input, [
-    		'current_password' => 'required|min:6',
-    		'new_password' => 'required|confirmed|min:6',
-    	]);
+    	$validator = Validator::make($input, 
+            [
+        		'current_password' => 'required|min:6',
+        		'new_password' => 'required|min:6',
+                'new_password_confirmation' => 'required|min:6|confirmed',
+        	],
+            ['new_password_confirmation.confirmed' => 'New password and confirm password does not match.']
+        );
+
+        //show custome name of field in validation errors
+        $attributeNames = array(
+           'new_password_confirmation' => 'Confirm Password',
+        );
+        $validator->setAttributeNames($attributeNames);
+
 
     	if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();

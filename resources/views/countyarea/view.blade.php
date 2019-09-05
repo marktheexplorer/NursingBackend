@@ -53,7 +53,7 @@
                     @if(count($countyareas) > 0)
                         @foreach($countyareas as $key => $row)
                             <tr>
-                                <td>{{ ++$key }}.
+                                <td>{{ ++$key }}</td>
                                 <td>{{ ucfirst($row->area) }}</td>
                                 <td>
                                     @if($row->is_area_blocked == 0)
@@ -70,9 +70,9 @@
                                         <li>
                                             <a href="{{ url('admin/county/delete_area/'.$row->id) }}">
                                             @if($row->is_area_blocked)
-                                                <button type="button" class="btn-sm btn-danger btn-cir" title="Un-block"><i class="fas fa-lock-open"></i></button>
+                                                <button type="button" class="btn-sm btn-danger btn-cir" title="Un-block"><i class="fas fa-lock"></i></button>
                                             @else
-                                                <button type="button" class="btn-sm btn-success btn-cir" title="Block"><i class="fas fa-lock"></i></button>
+                                                <button type="button" class="btn-sm btn-success btn-cir" title="Block"><i class="fas fa-lock-open"></i></button>
                                             @endif
                                             </a>
                                         </li>

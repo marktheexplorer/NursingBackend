@@ -50,7 +50,7 @@
                     <tbody>
                  	@foreach($county as $key => $row)
 	            		<tr>
-	            			<td>{{ ++$key }}.
+	            			<td>{{ ++$key }}</td>
 	              			<td>{{ ucfirst($row->county) }}</td>
                             <td>
                                 @if($row->is_blocked == 0)

@@ -22,7 +22,7 @@
                 <table class="table table-striped table-bordered table-hover" id="data-table" cellspacing="0" width="100%">
                     <thead>
                         <tr>
-                            <th>Id</th>
+                            <th>#</th>
               				<th>Name</th>
 	                  		<th>Email</th>
 	                  		<th>Phone</th>
@@ -33,7 +33,7 @@
                     <tbody>
                  	@foreach($enquiries as $key => $enquiry)
 	            		<tr>
-	            			<td>{{ ++$key }}
+	            			<td>{{ ++$key }}</td>
 	              			<td>{{ ucfirst($enquiry->name) }}</td>
 	              			<td>{{ $enquiry->email }}</td>
 	              			<td>{{ $enquiry->phone_number }}</td>

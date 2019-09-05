@@ -27,7 +27,7 @@
                 <table class="table table-striped table-bordered table-hover table-sm table-responsive" id="data-table" cellspacing="0" width="100%">
                     <thead>
                         <tr>
-                            <th>Id</th>
+                            <th>#</th>
                             <th style="min-width: 150px;">Patient</th>
                             <th style="min-width: 150px;">Caregiver</th>
                             <th style="min-width: 350px;">Service</th>
@@ -41,7 +41,7 @@
                     <tbody>
                  	@foreach($services as $key => $srvc)
 	            		<tr>
-	            			<td>{{ ++$key }}.</td>
+	            			<td>{{ ++$key }}</td>
 	              			<td>{{ ucfirst($srvc->name) }}</td>
                             <td><a href="{{ route('service_request.caregiver_list',['id' => $srvc->id]) }}" title="Select Caregiver">Change Caregiver</a></td>
                             <td>{{ ucfirst($srvc->title) }}</td>
@@ -70,9 +70,9 @@
 	              					<li>
                                         <a href="{{ url('admin/service_request/blocked/'.$srvc->id) }}">
                                             @if($srvc->status)
-                                                <button type="button" class="btn-sm btn-danger btn-cir" title="Unblock"><i class="fas fa-lock-open"></i></button>
+                                                <button type="button" class="btn-sm btn-danger btn-cir" title="Unblock"><i class="fas fa-lock"></i></button>
                                             @else
-                                                <button type="button" class="btn-sm btn-success btn-cir" title="Block"><i class="fas fa-lock"></i></button>
+                                                <button type="button" class="btn-sm btn-success btn-cir" title="Block"><i class="fas fa-lock-open"></i></button>
                                             @endif
                                         </a>
                                     </li>    <!--

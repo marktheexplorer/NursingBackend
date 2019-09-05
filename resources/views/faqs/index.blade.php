@@ -20,7 +20,7 @@
                 <table class="table table-striped table-bordered table-hover" id="data-table" cellspacing="0" width="100%">
                     <thead>
                         <tr>
-                            <th>Id</th>
+                            <th>#</th>
               				<th>Title</th>
                             <th>Created At</th>
 	                  		<th>Actions</th>
@@ -29,7 +29,7 @@
                     <tbody>
                  	@foreach($faqs as $key => $faq)
 	            		<tr>
-	            			<td>{{ ++$key }}
+	            			<td>{{ ++$key }}</td>
 	              			<td>{{ $faq->question }}</td>
                             <td>{{ date_format(date_create($faq->created_at) , 'd M ,y') }}
 	              			<td>
