@@ -210,7 +210,7 @@
                                                     <select name="state" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" readonly="true" id="state"">
                                                         <option disabled="true" selected=""> -- Select State --</option>
                                                         @foreach($city_state as $row)
-                                                            <option <?php if($row->state_code == $user->state){ echo 'selected'; } ?> >{{ $row->state_code }}</option>
+                                                            <option  value="{{ $row->state_code }}" <?php if($row->state_code == old('state', $user->state)){ echo 'selected'; } ?> >{{ $row->state_code }}</option>
                                                         @endforeach
                                                     </select>    
                                                     @if ($errors->has('state'))
@@ -496,8 +496,10 @@
     });
 
     $("#dob").keydown(function(e){
-        //make non edidatble field
-        e.preventDefault();
+        var key = event.keyCode;
+        if(key != 9){
+            e.preventDefault();
+        }
     });
 
     //date picker field

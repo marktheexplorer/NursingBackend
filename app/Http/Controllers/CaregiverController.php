@@ -77,6 +77,17 @@ class CaregiverController extends Controller{
             'description' => 'required|max:300',
             'qualification' => 'required|not_in:0',
         ]);
+        
+        //show custome name of field in validation errors
+        $attributeNames = array(
+           'fname' => 'first name',
+           'lname' => 'last name',     
+           'mname' => 'middel name',
+           'dob' => 'date of birth',
+           'location' => 'street',
+           'zipcode' => 'zip code'
+        );
+        $validator->setAttributeNames($attributeNames);
 
         $upload_image ='';
         if(!empty($request->file('profile_image'))){
@@ -341,6 +352,17 @@ class CaregiverController extends Controller{
             'description' => 'required|max:300',
             'qualification' => 'required|not_in:0',
         ]);
+
+        //show custome name of field in validation errors
+        $attributeNames = array(
+           'fname' => 'first name',
+           'lname' => 'last name',     
+           'mname' => 'middel name',
+           'dob' => 'date of birth',
+           'location' => 'street',
+           'zipcode' => 'zip code'
+        );
+        $validator->setAttributeNames($attributeNames);
 
         $upload_image ='';
         if(!empty($request->file('profile_image'))){

@@ -248,14 +248,9 @@ a,
                                             <select name="user_id" class="form-control {{ $errors->has('user_id') ? ' is-invalid' : '' }}" >
                                                 <option disabled="true" selected="true"> -- Select Patient --</option>
                                                 @foreach($caregiver_list as $key => $caregiver)
-                                                    <option value="{{ $caregiver->id }}" >{{ ucfirst($caregiver->name) }}</option>
+                                                    <option value="{{ $caregiver->id }}" {{ old('user_id') == $caregiver->id ? 'selected':'' }}>{{ ucfirst($caregiver->name) }}</option>
                                                 @endforeach
                                             </select>
-                                            @if ($errors->has('end_time'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('end_time')}}</strong>
-                                                </span>
-                                            @endif
                                             @if ($errors->has('user_id'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('user_id') }}</strong>
@@ -273,7 +268,7 @@ a,
                                         </div>       -->      
                                         <div class="col-sm-3  form-group">
                                             <label>Min Expected Bill ($)</label>
-                                            <input type="number" class="form-control {{ $errors->has('min_expected_bill') ? ' is-invalid' : '' }}" placeholder="Minimum Expected Bill" name="min_expected_bill" value="" min="0" id="min_price">
+                                            <input type="number" class="form-control {{ $errors->has('min_expected_bill') ? ' is-invalid' : '' }}" placeholder="Minimum Expected Bill" name="min_expected_bill" value="{{ old('min_expected_bill') }}" min="0" id="min_price">
                                             @if ($errors->has('min_expected_bill'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('min_expected_bill') }}</strong>
@@ -282,7 +277,7 @@ a,
                                         </div>
                                         <div class="col-sm-3  form-group">
                                             <label>Max Expected Bill ($)</label>
-                                            <input type="number" class="form-control {{ $errors->has('max_expected_bill') ? ' is-invalid' : '' }}" placeholder="Max Expected Bill" name="max_expected_bill" value="" min="0" id="max_price">
+                                            <input type="number" class="form-control {{ $errors->has('max_expected_bill') ? ' is-invalid' : '' }}" placeholder="Max Expected Bill" name="max_expected_bill" value="{{ old('max_expected_bill') }}" min="0" id="max_price">
                                             @if ($errors->has('max_expected_bill'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('max_expected_bill') }}</strong>
@@ -296,7 +291,7 @@ a,
                                             <select name="service" class="form-control {{ $errors->has('service') ? ' is-invalid' : '' }}">
                                                 <option disabled="true" selected="" > -- Select Service --</option>
                                                 @foreach($service_list as $srvc)
-                                                    <option value="{{ $srvc->id }}" >{{ $srvc->title }}</option>
+                                                    <option value="{{ $srvc->id }}" {{ old('service') == $srvc->id ? 'selected':'' }}>{{ $srvc->title }}</option>
                                                 @endforeach
                                             </select>
                                             @if ($errors->has('service'))
@@ -307,11 +302,11 @@ a,
                                         </div>                                        
                                         <div class="form-group col-sm-2" >
                                             <label>Start From</label>
-                                            <input type="text" class="form-control {{ $errors->has('start_date') ? ' is-invalid' : '' }}" name="start_date" placeholder="Start from" value="{{ date('d/m/Y', time()) }}" id="start_date"  />
+                                            <input type="text" class="form-control {{ $errors->has('start_date') ? ' is-invalid' : '' }}" name="start_date" placeholder="Start from" value="{{ old('start_date', date('d/m/Y', time())) }}" id="start_date"  />
                                         </div>  
                                         <div class="form-group col-sm-2" >
                                             <label>End From</label>
-                                            <input type="text" class="form-control {{ $errors->has('end_date') ? ' is-invalid' : '' }}" name="end_date" placeholder="End from" value="{{ date('d/m/Y', time()) }}" id="end_date"  />
+                                            <input type="text" class="form-control {{ $errors->has('end_date') ? ' is-invalid' : '' }}" name="end_date" placeholder="End from" value="{{ old('end_date', date('d/m/Y', time())) }}" id="end_date"  />
                                             @if ($errors->has('end_date'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('end_date')}}</strong>
@@ -321,9 +316,9 @@ a,
                                         <div class="form-group col-sm-2" >
                                             <label>Start Time</label>
                                             <select name="start_time" class="form-control {{ $errors->has('start_time') ? ' is-invalid' : '' }}" >
-                                                <option disabled="true" selected=""> -- Select Start time --</option>
+                                                <option disabled="true" selected=""> - Select Time --</option>
                                                 @foreach($timeslot as $key => $slot)
-                                                    <option value="{{ $key }}" >{{ $slot }}</option>
+                                                    <option value="{{ $key }}" {{ old('start_time') == $key ? 'selected':'' }}>{{ $slot }}</option>
                                                 @endforeach
                                             </select>
                                             @if ($errors->has('start_time'))
@@ -335,9 +330,9 @@ a,
                                         <div class="form-group col-sm-2" >
                                             <label>End Time</label>
                                             <select name="end_time" class="form-control {{ $errors->has('end_time') ? ' is-invalid' : '' }}" >
-                                                <option disabled="true" selected> -- Select End time --</option>
+                                                <option disabled="true" selected> -- Select Time --</option>
                                                 @foreach($timeslot as $key => $slot)
-                                                    <option value="{{ $key }}" >{{ $slot }}</option>
+                                                    <option value="{{ $key }}" {{ old('end_time') == $key ? 'selected':'' }}>{{ $slot }}</option>
                                                 @endforeach
                                             </select>
                                             @if ($errors->has('end_time'))
@@ -349,8 +344,8 @@ a,
                                     </div>    
                                     <div class="row">    
                                         <div class="form-group col-sm-6" >
-                                            <label>Street </label>
-                                            <input type="text" class="form-control {{ $errors->has('location') ? ' is-invalid' : '' }}" name="location" placeholder="Location" value="" />
+                                            <label>Location </label>
+                                            <input type="text" class="form-control {{ $errors->has('location') ? ' is-invalid' : '' }}" name="location" placeholder="Location" value="{{ old('location') }}" />
                                             @if ($errors->has('location'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('location') }}</strong>
@@ -359,7 +354,7 @@ a,
                                         </div>
                                         <div class="form-group col-sm-2" >
                                             <label>City </label>
-                                            <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" placeholder="city" value="" id="citysuggest" autocomplete="off" />
+                                            <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" placeholder="city" value="{{ old('city') }}" id="citysuggest" autocomplete="off" />
                                             @if ($errors->has('city'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('city') }}</strong>
@@ -375,7 +370,7 @@ a,
                                                         {{ old('state') }}
                                                     </option>
                                                 @endif
-                                            </select>                                               
+                                            </select> 
                                             @if ($errors->has('state'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('state') }}</strong>
@@ -384,7 +379,7 @@ a,
                                         </div>
                                         <div class="form-group col-sm-2" >
                                             <label>Zip Code </label>
-                                            <input type="text" class="form-control {{ $errors->has('zipcode') ? ' is-invalid' : '' }}" name="zipcode" placeholder="Zip code" value="" id="zipcode" readonly="true" />
+                                            <input type="text" class="form-control {{ $errors->has('zipcode') ? ' is-invalid' : '' }}" name="zipcode" placeholder="Zip code" value="{{ old('zipcode') }}" id="zipcode" readonly="true" />
                                             @if ($errors->has('zipcode'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('zipcode') }}</strong>
@@ -395,7 +390,7 @@ a,
                                     <div class="row">
                                         <div class="form-group col-sm-12" >
                                             <label>Description </label>
-                                            <textarea class="form-control {{ $errors->has('description') ? ' is-invalid' : '' }}" rows="4" name="description" id="description" placeholder="Description"></textarea>
+                                            <textarea class="form-control {{ $errors->has('description') ? ' is-invalid' : '' }}" rows="4" name="description" id="description" placeholder="Description">{{ old('description') }}</textarea>
                                             @if ($errors->has('description'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('description') }}</strong>
@@ -426,14 +421,6 @@ a,
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
-    $('#max_price').blur(function(){
-        minprice = $("#min_price").val();
-        maxprice = $("#max_price").val();
-        if(minprice >= maxprice){
-            $("#max_price").val(minprice);
-        }
-    });
-
     //date picker field
     $( function() {
         var dateFormat = "mm/dd/yy",
@@ -540,19 +527,18 @@ a,
         });
     })
 
-    $("#dob").keydown(function(e){
-        //make non edidatble field
-        e.preventDefault();
-    });
-
     $("#start_date").keydown(function(e){
-        //make non edidatble field
-        e.preventDefault();
+        if (e.which != 9) {
+            e.preventDefault();
+            // do your code
+        }
     });
 
     $("#end_date").keydown(function(e){
-        //make non edidatble field
-        e.preventDefault();
+        if (e.which != 9) {
+            e.preventDefault();
+            // do your code
+        }
     });
 </script>
 @endsection

@@ -51,9 +51,9 @@
 	              					<li>
 	              						<a href="{{ url('admin/patients/blocked/'.$patient->id) }}">
 					                    @if($patient->is_blocked)
-					                    	<button type="button" class="btn-sm btn-danger btn-cir" title="Unblock"><i class="fa fa-unlock"></i></button>
+					                    	<button type="button" class="btn-sm btn-danger btn-cir" title="Unblock"><i class="fas fa-lock-open"></i></i></button>
 					                	@else
-					                		<button type="button" class="btn-sm btn-success btn-cir" title="Block"><i class="fa fa-ban"></i></button>
+					                		<button type="button" class="btn-sm btn-success btn-cir" title="Block"><i class="fas fa-lock"></i></button>
 					            		@endif
                                         </a>
 	              					</li>

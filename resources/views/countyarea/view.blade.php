@@ -70,9 +70,9 @@
                                         <li>
                                             <a href="{{ url('admin/county/delete_area/'.$row->id) }}">
                                             @if($row->is_area_blocked)
-                                                <button type="button" class="btn-sm btn-danger btn-cir" title="Un-block"><i class="fa fa-unlock"></i></button>
+                                                <button type="button" class="btn-sm btn-danger btn-cir" title="Un-block"><i class="fas fa-lock-open"></i></button>
                                             @else
-                                                <button type="button" class="btn-sm btn-success btn-cir" title="Block"><i class="fa fa-ban"></i></button>
+                                                <button type="button" class="btn-sm btn-success btn-cir" title="Block"><i class="fas fa-lock"></i></button>
                                             @endif
                                             </a>
                                         </li>

@@ -471,17 +471,12 @@
         });
     })
 
-    $('#max_price').blur(function(){
-        minprice = $("#min_price").val();
-        maxprice = $("#max_price").val();
-        if(minprice >= maxprice){
-            $("#max_price").val(minprice);
-        }
-    });
-
+  
     $("#dob").keydown(function(e){
-        //make non edidatble field
-        e.preventDefault();
+        var key = event.keyCode;
+        if(key != 9){
+            e.preventDefault();
+        }
     });
 
     //date picker field
