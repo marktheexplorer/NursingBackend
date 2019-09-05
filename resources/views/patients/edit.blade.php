@@ -89,7 +89,7 @@
                                         </div>
                                         <div class="col-sm-4 form-group">
                                            <label>Mobile number</label>
-                                           <input type="text" class="form-control {{ $errors->has('mobile_number') ? ' is-invalid' : '' }}" name="mobile_number" placeholder="Mobile Number" value="{{ old('mobile_number', $user->mobile_number) }}" id="mobile_number" readonly />
+                                           <input type="text" class="form-control {{ $errors->has('mobile_number') ? ' is-invalid' : '' }}" name="mobile_number" placeholder="Mobile Number" value="{{ old('mobile_number', $user->mobile_number) }}" id="mobile_number" />
                                             @if ($errors->has('mobile_number'))
                                                <span class="text-danger">
                                                <strong>{{ $errors->first('mobile_number') }}</strong>
@@ -245,9 +245,7 @@
                                             <select name="qualification[]" class="form-control {{ $errors->has('qualification') ? ' is-invalid' : '' }} multiple" multiple="multiple">
                                                 <option disabled="true" > -- Select Discipline --</option>
                                                 @foreach($qualifications as $qualification)
-                                                  <option value="{{ $qualification->id }}" <?php if (in_array($qualification->id, $selected_disciplines)) {
-                                                    echo 'selected';
-                                                  } ?> >{{ $qualification->name }}</option>
+                                                  <option value="{{ $qualification->id }}" {{ (in_array($qualification->id, $selected_disciplines)) ? 'selected' :''}} >{{ $qualification->name }}</option>
                                                 @endforeach
                                             </select>
                                             @if ($errors->has('qualification'))
@@ -299,7 +297,7 @@
                                         </div>
                                         <div class="form-group col-md-12">
                                             <label>Additional Information</label>
-                                            <textarea class="form-control" name="additional_info" rows="5">{{ old('additional_info', $user->patient? $user->patient->additional_info:'') }}</textarea>
+                                            <textarea class="form-control" name="additional_info" placeholder="Description" rows="5">{{ old('additional_info', $user->patient? $user->patient->additional_info:'') }}</textarea>
                                         </div>
                                     </div>
                                     </div>
