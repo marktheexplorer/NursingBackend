@@ -56,3 +56,6 @@ padding:10px;}
   padding-left:15px;
   width: 302px;
   }
+  .lineAlign{
+    line-height: 1.5 !important;
+  }
