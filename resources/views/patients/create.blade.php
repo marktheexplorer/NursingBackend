@@ -296,7 +296,7 @@
                                       </div>
                                       <div class="form-group col-md-12">
                                           <label>Additional Information</label>
-                                          <textarea class="form-control" name="additional_info" rows="5" placeholder="Additional Information">{{ old('additional_info') }}</textarea>
+                                          <textarea class="form-control" name="additional_info" rows="5" placeholder="Description">{{ old('additional_info') }}</textarea>
                                            @if ($errors->has('additional_info'))
                                            <span class="text-danger">
                                            <strong>{{ $errors->first('additional_info') }}</strong>
