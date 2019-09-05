@@ -18,20 +18,20 @@ class PatientExport implements FromCollection, WithHeadings, ShouldAutoSize{
             $count = 1;
             foreach ($usre_data as $row) {
                 $output[] = array(
-                   $count.".", 
-                    ucfirst(str_replace(",", " ", $row->name)), 
+                   $count.".",
+                    ucfirst(str_replace(",", " ", $row->name)),
                     $row->email,
                     $row->mobile_number,
                     $row->gender,
                     date("d-m-Y", strtotime($row->dob)),
-                    ucfirst($row->location),
+                    ucfirst($row->street),
                     $row->city,
                     $row->state,
                     $row->pin_code,
                     date("d-m-Y", strtotime($row->created_at))
                 );
                 $count++;
-            } 
+            }
         }
 
         return collect([$output]);
@@ -39,16 +39,16 @@ class PatientExport implements FromCollection, WithHeadings, ShouldAutoSize{
 
     public function headings(): array{
         return [
-            'S. No.', 
-            'Name', 
-            'Email', 
+            'S. No.',
+            'Name',
+            'Email',
             'Mobile No.',
             'Gender',
             'Date Of Birth',
             'Street',
             'City',
             'State',
-            'Zip Code',  
+            'Zip Code',
             'Created On',
         ];
     }

@@ -52,13 +52,15 @@ class PatientsController extends Controller{
      */
     public function update(Request $request, $id)
     {
+        $temp_number = str_replace(array("(", ")", "_", "-", " "), "", $request->input('mobile_number'));
+        $request->merge(array('mobile_number' => $temp_number));
         $input = $request->input();
         $validator = validator::make($input,[
             'f_name' => 'required|string|max:20',
             'm_name' => 'nullable|string|max:20',
             'l_name' => 'required|string|max:20',
             'email' => 'email|required|string|max:60',
-            'mobile_number' => 'required',
+            'mobile_number' => 'required||min:8|max:15',
             'dob' => 'required',
             'gender' => 'required',
             'range' => 'required|numeric',
@@ -97,12 +99,12 @@ class PatientsController extends Controller{
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
-        }   
+        }
 
         if($request->has('profile_image') && ($request->file('profile_image') != null)) {
                 $image = $request->file('profile_image');
                 $user = User::findOrFail($id);
-                $input['profile_image'] = time().'.'.$image->getClientOriginalExtension(); 
+                $input['profile_image'] = time().'.'.$image->getClientOriginalExtension();
                 $user->profile_image = $input['profile_image'];
                 $user->save();
                 $destinationPath = config('image.user_image_path');
@@ -166,15 +168,15 @@ class PatientsController extends Controller{
         $user = User::find($id);
         $user->is_blocked = !$user->is_blocked;
         $user->save();
-       
-        if ($user->is_blocked)
-            flash()->success("Patient blocked successfully."); 
-        else 
-            flash()->success("Patient Unblocked successfully."); 
 
-        return redirect()->route('patients.index');  
+        if ($user->is_blocked)
+            flash()->success("Patient blocked successfully.");
+        else
+            flash()->success("Patient Unblocked successfully.");
+
+        return redirect()->route('patients.index');
     }
-    
+
     public function create(){
         $diagnosis = Diagnose::get();
         $qualifications = Qualification::orderBy('name', 'asc')->get();
@@ -182,13 +184,15 @@ class PatientsController extends Controller{
     }
 
     public function store(Request $request){
+        $temp_number = str_replace(array("(", ")", "_", "-", " "), "", $request->input('mobile_number'));
+        $request->merge(array('mobile_number' => $temp_number));
         $input = $request->input();
         $validator = validator::make($input,[
             'f_name' => 'required|string|max:20',
             'm_name' => 'nullable|string|max:20',
             'l_name' => 'required|string|max:20',
             'email' => 'email|required|string|max:60|unique:users',
-            'mobile_number' => 'required|unique:users',
+            'mobile_number' => 'required|unique:users|min:8|max:15',
             'dob' => 'required',
             'gender' => 'required',
             'range' => 'required|numeric',
@@ -220,7 +224,7 @@ class PatientsController extends Controller{
             'range.required'    => 'Expected Cost is required.',
         ]);
 
-        
+
         if(!empty($input['pets']) && $input['pets'] == 'yes'){
             $this->validate($request, [
               'pets_description' => 'required|max:2000'
@@ -233,7 +237,7 @@ class PatientsController extends Controller{
 
          if($request->has('profile_image') && ($request->file('profile_image') != null)) {
                 $image = $request->file('profile_image');
-                $input['profile_image'] = time().'.'.$image->getClientOriginalExtension();   
+                $input['profile_image'] = time().'.'.$image->getClientOriginalExtension();
 
                 $destinationPath = config('image.user_image_path');
                 $img = Image::make($image->getRealPath());
@@ -287,10 +291,10 @@ class PatientsController extends Controller{
 
         if($user->patient){
             $diagnosis = Diagnose::where('id',$user->patient->diagnose_id)->first();
-            $disciplines = explode(',', $user->patient->disciplines) ; 
+            $disciplines = explode(',', $user->patient->disciplines) ;
             foreach ($disciplines as $key => $value) {
                 $disciplines_name[] = Qualification::where('id',$value)->first();
-            }          
+            }
         }else{
             $diagnosis = '';
             $disciplines = '';
@@ -344,7 +348,7 @@ class PatientsController extends Controller{
     public function getzip(Request $request){
         $city = $request->input('city');
         $state = $request->input('state');
-        $zipcode = DB::select( DB::raw("SELECT zip FROM `us_location` where city = '".$city."' and state_code = '".$state."'")); 
+        $zipcode = DB::select( DB::raw("SELECT zip FROM `us_location` where city = '".$city."' and state_code = '".$state."'"));
         echo $zipcode[0]->zip;
     }
 }

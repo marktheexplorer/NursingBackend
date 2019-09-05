@@ -26,13 +26,32 @@
                                 <a class="nav-link active" href="#tab-2" data-toggle="tab"><i class="fas fa-pencil-alt"></i>Edit Patient</a>
                             </li>
                         </ul>
-                        <form action="{{ route('patients.update', ['id' => $user->id]) }}" enctype = 'multipart/form-data' method="post" class="form-horizontal">
-                        @csrf
-                        @method('put')
-                            <div class="tab-content row">
-                                <div class="tab-pane fade show active col-md-9" id="tab-2">
-                                    <div class="row">
-                                       <div class="col-sm-4 form-group">
+                        <div class="tab-content">
+                           <div class="tab-pane fade show active" id="tab-2">
+                             <form action="{{ route('patients.update', ['id' => $user->id]) }}" enctype = 'multipart/form-data' method="post" class="form-horizontal">
+                               @csrf
+                               @method('put')
+                               <div class="card">
+                                 <div class="card-header" style="background-color: #ddd;">
+                                    <h5>Persona Info</h5>
+                                 </div>
+                                 <div class="tab-content row">
+                                  <div class="tab-pane fade show active col-md-12" id="tab-2">
+                                    <div class="card-body">
+                                      <div class="row">
+                                          <div class="form-group col-sm-12 center" style="text-align: center;">
+                                            <span style="text-align: center;position: absolute;top: 120px;margin-left: 101px;" id="upload_image" onclick="event.preventDefault();">
+                                              <button class="btn-sm btn-primary btn-cir" title="Edit"><i class="fas fa-pencil-alt"></i></button>
+                                            </span>
+                                              <img class="img-circle" src="<?php if($user->profile_image){ echo asset(config('image.user_image_url').$user->profile_image); }else{ echo asset('admin/assets/img/admin-avatar.png') ;} ?>" style="width:150px;height:150px;"/>
+                                                <input type="file" id="profile_image" name="profile_image" value="{{ old('profile_image') }}" onchange="readURL(this);" accept="image/*"/ style="display:none;"><br/><br/>
+                                                @if ($errors->has('profile_image'))
+                                                <span class="text-danger">
+                                                <strong>{{ $errors->first('profile_image') }}</strong>
+                                                </span>
+                                                @endif
+                                          </div>
+                                        <div class="col-sm-4 form-group">
                                             <label>First Name</label>
                                             <input type="text" class="form-control {{ $errors->has('f_name') ? ' is-invalid' : '' }}" name="f_name" placeholder="First Name" value="{{ old('f_name', $user->patient?$user->patient->f_name:'') }}"/>
                                             @if ($errors->has('f_name'))
@@ -171,7 +190,7 @@
                                                     <strong>{{ $errors->first('city') }}</strong>
                                                 </span>
                                             @endif
-                                        </div> 
+                                        </div>
                                         <div class="col-sm-4 form-group">
                                             <label>State</label>
                                             <select name="state" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" readonly="true" id="state">
@@ -179,7 +198,7 @@
                                                 @foreach($city_state as $row)
                                                     <option <?php if($row->state_code == $user->state){ echo 'selected'; } ?> >{{ $row->state_code }}</option>
                                                 @endforeach
-                                            </select>  
+                                            </select>
                                             @if ($errors->has('state'))
                                                 <span class="text-danger">
                                                     <strong>{{ $errors->first('state') }}</strong>
@@ -283,28 +302,26 @@
                                             <textarea class="form-control" name="additional_info" rows="5">{{ old('additional_info', $user->patient? $user->patient->additional_info:'') }}</textarea>
                                         </div>
                                     </div>
+                                    </div>
+                                  </div>
                                 </div>
-                                <div class="col-sm-3 form-group">
-                                    <label>Select Image:</label>
-                                    <input type="file" name="profile_image" class="{{ $errors->has('profile_image') ? ' is-invalid' : '' }} form-control" value="{{ old('profile_image') }}" onchange="readURL(this);" accept="image/*"/ style="padding-left:0px;padding:0px;border:0px;"><br/><br/>
-                                    <img  id="preview" src="{{ asset(config('image.user_image_url').$user->profile_image) }}" alt="Your image">
-                                    @if ($errors->has('profile_image'))
-                                        <span class="text-danger">
-                                            <strong>{{ $errors->first('profile_image') }}</strong>
-                                        </span>
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <button class="btn btn-default" type="submit">Submit</button>
-                            </div>
-                        </form>
+                                <div class="row">
+                                 <div class="form-group col-sm-5 pull-right"></div>
+                                   <div class="form-group col-sm-2 pull-right"><br/>
+                                       <button class="btn btn-primary pull-right" type="submit">Submit</button>
+                                   </div>
+                                 <div class="form-group col-sm-5 pull-right"></div>
+                               </div>
+                              </div>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
                     </div>
+                  </div>
                 </div>
+              </div>
             </div>
-        </div>
-    </div>
-</div>
 @endsection
 @section('footer-scripts')
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -327,16 +344,15 @@
         //make non edidatble field
         e.preventDefault();
     });
-   
+
     function readURL(input) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
-   
+
             reader.onload = function (e) {
-                $('#preview')
-                    .attr('src', e.target.result);
+                $('.img-circle').attr('src', e.target.result);
             };
-   
+
             reader.readAsDataURL(input.files[0]);
         }
     }
@@ -346,7 +362,7 @@
     }
 
     function extractLast( term ) {
-        //return split( term ).pop();  
+        //return split( term ).pop();
         temp = $.trim($("#pin_code").val());
         fnd = ','
         if(temp.indexOf(fnd) != -1){
@@ -356,7 +372,7 @@
         return term;
     }
 
-    // don't navigate away from the field on tab when selecting an item                
+    // don't navigate away from the field on tab when selecting an item
     $( "#citysuggest" ).on( "keydown", function( event ) {
         if(event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active){
             event.preventDefault();
@@ -391,7 +407,7 @@
             return false;
         }
     });
-}); 
+});
 
 function setstateoptions(){
     zip = $("#citysuggest").val();
@@ -408,7 +424,7 @@ function setstateoptions(){
             }else{
                 $.each(res['list'], function( index, value ) {
                     //alert( index + ": " + value );
-                    $('#state').append($("<option></option>").attr(value, value).text(value)); 
+                    $('#state').append($("<option></option>").attr(value, value).text(value));
                 });
             }
         }
@@ -429,7 +445,7 @@ $("#state").change(function () {
     });
 })
     if($('input[name=pets]:checked').val() == 'no')
-        {  
+        {
             $('.describe').hide();
         }
     $('input[name=pets]').click(function(){
@@ -443,9 +459,9 @@ $("#state").change(function () {
 
     /*Validation for mobile number format*/
     var phones = [{ "mask": "(###) ###-####"}];
-    $('#mobile_number').inputmask({ 
-        mask: phones, 
-        greedy: false, 
+    $('#mobile_number').inputmask({
+        mask: phones,
+        greedy: false,
         definitions: { '#': { validator: "[0-9]", cardinality: 1}}
     });
 
@@ -478,5 +494,9 @@ $("#state").change(function () {
     }
 
     $('.multiple').select2();
+    $("#upload_image").click(function(){
+        $("#profile_image").click();
+        //e.preventDefault();
+    });
 </script>
 @endsection
