@@ -377,7 +377,7 @@
         $("#servicearea").select2({
             placeholder: {
                 id: '-1', // the value of the option
-                text: 'Select Service Area'
+                text: ' -- Select Service Area --'
             }
         }).on("change", function (e) {
             // show data in separate div when item is selected
@@ -394,7 +394,7 @@
         $("#nonservicearea").select2({
             placeholder: {
                 id: '-1', // the value of the option
-                text: 'Select Non Service Area'
+                text: '-- Select Non Service Area --'
             }
         });
 
