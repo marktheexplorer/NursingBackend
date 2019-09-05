@@ -43,7 +43,7 @@
                                                     @if ($errors->has('profile_image'))
                                                         <div class="clearfix;"></div>
                                                         <span class="invalid-feedback" role="alert" style="text-align: center;display: inline;">
-                                                            <strong>{{ $errors->first('profile_image') }} there is something.....</strong>
+                                                            <strong>{{ $errors->first('profile_image') }} </strong>
                                                         </span>
                                                     @endif
                                                 </div> 

@@ -26,12 +26,14 @@
                         <button class="btn btn-info pull-right" type="submit" style="margin-left:30px;float: right;margin-right: 20px;" id="addbutton"> Submit</button>
 
                         <input type="hidden" name="countyid" id="countyid" value="0"/>
-                        <input type="text" class="form-control {{ $errors->has('county') ? ' is-invalid' : '' }}" name="county" placeholder="Add County" value="{{ old('county') }}" style="width:30%;float:right;" id="county"/>
-                        @if ($errors->has('county'))
-                            <span class="text-danger">
-                                <strong style="line-height: 2.5;margin-right:20px;">{{ $errors->first('county') }}</strong>
-                            </span>
-                        @endif
+                        <span style="width:30%;float:right">
+                            <input type="text" class="form-control {{ $errors->has('county') ? ' is-invalid' : '' }}" name="county" placeholder="Add County" value="{{ old('county') }}" style=";" id="county"/>
+                            @if ($errors->has('county'))
+                                <span class="text-danger" style="float:left;">
+                                    <strong style="">{{ $errors->first('county') }}</strong>
+                                </span>
+                            @endif
+                        </span>
                     </form>
                 </div>
             </div>

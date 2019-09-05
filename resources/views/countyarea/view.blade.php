@@ -28,12 +28,14 @@
 
                         <input type="hidden" name="countyid" id="countyid" value="{{ $county->id }}"/>
                         <input type="hidden" name="areaid" id="areaid" value="0"/>
-                        <input type="text" class="form-control {{ $errors->has('area') ? ' is-invalid' : '' }}" name="area" placeholder="Add Area" value="{{ old('area') }}" style="width:30%;float:right;" id="area"/>
-                        @if ($errors->has('area'))
-                            <span class="text-danger">
-                                <strong style="line-height: 2.5;margin-right:20px;">{{ $errors->first('area') }}</strong>
-                            </span>
-                        @endif
+                         <span style="width:30%;float:right">
+                            <input type="text" class="form-control {{ $errors->has('area') ? ' is-invalid' : '' }}" name="area" placeholder="Add Area" value="{{ old('area') }}" id="area"/>
+                            @if ($errors->has('area'))
+                                <span class="text-danger" style="float:left;">
+                                    <strong>{{ $errors->first('area') }}</strong>
+                                </span>
+                            @endif
+                        </span>    
                     </form>
                 </div>
             </div>
