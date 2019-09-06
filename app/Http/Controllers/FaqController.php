@@ -37,7 +37,7 @@ class FaqController extends Controller
     public function store(Request $request){
         $input = $request->input(); 
         $validator =  Validator::make($input,[
-            'question' => 'required|string|max:255',
+            'question' => 'required|string|max:200',
             'answer' => 'required|string',
         ]);
 
@@ -88,7 +88,7 @@ class FaqController extends Controller
     public function update(Request $request, $id){
         $input = $request->input();
         $validator =  Validator::make($input,[
-            'question' => 'required|string|max:255',
+            'question' => 'required|string|max:200',
             'answer' => 'required|string',
         ]);
 

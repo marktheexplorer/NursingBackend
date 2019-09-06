@@ -42,17 +42,15 @@
                                         <textarea class="form-control" name="content" rows="15">{{ old('content', $cms->content) }}</textarea>
                                     </div>
                                     <div class="form-group">
-                                        <div class="form-control {{ $errors->has('content') ? ' is-invalid' : '' }}">
-                                            @if ($errors->has('content'))
-                                                <span class="invalid-feedback" role="alert" style="display:block">
-                                                    <strong>{{ $errors->first('content') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
+                                        @if ($errors->has('content'))
+                                            <span class="invalid-feedback" role="alert" style="display:block">
+                                                <strong>{{ $errors->first('content') }}</strong>
+                                            </span>
+                                        @endif
                                     </div>
-                                    <div class="form-group">
-                                        <button class="btn btn-info" type="submit">Submit</button>
-                                    </div>
+                                </div>    
+                                <div class="form-group col-md-12" style="padding-left: 0px;">
+                                    <button class="btn btn-info" type="submit">Submit</button>
                                 </div>
                             </form>
                         </div>

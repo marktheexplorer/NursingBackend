@@ -13,12 +13,10 @@
     </div>
     @include('flash::message')
     <div class="page-content fade-in-up">
-        <a href="{{ route('cms.create') }}"><button class="btn btn-info "><i class="fas fa-plus"></i> Add</button></a>
         <div class="ibox">
-            <div class="ibox-head">
-                <div class="ibox-title">Cms Page Data</div>
-            </div>
             <div class="ibox-body">
+                <a href="{{ route('cms.create') }}"><button class="btn btn-info " style="float: right;"><i class="fas fa-plus"></i> Add</button></a><br/><br/>
+        
                 <table class="table table-striped table-bordered table-hover" id="data-table" cellspacing="0" width="100%">
                     <thead>
                         <tr>
@@ -116,7 +114,7 @@
                     }
                 });
             } else {
-                swal("Cancelled", name+"'s page will not be deleted.", "error");
+                //swal("Cancelled", name+"'s page will not be deleted.", "error");
             }
         });
     }

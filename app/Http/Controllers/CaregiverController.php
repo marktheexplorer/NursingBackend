@@ -311,7 +311,7 @@ class CaregiverController extends Controller{
 
         $service_list = DB::table('services')->orderBy('title', 'asc')->get();
         $qualification = DB::table('qualifications')->orderBy('name', 'asc')->get();
-        $city_state = DB::table('us_location')->select('state_code')->where('city', '=', $user->city)->orderBy('state_code', 'asc')->get();
+        $city_state = DB::table('us_location')->select('state_code')->where('city', '=', $user->city)->where('zip', '=', $user->zipcode)->orderBy('state_code', 'asc')->get();
 
         $service_area_list = DB::table('county_areas')->select('id', 'county', 'area')->where('area', '!=', '0')->orderBy('area', 'asc')->get();
 

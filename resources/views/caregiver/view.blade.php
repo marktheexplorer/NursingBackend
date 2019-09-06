@@ -55,7 +55,7 @@
                                     <li class="media">
                                         <div class="media-img">Email Id</div>
                                         <div class="media-body">
-                                            <div class="media-heading text-warning">{{ $user->email }}</div>
+                                            <div class="media-heading">{{ $user->email }}</div>
                                         </div>
                                     </li>
                                     <li class="media">

@@ -35,19 +35,15 @@
                                     <div class="form-group col-md-12">
                                         <label>Answer</label>
                                         <textarea class="form-control" name="answer" rows="15">{{ old('answer', $faq->answer) }}</textarea>
+                                        @if ($errors->has('answer'))
+                                            <span class="invalid-feedback" role="alert" style="display:block">
+                                                <strong>{{ $errors->first('answer') }}</strong>
+                                            </span>
+                                        @endif
                                     </div>
-                                    <div class="form-group">
-                                        <div class="form-control {{ $errors->has('answer') ? ' is-invalid' : '' }}">
-                                            @if ($errors->has('answer'))
-                                                <span class="invalid-feedback" role="alert" style="display:block">
-                                                    <strong>{{ $errors->first('answer') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <button class="btn btn-info" type="submit">Submit</button>
-                                    </div>
+                                </div>    
+                                <div class="form-group col-md-12" style="padding-left: 0px;">
+                                    <div class="form-group"><button class="btn btn-info" type="submit">Submit</button></div>
                                 </div>
                             </form>
                         </div>
