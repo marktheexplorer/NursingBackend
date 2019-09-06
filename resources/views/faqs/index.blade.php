@@ -8,7 +8,7 @@
             <li class="breadcrumb-item">
                 <a href="{{ route('dashboard') }}"><i class="fas fa-home"></i></a>
             </li>
-            <li class="breadcrumb-item">Faqs</li>
+            <li class="breadcrumb-item">FAQs</li>
         </ol>
     </div>
     @include('flash::message')

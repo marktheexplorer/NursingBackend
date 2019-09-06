@@ -3,12 +3,12 @@
 @section('content')
 <div class="content-wrapper">
     <div class="page-heading">
-        <h1 class="page-title">Faq Details</h1>
+        <h1 class="page-title">FAQ Details</h1>
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
                 <a href="{{ route('dashboard') }}"><i class="fas fa-home"></i></a>
             </li>
-            <li class="breadcrumb-item"><a href="{{ route('faqs.index') }}" >Faqs</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('faqs.index') }}" >FAQs</a></li>
         </ol>
     </div>
     <div class="page-content fade-in-up">

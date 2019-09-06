@@ -3,12 +3,12 @@
 @section('content')
 <div class="content-wrapper">
     <div class="page-heading">
-        <h1 class="page-title">Cms Pages</h1>
+        <h1 class="page-title">CMS Pages</h1>
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
                 <a href="{{ route('dashboard') }}"><i class="fas fa-home"></i></a>
             </li>
-            <li class="breadcrumb-item">Cms Pages</li>
+            <li class="breadcrumb-item">CMS Pages</li>
         </ol>
     </div>
     @include('flash::message')
@@ -73,7 +73,7 @@
         event.preventDefault();
         swal({
             title: "Are you sure?",
-            text: "You want to delete "+name+" page",
+            text: "You want to delete this page",
             icon: "warning",
             buttons: {
                 cancel: true,
@@ -94,7 +94,6 @@
                     if(data['status']) {
                         swal({
                             title: data['message'],
-                            text: "Press ok to continue",
                             icon: "success",
                             buttons: {
                                 cancel: true,

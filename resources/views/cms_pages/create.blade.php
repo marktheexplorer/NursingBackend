@@ -4,12 +4,12 @@
 <div class="content-wrapper">
     <!-- START PAGE CONTENT-->
     <div class="page-heading">
-        <h1 class="page-title">Add Cms Page</h1>
+        <h1 class="page-title">Add CMS Page</h1>
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
                 <a href="{{ route('dashboard') }}"><i class="fas fa-home"></i></a>
             </li>
-            <li class="breadcrumb-item"><a href="{{ route('cms.index') }}">Cms Pages</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('cms.index') }}">CMS Pages</a></li>
         </ol>
     </div>
     <div class="page-content fade-in-up">

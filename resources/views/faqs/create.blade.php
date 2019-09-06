@@ -4,12 +4,12 @@
 <div class="content-wrapper">
     <!-- START PAGE CONTENT-->
     <div class="page-heading">
-        <h1 class="page-title">Add Faq</h1>
+        <h1 class="page-title">Add FAQ</h1>
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
                 <a href="{{ route('dashboard') }}"><i class="fas fa-home"></i></a>
             </li>
-            <li class="breadcrumb-item"><a href="{{ route('faqs.index') }}">Faqs</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('faqs.index') }}">FAQs</a></li>
         </ol>
     </div>
     <div class="page-content fade-in-up">
