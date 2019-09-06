@@ -43,7 +43,8 @@
                         <tr>
                             <th>#</th>
               				<th>County</th>
-                       		<th style="min-width: 150px;">Actions</th>
+                            <th>Created At</th>
+	                  		<th style="min-width: 150px;">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -51,7 +52,8 @@
 	            		<tr>
 	            			<td>{{ ++$key }}</td>
 	              			<td>{{ ucfirst($row->county) }}</td>
-                        	<td>
+                            <td>{{ date_format(date_create($row->created_at), 'd M, y')}}</td>
+	              			<td>
 	              				<ul class="actions-menu">
 	              					<li>
 	              					    <button class="btn-sm btn-primary btn-cir" title="Edit" onclick="editcountry({{$row->id}}, '{{$row->county}}' ); "><i class="fas fa-pencil-alt"></i></button>
