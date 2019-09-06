@@ -20,7 +20,7 @@
                     <div class="ibox-body">
                         <ul class="nav nav-tabs tabs-line">
                             <li class="nav-item">
-                                <a class="nav-link active" href="#tab-2" data-toggle="tab"><i class="fas fa-pencil-alt"></i> Edit Cms Page</a>
+                                <a class="nav-link active" href="#tab-2" data-toggle="tab"><i class="fas fa-pencil-alt"></i> Edit CMS Page</a>
                             </li>
                         </ul>
                         <div class="tab-content">
