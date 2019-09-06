@@ -43,8 +43,7 @@
                         <tr>
                             <th>#</th>
               				<th>County</th>
-                            <th>Status</th>
-	                  		<th style="min-width: 150px;">Actions</th>
+                       		<th style="min-width: 150px;">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -52,14 +51,7 @@
 	            		<tr>
 	            			<td>{{ ++$key }}</td>
 	              			<td>{{ ucfirst($row->county) }}</td>
-                            <td>
-                                @if($row->is_blocked == 0)
-                                    Blocked
-                                @else
-                                    Active
-                                @endif
-                            </td>
-	              			<td>
+                        	<td>
 	              				<ul class="actions-menu">
 	              					<li>
 	              					    <button class="btn-sm btn-primary btn-cir" title="Edit" onclick="editcountry({{$row->id}}, '{{$row->county}}' ); "><i class="fas fa-pencil-alt"></i></button>
