@@ -39,8 +39,6 @@
                                     <div class="form-group col-md-12">
                                         <label>Content</label>
                                         <textarea class="form-control" name="content" rows="15">{{ old('content') }}</textarea>
-                                    </div>
-                                    <div class="form-group">
                                         @if ($errors->has('content'))
                                             <span class="invalid-feedback" role="alert" style="display:block">
                                                 <strong>{{ $errors->first('content') }}</strong>
