@@ -51,7 +51,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://careservice.projectdevelopment.co/'),
+    'url' => env('APP_URL', 'https://careservice.projectdevelopment.co/'),
 
     'asset_url' => env('ASSET_URL', null),
 
