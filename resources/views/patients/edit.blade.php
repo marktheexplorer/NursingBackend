@@ -242,6 +242,9 @@
                                         </div>
                                         <div class="col-sm-4  form-group">
                                             <label>Discipline</label>
+                                            <?php if(old('qualification') != null)
+                                            $selected_disciplines = old('qualification');
+                                            ?>
                                             <select name="qualification[]" class="form-control {{ $errors->has('qualification') ? ' is-invalid' : '' }} multiple" multiple="multiple">
                                                 <option disabled="true" > -- Select Discipline --</option>
                                                 @foreach($qualifications as $qualification)
