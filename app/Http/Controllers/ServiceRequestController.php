@@ -211,24 +211,12 @@ class ServiceRequestController extends Controller{
         
         $services = DB::table('service_requests')->select('service_requests.description', 'service_requests.created_at', 'service_requests.start_time', 'service_requests.end_time', 'service_requests.service', 'service_requests.id', 'service_requests.user_id', 'service_requests.location', 'service_requests.city', 'services.title','service_requests.state', 'service_requests.zip', 'service_requests.country', 'service_requests.min_expected_bill', 'service_requests.max_expected_bill', 'service_requests.start_date', 'service_requests.end_date', 'service_requests.status', 'users.name', 'users.email', 'users.mobile_number', 'users.name', 'users.name', 'users.is_blocked', 'services.title')->Join('users', 'service_requests.user_id', '=', 'users.id')->Join('services', 'services.id', '=', 'service_requests.service')->where('service_requests.id', $id)->first();
 
-        //non filter caregivers list
-        /*$caregivers = DB::table('users')->select('users.id', 'name', 'email', 'mobile_number', 'profile_image', 'users.is_blocked', 'users.created_at', 'services.title', 'min_price', 'max_price', 'gender', 'zipcode')->Join('caregiver', 'caregiver.user_id', '=', 'users.id')->leftJoin('services', 'services.id', '=', 'caregiver.service')->where('users.id','>', '1')->where('users.type', '=', 'caregiver')->orderBy('users.id', 'desc')->get();*/
-
-        $caregivers = DB::table('users')->select('users.id', 'name', 'email', 'mobile_number', 'profile_image', 'users.is_blocked', 'users.created_at', 'min_price', 'max_price', 'gender', 'zipcode')->Join('caregiver', 'caregiver.user_id', '=', 'users.id')->Join('caregiver_attributes', 'caregiver_attributes.caregiver_id', '=', 'users.id')->where('users.id','>', '1')->where('caregiver_attributes.type', '=', 'service')->where('caregiver_attributes.value', '=', $srvc->service)->orderBy('users.name', 'asc')->get();
 
         $final_caregivers = DB::table('service_requests_attributes')->select('service_requests_attributes.value', 'users.name', 'users.email')->Join('users', 'users.id', '=', 'service_requests_attributes.value')->where('service_request_id', '=', $id)->where('service_requests_attributes.type', '=', 'caregiver_list')->get();
 
-        $caregivers = DB::table('users')->select('users.id', 'name', 'email', 'mobile_number', 'profile_image', 'users.is_blocked', 'users.created_at', 'min_price', 'max_price', 'gender', 'zipcode')->Join('caregiver', 'caregiver.user_id', '=', 'users.id')->Join('caregiver_attributes', 'caregiver_attributes.caregiver_id', '=', 'users.id')->where('users.id','>', '1')->where('caregiver_attributes.type', '=', 'service')->where('caregiver_attributes.value', '=', $srvc->service)->orderBy('users.name', 'asc')->get();
+        $caregivers = DB::table('users')->select('users.id', 'name', 'email', 'mobile_number', 'profile_image', 'users.is_blocked', 'users.created_at', 'min_price', 'max_price', 'gender', 'zipcode')->Join('caregiver', 'caregiver.user_id', '=', 'users.id')->orderBy('users.name', 'asc')->get();
 
         $query = "select users.id, name, email, mobile_number, profile_image, users.is_blocked, users.created_at, min_price, max_price, gender, zipcode from users join caregiver on caregiver.user_id = users.id join caregiver_attributes on caregiver_attributes.caregiver_id = users.id where users.id > 1 and caregiver_attributes.type = 'service' and caregiver_attributes.value = '".$srvc->service."' and NOT EXISTS (select request_booking.start_date from request_booking where caregiver_id = users.id and (request_booking.start_date >= '".$srvc->start_date."' and request_booking.start_date <= '".$srvc->end_date."') || (request_booking.end_date >= '".$srvc->start_date."' and request_booking.end_date <= '".$srvc->end_date."') limit 1) order by users.name asc";
-        
-        //$caregivers = DB::select($query);
-        //exists(select * from request_booking where caregiver_id = users.id and (request_booking.start_date >= '".$srvc->start_date."' AND request_booking.start_date <= '".$srvc->start_date."') || (request_booking.end_date >= '".$srvc->start_date."' AND request_booking.end_date <= '".$srvc->start_date."'))
-
-        /* echo "<pre>";
-        print_r($services);
-        print_r($caregivers);
-        die; */
 
         $select_caregiver = array(0);
         foreach($final_caregivers as $scr){
