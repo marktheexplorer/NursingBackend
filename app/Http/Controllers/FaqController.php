@@ -15,7 +15,7 @@ class FaqController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        $faqs = Faq::orderBy('faq_order', 'asc')->get();
+        $faqs = Faq::orderBy('id', 'DESC')->get();
         return view('faqs.index', compact('faqs'));
     }
 
