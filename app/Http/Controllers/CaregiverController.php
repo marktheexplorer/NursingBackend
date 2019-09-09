@@ -74,7 +74,7 @@ class CaregiverController extends Controller{
             'state' => 'required',
             'service_area' => 'required',
             'non_service_area' => 'required',
-            'description' => 'required|max:300',
+            'description' => 'required|max:150',
             'qualification' => 'required|not_in:0',
         ],
         ['max_price.gt' => 'The max price must be greater than min price.']);
@@ -350,7 +350,7 @@ class CaregiverController extends Controller{
             'state' => 'required',
             'service_area' => 'required',
             'non_service_area' => 'required',
-            'description' => 'required|max:300',
+            'description' => 'required|max:150',
             'qualification' => 'required|not_in:0',
         ],
         ['max_price.gt' => 'The max price must be greater than min price.']);

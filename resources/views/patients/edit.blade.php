@@ -45,11 +45,9 @@
                                             </span>
                                               <img class="img-circle" src="<?php if($user->profile_image){ echo asset(config('image.user_image_url').$user->profile_image); }else{ echo asset('admin/assets/img/admin-avatar.png') ;} ?>" style="width:150px;height:150px;"/>
                                                 <input type="file" id="profile_image" name="profile_image" value="{{ old('profile_image') }}" onchange="readURL(this);" accept="image/*"/ style="display:none;"><br/><br/>
-                                                @if ($errors->has('profile_image'))
-                                                <span class="text-danger">
-                                                <strong>{{ $errors->first('profile_image') }}</strong>
+                                                <span class="text-danger image_error">
+                                                <strong>{{ $errors->has('profile_image')?$errors->first('profile_image'):'' }}</strong>
                                                 </span>
-                                                @endif
                                           </div>
                                         <div class="col-sm-4 form-group">
                                             <label>First Name</label>
@@ -499,5 +497,54 @@ $("#state").change(function () {
         $("#profile_image").click();
         //e.preventDefault();
     });
+
+    $("#upload_image").click(function(){
+        $("#profile_image").click();
+        //e.preventDefault();
+    });
+
+    (function($) {
+    $.fn.checkFileType = function(options) {
+        var defaults = {
+            allowedExtensions: [],
+            success: function() {},
+            error: function() {}
+        };
+        options = $.extend(defaults, options);
+
+        return this.each(function() {
+
+            $(this).on('change', function() {
+                var value = $(this).val(),
+                    file = value.toLowerCase(),
+                    extension = file.substring(file.lastIndexOf('.') + 1);
+
+                if ($.inArray(extension, options.allowedExtensions) == -1) {
+                    options.error();
+                    $(this).focus();
+                } else {
+                    options.success();
+
+                }
+
+            });
+
+        });
+    };
+
+})(jQuery);
+
+$(function() {
+    $('#profile_image').checkFileType({
+        allowedExtensions: ['jpg', 'jpeg','png'],
+        success: function() {
+            $('.image_error').text('');
+        },
+        error: function() {
+            $('.image_error').text('Please upload a jpg , jpeg or png image .');
+        }
+    });
+
+});
 </script>
 @endsection

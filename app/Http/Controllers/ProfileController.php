@@ -42,7 +42,7 @@ class ProfileController extends Controller{
             $profile_image->move($destinationPath, $imageName);
             $input['profile_image'] =  "/uploads/profile_images/".$imageName;
         }
-        
+
        	$user = User::findOrFail($id);
        	$user->fill($input);
        	$user->save();
@@ -57,13 +57,13 @@ class ProfileController extends Controller{
 
     public function updatePassword(Request $request){
     	$input = $request->input();
-    	$validator = Validator::make($input, 
+    	$validator = Validator::make($input,
             [
         		'current_password' => 'required|min:6',
         		'new_password' => 'required|min:6',
-                'new_password_confirmation' => 'required|min:6|confirmed',
+            'new_password_confirmation' => 'required|min:6|same:new_password',
         	],
-            ['new_password_confirmation.confirmed' => 'New password and confirm password does not match.']
+            ['new_password_confirmation.same' => 'New password and confirm password does not match.']
         );
 
         //show custome name of field in validation errors
