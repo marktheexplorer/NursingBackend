@@ -330,11 +330,9 @@ class ServiceRequestController extends Controller{
             flash()->success("Invalid Patient."); 
             return redirect()->route('service_request.index'); 
         }
-
         $token = md5(uniqid(rand(), true));
         
-        $service_request = DB::table('service_requests')->where('id', '=', $input['request_id'])->update(array('status' =>  '5', 'token' => $token));
-        //$service_request = DB::table('service_requests')->where('id', '=', $input['request_id'])->update(array('token' => $token));
+        $service_request=DB::table('service_requests')->where('id','=',$input['request_id'])->update(array('status'=>'5', 'token'=>$token));
         
         $objDemo = new \stdClass();
         $objDemo->sender = env('APP_NAME');
@@ -350,6 +348,7 @@ class ServiceRequestController extends Controller{
 
         //redirect back to list page
         flash()->success("Basic Care Service Pack mail to Patient sent successfully."); 
+        //return view('mail.basic_carepack_confirmed', compact('objDemo'));
         return redirect()->route('service_request.caregiver_list',['id' => $input['request_id']]); 
     }
 
