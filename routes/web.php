@@ -21,6 +21,7 @@ Auth::routes();
 Route::get('signup/activate/{token}', 'API\v1\UserController@signupActivate');
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function(){
 	Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
+	Route::get('/profile/signout', 'ProfileController@signout')->name('signout');
 	Route::get('/profile', 'ProfileController@viewProfile')->name('profile');
 	Route::get('/profile/edit', 'ProfileController@editProfile')->name('edit.profile');
 	Route::post('/profile/update/{id}', 'ProfileController@updateProfile')->name('update.profile');
@@ -79,6 +80,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function()
 	Route::get('service_request/blocked/{userId}', 'ServiceRequestController@blocked');
 	Route::resource('service_request', 'ServiceRequestController');
 });
+
 
 Route::get('cms/{token}', 'CmsPageController@view_cms');
 Route::get('confirm_careservice/{token}', 'ServiceRequestController@confirm_careservice');

@@ -43,7 +43,7 @@
                         <tr>
                             <th>#</th>
               				<th>County</th>
-                            <th>Status</th>
+                            <th>Created At</th>
 	                  		<th style="min-width: 150px;">Actions</th>
                         </tr>
                     </thead>
@@ -52,13 +52,7 @@
 	            		<tr>
 	            			<td>{{ ++$key }}</td>
 	              			<td>{{ ucfirst($row->county) }}</td>
-                            <td>
-                                @if($row->is_blocked == 0)
-                                    Blocked
-                                @else
-                                    Active
-                                @endif
-                            </td>
+                            <td>{{ date_format(date_create($row->created_at), 'd M, y')}}</td>
 	              			<td>
 	              				<ul class="actions-menu">
 	              					<li>

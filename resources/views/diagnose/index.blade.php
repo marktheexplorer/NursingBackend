@@ -32,9 +32,9 @@
                     <tbody>
                  	@foreach($diagnosis as $key => $diagnose)
 	            		<tr>
-	            			<td>{{ ++$key }}
+	            			<td>{{ ++$key }}</td>
 	              			<td>{{ ucfirst($diagnose->title) }}</td>
-	              			<td>{{ date_format(date_create($diagnose->created_at), 'd M, y')}}
+	              			<td>{{ date_format(date_create($diagnose->created_at), 'd M, y')}}</td>
 	              			<td>
 	              				<ul class="actions-menu">
 	              					<li>

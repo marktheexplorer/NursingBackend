@@ -4,19 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redirect;
 use App\User;
 use Validator;
 use Auth;
+use Session;
+use Cache;
 
-class ProfileController extends Controller
-{
-    public function viewProfile()
-    {
+class ProfileController extends Controller{
+    public function viewProfile(){
     	return view('profile.index');
     }
 
-    public function editProfile()
-    {
+    public function editProfile(){
     	return view('profile.edit');
     }
 
@@ -51,13 +51,11 @@ class ProfileController extends Controller
        	return redirect()->route('profile');
     }
 
-    public function changePassword()
-    {
+    public function changePassword(){
     	return view('profile.change-password');
     }
 
-    public function updatePassword(Request $request)
-    {
+    public function updatePassword(Request $request){
     	$input = $request->input();
     	$validator = Validator::make($input, 
             [
@@ -88,5 +86,13 @@ class ProfileController extends Controller
             flash()->error("Current Password is not correct");
         }
         return redirect()->back();
+    }
+
+    public function signout(Request $request){
+        Auth::logout(); // logout user
+        Session::flush();
+        Redirect::back();
+        Cache::flush();
+        return redirect(\URL::previous());
     }
 }

@@ -4,12 +4,12 @@
 <div class="content-wrapper">
     <!-- START PAGE CONTENT-->
     <div class="page-heading">
-        <h1 class="page-title">Add Cms Page</h1>
+        <h1 class="page-title">Add CMS Page</h1>
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
                 <a href="{{ route('dashboard') }}"><i class="fas fa-home"></i></a>
             </li>
-            <li class="breadcrumb-item"><a href="{{ route('cms.index') }}">Cms Pages</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('cms.index') }}">CMS Pages</a></li>
         </ol>
     </div>
     <div class="page-content fade-in-up">
@@ -20,7 +20,7 @@
                     <div class="ibox-body">
                         <ul class="nav nav-tabs tabs-line">
                             <li class="nav-item">
-                                <a class="nav-link active" href="#tab-2" data-toggle="tab"><i class="fas fa-plus"></i> Add Cms Page</a>
+                                <a class="nav-link active" href="#tab-2" data-toggle="tab"><i class="fas fa-plus"></i> Add CMS Page</a>
                             </li>
                         </ul>
                         <div class="tab-content">
@@ -39,16 +39,14 @@
                                     <div class="form-group col-md-12">
                                         <label>Content</label>
                                         <textarea class="form-control" name="content" rows="15">{{ old('content') }}</textarea>
+                                        @if ($errors->has('content'))
+                                            <span class="invalid-feedback" role="alert" style="display:block">
+                                                <strong>{{ $errors->first('content') }}</strong>
+                                            </span>
+                                        @endif
                                     </div>
-                                    <div class="form-group">
-                                        <div class="form-control {{ $errors->has('content') ? ' is-invalid' : '' }}">
-                                            @if ($errors->has('content'))
-                                                <span class="invalid-feedback" role="alert" style="display:block">
-                                                    <strong>{{ $errors->first('content') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                    </div>
+                                </div>
+                                <div class="form-group col-md-12" style="padding-left: 0px;">    
                                     <div class="form-group">
                                         <button class="btn btn-info" type="submit">Submit</button>
                                     </div>

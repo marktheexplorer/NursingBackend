@@ -40,13 +40,13 @@
                                     <li class="media">
                                         <div class="media-img">Name</div>
                                         <div class="media-body">
-                                            <div class="media-heading text-warning lineAlign">{{ $user->name }}</div>
+                                            <div class="media-heading lineAlign">{{ $user->name }}</div>
                                         </div>
                                     </li>
                                     <li class="media">
                                         <div class="media-img">Email Id</div>
                                         <div class="media-body">
-                                            <div class="media-heading text-warning lineAlign">{{ $user->email }}</div>
+                                            <div class="media-heading lineAlign">{{ $user->email }}</div>
                                         </div>
                                     </li>
                                     <li class="media">

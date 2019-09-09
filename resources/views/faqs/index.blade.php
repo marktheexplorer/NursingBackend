@@ -8,15 +8,15 @@
             <li class="breadcrumb-item">
                 <a href="{{ route('dashboard') }}"><i class="fas fa-home"></i></a>
             </li>
-            <li class="breadcrumb-item">Faqs</li>
+            <li class="breadcrumb-item">FAQs</li>
         </ol>
     </div>
     @include('flash::message')
     <div class="page-content fade-in-up">
-        <a href="{{ route('faqs.create') }}"><button class="btn btn-info "><i class="fas fa-plus"></i> Add</button></a>
-        <div class="ibox">
-           
+        <div class="ibox">           
             <div class="ibox-body">
+                <a href="{{ route('faqs.create') }}" style="float: right;"><button class="btn btn-info "><i class="fas fa-plus"></i> Add</button></a><br/><br/>
+        
                 <table class="table table-striped table-bordered table-hover" id="data-table" cellspacing="0" width="100%">
                     <thead>
                         <tr>
@@ -73,7 +73,7 @@
         event.preventDefault();
         swal({
             title: "Are you sure?",
-            text: "You want to delete "+name+" faq",
+            text: "You want to delete this faq",
             icon: "warning",
             buttons: {
 				cancel: true,
@@ -94,7 +94,7 @@
                     if(data['status']) {
                         swal({
                             title: data['message'],
-                            text: "Press ok to continue",
+                            //text: "Press ok to continue",
                             icon: "success",
                             buttons: {
     							cancel: true,
@@ -114,7 +114,7 @@
                     }
                 });
             } else {
-                swal("Cancelled", name+"'s faq will not be deleted.", "error");
+                //swal("Cancelled", name+"'s faq will not be deleted.", "error");
             }
         });
     }

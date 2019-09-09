@@ -3,22 +3,20 @@
 @section('content')
 <div class="content-wrapper">
     <div class="page-heading">
-        <h1 class="page-title">Cms Pages</h1>
+        <h1 class="page-title">CMS Pages</h1>
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
                 <a href="{{ route('dashboard') }}"><i class="fas fa-home"></i></a>
             </li>
-            <li class="breadcrumb-item">Cms Pages</li>
+            <li class="breadcrumb-item">CMS Pages</li>
         </ol>
     </div>
     @include('flash::message')
     <div class="page-content fade-in-up">
-        <a href="{{ route('cms.create') }}"><button class="btn btn-info "><i class="fas fa-plus"></i> Add</button></a>
         <div class="ibox">
-            <div class="ibox-head">
-                <div class="ibox-title">Cms Page Data</div>
-            </div>
             <div class="ibox-body">
+                <a href="{{ route('cms.create') }}"><button class="btn btn-info " style="float: right;"><i class="fas fa-plus"></i> Add</button></a><br/><br/>
+        
                 <table class="table table-striped table-bordered table-hover" id="data-table" cellspacing="0" width="100%">
                     <thead>
                         <tr>
@@ -75,7 +73,7 @@
         event.preventDefault();
         swal({
             title: "Are you sure?",
-            text: "You want to delete "+name+" page",
+            text: "You want to delete this page",
             icon: "warning",
             buttons: {
                 cancel: true,
@@ -96,7 +94,6 @@
                     if(data['status']) {
                         swal({
                             title: data['message'],
-                            text: "Press ok to continue",
                             icon: "success",
                             buttons: {
                                 cancel: true,
@@ -116,7 +113,7 @@
                     }
                 });
             } else {
-                swal("Cancelled", name+"'s page will not be deleted.", "error");
+                //swal("Cancelled", name+"'s page will not be deleted.", "error");
             }
         });
     }

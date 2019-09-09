@@ -39,7 +39,7 @@ class CmsPageController extends Controller
     {
         $input = $request->input(); 
         $validator =  Validator::make($input,[
-            'title' => 'required|string|max:255',
+            'title' => 'required|string|max:200',
             'content' => 'required|string',
         ]);
 
@@ -93,7 +93,7 @@ class CmsPageController extends Controller
     {
         $input = $request->input();
         $validator =  Validator::make($input,[
-            'title' => 'required|string|max:255',
+            'title' => 'required|string|max:200',
             'content' => 'required|string',
         ]);
 
