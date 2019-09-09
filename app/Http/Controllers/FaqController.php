@@ -35,10 +35,10 @@ class FaqController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request){
-        $input = $request->input(); 
+        $input = $request->input();
         $validator =  Validator::make($input,[
             'question' => 'required|string|max:200',
-            'answer' => 'required|string',
+            'answer' => 'required|string|max:500',
         ]);
 
         if ($validator->fails()) {
@@ -89,13 +89,13 @@ class FaqController extends Controller
         $input = $request->input();
         $validator =  Validator::make($input,[
             'question' => 'required|string|max:200',
-            'answer' => 'required|string',
+            'answer' => 'required|string|max:500',
         ]);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-        
+
         $faq = Faq::findOrFail($id);
         $faq->fill($input);
         $faq->save();
@@ -128,7 +128,7 @@ class FaqController extends Controller
 
     public function reorder(){
         $faqs = Faq::orderBy('faq_order', 'asc')->get();
-        return view('faqs.reorder', compact('faqs'));        
+        return view('faqs.reorder', compact('faqs'));
     }
 
     public function updateorder(Request $request){
