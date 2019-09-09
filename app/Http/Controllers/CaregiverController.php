@@ -50,7 +50,7 @@ class CaregiverController extends Controller{
         $temp_number = str_replace(array("(", ")", "_", "-", " "), "", $request->input('mobile_number'));
         $request->merge(array('mobile_number' => $temp_number));
 
-        $input = $request->input(); 
+        $input = $request->input();
         $profile_image = $request->file('profile_image');
 
         //make validation
@@ -76,12 +76,13 @@ class CaregiverController extends Controller{
             'non_service_area' => 'required',
             'description' => 'required|max:300',
             'qualification' => 'required|not_in:0',
-        ]);
-        
+        ],
+        ['max_price.gt' => 'The max price must be greater than min price.']);
+
         //show custome name of field in validation errors
         $attributeNames = array(
            'fname' => 'first name',
-           'lname' => 'last name',     
+           'lname' => 'last name',
            'mname' => 'middel name',
            'dob' => 'date of birth',
            'location' => 'street',
@@ -98,11 +99,11 @@ class CaregiverController extends Controller{
             if(!in_array($profile_image->getClientOriginalExtension(), array('jpeg', 'png', 'jpg'))){
                 $validator->after(function($validator){
                     $validator->errors()->add('profile_image', 'Only jpeg, png, jpg type are valid for image');
-                });     
+                });
             }else if(2097152 < $profile_image->getSize()){
                 $validator->after(function($validator){
                     $validator->errors()->add('profile_image', 'image size should not be greater then 2MB.');
-                });     
+                });
             }else{
                 $imageName = time().'.'.$profile_image->getClientOriginalExtension();
                 $destinationPath = public_path('/uploads/profile_images');
@@ -160,7 +161,7 @@ class CaregiverController extends Controller{
             $caregiver->first_name = $input['fname'];
             if(!empty($input['mname'])){
                 $caregiver->middle_name = $input['mname'];
-            } 
+            }
 
             $caregiver->last_name = $input['lname'];
             $caregiver->language = $input['language'];
@@ -169,7 +170,7 @@ class CaregiverController extends Controller{
             $caregiver->save();
 
             $data = array();    //array to save caregiver attributes
-            
+
             //save servicable area
             $serivice_area = $input['service_area'];
             foreach($serivice_area as $area){
@@ -177,7 +178,7 @@ class CaregiverController extends Controller{
                     'caregiver_id' => $user->id,
                     'value' => $area,
                     'type' => 'service_area'
-                );   
+                );
             }
 
             //save no servicable area
@@ -187,7 +188,7 @@ class CaregiverController extends Controller{
                     'caregiver_id' => $user->id,
                     'value' => $area,
                     'type' => 'non_service_area'
-                );   
+                );
             }
 
             //save qualification
@@ -196,7 +197,7 @@ class CaregiverController extends Controller{
                     'caregiver_id' => $user->id,
                     'value' => $value,
                     'type' => 'qualification'
-                );   
+                );
             }
 
             //save services
@@ -205,14 +206,14 @@ class CaregiverController extends Controller{
                     'caregiver_id' => $user->id,
                     'value' => $value,
                     'type' => 'service'
-                );   
+                );
             }
 
             DB::table('caregiver_attributes')->insert($data);
 
             //send mail about reset password
             if($input['issentmail'] == '1'){
-                $token = md5(uniqid(rand(), true));        
+                $token = md5(uniqid(rand(), true));
                 $objDemo = new \stdClass();
                 $objDemo->sender = env('APP_NAME');
                 $objDemo->receiver = ucfirst($name);
@@ -225,7 +226,7 @@ class CaregiverController extends Controller{
                 //return view('mail.basic_carepack_confirmed', compact('objDemo'));
                 //$issemd = Mail::to('sonu.shokeen@saffrontech.net')->send(new MailHelper($objDemo));
                 $issemd = Mail::to($input['email'])->send(new MailHelper($objDemo));
-                
+
                 //update token in table
                 $service_request = DB::table('users')->where('email', '=', $input['email'])->update(array('email_activation_token' => $token));
             }
@@ -351,12 +352,13 @@ class CaregiverController extends Controller{
             'non_service_area' => 'required',
             'description' => 'required|max:300',
             'qualification' => 'required|not_in:0',
-        ]);
+        ],
+        ['max_price.gt' => 'The max price must be greater than min price.']);
 
         //show custome name of field in validation errors
         $attributeNames = array(
            'fname' => 'first name',
-           'lname' => 'last name',     
+           'lname' => 'last name',
            'mname' => 'middel name',
            'dob' => 'date of birth',
            'location' => 'street',
@@ -373,11 +375,11 @@ class CaregiverController extends Controller{
             if(!in_array($profile_image->getClientOriginalExtension(), array('jpeg', 'png', 'jpg'))){
                 $validator->after(function($validator){
                     $validator->errors()->add('profile_image', 'Only jpeg, png, jpg type are valid for image');
-                });     
+                });
             }else if(2097152 < $profile_image->getSize()){
                 $validator->after(function($validator){
                     $validator->errors()->add('profile_image', 'image size should not be greater then 2MB.');
-                });     
+                });
             }else{
                 $imageName = time().'.'.$profile_image->getClientOriginalExtension();
                 $destinationPath = public_path('/uploads/profile_images');
@@ -394,9 +396,9 @@ class CaregiverController extends Controller{
 
         $name = $input['first_name'];
         if(!empty($input['middle_name'])){
-            $name .= " ".$input['middle_name']; 
+            $name .= " ".$input['middle_name'];
         }
-        $name .= " ".$input['last_name']; 
+        $name .= " ".$input['last_name'];
 
         $user = User::findOrFail($id);
         $user->role_id = 2;
@@ -421,12 +423,12 @@ class CaregiverController extends Controller{
         if(!empty($upload_image)){
             $user->profile_image =  "$upload_image";
         }
-       
+
         $user->save();
 
         //send mail about reset password
         if($input['issentmail'] == '1'){
-            $token = md5(uniqid(rand(), true));        
+            $token = md5(uniqid(rand(), true));
             $objDemo = new \stdClass();
             $objDemo->sender = env('APP_NAME');
             $objDemo->receiver = ucfirst($name);
@@ -439,7 +441,7 @@ class CaregiverController extends Controller{
             //return view('mail.basic_carepack_confirmed', compact('objDemo'));
             //$issemd = Mail::to('sonu.shokeen@saffrontech.net')->send(new MailHelper($objDemo));
             $issemd = Mail::to($input['email'])->send(new MailHelper($objDemo));
-            
+
             //update token in table
             $service_request = DB::table('users')->where('email', '=', $input['email'])->update(array('email_activation_token' => $token));
         }
@@ -452,13 +454,13 @@ class CaregiverController extends Controller{
         $caregiver->first_name = $input['first_name'];
         if(!empty($input['middle_name'])){
             $caregiver->middle_name = $input['middle_name'];
-        } 
+        }
         $caregiver->last_name = $input['last_name'];
         $caregiver->height = $input['height'];
         $caregiver->weight = $input['weight'];
         $caregiver->language = $input['language'];
         $caregiver->description = $input['description'];
-        $caregiver->zipcode = $input['zipcode']; 
+        $caregiver->zipcode = $input['zipcode'];
         $caregiver->save();
 
         //remove all old zipcode, services, qualifications, non service zipcode, srvice zipcode
@@ -466,7 +468,7 @@ class CaregiverController extends Controller{
 
         //now save new changes
         $data = array();    //array to save caregiver attributes
-        
+
         //save servicable area
         $serivice_area = $input['service_area'];
         foreach($serivice_area as $area){
@@ -474,7 +476,7 @@ class CaregiverController extends Controller{
                 'caregiver_id' => $user->id,
                 'value' => $area,
                 'type' => 'service_area'
-            );   
+            );
         }
 
         //save no servicable area
@@ -484,7 +486,7 @@ class CaregiverController extends Controller{
                 'caregiver_id' => $user->id,
                 'value' => $area,
                 'type' => 'non_service_area'
-            );   
+            );
         }
 
         //save qualification
@@ -493,7 +495,7 @@ class CaregiverController extends Controller{
                 'caregiver_id' => $id,
                 'value' => $value,
                 'type' => 'qualification'
-            );   
+            );
         }
 
         //save services
@@ -502,7 +504,7 @@ class CaregiverController extends Controller{
                 'caregiver_id' => $id,
                 'value' => $value,
                 'type' => 'service'
-            );   
+            );
         }
 
         DB::table('caregiver_attributes')->insert($data);
@@ -567,11 +569,11 @@ class CaregiverController extends Controller{
         if (strpos($fieldval, ', ') !== false) {
             $temp = explode(', ', $fieldval);
             $keyword = trim(substr(strrchr($fieldval, ", "), 1));
-            array_pop($temp); 
+            array_pop($temp);
             $search_zipx = Us_location::Where("zip", "like", "{$keyword}%")->WhereNotIn("zip", $temp)->orderBy("zip", "asc")->get();
         }else{
             $search_zipx = Us_location::Where("zip", "like", "{$fieldval}%")->orderBy("zip", "asc")->get();
-        }    
+        }
         $temp = array();
         foreach ($search_zipx as $row) {
             array_push($temp, "$row->zip");
@@ -581,7 +583,7 @@ class CaregiverController extends Controller{
 
     public function locationfromzip(Request $request){
         $zipcode = $request->input('zipcode');
-        $search_zipx = DB::select( DB::raw("SELECT * FROM `us_location` where zip = '".$zipcode."'")); 
+        $search_zipx = DB::select( DB::raw("SELECT * FROM `us_location` where zip = '".$zipcode."'"));
 
         $response = array();
         $response['error'] = false;
@@ -598,13 +600,13 @@ class CaregiverController extends Controller{
     public function getzip(Request $request){
         $city = $request->input('city');
         $state = $request->input('state');
-        $zipcode = DB::select( DB::raw("SELECT zip FROM `us_location` where city = '".$city."' and state_code = '".$state."'")); 
+        $zipcode = DB::select( DB::raw("SELECT zip FROM `us_location` where city = '".$city."' and state_code = '".$state."'"));
         echo $zipcode[0]->zip;
     }
 
     public function locationfromcity(Request $request){
         $zipcode = $request->input('city');
-        $search_zipx = DB::select( DB::raw("SELECT * FROM `us_location` where zip = '".$zipcode."'")); 
+        $search_zipx = DB::select( DB::raw("SELECT * FROM `us_location` where zip = '".$zipcode."'"));
 
         $response = array();
         $response['error'] = false;
@@ -622,13 +624,13 @@ class CaregiverController extends Controller{
         $user = User::find($id);
         $user->is_blocked = !$user->is_blocked;
         $user->save();
-       
-        if ($user->is_blocked)
-            flash()->success("Caregiver blocked successfully."); 
-        else 
-            flash()->success("Caregiver Unblocked successfully."); 
 
-        return redirect()->route('caregiver.index');  
+        if ($user->is_blocked)
+            flash()->success("Caregiver blocked successfully.");
+        else
+            flash()->success("Caregiver Unblocked successfully.");
+
+        return redirect()->route('caregiver.index');
     }
 
     public function download_excel(){
@@ -641,7 +643,7 @@ class CaregiverController extends Controller{
     }
 
     public function savepassword(Request $request){
-        $input = $request->input(); 
+        $input = $request->input();
 
         $validator =  Validator::make($input,[
             'password' => 'required|string|max:255|min:8|required_with:cpassword|same:cpassword',
@@ -653,7 +655,7 @@ class CaregiverController extends Controller{
             return redirect()->back()->withErrors($validator);
         }
 
-        $user_password = Hash::make($input['password']); 
+        $user_password = Hash::make($input['password']);
         $service_request = DB::table('users')->where('email_activation_token','=',$input['token'])->update(array('password' => $user_password));
         $issuccess = true;
         return view('resetpassword', compact('issuccess'));
