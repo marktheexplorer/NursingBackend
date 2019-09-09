@@ -333,16 +333,8 @@ class ServiceRequestController extends Controller{
             return redirect()->route('service_request.index');
         }
         $token = md5(uniqid(rand(), true));
-<<<<<<< HEAD
-        
         $service_request=DB::table('service_requests')->where('id','=',$input['request_id'])->update(array('status'=>'5', 'token'=>$token));
-        
-=======
 
-        $service_request = DB::table('service_requests')->where('id', '=', $input['request_id'])->update(array('status' =>  '5', 'token' => $token));
-        //$service_request = DB::table('service_requests')->where('id', '=', $input['request_id'])->update(array('token' => $token));
-
->>>>>>> 01acfa09a123b4e15159c57606ba6f3e00fc500a
         $objDemo = new \stdClass();
         $objDemo->sender = env('APP_NAME');
         $objDemo->receiver = ucfirst($patient->name);
@@ -356,14 +348,9 @@ class ServiceRequestController extends Controller{
         $issemd = Mail::to($patient->email)->send(new MailHelper($objDemo));
 
         //redirect back to list page
-<<<<<<< HEAD
         flash()->success("Basic Care Service Pack mail to Patient sent successfully."); 
         //return view('mail.basic_carepack_confirmed', compact('objDemo'));
         return redirect()->route('service_request.caregiver_list',['id' => $input['request_id']]); 
-=======
-        flash()->success("Basic Care Service Pack mail to Patient sent successfully.");
-        return redirect()->route('service_request.caregiver_list',['id' => $input['request_id']]);
->>>>>>> 01acfa09a123b4e15159c57606ba6f3e00fc500a
     }
 
     public function confirm_careservice($token){
