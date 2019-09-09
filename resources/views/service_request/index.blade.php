@@ -48,7 +48,7 @@
 	              			<td>{{ $srvc->location.", ".$srvc->city.", ".$srvc->state.", ".$srvc->zip }}</td>
                             <td><?php echo "$".$srvc->min_expected_bill." - $".$srvc->max_expected_bill; ?></td>
                             <td><?php echo substr_replace( $srvc->start_time, ":", 2, 0)." - ".substr_replace( $srvc->end_time, ":", 2, 0); ?></td>
-	              			<td>{{ date_format(date_create($srvc->start_date), 'd M, Y')." - ".date_format(date_create($srvc->start_date), 'd M, Y')}}</td>
+	              			<td>{{ date_format(date_create($srvc->start_date), 'd M, Y')." - ".date_format(date_create($srvc->end_date), 'd M, Y')}}</td>
 	              			<td>
 	              				<ul class="actions-menu">
                                     <li>

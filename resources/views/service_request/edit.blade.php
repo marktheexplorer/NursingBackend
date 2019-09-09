@@ -437,7 +437,7 @@ a,
             }
         }).autocomplete({
             source: function( request, response ) {
-                $.getJSON( "searchcity", {
+                $.getJSON( "{{ env('APP_URL') }}admin/caregiver/searchcity", {
                     term: request.term
                 }, response );
             },
@@ -466,56 +466,42 @@ a,
                 return false;
             }
         });
+    }); 
 
-        function setstateoptions(){
-            zip = $("#citysuggest").val();
-            $.ajax({
-                url: 'statefromcity',
-                type: 'GET',
-                dataType: 'json',
-                data:{term:zip},
-                success: function (res) {
-                    if(res['error']){
-                        //swal("Oops", "Invalid City", "error");
-                        $("#citysuggest").val('');
-                        $("#citysuggest").focus();
-                    }else{
-                        $.each(res['list'], function( index, value ) {
-                            //alert( index + ": " + value );
-                            $('#state').append($("<option></option>").attr(value, value).text(value)); 
-                        });
-                    }
+    function setstateoptions(){
+        zip = $("#citysuggest").val();
+        $.ajax({
+            url: '{{ env('APP_URL') }}admin/caregiver/statefromcity',
+            type: 'GET',
+            dataType: 'json',
+            data:{term:zip},
+            success: function (res) {
+                if(res['error']){
+                    //swal("Oops", "Invalid City", "error");
+                    $("#citysuggest").val('');
+                    $("#citysuggest").focus();
+                }else{
+                    $.each(res['list'], function( index, value ) {
+                        //alert( index + ": " + value );
+                        $('#state').append($("<option></option>").attr(value, value).text(value)); 
+                    });
                 }
-            });
-            $("#state").attr("readonly", false);
-        }
-
-        $("#state").change(function () {
-            stateoption = $("#state option:selected").val();
-            cityoption = $("#citysuggest").val();
-            $.ajax({
-                url: 'getzip',
-                type: 'GET',
-                data:{city:cityoption, state:stateoption},
-                success: function (res) {
-                    $("#zipcode").val(res);
-                }
-            });
-        })
-
-        $("#start_date").keydown(function(e){
-           if (e.which != 9) {
-                e.preventDefault();
-                // do your code
             }
         });
+        $("#state").attr("readonly", false);
+    }
 
-        $("#end_date").keydown(function(e){
-            if (e.which != 9) {
-                e.preventDefault();
-                // do your code
+    $("#state").change(function () {
+        stateoption = $("#state option:selected").val();
+        cityoption = $("#citysuggest").val();
+        $.ajax({
+            url: '{{ env('APP_URL') }}admin/caregiver/getzip',
+            type: 'GET',
+            data:{city:cityoption, state:stateoption},
+            success: function (res) {
+                $("#zipcode").val(res);
             }
         });
-    });
+    })
 </script>
 @endsection
