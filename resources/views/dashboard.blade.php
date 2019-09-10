@@ -13,13 +13,13 @@
                         </div>
                     </div>
                 </a>
-            </div> 
+            </div>
             <div class="col-lg-3 col-md-6">
                 <a href="{{ route('patients.index') }}">
                     <div class="ibox bg-success color-white widget-stat">
                         <div class="ibox-body">
                             <h2 class="m-b-5 font-strong">{{ $users['patients'] }}</h2>
-                            <div class="m-b-5">Total Patients</div><i class="fas fa fa-wheelchair widget-stat-icon"></i>
+                            <div class="m-b-5">Total Clients</div><i class="fas fa fa-wheelchair widget-stat-icon"></i>
                         </div>
                     </div>
                 </a>
@@ -61,7 +61,7 @@
                     <div class="ibox bg-success color-white widget-stat">
                         <div class="ibox-body">
                             <h2 class="m-b-5 font-strong">{{ $faqs }}</h2>
-                            <div class="m-b-5">Total FAQs</div><i class="fas fa-question widget-stat-icon"></i> 
+                            <div class="m-b-5">Total FAQs</div><i class="fas fa-question widget-stat-icon"></i>
                         </div>
                     </div>
                 </a>

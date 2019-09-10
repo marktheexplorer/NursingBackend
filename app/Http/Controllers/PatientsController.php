@@ -63,7 +63,6 @@ class PatientsController extends Controller{
             'mobile_number' => 'required||min:8|max:15',
             'dob' => 'required',
             'gender' => 'required',
-            'range' => 'required|numeric',
             'pin_code' => 'required|numeric',
             'city' => 'required|string',
             'state' => 'required|string',
@@ -89,7 +88,6 @@ class PatientsController extends Controller{
             'pets.required'    => 'Pets is required.',
             'long_term.required'    => 'Long terms insurance is required.',
             'qualification.required'    => 'Discipline is required.',
-            'range.required'    => 'Expected Cost is required.',
         ]);
         if(isset($input['pets']) && $input['pets'] == 'yes'){
             $this->validate($request, [
@@ -127,7 +125,6 @@ class PatientsController extends Controller{
                     $userProfile['f_name'] = $input['f_name'];
                     $userProfile['m_name'] = $input['m_name'];
                     $userProfile['l_name'] = $input['l_name'];
-                    $userProfile['range'] = $input['range'];
                     $userProfile['pin_code'] = $input['pin_code'];
                     $userProfile['diagnose_id'] = $input['diagnose_id'];
                     $userProfile['availability'] = $input['availability'];
@@ -145,7 +142,6 @@ class PatientsController extends Controller{
                     $profile['f_name'] = $input['f_name'];
                     $profile['m_name'] = $input['m_name'];
                     $profile['l_name'] = $input['l_name'];
-                    $profile['range'] = $input['range'];
                     $profile['pin_code'] = $input['pin_code'];
                     $profile['diagnose_id'] = $input['diagnose_id'];
                     $profile['availability'] = $input['availability'];
@@ -160,7 +156,7 @@ class PatientsController extends Controller{
                     $profile = PatientProfile::create($profile);
                 }
 
-                flash()->success('Patient updated successfully');
+                flash()->success('Client updated successfully');
                 return redirect()->route('patients.index');
     }
 
@@ -170,9 +166,9 @@ class PatientsController extends Controller{
         $user->save();
 
         if ($user->is_blocked)
-            flash()->success("Patient blocked successfully.");
+            flash()->success("Client blocked successfully.");
         else
-            flash()->success("Patient Unblocked successfully.");
+            flash()->success("Client Unblocked successfully.");
 
         return redirect()->route('patients.index');
     }
@@ -195,7 +191,6 @@ class PatientsController extends Controller{
             'mobile_number' => 'required|unique:users|min:8|max:15',
             'dob' => 'required',
             'gender' => 'required',
-            'range' => 'required|numeric',
             'pin_code' => 'required|numeric',
             'city' => 'required|string',
             'state' => 'required|string',
@@ -221,7 +216,6 @@ class PatientsController extends Controller{
             'pets.required'    => 'Pets is required.',
             'long_term.required'    => 'Long terms insurance is required.',
             'qualification.required'    => 'Discipline is required.',
-            'range.required'    => 'Expected Cost is required.',
         ]);
 
 
@@ -261,7 +255,6 @@ class PatientsController extends Controller{
             $profile['f_name'] = $input['f_name'];
             $profile['m_name'] = $input['m_name'];
             $profile['l_name'] = $input['l_name'];
-            $profile['range'] = $input['range'];
             $profile['pin_code'] = $input['pin_code'];
             $profile['diagnose_id'] = $input['diagnose_id'];
             $profile['availability'] = $input['availability'];
@@ -275,7 +268,7 @@ class PatientsController extends Controller{
             $profile['additional_info'] = $input['additional_info'];
             $profile = PatientProfile::create($profile);
 
-            flash()->success('New Patient added successfully');
+            flash()->success('New Client added successfully');
             return redirect()->route('patients.index');
     }
 
@@ -304,7 +297,7 @@ class PatientsController extends Controller{
     }
 
     public function download_excel(){
-        return Excel::download(new PatientExport, 'Patient_list.xlsx');
+        return Excel::download(new PatientExport, 'Client_list.xlsx');
     }
 
     public function searchcity(Request $request){

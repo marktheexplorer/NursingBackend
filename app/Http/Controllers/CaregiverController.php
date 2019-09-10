@@ -24,7 +24,16 @@ class CaregiverController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        $caregivers = User::select('users.*','service','min_price','max_price')->Join('caregiver', 'caregiver.user_id', '=', 'users.id')->where('users.id','>', '1')->where('type', 'caregiver')->orderBy('users.id', 'desc')->get();
+        $caregivers = User::select('users.*','service','min_price','max_price')
+        ->Join('caregiver', 'caregiver.user_id', '=', 'users.id')
+        ->where('users.id','>', '1')->where('type', 'caregiver')->orderBy('users.id', 'desc')->get();
+        foreach ($caregivers as $key => $value) {
+          $value->qualification = DB::table('caregiver_attributes')
+          ->Join('qualifications', 'qualifications.id', '=', 'caregiver_attributes.value')
+          ->where('caregiver_attributes.type', '=', 'qualification')
+          ->where('caregiver_attributes.caregiver_id', '=', $value->id)
+          ->pluck('qualifications.name')->toArray();
+        }
         return view('caregiver.index', compact('caregivers'));
     }
 

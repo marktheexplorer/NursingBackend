@@ -18,7 +18,7 @@
         <div style="text-align: right;">
             <a href="{{ route('service_request.create') }}" style="" ><button class="btn btn-info "><i class="fas fa-plus"></i> Add Request</button></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <a href="{{ route('service_request.download_excel') }}" style="float:right;" target="_blank"><button class="btn btn-info "><i class="fas fa-download"></i> Download</button></a>
-        </div>    
+        </div>
         <div class="ibox">
             <div class="ibox-head">
                 <div class="ibox-title">Requests Data</div>
@@ -28,7 +28,7 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th style="min-width: 150px;">Patient</th>
+                            <th style="min-width: 150px;">Client</th>
                             <th style="min-width: 150px;">Caregiver</th>
                             <th style="min-width: 350px;">Service</th>
                             <th style="min-width: 350px;">Location</th>
@@ -60,7 +60,7 @@
                                             <a href="{{ route('service_request.reschedule',['id' => $srvc->id]) }}">
                                                 <button class="btn-sm btn-primary btn-cir" title="Re-Schedule"><i class="fas fa-clock"></i></button>
                                             </a>
-                                        @endif    
+                                        @endif
 	              					</li>
 	              					<li>
 	              						<a href="{{ route('service_request.show',['id' => $srvc->id]) }}">
@@ -90,7 +90,7 @@
                 </table>
             </div>
         </div>
-	</div>    
+	</div>
 </div>
 @endsection
 

@@ -37,7 +37,7 @@
                                         <div class="card-body">
                                               <div class="row">
                                                 <div class="col-sm-12 form-group center" style="text-align: center;">
-                                                    
+
                                                     <input type="file" class=" {{ $errors->has('profile_image') ? ' is-invalid' : '' }} form-control" name="profile_image" placeholder="Profile Image" value="{{ old('profile_image') }}" accept="image/*" style="display: none;" id="upload_image" onchange="readURL(this);" />
 
                                                     <span style="text-align: center;position: absolute;top: 120px;margin-left: 101px;" >
@@ -47,16 +47,16 @@
                                                         <img class="img-circle" src="{{ asset('admin/assets/img/admin-avatar.png') }}" /><?php
                                                     }else{ ?>
                                                         <img class="img-circle" style="height:150px;width: 150px;" src="<?php echo asset($user->profile_image); ?>" /><?php
-                                                    }   ?> 
+                                                    }   ?>
                                                     @if ($errors->has('profile_image'))
                                                         <div class="clearfix;"></div>
                                                         <span class="invalid-feedback" role="alert" style="text-align: center;">
                                                             <strong>{{ $errors->first('profile_image') }} </strong>
                                                         </span>
                                                     @endif
-                                                </div> 
+                                                </div>
                                             </div>
-                                            <div class="row">  
+                                            <div class="row">
                                                 <div class="col-sm-3 form-group">
                                                     <label>First Name</label>
                                                     <input type="text" class="form-control {{ $errors->has('first_name') ? ' is-invalid' : '' }}" name="first_name" placeholder="First Name" value="{{ old('first_name', $user->first_name) }}" />
@@ -96,9 +96,9 @@
                                                             <strong>{{ $errors->first('gender') }}</strong>
                                                         </span>
                                                     @endif
-                                                </div> 
+                                                </div>
                                             </div>
-                                            <div class="row">                                            
+                                            <div class="row">
                                                 <div class="col-sm-3  form-group">
                                                     <label>Email</label>
                                                     <input type="text" name="email" placeholder="Email" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email', $user->email) }}" readonly/>
@@ -114,7 +114,7 @@
                                                         <span style="margin-left:30px;color:blue;cursor: pointer;" onclick="setmail()">Send Mail</span>
                                                     </label>
                                                     <input type="hidden" value="0" name="issentmail" id="issentmail">
-                                                    <input type="text" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" placeholder="Password" value="{{ old('password') }}" id="newpassword"/>
+                                                    <input type="password" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" placeholder="Password" value="{{ old('password') }}" id="newpassword"/>
                                                     @if ($errors->has('password'))
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $errors->first('password') }}</strong>
@@ -140,8 +140,8 @@
                                                     @endif
                                                 </div>
                                             </div>
-                                            <div class="row"> 
-                                                                                       
+                                            <div class="row">
+
                                                 <div class="col-sm-3  form-group">
                                                     <label>Height</label>
                                                     <select name="height" class="form-control {{ $errors->has('height') ? ' is-invalid' : '' }}">
@@ -183,8 +183,8 @@
                                                             <strong>{{ $errors->first('language') }}</strong>
                                                         </span>
                                                     @endif
-                                                </div>  
-                                            </div>    
+                                                </div>
+                                            </div>
                                             <div class="row">
                                                 <div class="form-group col-sm-6" >
                                                     <label>Street </label>
@@ -211,7 +211,7 @@
                                                         @foreach($city_state as $row)
                                                             <option  value="{{ $row->state_code }}" <?php if($row->state_code == old('state', $user->state)){ echo 'selected'; } ?> >{{ $row->state_code }}</option>
                                                         @endforeach
-                                                    </select>    
+                                                    </select>
                                                     @if ($errors->has('state'))
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $errors->first('state') }}</strong>
@@ -234,7 +234,7 @@
                                         <div class="card-header" style="background-color: #ddd;">
                                             <h5>Service Info</h5>
                                         </div>
-                                        <div class="card-body">    
+                                        <div class="card-body">
                                             <div class="row">
                                                 <div class="col-sm-6  form-group">
                                                     <label>Min Price</label>
@@ -264,7 +264,7 @@
                                                         }else{
                                                             foreach($user->qualification as $qlf){
                                                                 $qualification_array[] = $qlf->id;
-                                                            } 
+                                                            }
                                                         } ?>
                                                     <select name="qualification[]" class="form-control {{ $errors->has('qualification') ? ' is-invalid' : '' }}" multiple="true">
                                                         <option disabled="true" > -- Select Discipline --</option>
@@ -316,11 +316,11 @@
                                                             <strong>{{ $errors->first('service_area') }}</strong>
                                                         </span>
                                                     @endif
-                                                </div>    
+                                                </div>
                                             </div>
                                             <div class="row">
                                                 <div class="form-group col-sm-12" >
-                                                    <label>Non Servicable Area </label>
+                                                    <label>Non Service Area </label>
                                                     <select name="non_service_area[]" class="form-control {{ $errors->has('non_service_area') ? ' is-invalid' : '' }} select2" multiple="multiple" id="nonservicearea">
                                                         @foreach($service_area_list as $row)
                                                             <option value="{{ $row->id }}" <?php if(in_array($row->id, old('non_service_area', $user->non_service_area))){ echo 'selected'; } ?>>
@@ -333,7 +333,7 @@
                                                             <strong>{{ $errors->first('non_service_area') }}</strong>
                                                         </span>
                                                     @endif
-                                                </div>    
+                                                </div>
                                             </div>
                                             <div class="row">
                                                 <div class="form-group col-sm-12" >
@@ -354,7 +354,7 @@
                                             <button class="btn btn-primary pull-right" type="submit">Submit</button>
                                         </div>
                                         <div class="form-group col-sm-5 pull-right"></div>
-                                    </div>    
+                                    </div>
                                 </form>
                             </div>
                         </div>
@@ -402,7 +402,7 @@
         }
 
         function extractLast( term ) {
-            //return split( term ).pop();  
+            //return split( term ).pop();
             temp = $.trim($("#service_zipcode").val());
             fnd = ','
             if(temp.indexOf(fnd) != -1){
@@ -412,7 +412,7 @@
             return term;
         }
 
-        // don't navigate away from the field on tab when selecting an item                
+        // don't navigate away from the field on tab when selecting an item
         $( "#citysuggest" ).on( "keydown", function( event ) {
             if(event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active){
                 event.preventDefault();
@@ -423,7 +423,7 @@
                     term: request.term
                 }, response );
             },
-            
+
             search: function() {
                 // custom minLength
                 var term = this.value;
@@ -448,7 +448,7 @@
                 return false;
             }
         });
-    }); 
+    });
 
     function setstateoptions(){
         zip = $("#citysuggest").val();
@@ -465,7 +465,7 @@
                 }else{
                     $.each(res['list'], function( index, value ) {
                         //alert( index + ": " + value );
-                        $('#state').append($("<option></option>").attr(value, value).text(value)); 
+                        $('#state').append($("<option></option>").attr(value, value).text(value));
                     });
                 }
             }
@@ -514,10 +514,10 @@
     });
 
     /*Validation for mobile number format*/
-    var phones = [{ "mask": "(###) ###-####"}];
-    $('#mobile_number').inputmask({ 
-        mask: phones, 
-        greedy: false, 
+    var phones = [{ "mask": "###-###-####"}];
+    $('#mobile_number').inputmask({
+        mask: phones,
+        greedy: false,
         definitions: { '#': { validator: "[0-9]", cardinality: 1}},
     });
 
@@ -574,7 +574,7 @@
         var key = event.keyCode;
         if(key != 9){
             e.preventDefault();
-        }    
+        }
     });
 
     $("#upload_image_icon").click(function(){
@@ -584,7 +584,7 @@
 
     function readURL(input) {
         if (input.files && input.files[0]){
-            var reader = new FileReader();   
+            var reader = new FileReader();
             reader.onload = function (e) {
                 $('.img-circle').attr('src', e.target.result);
             };

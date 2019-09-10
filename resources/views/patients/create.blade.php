@@ -6,12 +6,12 @@
 <div class="content-wrapper">
    <!-- START PAGE CONTENT-->
    <div class="page-heading">
-      <h1 class="page-title">Add Patient</h1>
+      <h1 class="page-title">Add Client</h1>
       <ol class="breadcrumb">
          <li class="breadcrumb-item">
             <a href="{{ route('dashboard') }}"><i class="fas fa-home"></i></a>
          </li>
-         <li class="breadcrumb-item"><a href="{{ route('patients.index') }}">Patients</a></li>
+         <li class="breadcrumb-item"><a href="{{ route('patients.index') }}">Clients</a></li>
       </ol>
    </div>
    <div class="page-content fade-in-up">
@@ -22,7 +22,7 @@
                <div class="ibox-body">
                   <ul class="nav nav-tabs tabs-line">
                      <li class="nav-item">
-                        <a class="nav-link active" href="#tab-2" data-toggle="tab"><i class="fas fa-plus"></i> Add Patient</a>
+                        <a class="nav-link active" href="#tab-2" data-toggle="tab"><i class="fas fa-plus"></i> Add Client</a>
                      </li>
                   </ul>
                   <div class="tab-content">
@@ -31,7 +31,7 @@
                            @csrf
                            <div class="card">
                              <div class="card-header" style="background-color: #ddd;">
-                                <h5>Persona Info</h5>
+                                <h5>Personal Info</h5>
                              </div>
                              <div class="tab-content row">
                                 <div class="tab-pane fade show active col-md-12" id="tab-2">
@@ -87,7 +87,7 @@
                                          @endif
                                       </div>
                                       <div class="col-sm-4 form-group">
-                                         <label>Mobile number</label>
+                                         <label>Mobile Number</label>
                                          <input type="text" class="form-control {{ $errors->has('mobile_number') ? ' is-invalid' : '' }}" name="mobile_number" placeholder="Mobile Number" value="{{ old('mobile_number') }}" id="mobile_number" />
                                          @if ($errors->has('mobile_number'))
                                          <span class="text-danger">
@@ -162,15 +162,6 @@
                                           @endif
                                       </div>
                                       <div class="col-sm-4 form-group">
-                                         <label>Expected cost ($)</label>
-                                            <input type="text" class="form-control {{ $errors->has('range') ? ' is-invalid' : '' }} " name="range" placeholder="Range" value="{{ old('range') }}" onkeypress="return validateFloatKeyPress(this,event);"/>
-                                         @if ($errors->has('range'))
-                                         <span class="text-danger">
-                                         <strong>{{ $errors->first('range') }}</strong>
-                                         </span>
-                                         @endif
-                                      </div>
-                                      <div class="col-sm-4 form-group">
                                          <label>Street</label>
                                          <input type="text" class="form-control {{ $errors->has('street') ? ' is-invalid' : '' }}" name="street" id="street" placeholder="street" value="{{ old('street') }}" />
                                          @if ($errors->has('street'))
@@ -205,8 +196,8 @@
                                          @endif
                                       </div>
                                       <div class="col-sm-4 form-group">
-                                         <label>Pin Code</label>
-                                         <input type="text" class="form-control {{ $errors->has('pin_code') ? ' is-invalid' : '' }}" id="pin_code" name="pin_code" placeholder="Pin Code" value="{{ old('pin_code') }}" readonly/>
+                                         <label>Zip Code</label>
+                                         <input type="text" class="form-control {{ $errors->has('pin_code') ? ' is-invalid' : '' }}" id="pin_code" name="pin_code" placeholder="Zip Code" value="{{ old('pin_code') }}" readonly/>
                                          @if ($errors->has('pin_code'))
                                          <span class="text-danger">
                                          <strong>{{ $errors->first('pin_code') }}</strong>
@@ -461,40 +452,12 @@ $('input[name=pets]').click(function(){
 });
 
 /*Validation for mobile number format*/
-var phones = [{ "mask": "(###) ###-####"}];
+var phones = [{ "mask": "###-###-####"}];
 $('#mobile_number').inputmask({
     mask: phones,
     greedy: false,
     definitions: { '#': { validator: "[0-9]", cardinality: 1}}
 });
-
-/*Validation for price field for 2 decimal places*/
-function validateFloatKeyPress(el, evt) {
-    var charCode = (evt.which) ? evt.which : event.keyCode;
-    var number = el.value.split('.');
-    if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
-        return false;
-    }
-    //just one dot
-    if(number.length>1 && charCode == 46){
-         return false;
-    }
-    //get the carat position
-    var caratPos = getSelectionStart(el);
-    var dotPos = el.value.indexOf(".");
-    if( caratPos > dotPos && dotPos>-1 && (number[1].length > 1)){
-        return false;
-    }
-    return true;
-}
-function getSelectionStart(o) {
-  if (o.createTextRange) {
-    var r = document.selection.createRange().duplicate()
-    r.moveEnd('character', o.value.length)
-    if (r.text == '') return o.value.length
-    return o.value.lastIndexOf(r.text)
-  } else return o.selectionStart
-}
 
 $('.select2').select2({
    placeholder: {

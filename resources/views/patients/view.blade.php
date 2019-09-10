@@ -4,12 +4,12 @@
 <div class="content-wrapper">
     <!-- START PAGE CONTENT-->
     <div class="page-heading">
-        <h1 class="page-title">Patient Profile</h1>
+        <h1 class="page-title">Client Profile</h1>
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
                 <a href="{{ route('dashboard') }}"><i class="fas fa-home"></i></a>
             </li>
-            <li class="breadcrumb-item"><a href="{{ route('patients.index') }}">Patients</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('patients.index') }}">Clients</a></li>
         </ol>
     </div>
     <div class="page-content fade-in-up">
@@ -26,7 +26,7 @@
                             @endif
                         </div>
                         <h5 class="font-strong m-b-10 m-t-10">{{ ucfirst($user->name) }}</h5>
-                        <h5 class="m-b-20 text-muted">Patient</h5>
+                        <h5 class="m-b-20 text-muted">Client</h5>
                     </div>
                 </div>
             </div>
@@ -104,7 +104,7 @@
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img">Pin Code</div>
+                                        <div class="media-img">Zip Code</div>
                                         <div class="media-body">
                                             <div class="media-heading lineAlign">{{ $user->patient ? $user->patient->pin_code : ''}}</div>
                                         </div>
@@ -113,12 +113,6 @@
                                         <div class="media-img">Health Conditions</div>
                                         <div class="media-body">
                                             <div class="media-heading lineAlign">{{ $diagnosis ? $diagnosis->title : ''}}</div>
-                                        </div>
-                                    </li>
-                                    <li class="media">
-                                        <div class="media-img">Range</div>
-                                        <div class="media-body">
-                                            <div class="media-heading lineAlign">${{ $user->patient ? $user->patient->range : ''}}</div>
                                         </div>
                                     </li>
                                     <li class="media">

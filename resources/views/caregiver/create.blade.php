@@ -28,7 +28,7 @@
                         <div class="tab-content">
                             <div class="tab-pane fade show active" id="tab-2">
                                <form action="{{ route('caregiver.store') }}" method="post" class="form-horizontal" enctype="multipart/form-data">
-                                @csrf    
+                                @csrf
                                     <div class="card">
                                         <div class="card-header" style="background-color: #ddd;">
                                             <h5>Persona Info</h5>
@@ -46,7 +46,7 @@
                                                             <strong>{{ $errors->first('profile_image') }} </strong>
                                                         </span>
                                                     @endif
-                                                </div> 
+                                                </div>
                                                 <input type="file" class="{{ $errors->has('profile_image') ? ' is-invalid' : '' }} form-control" name="profile_image" placeholder="Profile Image" value="{{ old('profile_image') }}" accept="image/*"/ style="padding-left:0px;padding:0px;border:0px;display: none;" id="profile_image" onchange="readURL(this);">
                                             </div>
                                             <div class="row">
@@ -91,7 +91,7 @@
                                                     @endif
                                                 </div>
                                             </div>
-                                            <div class="row">    
+                                            <div class="row">
                                                 <div class="col-sm-3  form-group">
                                                     <label>Email</label>
                                                     <input type="text" name="email" placeholder="Email" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" />
@@ -100,14 +100,14 @@
                                                             <strong>{{ $errors->first('email') }}</strong>
                                                         </span>
                                                     @endif
-                                                </div>                                                
+                                                </div>
                                                 <div class="form-group col-sm-3" >
                                                     <label>
                                                         <span style="color:blue;cursor: pointer;" onclick="generatepassword()">Generate Password</span>
                                                         <span style="margin-left:30px;color:blue;cursor: pointer;" onclick="setmail()">Send Mail</span>
                                                     </label>
                                                     <input type="hidden" value="0" name="issentmail" id="issentmail">
-                                                    <input type="text" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" placeholder="Password" value="{{ old('password') }}" readonly id="newpassword" />
+                                                    <input type="password" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" placeholder="Password" value="{{ old('password') }}" readonly id="newpassword" />
                                                     @if ($errors->has('password'))
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $errors->first('password') }}</strong>
@@ -122,7 +122,7 @@
                                                             <strong>{{ $errors->first('mobile_number') }}</strong>
                                                         </span>
                                                     @endif
-                                                </div>                                            
+                                                </div>
                                                 <div class="form-group col-sm-3" >
                                                     <label>Date of Birth</label>
                                                     <input type="text" class="form-control {{ $errors->has('dob') ? ' is-invalid' : '' }}" name="dob" placeholder="Date of Birth" value="{{ old('dob') }}" id="dob" autocomplete="off" />
@@ -183,8 +183,8 @@
                                                         </span>
                                                     @endif
                                                 </div>
-                                            </div>    
-                                            <div class="row">    
+                                            </div>
+                                            <div class="row">
                                                 <div class="form-group col-sm-6" >
                                                     <label>Street </label>
                                                     <input type="text" class="form-control {{ $errors->has('location') ? ' is-invalid' : '' }}" name="location" placeholder="Location" value="{{ old('location') }}" autocomplete="off" />
@@ -254,7 +254,7 @@
                                                             <strong>{{ $errors->first('max_price') }}</strong>
                                                         </span>
                                                     @endif
-                                                </div>                                                                              
+                                                </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-sm-6  form-group">
@@ -285,7 +285,7 @@
                                                         </span>
                                                     @endif
                                                 </div>
-                                            </div>                                            
+                                            </div>
                                             <div class="row">
                                                 <div class="form-group col-sm-12" >
                                                     <label>Service Area </label>
@@ -301,11 +301,11 @@
                                                             <strong>{{ $errors->first('service_area') }}</strong>
                                                         </span>
                                                     @endif
-                                                </div>    
+                                                </div>
                                             </div>
                                             <div class="row">
                                                 <div class="form-group col-sm-12" >
-                                                    <label>Non Servicable Area </label>
+                                                    <label>Non Service Area </label>
                                                     <select name="non_service_area[]" class="form-control {{ $errors->has('non_service_area') ? ' is-invalid' : '' }} select2" multiple="multiple" id="nonservicearea">
                                                         @foreach($service_area_list as $row)
                                                             <option value="{{ $row->id }}" id="non{{ $row->id }}" {{ (collect(old('non_service_area'))->contains($row->id)) ? 'selected':'' }}>
@@ -318,7 +318,7 @@
                                                             <strong>{{ $errors->first('non_service_area') }}</strong>
                                                         </span>
                                                     @endif
-                                                </div>    
+                                                </div>
                                             </div>
                                             <div class="row">
                                                 <div class="form-group col-sm-12" >
@@ -330,7 +330,7 @@
                                                         </span>
                                                     @endif
                                                 </div>
-                                            </div> 
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -339,7 +339,7 @@
                                             <button class="btn btn-primary pull-right" type="submit">Submit</button>
                                         </div>
                                         <div class="form-group col-sm-5 pull-right"></div>
-                                    </div>        
+                                    </div>
                                 </form>
                             </div>
                         </div>
@@ -386,7 +386,7 @@
         }
 
         function extractLast( term ) {
-            //return split( term ).pop();  
+            //return split( term ).pop();
             temp = $.trim($("#service_zipcode").val());
             fnd = ','
             if(temp.indexOf(fnd) != -1){
@@ -396,7 +396,7 @@
             return term;
         }
 
-        // don't navigate away from the field on tab when selecting an item                
+        // don't navigate away from the field on tab when selecting an item
         $( "#citysuggest" ).on( "keydown", function( event ) {
             if(event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active){
                 event.preventDefault();
@@ -407,7 +407,7 @@
                     term: request.term
                 }, response );
             },
-            
+
             search: function() {
                 // custom minLength
                 var term = this.value;
@@ -432,7 +432,7 @@
                 return false;
             }
         });
-    }); 
+    });
 
     function setstateoptions(){
         zip = $("#citysuggest").val();
@@ -449,7 +449,7 @@
                 }else{
                     $.each(res['list'], function( index, value ) {
                         //alert( index + ": " + value );
-                        $('#state').append($("<option></option>").attr(value, value).text(value)); 
+                        $('#state').append($("<option></option>").attr(value, value).text(value));
                     });
                 }
             }
@@ -470,7 +470,7 @@
         });
     })
 
-  
+
     $("#dob").keydown(function(e){
         var key = event.keyCode;
         if(key != 9){
@@ -491,10 +491,10 @@
     });
 
     /*Validation for mobile number format*/
-    var phones = [{ "mask": "(###) ###-####"}];
-    $('#mobile_number').inputmask({ 
-        mask: phones, 
-        greedy: false, 
+    var phones = [{ "mask": "###-###-####"}];
+    $('#mobile_number').inputmask({
+        mask: phones,
+        greedy: false,
         definitions: { '#': { validator: "[0-9]", cardinality: 1}}
     });
 
@@ -543,7 +543,7 @@
         var key = event.keyCode;
         if(key != 9){
             e.preventDefault();
-        }    
+        }
     });
 
     $("#upload_image").click(function(){
@@ -553,7 +553,7 @@
 
     function readURL(input) {
         if (input.files && input.files[0]){
-            var reader = new FileReader();   
+            var reader = new FileReader();
             reader.onload = function (e) {
                 $('.img-circle').attr('src', e.target.result);
             };

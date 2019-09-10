@@ -27,7 +27,7 @@
                             <div class="tab-pane fade show active" id="tab-1">
                                 <ul class="media-list media-list-divider m-0">
                                     <li class="media">
-                                        <div class="media-img">Patient Name</div>
+                                        <div class="media-img">Client Name</div>
                                         <div class="media-body">
                                             <div class="media-heading">{{ ucfirst($services->name) }} </div>
                                         </div>
@@ -40,13 +40,13 @@
                                             <div class="media-heading">{{ date_format(date_create($services->start_date), 'd M, Y')." - ".date_format(date_create($services->start_date), 'd M, Y') }}</div>
                                         </div>
                                     </li>
-                                    <li class="media">                                        
+                                    <li class="media">
                                         <div class="media-img">Location</div>
                                         <div class="media-body">
                                             <div class="media-heading">{{ $services->location.", ".$services->city.", ".$services->state.", ".$services->country.", ".$services->zip  }}</div>
                                         </div>
                                     </li>
-                                    <li class="media">    
+                                    <li class="media">
                                         <div class="media-img">Service</div>
                                         <div class="media-body">
                                             <div class="media-heading">{{ ucfirst($services->title) }} </div>
@@ -64,10 +64,10 @@
                                                     foreach($final_caregivers as $user){
                                                         if($services->status == 5){
                                                             echo $count.". ".ucfirst($user->name)." (".$user->email.") &nbsp;&nbsp;&nbsp;&nbsp;";
-                                                        }else{ 
+                                                        }else{
                                                             if($user->value != $picked_cargiver_id){ ?>
                                                                 <form action="{{ route('service_request.picked_caregiver') }}" method="post" class="form-horizontal">
-                                                                    {{ $count.". ".ucfirst($user->name)." (".$user->email.") " }} 
+                                                                    {{ $count.". ".ucfirst($user->name)." (".$user->email.") " }}
                                                                     @csrf
                                                                     <input type="hidden" name="request_id" value="{{ $services->id }}" />
                                                                     <input type="hidden" name="caregiver_id" value="{{ $user->value }}" />&nbsp;&nbsp;&nbsp;&nbsp;
@@ -82,11 +82,11 @@
                                                                     <button type="submit" class="btn-sm btn-success " title="Assign">Confirm and send mail</button>
                                                                 </form><?php
                                                             }
-                                                        }    
+                                                        }
                                                         $count++;
                                                         echo "<br/>";
                                                     }
-                                                }?>    
+                                                }?>
                                             </div>
                                         </div>
                                     </li><?php
@@ -112,7 +112,7 @@
                                                             <td>{{ ucfirst($user->name) }}</td>
                                                             <td>{{ $user->email }}</td>
                                                             <td>{{ $user->mobile_number }}</td>
-                                                            <td>{{ ucfirst($services->title) }}</td>    
+                                                            <td>{{ ucfirst($services->title) }}</td>
                                                             <td>{{ ucfirst($user->zipcode) }}</td>
                                                             <td>
                                                                 <form action="{{ route('service_request.assign') }}" method="post" class="form-horizontal" enctype="multipart/form-data">
@@ -124,15 +124,15 @@
                                                                     @else
                                                                         <button type="submit" class="btn-sm btn-success btn-cir" title="Assign"><i class="fas fa-check-circle"></i></button>
                                                                     @endif
-                                                                </form>    
+                                                                </form>
                                                             </td>
                                                         </tr>
                                                     @endforeach
                                                 </tbody>
                                             </table>
                                         </li><?php
-                                    } ?>           
-                                </ul>  
+                                    } ?>
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -147,5 +147,5 @@
     $(document).ready( function () {
         $('#data-table').DataTable();
     });
-</script>    
+</script>
 @endsection
