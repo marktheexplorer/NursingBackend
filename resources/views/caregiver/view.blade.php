@@ -193,7 +193,7 @@
                                     <tr>
                                         <th>Id</th>
                                         <th>Service</th>
-                                        <th>Patient</th>
+                                        <th>Client</th>
                                         <th>Price Range</th>
                                         <th>Location</th>
                                         <th>Shift</th>
