@@ -156,7 +156,7 @@ class PatientsController extends Controller{
                     $profile = PatientProfile::create($profile);
                 }
 
-                flash()->success('Patient updated successfully');
+                flash()->success('Client updated successfully');
                 return redirect()->route('patients.index');
     }
 
@@ -166,9 +166,9 @@ class PatientsController extends Controller{
         $user->save();
 
         if ($user->is_blocked)
-            flash()->success("Patient blocked successfully.");
+            flash()->success("Client blocked successfully.");
         else
-            flash()->success("Patient Unblocked successfully.");
+            flash()->success("Client Unblocked successfully.");
 
         return redirect()->route('patients.index');
     }
@@ -268,7 +268,7 @@ class PatientsController extends Controller{
             $profile['additional_info'] = $input['additional_info'];
             $profile = PatientProfile::create($profile);
 
-            flash()->success('New Patient added successfully');
+            flash()->success('New Client added successfully');
             return redirect()->route('patients.index');
     }
 
@@ -297,7 +297,7 @@ class PatientsController extends Controller{
     }
 
     public function download_excel(){
-        return Excel::download(new PatientExport, 'Patient_list.xlsx');
+        return Excel::download(new PatientExport, 'Client_list.xlsx');
     }
 
     public function searchcity(Request $request){

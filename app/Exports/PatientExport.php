@@ -11,7 +11,7 @@ use DB;
 
 class PatientExport implements FromCollection, WithHeadings, ShouldAutoSize{
     public function collection(){
-        $usre_data = DB::table('users')->select('users.*', 'patients_profiles.range', 'patients_profiles.pin_code')->Join('patients_profiles', 'patients_profiles.user_id', '=', 'users.id')->orderBy('users.name', 'desc')->get();
+        $usre_data = DB::table('users')->select('users.*', 'patients_profiles.pin_code')->Join('patients_profiles', 'patients_profiles.user_id', '=', 'users.id')->orderBy('users.name', 'desc')->get();
 
         $output = array();
         if(!empty($usre_data)){
