@@ -10,6 +10,7 @@ use Validator;
 use Auth;
 use Session;
 use Cache;
+use Artisan;
 
 class ProfileController extends Controller{
     public function viewProfile(){
@@ -93,6 +94,7 @@ class ProfileController extends Controller{
         Session::flush();
         Redirect::back();
         Cache::flush();
+        Artisan::call('cache:clear');
         return redirect(\URL::previous());
     }
 }

@@ -434,7 +434,7 @@ class CaregiverController extends Controller{
             $objDemo->receiver = ucfirst($name);
             $objDemo->type = 'password_reset_mail';
             $objDemo->format = 'basic';
-            $objDemo->subject = '24*7 Nursing : Password Reset Mail';
+            $objDemo->subject = '24*7 Nursing : Password Information';
             $objDemo->mail_from = env('MAIL_FROM_EMAIL');
             $objDemo->mail_from_name = env('MAIL_FROM_NAME');
             $objDemo->weburl = env('APP_URL')."set_password/".$token;
