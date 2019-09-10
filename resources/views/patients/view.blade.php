@@ -38,119 +38,127 @@
                                 <h5 class="text-info m-b-20 m-t-20"><i class="fa fa-bullhorn"></i> Details</h5>
                                 <ul class="media-list media-list-divider m-0">
                                     <li class="media">
-                                        <div class="media-img">Name</div>
+                                        <div class="media-img col-md-3">Name</div>
                                         <div class="media-body">
-                                            <div class="media-heading lineAlign">{{ $user->name }}</div>
+                                            <div class="media-heading lineAlign">{{ ucfirst($user->name) }}</div>
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img">Email Id</div>
+                                        <div class="media-img col-md-3">Email Id</div>
                                         <div class="media-body">
                                             <div class="media-heading lineAlign">{{ $user->email }}</div>
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img">Mobile Number</div>
+                                        <div class="media-img col-md-3">Mobile Number</div>
                                         <div class="media-body">
                                             <div class="media-heading lineAlign">{{ $user->mobile_number }}</div>
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img">Date of Birth</div>
+                                        <div class="media-img col-md-3">Date of Birth</div>
                                         <div class="media-body">
                                             <div class="media-heading lineAlign">{{ date_format(date_create($user->dob), 'd M, Y') }}</div>
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img">Gender</div>
+                                        <div class="media-img col-md-3">Gender</div>
                                         <div class="media-body">
                                             <div class="media-heading lineAlign">{{ $user->gender ? $user->gender : ''}}</div>
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img">Height</div>
+                                        <div class="media-img col-md-3">Height</div>
                                         <div class="media-body">
                                             <div class="media-heading lineAlign">{{ $user->patient ? $user->patient->height : ''}}</div>
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img">Weight</div>
+                                        <div class="media-img col-md-3">Weight</div>
                                         <div class="media-body">
                                             <div class="media-heading lineAlign">{{ $user->patient ? $user->patient->weight : ''}}</div>
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img">Language</div>
+                                        <div class="media-img col-md-3">Language</div>
                                         <div class="media-body">
                                             <div class="media-heading lineAlign">{{ $user->patient ? $user->patient->language : ''}}</div>
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img">Street</div>
+                                        <div class="media-img col-md-3">Street</div>
                                         <div class="media-body">
                                             <div class="media-heading lineAlign">{{ $user->street}}</div>
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img">City</div>
+                                        <div class="media-img col-md-3">City</div>
                                         <div class="media-body">
                                             <div class="media-heading lineAlign">{{ $user->city}}</div>
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img">State</div>
+                                        <div class="media-img col-md-3">State</div>
                                         <div class="media-body">
                                             <div class="media-heading lineAlign">{{ $user->state}}</div>
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img">Zip Code</div>
+                                        <div class="media-img col-md-3">Zip Code</div>
                                         <div class="media-body">
                                             <div class="media-heading lineAlign">{{ $user->patient ? $user->patient->pin_code : ''}}</div>
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img">Health Conditions</div>
+                                        <div class="media-img col-md-3">Health Conditions</div>
                                         <div class="media-body">
                                             <div class="media-heading lineAlign">{{ $diagnosis ? $diagnosis->title : ''}}</div>
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img">Availability</div>
+                                        <div class="media-img col-md-3">Availability</div>
                                         <div class="media-body">
                                             <div class="media-heading lineAlign">{{ $user->patient ? $user->patient->availability : ''}}</div>
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img">Disciplines</div>
+                                        <div class="media-img col-md-3">Disciplines</div>
                                         <div class="media-body">
-                                            <div class="media-heading lineAlign"> <?php if($disciplines_name){ foreach($disciplines_name as $key => $value){ echo $value->name.',  ' ;} }?> </div>
+                                            <div class="media-heading lineAlign"> <?php 
+                                            if($disciplines_name){ 
+                                                foreach($disciplines_name as $key => $value){ 
+                                                    if($value)
+                                                        echo $value->name.',  ' ;
+                                                    else
+                                                        echo 'NA';
+                                                } 
+                                            }?> </div>
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img">Long Term Care insurance</div>
+                                        <div class="media-img col-md-3">Long Term Care insurance</div>
                                         <div class="media-body">
                                             <div class="media-heading lineAlign">{{ $user->patient ? ($user->patient->long_term == 1? 'Yes' : 'No'):'' }}</div>
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img">Pets</div>
+                                        <div class="media-img col-md-3">Pets</div>
                                         <div class="media-body">
                                             <div class="media-heading lineAlign">{{ $user->patient ? ($user->patient->pets == 1? 'Yes' : 'No'):'' }}</div>
                                         </div>
                                     </li>
                                     @if($user->patient?$user->patient->pets == 1:0)
                                     <li class="media">
-                                        <div class="media-img">Pets Description</div>
+                                        <div class="media-img col-md-3">Pets Description</div>
                                         <div class="media-body">
-                                            <div class="media-heading lineAlign">{{ $user->patient ? $user->patient->pets_description :'' }}</div>
+                                            <div class="media-heading lineAlign">{{ $user->patient ? $user->patient->pets_description :'NA' }}</div>
                                         </div>
                                     </li>
                                     @endif
                                     <li class="media">
-                                        <div class="media-img">Additional Information</div>
+                                        <div class="media-img col-md-3">Additional Information</div>
                                         <div class="media-body">
-                                            <div class="media-heading lineAlign">{{ $user->patient ? $user->patient->additional_info : ''}}</div>
+                                            <div class="media-heading lineAlign">{{ $user->patient ? $user->patient->additional_info : 'NA'}}</div>
                                         </div>
                                     </li>
                                 </ul>
@@ -163,7 +171,7 @@
                 <div class="ibox">
                     <div class="ibox-body">
                         <div class="tab-content">
-                            <p><h3>Services Requested</h3></p>
+                            <p><h3 style="text-align: center;">Services Requested</h3></p>
                             <table class="table table-striped table-bordered table-hover" id="data-table" cellspacing="0" width="100%">
                                 <thead>
                                     <tr>

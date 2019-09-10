@@ -27,13 +27,13 @@
                             <div class="tab-pane fade show active" id="tab-1">
                                 <ul class="media-list media-list-divider m-0">
                                     <li class="media">
-                                        <div class="media-img">Client Name</div>
+                                        <div class="media-img col-md-2">Client Name</div>
                                         <div class="media-body">
                                             <div class="media-heading">{{ $services->name }} </div>
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img">Caregiver Name</div>
+                                        <div class="media-img col-md-2">Caregiver Name</div>
                                         <div class="media-body">
                                             <div class="media-heading"><?php
                                                 if(empty($final_caregivers)){
@@ -45,44 +45,44 @@
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img">Location</i></div>
+                                        <div class="media-img col-md-2">Location</i></div>
                                         <div class="media-body">
                                             <div class="media-heading">{{ $services->location.", ".$services->city.", ".$services->state.", ".$services->country.", ".$services->zip  }} </div>
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img">Services</i></div>
+                                        <div class="media-img col-md-2">Services</i></div>
                                         <div class="media-body">
                                             <div class="media-heading">{{ $services->title }}</div>
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img">Price Range</i></div>
+                                        <div class="media-img col-md-2">Price Range</i></div>
                                         <div class="media-body">
                                             <div class="media-heading">{{ "$".$services->min_expected_bill." - $".$services->max_expected_bill }} </div>
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img">Shift</i></div>
+                                        <div class="media-img col-md-2">Shift</i></div>
                                         <div class="media-body">
-                                            <div class="media-heading">{{ substr_replace( $services->start_time, ":", 2, 0)." - ".substr_replace( $services->end_time, ":", 2, 0) }}</div>
+                                            <div class="media-heading">{{ substr_replace( $services->start_time, ":", -2, 0)." - ".substr_replace( $services->end_time, ":", -2, 0) }}</div>
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img">Duration</i></div>
+                                        <div class="media-img col-md-2">Duration</i></div>
                                         <div class="media-body">
-                                            <div class="media-heading">{{ date_format(date_create($services->start_date), 'd M, Y')." - ".date_format(date_create($services->start_date), 'd M, Y') }}</div>
+                                            <div class="media-heading">{{ date_format(date_create($services->start_date), 'd M, Y')." - ".date_format(date_create($services->end_date), 'd M, Y') }}</div>
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img">Notes</i></div>
+                                        <div class="media-img col-md-2">Notes</i></div>
                                         <div class="media-body">
                                             <div class="media-heading">{{ $services->description }} </div>
                                         </div>
                                     </li>
                                     @if(count($upload_docs) > 0)
                                         <li class="media">
-                                            <div class="media-img">Upload Documents</div>
+                                            <div class="media-img col-md-2">Upload Documents</div>
                                             <div class="media-body">
                                                 <div class="media-heading">
                                                     <table class="table table-striped table-bordered table-hover table-sm">
@@ -125,7 +125,7 @@
                                         </li>
                                     @endif
                                     <li class="media">
-                                        <div class="media-img">Status</i></div>
+                                        <div class="media-img col-md-2">Status</i></div>
                                         <div class="media-body">
                                             <div class="media-heading"><?php
                                                 switch($services->status){
@@ -163,7 +163,7 @@
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img">Created At</i></div>
+                                        <div class="media-img col-md-2">Created At</i></div>
                                         <div class="media-body">
                                             <div class="media-heading">{{ date_format(date_create($services->created_at), 'd M, Y') }} </div>
                                         </div>

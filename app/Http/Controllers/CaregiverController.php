@@ -24,7 +24,7 @@ class CaregiverController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        $caregivers = User::select('users.*','service','min_price','max_price')
+        $caregivers = User::select('users.*','service','min_price','max_price', 'language')
         ->Join('caregiver', 'caregiver.user_id', '=', 'users.id')
         ->where('users.id','>', '1')->where('type', 'caregiver')->orderBy('users.id', 'desc')->get();
         foreach ($caregivers as $key => $value) {
