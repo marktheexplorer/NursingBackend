@@ -20,7 +20,6 @@ class CreatePatientsProfilesTable extends Migration
             $table->string('f_name');
             $table->string('m_name');
             $table->string('l_name');
-            $table->string('range');
             $table->string('availability');
             $table->string('pin_code');
             $table->string('height');

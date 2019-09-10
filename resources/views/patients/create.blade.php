@@ -162,15 +162,6 @@
                                           @endif
                                       </div>
                                       <div class="col-sm-4 form-group">
-                                         <label>Expected cost ($)</label>
-                                            <input type="text" class="form-control {{ $errors->has('range') ? ' is-invalid' : '' }} " name="range" placeholder="Range" value="{{ old('range') }}" onkeypress="return validateFloatKeyPress(this,event);"/>
-                                         @if ($errors->has('range'))
-                                         <span class="text-danger">
-                                         <strong>{{ $errors->first('range') }}</strong>
-                                         </span>
-                                         @endif
-                                      </div>
-                                      <div class="col-sm-4 form-group">
                                          <label>Street</label>
                                          <input type="text" class="form-control {{ $errors->has('street') ? ' is-invalid' : '' }}" name="street" id="street" placeholder="street" value="{{ old('street') }}" />
                                          @if ($errors->has('street'))

@@ -116,12 +116,6 @@
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img">Range</div>
-                                        <div class="media-body">
-                                            <div class="media-heading lineAlign">${{ $user->patient ? $user->patient->range : ''}}</div>
-                                        </div>
-                                    </li>
-                                    <li class="media">
                                         <div class="media-img">Availability</div>
                                         <div class="media-body">
                                             <div class="media-heading lineAlign">{{ $user->patient ? $user->patient->availability : ''}}</div>
