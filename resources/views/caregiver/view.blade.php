@@ -22,7 +22,7 @@
                                 <img class="img-circle" src="{{ asset('admin/assets/img/admin-avatar.png') }}" /><?php
                             }else{ ?>
                                 <img class="img-circle" style="height:150px;width: 150px;" src="<?php echo asset($user->profile_image); ?>" /><?php
-                            }   ?> 
+                            }   ?>
                         </div>
                         <h5 class="font-strong m-b-10 m-t-10">{{ ucfirst($user->name) }}</h5>
                         <div class="m-b-20 text-muted">Caregiver</div>
@@ -67,7 +67,7 @@
                                     <li class="media">
                                         <div class="media-img">Services</div>
                                         <div class="media-body">
-                                            <div class="media-heading"><?php 
+                                            <div class="media-heading"><?php
                                                 if(empty($user->services)){
                                                     echo "NA";
                                                 }else{
@@ -85,11 +85,11 @@
                                         <div class="media-body">
                                             <div class="media-heading">{{ "$".$user->min_price." - $".$user->max_price }} </div>
                                         </div>
-                                    </li>               
+                                    </li>
                                     <li class="media">
                                         <div class="media-img">Discipline</div>
                                         <div class="media-body">
-                                            <div class="media-heading"><?php 
+                                            <div class="media-heading"><?php
                                                 if(empty($user->qualification)){
                                                     echo "NA";
                                                 }else{
@@ -101,31 +101,31 @@
                                                 } ?>
                                             </div>
                                         </div>
-                                    </li>               
+                                    </li>
                                     <li class="media">
                                         <div class="media-img">Language</div>
                                         <div class="media-body">
                                             <div class="media-heading">{{ $user->language }} </div>
                                         </div>
-                                    </li>                     
+                                    </li>
                                     <li class="media">
                                         <div class="media-img">Gender</div>
                                         <div class="media-body">
                                             <div class="media-heading">{{ $user->gender }} </div>
                                         </div>
-                                    </li>                                    
+                                    </li>
                                     <li class="media">
                                         <div class="media-img">Height</div>
                                         <div class="media-body">
                                             <div class="media-heading">{{ $user->height }}</div>
                                         </div>
-                                    </li>                                    
+                                    </li>
                                     <li class="media">
                                         <div class="media-img">Weight</div>
                                         <div class="media-body">
                                             <div class="media-heading">{{ $user->weight }}</div>
                                         </div>
-                                    </li>                                    
+                                    </li>
                                     <li class="media">
                                         <div class="media-img">Date of Birth</div>
                                         <div class="media-body">
@@ -135,7 +135,7 @@
                                     <li class="media">
                                         <div class="media-img">Servicable Area</div>
                                         <div class="media-body">
-                                            <div class="media-heading"><?php 
+                                            <div class="media-heading"><?php
                                                 if(empty($user->service_area)){
                                                     echo "NA";
                                                 }else{
@@ -149,9 +149,9 @@
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img">Non Servicable Zipcodes</div>
+                                        <div class="media-img">Non Service Area</div>
                                         <div class="media-body">
-                                            <div class="media-heading"><?php 
+                                            <div class="media-heading"><?php
                                                 if(empty($user->non_service_area)){
                                                     echo "NA";
                                                 }else{
@@ -183,7 +183,7 @@
                 </div>
             </div>
 
-            <div class="col-md-12 col-lg-12" >   
+            <div class="col-md-12 col-lg-12" >
                 <div class="ibox">
                     <div class="ibox-body">
                         <div class="tab-content">
@@ -217,7 +217,7 @@
                                     <tr>
                                         <td colspan="7" style="text-align: center;"><strong>No record found.</strong></td>
                                     </tr>
-                                @endif    
+                                @endif
                                 </tbody>
                             </table>
                         </div>
