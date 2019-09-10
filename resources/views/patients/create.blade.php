@@ -31,7 +31,7 @@
                            @csrf
                            <div class="card">
                              <div class="card-header" style="background-color: #ddd;">
-                                <h5>Persona Info</h5>
+                                <h5>Personal Info</h5>
                              </div>
                              <div class="tab-content row">
                                 <div class="tab-pane fade show active col-md-12" id="tab-2">
@@ -196,8 +196,8 @@
                                          @endif
                                       </div>
                                       <div class="col-sm-4 form-group">
-                                         <label>Pin Code</label>
-                                         <input type="text" class="form-control {{ $errors->has('pin_code') ? ' is-invalid' : '' }}" id="pin_code" name="pin_code" placeholder="Pin Code" value="{{ old('pin_code') }}" readonly/>
+                                         <label>Zip Code</label>
+                                         <input type="text" class="form-control {{ $errors->has('pin_code') ? ' is-invalid' : '' }}" id="pin_code" name="pin_code" placeholder="Zip Code" value="{{ old('pin_code') }}" readonly/>
                                          @if ($errors->has('pin_code'))
                                          <span class="text-danger">
                                          <strong>{{ $errors->first('pin_code') }}</strong>
