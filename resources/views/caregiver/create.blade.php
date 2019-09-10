@@ -107,7 +107,7 @@
                                                         <span style="margin-left:30px;color:blue;cursor: pointer;" onclick="setmail()">Send Mail</span>
                                                     </label>
                                                     <input type="hidden" value="0" name="issentmail" id="issentmail">
-                                                    <input type="text" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" placeholder="Password" value="{{ old('password') }}" readonly id="newpassword" />
+                                                    <input type="password" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" placeholder="Password" value="{{ old('password') }}" readonly id="newpassword" />
                                                     @if ($errors->has('password'))
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $errors->first('password') }}</strong>
