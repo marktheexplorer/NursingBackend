@@ -4,22 +4,22 @@
 <div class="content-wrapper">
     <!-- START PAGE CONTENT-->
     <div class="page-heading">
-        <h1 class="page-title">Patients Management</h1>
+        <h1 class="page-title">Clients Management</h1>
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
                 <a href="{{ route('dashboard') }}"><i class="fas fa-home"></i></a>
             </li>
-            <li class="breadcrumb-item"><a href="{{ route('patients.index')}}" >Patients</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('patients.index')}}" >Clients</a></li>
         </ol>
     </div>
     @include('flash::message')
     <div class="page-content fade-in-up">
         <div class="ibox">
             <div class="ibox-head">
-                <div class="ibox-title">Patient Data</div>
-                <div>                    
-                    <a href="{{ route('patients.active') }}"><button class="btn btn-primary">Active Patients</button></a>
-                    <a href="{{ route('patients.inactive') }}"><button class="btn btn-primary">Inactive Patients</button></a>
+                <div class="ibox-title">Client Data</div>
+                <div>
+                    <a href="{{ route('patients.active') }}"><button class="btn btn-primary">Active Clients</button></a>
+                    <a href="{{ route('patients.inactive') }}"><button class="btn btn-primary">Inactive Clients</button></a>
                 </div>
                 <div>
                     <a href="{{ route('patients.create') }}"><button class="btn btn-info"><i class="fas fa-plus"></i> Add</button></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -75,7 +75,7 @@
                 </table>
             </div>
         </div>
-	</div>    
+	</div>
 </div>
 @endsection
 @section('footer-scripts')
@@ -85,4 +85,3 @@
     });
 </script>
 @endsection
-

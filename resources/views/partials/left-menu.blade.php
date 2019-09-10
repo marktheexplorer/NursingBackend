@@ -36,7 +36,7 @@
             </li>
             <li>
                 <a href="{{ route('patients.index') }}" style="{{ (request()->is('admin/patients*')) ? 'background-color:#3498db;color:#fff;' : '' }}"><i class="sidebar-item-icon fas fa fa-wheelchair"></i>
-                    <span class="nav-label">Patient</span></a>
+                    <span class="nav-label">Client</span></a>
             </li>
             <li>
                 <a href="{{ route('service_request.index') }}" style="{{ (request()->is('admin/service_request*')) ? 'background-color:#3498db;color:#fff;' : '' }}"><i class="sidebar-item-icon fas fa-book-medical"></i>
@@ -47,7 +47,7 @@
                     <a href="javascript:;"  style="background-color:#3498db;color:#fff"><i class="sidebar-item-icon fas fa-list"></i><span class="nav-label">Master List</span><i class="fa fa-angle-left arrow"></i></a>
                 @else
                     <a href="javascript:;"><i class="sidebar-item-icon fas fa-list"></i><span class="nav-label">Master List</span><i class="fa fa-angle-left arrow"></i></a>
-                @endif    
+                @endif
                 <ul class="nav-2-level collapse" aria-expanded="false">
                     <li>
                         <a href="{{ route('county.index') }}"><i class="sidebar-item-icon fas fa-map-signs"></i>County</a>
@@ -61,8 +61,8 @@
                     <li>
                         <a href="{{ route('diagnosis.index') }}"><i class="sidebar-item-icon fas fa-diagnoses"></i>Diagnosis</a>
                     </li>
-                    
-                </ul>  
+
+                </ul>
             </li>
             <li>
                 <a href="javascript:;" style="{{ (request()->is('admin/faqs*')) ? 'background-color:#3498db;color:#fff;' : '' }}"><i class="sidebar-item-icon fas fa-question"></i>
@@ -93,7 +93,7 @@
                 </ul>
             </li>
             <li>
-                <a href="{{ route('enquiries.index') }}" style="{{ (request()->is('admin/enquiries*')) ? 'background-color:#3498db;color:#fff;' : '' }}"><i class="sidebar-item-icon fas fa-mail-bulk"></i>         
+                <a href="{{ route('enquiries.index') }}" style="{{ (request()->is('admin/enquiries*')) ? 'background-color:#3498db;color:#fff;' : '' }}"><i class="sidebar-item-icon fas fa-mail-bulk"></i>
                     <span class="nav-label">Inquiry</span>
                 </a>
             </li>
