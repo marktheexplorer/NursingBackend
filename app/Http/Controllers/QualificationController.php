@@ -38,19 +38,27 @@ class QualificationController extends Controller
     public function store(Request $request)
     { 
         $input = $request->input();
-        $validator = validator::make($input,[
-            'name' => 'required|string|max:60',
-        ]);
+
+        $attributes = ['name' => 'Title'];
+        $validator = validator::make($input,
+            [
+                'name' => 'required|string|max:60',
+            ],
+            [
+                'name.required' => 'The title field is required.',
+                'name.max' => 'The title may not be greater than 60 characters.',
+            ]
+         );
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-                $input['name'] = $input['name'];
-                $service = Qualification::create($input);
+        $input['name'] = $input['name'];
+        $service = Qualification::create($input);
 
-                flash()->success('New Discipline added successfully');
-                return redirect()->route('qualifications.index');
+        flash()->success('New Discipline added successfully');
+        return redirect()->route('qualifications.index');
     }
 
     /**
@@ -89,7 +97,12 @@ class QualificationController extends Controller
         $input = $request->input();
         $validator = validator::make($input,[
             'name' => 'required|string|max:60'
-        ]);
+        ],
+            [
+                'name.required' => 'The title field is required.',
+                'name.max' => 'The title may not be greater than 60 characters.',
+            ]
+        );
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();

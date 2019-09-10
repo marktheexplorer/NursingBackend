@@ -430,7 +430,7 @@ a,
             changeMonth: true,
             numberOfMonths: 1
         }).on( "change", function() {
-            to.datepicker( "option", "minDate", getDate( this ) );
+            to.datepicker( "option", "minDate", getDate(this));
         }),
         to = $( "#end_date" ).datepicker({
             minDate : 1,

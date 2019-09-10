@@ -53,8 +53,8 @@ class ServiceRequestController extends Controller{
                 'user_id' => 'required|not_in:0',
                 'service' => 'required|not_in:0',
                 'start_date' => 'required',
-                'end_date' => 'required',
-                'start_time' => 'required',
+                'start_time' => 'required|date',
+                'end_date' => 'required|date|after:start_date',                
                 'end_time' => 'required',
                 'min_expected_bill' => 'required|min:0',
                 'max_expected_bill' => 'required|min:1|gt:min_expected_bill',
@@ -64,8 +64,11 @@ class ServiceRequestController extends Controller{
                 'state' => 'required',
                 'description' => 'required'
             ],
-            ['user_id.required' => 'The Client field is required.',
-             'max_expected_bill.gt' => 'The max price must be greater than min price.']
+            [
+                'user_id.required' => 'The Client field is required.',
+                'max_expected_bill.gt' => 'The max price must be greater than min price.',
+                'end_date.after' => 'The end date must be greater than start date'
+            ]
         );
 
         if ($validator->fails()) {

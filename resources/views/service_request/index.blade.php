@@ -33,7 +33,7 @@
                             <th style="min-width: 350px;">Service</th>
                             <th style="min-width: 350px;">Location</th>
                             <th style="min-width: 150px;">Price Range</th>
-                            <th style="min-width: 100px;">Shift</th>
+                            <th style="min-width: 100px;">Shift Timing</th>
                             <th style="min-width: 165px;">Duration</th>
                             <th style="min-width: 165px;">Actions</th>
                         </tr>

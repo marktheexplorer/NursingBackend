@@ -63,7 +63,7 @@
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img col-md-2">Shift</i></div>
+                                        <div class="media-img col-md-2">Shift Timing</i></div>
                                         <div class="media-body">
                                             <div class="media-heading">{{ substr_replace( $services->start_time, ":", -2, 0)." - ".substr_replace( $services->end_time, ":", -2, 0) }}</div>
                                         </div>
