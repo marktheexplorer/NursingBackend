@@ -104,7 +104,7 @@
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img">Pin Code</div>
+                                        <div class="media-img">Zip Code</div>
                                         <div class="media-body">
                                             <div class="media-heading lineAlign">{{ $user->patient ? $user->patient->pin_code : ''}}</div>
                                         </div>
