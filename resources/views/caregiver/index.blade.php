@@ -23,14 +23,15 @@
                 <table class="table table-striped table-bordered table-hover" id="data-table" cellspacing="0" width="100%">
                     <thead>
                         <tr>
-                          <th>#</th>
-              				    <th>Name</th>
-	                  		  <th>Email</th>
-	                  	  	<th>Mobile no</th>
-                          <th>Price Range</th>
-                          <th>Disciplines</th>
-	                  		  <th>Created At</th>
-	                  		  <th>Actions</th>
+                            <th>#</th>
+              				<th>Name</th>
+	                  		<th>Email</th>
+	                  	  	<th>Mobile Number</th>
+                            <th>Price Range</th>
+                            <th>Disciplines</th>
+                            <th>Language</th>
+	                  		<th>Created At</th>
+	                  		<th style="min-width: 100px;">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -43,9 +44,10 @@
 	              			<td>{{ $user->mobile_number }}</td>
                       <td><?php echo "$".$user->min_price."-$".$user->max_price; ?></td>
                       <td><?php echo implode(' , ',$user->qualification); ?></td>
+                      <td>{{ $user->language }}</td>
 	              			<td>{{ date_format(date_create($user->created_at), 'd M, Y')}}
 	              			<td>
-	              				<ul class="actions-menu">
+	              				<ul class="actions-menu" style="padding-left: 0px;">
                           <li>
                             <a href="{{ url('admin/caregiver/blocked/'.$user->id) }}">
                                 @if($user->is_blocked)

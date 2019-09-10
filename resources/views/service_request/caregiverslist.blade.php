@@ -27,33 +27,37 @@
                             <div class="tab-pane fade show active" id="tab-1">
                                 <ul class="media-list media-list-divider m-0">
                                     <li class="media">
-                                        <div class="media-img">Client Name</div>
+                                        <div class="media-img  col-md-2">Client Name</i></div>
                                         <div class="media-body">
-                                            <div class="media-heading">{{ ucfirst($services->name) }} </div>
-                                        </div>
-                                        <div class="media-img">Price Range</div>
-                                        <div class="media-body">
-                                            <div class="media-heading">{{ "$".$services->min_expected_bill." - $".$services->max_expected_bill }} </div>
-                                        </div>
-                                        <div class="media-img">Duration</div>
-                                        <div class="media-body">
-                                            <div class="media-heading">{{ date_format(date_create($services->start_date), 'd M, Y')." - ".date_format(date_create($services->start_date), 'd M, Y') }}</div>
+                                            <div class="media-heading">{{ ucfirst($services->name) }}</div>
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img">Location</div>
+                                        <div class="media-img  col-md-2">Price Range</i></div>
+                                        <div class="media-body">
+                                            <div class="media-heading">{{ "$".$services->min_expected_bill." - $".$services->max_expected_bill }}</div>
+                                        </div>
+                                    </li>
+                                    <li class="media">
+                                        <div class="media-img  col-md-2">Duration</div>
+                                        <div class="media-body">
+                                            <div class="media-heading">{{ date_format(date_create($services->start_date), 'd M, Y')." - ".date_format(date_create($services->end_date), 'd M, Y') }}</div>
+                                        </div>
+                                    </li>
+                                    <li class="media">
+                                        <div class="media-img col-md-2">Location</div>
                                         <div class="media-body">
                                             <div class="media-heading">{{ $services->location.", ".$services->city.", ".$services->state.", ".$services->country.", ".$services->zip  }}</div>
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img">Service</div>
+                                        <div class="media-img  col-md-2">Service</div>
                                         <div class="media-body">
                                             <div class="media-heading">{{ ucfirst($services->title) }} </div>
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img">Assign Caregivers</div>
+                                        <div class="media-img  col-md-2">Assign Caregivers</div>
                                         <div class="media-body">
                                             <div class="media-heading"><?php
                                                 if(!empty($picked_caregiver)){
@@ -93,13 +97,15 @@
                                     if($services->status < 5){ ?>
                                         <li class="caregiverlist"><?php
                                             $count = 0; ?>
+                                            <hr/>
+                                            <h3 style="text-align:center;">Caregivers</h3>
                                             <table class="table table-striped table-bordered table-hover" id="data-table" cellspacing="0" width="100%">
                                                 <thead>
                                                     <tr>
                                                         <th>Id</th>
                                                         <th>Name</th>
                                                         <th>Email</th>
-                                                        <th>Mobile no</th>
+                                                        <th>Mobile Number</th>
                                                         <th>Service</th>
                                                         <th>Zip Code</th>
                                                         <th></th>
@@ -120,9 +126,11 @@
                                                                     <input type="hidden" name="request_id" value="{{ $services->id }}" />
                                                                     <input type="hidden" name="caregiver_id" value="{{ $user->id }}" />
                                                                     @if(in_array($user->id, $select_caregiver))
-                                                                        <button type="submit" class="btn-sm btn-danger btn-cir" title="Un-Assign"><i class="fas fa-times-circle"></i></button>
+                                                                        <!-- <button type="submit" class="btn-sm btn-danger btn-cir" ><i class="fas fa-times-circle"></i></button> -->
+                                                                        <input type="checkbox" title="Un-Assign" checked class="form-control" style="cursor: pointer;" onclick="$(this).closest('form').submit();">
                                                                     @else
-                                                                        <button type="submit" class="btn-sm btn-success btn-cir" title="Assign"><i class="fas fa-check-circle"></i></button>
+                                                                        <!-- <button type="submit" class="btn-sm btn-success btn-cir" title="Assign"><i class="fas fa-check-circle"></i></button> -->
+                                                                        <input type="checkbox" title="Assign" class="form-control" style="cursor: pointer;" onclick="$(this).closest('form').submit();">
                                                                     @endif
                                                                 </form>
                                                             </td>

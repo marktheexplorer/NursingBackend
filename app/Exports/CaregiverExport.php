@@ -11,10 +11,9 @@ use DB;
 class CaregiverExport implements FromCollection, WithHeadings, ShouldAutoSize{
     public function collection(){
         $usre_data = DB::table('users')
-        ->select('users.*', 'caregiver.service', 'caregiver.min_price', 'caregiver.max_price', 'caregiver.description','caregiver.language', 'caregiver.zipcode','caregiver_attributes.value')
+        ->select('users.*', 'caregiver.service', 'caregiver.min_price', 'caregiver.max_price', 'caregiver.description','caregiver.language', 'caregiver.zipcode')
         ->Join('caregiver', 'caregiver.user_id', '=', 'users.id')
-        ->Join('caregiver_attributes','caregiver_attributes.caregiver_id' ,'=','users.id')
-        ->where('caregiver_attributes.type', 'qualification')
+        //->Join('caregiver_attributes','caregiver_attributes.caregiver_id' ,'=','users.id')
         ->orderBy('users.id', 'desc')->get();
 
         foreach ($usre_data as $key => $value) {
@@ -29,6 +28,7 @@ class CaregiverExport implements FromCollection, WithHeadings, ShouldAutoSize{
         if(!empty($usre_data)){
             $count = 1;
             foreach ($usre_data as $row) {
+                $desciplines = implode(',', $row->qualification);
                 $output[] = array(
                     $count.".",
                     ucfirst(str_replace(",", " ", $row->name)),
@@ -37,7 +37,7 @@ class CaregiverExport implements FromCollection, WithHeadings, ShouldAutoSize{
                     $row->gender,
                     date("d-m-Y", strtotime($row->dob)),
                     $row->language,
-                    implode(',', $row->qualification),
+                    $desciplines,
                     ucfirst($row->location),
                     $row->city,
                     $row->state,

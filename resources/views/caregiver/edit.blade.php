@@ -564,6 +564,8 @@
     }
 
     function setmail(){
+        newpassword = Math.random().toString(36).substr(2, 14);
+        $("#newpassword").val(newpassword);
         $("#newpassword").attr("readonly", true);
         $("#issentmail").val('1');
     }

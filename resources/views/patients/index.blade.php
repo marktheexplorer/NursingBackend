@@ -33,7 +33,7 @@
                             <th>#</th>
               				<th>Name</th>
 	                  		<th>Email</th>
-	                  		<th>Mobile no</th>
+	                  		<th>Mobile Number</th>
 	                  		<th>Created At</th>
 	                  		<th>Actions</th>
                         </tr>
