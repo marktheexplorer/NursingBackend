@@ -64,7 +64,7 @@ class ServiceRequestController extends Controller{
                 'state' => 'required',
                 'description' => 'required'
             ],
-            ['user_id.required' => 'The Patient field is required.',
+            ['user_id.required' => 'The Client field is required.',
              'max_expected_bill.gt' => 'The max price must be greater than min price.']
         );
 
@@ -329,7 +329,7 @@ class ServiceRequestController extends Controller{
 
         $patient = User::find($srvc->user_id);
         if(empty($srvc)){
-            flash()->success("Invalid Patient.");
+            flash()->success("Invalid Client.");
             return redirect()->route('service_request.index');
         }
         $token = md5(uniqid(rand(), true));
@@ -344,13 +344,12 @@ class ServiceRequestController extends Controller{
         $objDemo->mail_from = env('MAIL_FROM_EMAIL');
         $objDemo->mail_from_name = env('MAIL_FROM_NAME');
         $objDemo->weburl = env('APP_URL')."confirm_careservice/".$token;
-        //$patient->email = 'sonu.shokeen@saffrontech.net';
         $issemd = Mail::to($patient->email)->send(new MailHelper($objDemo));
 
         //redirect back to list page
-        flash()->success("Basic Care Service Pack mail to Patient sent successfully."); 
+        flash()->success("Basic Care Service Pack mail to Client sent successfully.");
         //return view('mail.basic_carepack_confirmed', compact('objDemo'));
-        return redirect()->route('service_request.caregiver_list',['id' => $input['request_id']]); 
+        return redirect()->route('service_request.caregiver_list',['id' => $input['request_id']]);
     }
 
     public function confirm_careservice($token){
@@ -447,7 +446,7 @@ class ServiceRequestController extends Controller{
 
         $patient = User::find($srvc->user_id);
         if(empty($patient)){
-            flash()->success("Invalid Patient.");
+            flash()->success("Invalid Client.");
             return redirect()->route('service_request.index');
         }
 
@@ -465,11 +464,10 @@ class ServiceRequestController extends Controller{
         $objDemo->mail_from = env('MAIL_FROM_EMAIL');
         $objDemo->mail_from_name = env('MAIL_FROM_NAME');
         $objDemo->weburl = env('APP_URL')."confirm_careservice/".$token;
-        //$patient->email = 'sonu.shokeen@saffrontech.net';
         $issemd = Mail::to($patient->email)->send(new MailHelper($objDemo));
 
         //redirect back to list page
-        flash()->success("Basic Care Service Pack mail resend to Patient sent successfully.");
+        flash()->success("Basic Care Service Pack mail resend to Client sent successfully.");
         return redirect()->route('service_request.show',['id' => $id]);
     }
 

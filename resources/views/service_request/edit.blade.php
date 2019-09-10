@@ -47,9 +47,9 @@ $timeslot = array(
         "2200" => "22:00",
         "2230" => "22:30",
         "2300" => "23:00",
-        "2330" => "23:30"  
+        "2330" => "23:30"
     );?>
-<style> 
+<style>
     /*
 Theme Name: jqueryui-com
 Template: jquery
@@ -242,14 +242,14 @@ a,
                                 @method('put')
                                     <div class="row">
                                         <div class="col-sm-3 form-group">
-                                            <label>Patient</label>
-                                            <input type="text" class="form-control {{ $errors->has('user_id') ? ' is-invalid' : '' }}" name="user_id" placeholder="Patient" value="{{ ucfirst($services->name) }}" readonly="true" />
+                                            <label>Client</label>
+                                            <input type="text" class="form-control {{ $errors->has('user_id') ? ' is-invalid' : '' }}" name="user_id" placeholder="Client" value="{{ ucfirst($services->name) }}" readonly="true" />
                                             @if ($errors->has('user_id'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('user_id') }}</strong>
                                                 </span>
                                             @endif
-                                        </div>   
+                                        </div>
                                         <div class="col-sm-3 form-group">
                                             <label>Caregiver</label>
                                             <input type="text" class="form-control {{ $errors->has('caregiver_id') ? ' is-invalid' : '' }}" name="caregiver_id" placeholder="caregiver_id" value="{{ $services->caregiver_id }}" readonly="true" />
@@ -258,7 +258,7 @@ a,
                                                     <strong>{{ $errors->first('caregiver_id') }}</strong>
                                                 </span>
                                             @endif
-                                        </div>             
+                                        </div>
                                         <div class="col-sm-3  form-group">
                                             <label>Min Expected Bill ($)</label>
                                             <input type="number" class="form-control {{ $errors->has('min_expected_bill') ? ' is-invalid' : '' }}" placeholder="Minimum Expected Bill" name="min_expected_bill" value="{{ old('min_expected_bill', $services->min_expected_bill) }}" min="0" id="min_price">
@@ -276,9 +276,9 @@ a,
                                                     <strong>{{ $errors->first('max_expected_bill') }}</strong>
                                                 </span>
                                             @endif
-                                        </div> 
+                                        </div>
                                     </div>
-                                    <div class="row">                                            
+                                    <div class="row">
                                         <div class="col-sm-4  form-group">
                                             <label>Service</label>
                                             <select name="service" class="form-control {{ $errors->has('service') ? ' is-invalid' : '' }}" >
@@ -296,7 +296,7 @@ a,
                                         <div class="form-group col-sm-2" >
                                             <label>Start From</label>
                                             <input type="text" class="form-control {{ $errors->has('start_date') ? ' is-invalid' : '' }}" name="start_date" placeholder="Start from" value="{{ old('start_date', date('d/m/Y', strtotime($services->start_date))) }}" id="start_date" readonly="true" />
-                                        </div>  
+                                        </div>
                                         <div class="form-group col-sm-2" >
                                             <label>End From</label>
                                             <input type="text" class="form-control {{ $errors->has('end_date') ? ' is-invalid' : '' }}" name="end_date" placeholder="End from" value="{{ old('end_date', date('d/m/Y', strtotime($services->end_date))) }}" id="end_date" readonly="true" />
@@ -319,7 +319,7 @@ a,
                                                     <strong>{{ $errors->first('start_time')}}</strong>
                                                 </span>
                                             @endif
-                                        </div>  
+                                        </div>
                                         <div class="form-group col-sm-2" >
                                             <label>End Time</label>
                                             <select name="end_time" class="form-control {{ $errors->has('end_time') ? ' is-invalid' : '' }}" >
@@ -333,9 +333,9 @@ a,
                                                     <strong>{{ $errors->first('end_time')}}</strong>
                                                 </span>
                                             @endif
-                                        </div>                                        
-                                    </div>    
-                                    <div class="row">    
+                                        </div>
+                                    </div>
+                                    <div class="row">
                                         <div class="form-group col-sm-6" >
                                             <label>Street </label>
                                             <input type="text" class="form-control {{ $errors->has('location') ? ' is-invalid' : '' }}" name="location" placeholder="Location" value="{{ old('location', $services->location) }}" />
@@ -353,7 +353,7 @@ a,
                                                     <strong>{{ $errors->first('city') }}</strong>
                                                 </span>
                                             @endif
-                                        </div>  
+                                        </div>
                                         <div class="form-group col-sm-2" >
                                             <label>State </label>
                                             <select name="state" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" readonly="true" id="state"">
@@ -361,7 +361,7 @@ a,
                                                 @foreach($city_state as $row)
                                                     <option <?php if($row->state_code == old('state', $services->state)){ echo 'selected'; } ?> >{{ $row->state_code }}</option>
                                                 @endforeach
-                                            </select>    
+                                            </select>
                                             @if ($errors->has('state'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('state') }}</strong>
@@ -378,7 +378,7 @@ a,
                                                 </span>
                                             @endif
                                         </div>
-                                    </div>                                    
+                                    </div>
                                     <div class="row">
                                         <div class="form-group col-sm-12" >
                                             <label>Description </label>
@@ -397,7 +397,7 @@ a,
                                             <button class="btn btn-default pull-right" type="submit">Submit</button>
                                         </div>
                                         <div class="form-group col-sm-5 pull-right"></div>
-                                    </div>        
+                                    </div>
                                 </form>
                             </div>
                         </div>
@@ -419,7 +419,7 @@ a,
         }
 
         function extractLast( term ) {
-            //return split( term ).pop();  
+            //return split( term ).pop();
             temp = $.trim($("#service_zipcode").val());
             fnd = ','
             if(temp.indexOf(fnd) != -1){
@@ -430,7 +430,7 @@ a,
         }
 
 
-        // don't navigate away from the field on tab when selecting an item                
+        // don't navigate away from the field on tab when selecting an item
         $( "#citysuggest" ).on( "keydown", function( event ) {
             if(event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active){
                 event.preventDefault();
@@ -441,7 +441,7 @@ a,
                     term: request.term
                 }, response );
             },
-            
+
             search: function() {
                 // custom minLength
                 var term = this.value;
@@ -466,7 +466,7 @@ a,
                 return false;
             }
         });
-    }); 
+    });
 
     function setstateoptions(){
         zip = $("#citysuggest").val();
@@ -483,7 +483,7 @@ a,
                 }else{
                     $.each(res['list'], function( index, value ) {
                         //alert( index + ": " + value );
-                        $('#state').append($("<option></option>").attr(value, value).text(value)); 
+                        $('#state').append($("<option></option>").attr(value, value).text(value));
                     });
                 }
             }

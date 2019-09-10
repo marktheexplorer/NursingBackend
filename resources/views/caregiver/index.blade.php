@@ -17,7 +17,7 @@
     	<div style="text-align: right;">
             <a href="{{ route('caregiver.create') }}"><button class="btn btn-info "><i class="fas fa-plus"></i> Add</button></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <a href="{{ route('caregiver.download_excel') }}" style="" target="_blank"><button class="btn btn-info "><i class="fas fa-download"></i> Download</button></a>
-        </div>    
+        </div>
         <div class="ibox">
             <div class="ibox-body">
                 <table class="table table-striped table-bordered table-hover" id="data-table" cellspacing="0" width="100%">
@@ -60,13 +60,7 @@
 	              						<a href="{{ route('caregiver.show',['id' => $user->id]) }}">
 	              							<button class="btn-sm btn-warning btn-cir" title="View"><i class="fas fa-eye"></i></button>
 	              						</a>
-	              					</li><!--
-	              					<li>
-	              						<form action="{{ url('/admin/caregiver/'.$user->id) }}" method="POST" onsubmit="deleteUser('{{ $user->id }}', '{{ $user->name }}', event,this)">
-	                    				@csrf
-	              							<button class="btn-sm btn-danger btn-cir" title="Delete"><i class="fas fa-trash-alt"></i></button>
-	              						</form>
-	              					</li>-->
+	              					</li>
 	              				</ul>
 	              			</td>
 	            		</tr>
@@ -75,7 +69,7 @@
                 </table>
             </div>
         </div>
-	</div>    
+	</div>
 </div>
 @endsection
 

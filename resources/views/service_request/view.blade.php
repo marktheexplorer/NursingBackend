@@ -27,7 +27,7 @@
                             <div class="tab-pane fade show active" id="tab-1">
                                 <ul class="media-list media-list-divider m-0">
                                     <li class="media">
-                                        <div class="media-img">Patient Name</div>
+                                        <div class="media-img">Client Name</div>
                                         <div class="media-body">
                                             <div class="media-heading">{{ $services->name }} </div>
                                         </div>
@@ -41,7 +41,7 @@
                                                 }else{
                                                     echo ucfirst($final_caregivers->name)." (".$final_caregivers->email.")<br/>";
                                                 }?>
-                                            </div>    
+                                            </div>
                                         </div>
                                     </li>
                                     <li class="media">
@@ -61,19 +61,19 @@
                                         <div class="media-body">
                                             <div class="media-heading">{{ "$".$services->min_expected_bill." - $".$services->max_expected_bill }} </div>
                                         </div>
-                                    </li>   
+                                    </li>
                                     <li class="media">
                                         <div class="media-img">Shift</i></div>
                                         <div class="media-body">
                                             <div class="media-heading">{{ substr_replace( $services->start_time, ":", 2, 0)." - ".substr_replace( $services->end_time, ":", 2, 0) }}</div>
                                         </div>
-                                    </li>                     
+                                    </li>
                                     <li class="media">
                                         <div class="media-img">Duration</i></div>
                                         <div class="media-body">
                                             <div class="media-heading">{{ date_format(date_create($services->start_date), 'd M, Y')." - ".date_format(date_create($services->start_date), 'd M, Y') }}</div>
                                         </div>
-                                    </li>                        
+                                    </li>
                                     <li class="media">
                                         <div class="media-img">Notes</i></div>
                                         <div class="media-body">
@@ -93,7 +93,7 @@
                                                                 <td>Date</td>
                                                                 @if($services->status == 6)
                                                                     <td>Action</td>
-                                                                @endif    
+                                                                @endif
                                                             </tr>
                                                         </thead>
                                                         <tbody><?php
@@ -102,10 +102,10 @@
                                                                 <tr>
                                                                     <td>{{ $count }}.</td>
                                                                     <td>
-                                                                        <a href="{{ asset('/request_docs/'.$docs->value) }}" title="Download Document"> Download 
+                                                                        <a href="{{ asset('/request_docs/'.$docs->value) }}" title="Download Document"> Download
                                                                             @if($count == 1 && $services->status > 6)
                                                                             {{ '(Approved)' }}
-                                                                        @endif</a>                                                           
+                                                                        @endif</a>
                                                                     </td>
                                                                     <td>{{ date_format(date_create($docs->created_at), 'd M, Y') }}</td>
                                                                     @if($count == 1 && $services->status == 6)
@@ -113,13 +113,13 @@
                                                                             <a href="{{ url('admin/service_request/confirm_doc/'.$services->id) }}" class="btn-sm btn-success" title="Approved">Approved</a> &nbsp;&nbsp;&nbsp;&nbsp;
                                                                             <a href="{{ url('admin/service_request/resendmail/'.$services->id) }}" class="btn-sm btn-primary" title="click here">Dis-approved</a>
                                                                         </td>
-                                                                    @endif    
+                                                                    @endif
                                                                     <td></td>
                                                                 </tr><?php
                                                                 $count++;
                                                             }?>
                                                         </tbody>
-                                                    </table>    
+                                                    </table>
                                                 </div>
                                             </div>
                                         </li>
@@ -134,30 +134,30 @@
                                                         break;
                                                     case '1':
                                                         echo "Reject";
-                                                        break;    
+                                                        break;
                                                     case '2':
                                                         echo "Approved";
-                                                        break;    
+                                                        break;
                                                     case '3':
                                                         echo "Caregiver not Assign";
                                                         break;
                                                     case '4':
-                                                        echo "Assign to Caregiver"; 
-                                                        break;       
+                                                        echo "Assign to Caregiver";
+                                                        break;
                                                     case '5':
                                                         echo "Caregiver confirm and sent mail of basic careservice pack";
-                                                        break;    
+                                                        break;
                                                     case '6':
-                                                        echo "Document upload by patient, but document not varified";
-                                                        break;        
+                                                        echo "Document upload by client, but document not varified";
+                                                        break;
                                                     case '7':
                                                         echo "Uploaded document varified";
-                                                        break;            
+                                                        break;
                                                     case '8':
                                                         echo "Re-schedule";
                                                     case '9':
-                                                        echo "Close";    
-                                                        break;  
+                                                        echo "Close";
+                                                        break;
                                                 } ?>
                                             </div>
                                         </div>
@@ -167,7 +167,7 @@
                                         <div class="media-body">
                                             <div class="media-heading">{{ date_format(date_create($services->created_at), 'd M, Y') }} </div>
                                         </div>
-                                    </li>                                    
+                                    </li>
                                 </ul>
                             </div>
                         </div>
