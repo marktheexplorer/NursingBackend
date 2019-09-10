@@ -86,7 +86,7 @@
                                            @endif
                                         </div>
                                         <div class="col-sm-4 form-group">
-                                           <label>Mobile number</label>
+                                           <label>Mobile Number</label>
                                            <input type="text" class="form-control {{ $errors->has('mobile_number') ? ' is-invalid' : '' }}" name="mobile_number" placeholder="Mobile Number" value="{{ old('mobile_number', $user->mobile_number) }}" id="mobile_number" />
                                             @if ($errors->has('mobile_number'))
                                                <span class="text-danger">
@@ -446,7 +446,7 @@ $("#state").change(function () {
     });
 
     /*Validation for mobile number format*/
-    var phones = [{ "mask": "(###) ###-####"}];
+    var phones = [{ "mask": "###-###-####"}];
     $('#mobile_number').inputmask({
         mask: phones,
         greedy: false,

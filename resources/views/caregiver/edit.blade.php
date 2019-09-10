@@ -514,7 +514,7 @@
     });
 
     /*Validation for mobile number format*/
-    var phones = [{ "mask": "(###) ###-####"}];
+    var phones = [{ "mask": "###-###-####"}];
     $('#mobile_number').inputmask({
         mask: phones,
         greedy: false,
