@@ -32,7 +32,7 @@
                                 @method('put')
                                     <div class="card">
                                         <div class="card-header" style="background-color: #ddd;">
-                                            <h5>Persona Info</h5>
+                                            <h5>Personal Info</h5>
                                         </div>
                                         <div class="card-body">
                                               <div class="row">
@@ -99,7 +99,7 @@
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-sm-3  form-group">
+                                                <div class="col-sm-4 form-group">
                                                     <label>Email</label>
                                                     <input type="text" name="email" placeholder="Email" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email', $user->email) }}" readonly/>
                                                     @if ($errors->has('email'))
@@ -108,20 +108,7 @@
                                                         </span>
                                                     @endif
                                                 </div>
-                                                <div class="form-group col-sm-3" >
-                                                    <label>
-                                                        <span style="color:blue;cursor: pointer;" onclick="generatepassword()">Generate Password</span>
-                                                        <span style="margin-left:30px;color:blue;cursor: pointer;" onclick="setmail()">Send Mail</span>
-                                                    </label>
-                                                    <input type="hidden" value="0" name="issentmail" id="issentmail">
-                                                    <input type="password" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" placeholder="Password" value="{{ old('password') }}" id="newpassword"/>
-                                                    @if ($errors->has('password'))
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $errors->first('password') }}</strong>
-                                                        </span>
-                                                    @endif
-                                                </div>
-                                                <div class="col-sm-3  form-group">
+                                                <div class="col-sm-4  form-group">
                                                     <label>Mobile Number</label>
                                                     <input type="text" class="form-control {{ $errors->has('mobile_number') ? ' is-invalid' : '' }}" placeholder="Mobile Number" name="mobile_number" value="{{ old('mobile_number', $user->mobile_number) }}" id="mobile_number">
                                                     @if ($errors->has('mobile_number'))
@@ -130,7 +117,7 @@
                                                         </span>
                                                     @endif
                                                 </div>
-                                                <div class="form-group col-sm-3" >
+                                                <div class="form-group col-sm-4" >
                                                     <label>Date of Birth</label>
                                                     <input type="text" class="form-control {{ $errors->has('dob') ? ' is-invalid' : '' }}" name="dob" placeholder="Date of Birth" value="{{ old('dob', date('d/m/Y', strtotime($user->dob))) }}" id="dob"/>
                                                     @if ($errors->has('dob'))
@@ -142,7 +129,7 @@
                                             </div>
                                             <div class="row">
 
-                                                <div class="col-sm-3  form-group">
+                                                <div class="col-sm-4 form-group">
                                                     <label>Height</label>
                                                     <select name="height" class="form-control {{ $errors->has('height') ? ' is-invalid' : '' }}">
                                                         <option disabled="true" selected="true"> -- Select Height --</option>
@@ -156,7 +143,7 @@
                                                         </span>
                                                     @endif
                                                 </div>
-                                                <div class="col-sm-3 form-group">
+                                                <div class="col-sm-4 form-group">
                                                     <label>Weight</label>
                                                     <select name="weight" class="form-control {{ $errors->has('weight') ? ' is-invalid' : '' }}">
                                                         <option disabled="true" selected="true"> -- Select Weight --</option>
@@ -170,7 +157,7 @@
                                                         </span>
                                                     @endif
                                                 </div>
-                                                 <div class="col-sm-3  form-group">
+                                                 <div class="col-sm-4  form-group">
                                                     <label>Language</label>
                                                     <select name="language" class="form-control {{ $errors->has('language') ? ' is-invalid' : '' }}">
                                                         <option disabled="true" selected="true"> -- Select Language --</option>

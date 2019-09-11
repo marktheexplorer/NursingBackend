@@ -426,9 +426,6 @@ class CaregiverController extends Controller{
         //$user->country = 'USA';
         $user->gender = $input['gender'];
         $user->dob = date("Y-m-d", strtotime($input['dob']));
-        if ($input['password'] != null) {
-            $user->password = Hash::make($input['password']);
-        }
 
         //upload file
         if(!empty($upload_image)){
@@ -436,26 +433,6 @@ class CaregiverController extends Controller{
         }
 
         $user->save();
-
-        //send mail about reset password
-        if($input['issentmail'] == '1'){
-            $token = md5(uniqid(rand(), true));
-            $objDemo = new \stdClass();
-            $objDemo->sender = env('APP_NAME');
-            $objDemo->receiver = ucfirst($name);
-            $objDemo->type = 'password_reset_mail';
-            $objDemo->format = 'basic';
-            $objDemo->subject = '24*7 Nursing : Password Information';
-            $objDemo->mail_from = env('MAIL_FROM_EMAIL');
-            $objDemo->mail_from_name = env('MAIL_FROM_NAME');
-            $objDemo->weburl = env('APP_URL')."set_password/".$token;
-            //return view('mail.basic_carepack_confirmed', compact('objDemo'));
-            //$issemd = Mail::to('sonu.shokeen@saffrontech.net')->send(new MailHelper($objDemo));
-            $issemd = Mail::to($input['email'])->send(new MailHelper($objDemo));
-
-            //update token in table
-            $service_request = DB::table('users')->where('email', '=', $input['email'])->update(array('email_activation_token' => $token));
-        }
 
         $caregiverid = DB::table('caregiver')->select('id')->where('user_id','=', $id)->first();
         $caregiver = Caregiver::findOrFail($caregiverid->id);

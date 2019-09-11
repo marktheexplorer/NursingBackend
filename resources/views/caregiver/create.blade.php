@@ -31,7 +31,7 @@
                                 @csrf
                                     <div class="card">
                                         <div class="card-header" style="background-color: #ddd;">
-                                            <h5>Persona Info</h5>
+                                            <h5>Personal Info</h5>
                                         </div>
                                         <div class="card-body">
                                             <div class="row">
