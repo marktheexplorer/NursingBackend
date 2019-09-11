@@ -38,7 +38,7 @@
                                                 </span>
                                             @endif
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group col-md-12">
                                             <button class="btn btn-default" type="submit">Submit</button>
                                         </div>
                                     </div>
