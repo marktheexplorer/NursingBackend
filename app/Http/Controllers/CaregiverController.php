@@ -67,7 +67,7 @@ class CaregiverController extends Controller{
             'fname' => 'required|string|max:40',
             'lname' => 'required|string|max:40',
             'email' => 'email|required|string|unique:users,email',
-            'mobile_number' => 'required|unique:users,mobile_number|min:8|max:15',
+            'mobile_number' => 'required|unique:users,mobile_number|min:10|max:10',
             'service' => 'required|not_in:0',
             'password' => 'required|min:6',
             'gender' => 'required',
@@ -127,10 +127,10 @@ class CaregiverController extends Controller{
         }
 
         $input['mobile_number'] = str_replace(array("(", ")", "_", "-", " "), "", $input['mobile_number']);
-        if(strlen($input['mobile_number']) > 15){
+        if(strlen($input['mobile_number']) > 10){
             $validator->errors()->add('area', 'The Mobile Number must be less then 16 charecter.');
             return redirect()->back()->withErrors($validator)->withInput($request->except('password'));
-        }else if(strlen($input['mobile_number']) < 8){
+        }else if(strlen($input['mobile_number']) < 10){
             $validator->errors()->add('area', 'The Mobile Number must be greater then 8 charecter.');
             return redirect()->back()->withErrors($validator)->withInput($request->except('password'));
         }
@@ -344,7 +344,7 @@ class CaregiverController extends Controller{
             'first_name' => 'required|string|max:40',
             'last_name' => 'required|string|max:40',
             'email' => 'email|required|string',
-            'mobile_number' => 'required|min:8|max:15',
+            'mobile_number' => 'required|min:10|max:10',
             'service' => 'required|not_in:0',
             'gender' => 'required',
             'language' => 'required',
