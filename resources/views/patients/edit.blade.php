@@ -288,6 +288,11 @@
                                         <div class="form-group col-md-12">
                                             <label>Additional Information</label>
                                             <textarea class="form-control" name="additional_info" placeholder="Description" rows="5">{{ old('additional_info', $user->patient? $user->patient->additional_info:'') }}</textarea>
+                                            @if ($errors->has('additional_info'))
+                                            <span class="text-danger">
+                                            <strong>{{ $errors->first('additional_info') }}</strong>
+                                            </span>
+                                            @endif
                                         </div>
                                     </div>
                                     </div>
