@@ -77,7 +77,8 @@ class PatientsController extends Controller{
             'weight' => 'required',
             'language' => 'required',
             'pets' => 'required',
-            'pets_description' => 'nullable|max:2000'
+            'pets_description' => 'nullable|max:2000',
+            'additional_info' => 'max:150'
         ],
         $messages = [
             'f_name.required'    => 'The First name is required.',
@@ -205,7 +206,8 @@ class PatientsController extends Controller{
             'weight' => 'required',
             'language' => 'required',
             'pets_description' => 'max:2000',
-            'long_term' => 'required'
+            'long_term' => 'required',
+            'additional_info' => 'max:150'
         ],
         $messages = [
             'f_name.required'    => 'The First name is required.',
