@@ -35,7 +35,7 @@
                     <div class="ibox-body">
                         <div class="tab-content">
                             <div class="tab-pane fade @if(count($errors) > 0) '' @else show active @endif" id="tab-1">
-                                <h5 class="text-info m-b-20 m-t-20"><i class="fa fa-bullhorn"></i> Details</h5>
+                                <h5 class="text-info m-b-20 m-t-20"><i class="fa fa-bullhorn"></i>Personal Details</h5>
                                 <ul class="media-list media-list-divider m-0">
                                     <li class="media">
                                         <div class="media-img col-md-3">Name</div>
@@ -109,6 +109,13 @@
                                             <div class="media-heading lineAlign">{{ $user->patient ? $user->patient->pin_code : ''}}</div>
                                         </div>
                                     </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="tab-content">
+                            <div class="tab-pane fade @if(count($errors) > 0) '' @else show active @endif" id="tab-1">
+                                <h5 class="text-info m-b-20 m-t-20"><i class="fa fa-bullhorn"></i>Other Details</h5>
+                                <ul class="media-list media-list-divider m-0">
                                     <li class="media">
                                         <div class="media-img col-md-3">Health Conditions</div>
                                         <div class="media-body">
@@ -124,14 +131,14 @@
                                     <li class="media">
                                         <div class="media-img col-md-3">Disciplines</div>
                                         <div class="media-body">
-                                            <div class="media-heading lineAlign"> <?php 
-                                            if($disciplines_name){ 
-                                                foreach($disciplines_name as $key => $value){ 
+                                            <div class="media-heading lineAlign"> <?php
+                                            if($disciplines_name){
+                                                foreach($disciplines_name as $key => $value){
                                                     if($value)
                                                         echo $value->name.',  ' ;
                                                     else
                                                         echo 'NA';
-                                                } 
+                                                }
                                             }?> </div>
                                         </div>
                                     </li>
