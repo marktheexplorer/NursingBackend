@@ -52,6 +52,7 @@ class PatientsController extends Controller{
      */
     public function update(Request $request, $id)
     {
+        $mobile_number = $request->input('mobile_number');
         $temp_number = str_replace(array("(", ")", "_", "-", " "), "", $request->input('mobile_number'));
         $request->merge(array('mobile_number' => $temp_number));
         $input = $request->input();
@@ -113,7 +114,7 @@ class PatientsController extends Controller{
                 $user = User::findOrFail($id);
                 $user->name = $input['f_name'].' '.$input['m_name'].' '.$input['l_name'];
                 $user->email = $input['email'];
-                $user->mobile_number = $input['mobile_number'];
+                $user->mobile_number = $mobile_number;
                 $user->city = $input['city'];
                 $user->state = $input['state'];
                 $user->street = $input['street'];
@@ -181,6 +182,7 @@ class PatientsController extends Controller{
     }
 
     public function store(Request $request){
+        $mobile_number = $request->input('mobile_number');
         $temp_number = str_replace(array("(", ")", "_", "-", " "), "", $request->input('mobile_number'));
         $request->merge(array('mobile_number' => $temp_number));
         $input = $request->input();
@@ -243,7 +245,7 @@ class PatientsController extends Controller{
             $input['name'] = $input['f_name'].' '.$input['m_name'].' '.$input['l_name'];
             $input['role_id'] = 3;
             $input['email'] = $input['email'];
-            $input['mobile_number'] = $input['mobile_number'];
+            $input['mobile_number'] = $mobile_number;
             $input['city'] = $input['city'];
             $input['state'] = $input['state'];
             $input['street'] = $input['street'];

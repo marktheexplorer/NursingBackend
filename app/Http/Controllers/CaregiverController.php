@@ -56,6 +56,7 @@ class CaregiverController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request){
+        $mobile_number = $request->input('mobile_number');
         $temp_number = str_replace(array("(", ")", "_", "-", " "), "", $request->input('mobile_number'));
         $request->merge(array('mobile_number' => $temp_number));
 
@@ -146,7 +147,7 @@ class CaregiverController extends Controller{
         $user->name = $name;
         $user->email = $input['email'];
         $user->email_verified = 1;
-        $user->mobile_number = $input['mobile_number'];
+        $user->mobile_number = $mobile_number;
         $user->country_code = '+1';
         $user->type = 1;
         $user->mobile_number_verified = 1;
@@ -336,6 +337,7 @@ class CaregiverController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id){
+        $mobile_number = $request->input('mobile_number');
         $temp_number = str_replace(array("(", ")", "_", "-", " "), "", $request->input('mobile_number'));
         $request->merge(array('mobile_number' => $temp_number));
         $input = $request->input();
@@ -414,7 +416,7 @@ class CaregiverController extends Controller{
         $user->name = $name;
         $user->email = $input['email'];
         $user->email_verified = 1;
-        $user->mobile_number = $input['mobile_number'];
+        $user->mobile_number = $mobile_number;
         $user->country_code = '+1';
         $user->type = 1;
         $user->mobile_number_verified = 1;
