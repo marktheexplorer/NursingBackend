@@ -13,7 +13,6 @@ class CaregiverExport implements FromCollection, WithHeadings, ShouldAutoSize{
         $usre_data = DB::table('users')
         ->select('users.*', 'caregiver.service', 'caregiver.min_price', 'caregiver.max_price', 'caregiver.description','caregiver.language', 'caregiver.zipcode')
         ->Join('caregiver', 'caregiver.user_id', '=', 'users.id')
-        //->Join('caregiver_attributes','caregiver_attributes.caregiver_id' ,'=','users.id')
         ->orderBy('users.id', 'desc')->get();
 
         foreach ($usre_data as $key => $value) {
