@@ -204,6 +204,20 @@
                                          </span>
                                          @endif
                                       </div>
+                                   </div>
+                                 </div>
+                                </div>
+                             </div>
+                           </div>
+                           <br>
+                           <div class="card">
+                             <div class="card-header" style="background-color: #ddd;">
+                                <h5>Other Info</h5>
+                             </div>
+                             <div class="tab-content row">
+                                <div class="tab-pane fade show active col-md-12" id="tab-2">
+                                  <div class="card-body">
+                                   <div class="row">
                                       <div class="col-sm-4 form-group">
                                          <label>Diagnosis</label>
                                          <select class="form-control" name="diagnose_id">

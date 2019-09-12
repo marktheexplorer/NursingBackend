@@ -194,118 +194,132 @@
                                         </div>
                                         <div class="col-sm-4 form-group">
                                            <label>Zip Code</label>
-                                           <input type="text" class="form-control {{ $errors->has('pin_code') ? ' is-invalid' : '' }}" name="pin_code" placeholder="Zip Code" value="{{ old('pin_code' ,$user->patient ?$user->patient->pin_code:'') }}" id="pin_code" />
+                                           <input type="text" class="form-control {{ $errors->has('pin_code') ? ' is-invalid' : '' }}" name="pin_code" placeholder="Zip Code" value="{{ old('pin_code' ,$user->patient ?$user->patient->pin_code:'') }}" id="pin_code" readonly />
                                            @if ($errors->has('pin_code'))
                                            <span class="text-danger">
                                            <strong>{{ $errors->first('pin_code') }}</strong>
                                            </span>
                                            @endif
                                         </div>
-                                        <div class="col-sm-4 form-group">
-                                            <label>Diagnosis</label>
-                                             <select class="form-control" name="diagnose_id" >
-                                                @foreach($diagnosis as $diagnose)
-                                                <option value="{{ $diagnose->id }}" {{ ($user->patient?$user->patient->diagnose_id:old('diagnose')) == $diagnose->id ? 'selected' : '' }}>{{ $diagnose->title }}</option>
-                                                @endforeach
-                                             </select>
-                                            @if ($errors->has('diagnose'))
-                                                <span class="text-danger">
-                                                    <strong>{{ $errors->first('diagnose') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                        <div class="col-sm-4 form-group">
-                                            <label>Availability</label>
-                                            <select class="form-control" name="availability">
-                                               <option value="24-hours" {{ ($user->patient?$user->patient->availability:old('availability')) == '24-hours' ? 'selected' : '' }}>24-hours</option>
-                                               <option value="12-hours(Day shift)" {{ ($user->patient?$user->patient->availability:old('availability')) == '12-hours(Day shift)' ? 'selected' : '' }}>12-hours(Day shift)</option>
-                                               <option value="12-hours(Night shift)" {{ ($user->patient?$user->patient->availability:old('availability')) == '12-hours(Night shift)' ? 'selected' : '' }}>12-hours(Night shift)</option>
-                                            </select>
-                                            @if ($errors->has('availability'))
-                                                <span class="text-danger">
-                                                    <strong>{{ $errors->first('availability') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                        <div class="col-sm-4  form-group">
-                                            <label>Discipline</label>
-                                            <?php if(old('qualification') != null)
-                                            $selected_disciplines = old('qualification');
-                                            ?>
-                                            <select name="qualification[]" class="form-control {{ $errors->has('qualification') ? ' is-invalid' : '' }} multiple" multiple="multiple">
-                                                <option disabled="true" > -- Select Discipline --</option>
-                                                @foreach($qualifications as $qualification)
-                                                  <option value="{{ $qualification->id }}" {{ (in_array($qualification->id, $selected_disciplines)) ? 'selected' :''}} >{{ $qualification->name }}</option>
-                                                @endforeach
-                                            </select>
-                                            @if ($errors->has('qualification'))
-                                                <span class="text-danger">
-                                                    <strong>{{ $errors->first('qualification') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                        <div class="col-sm-4 form-group">
-                                           <label>Long Term Care insuranc</label>
-                                           <div>
-                                            <input type="radio" name="long_term" value="yes" {{ ($user->patient?$user->patient->long_term:old('long_term')) == '1' ? 'checked' : '' }}>
-                                            <label for="yes">Yes</label>
-
-                                            <input type="radio" name="long_term" value="no" {{ ($user->patient?$user->patient->long_term:old('long_term')) == '0' ? 'checked' : '' }}>
-                                            <label for="no">No</label>
-                                          </div>
-                                           @if ($errors->has('long_term'))
-                                           <span class="text-danger">
-                                           <strong>{{ $errors->first('long_term') }}</strong>
-                                           </span>
-                                           @endif
-                                        </div>
-                                        <div class="col-sm-2 form-group">
-                                           <label>Pets</label>
-                                           <div>
-                                            <input type="radio" id="yes"
-                                             name="pets" value="yes" {{ ($user->patient?$user->patient->pets:old('pets')) == '1' ? 'checked' : '' }}>
-                                            <label for="yes">Yes</label>
-
-                                            <input type="radio" id="no"
-                                             name="pets" value="no" {{ ($user->patient?$user->patient->pets:old('pets')) == '0' ? 'checked' : '' }}>
-                                            <label for="no">No</label>
-                                          </div>
-                                           @if ($errors->has('pets'))
-                                           <span class="text-danger">
-                                           <strong>{{ $errors->first('pets') }}</strong>
-                                           </span>
-                                           @endif
-                                        </div>
-                                        <div class="form-group col-md-6 yes describe">
-                                            <label>Please Describe</label>
-                                            <textarea class="form-control" name="pets_description" rows="3">{{ old('pets_description', $user->patient? $user->patient->pets_description:'') }}</textarea>
-                                             @if ($errors->has('pets_description'))
-                                             <span class="text-danger">
-                                             <strong>{{ $errors->first('pets_description') }}</strong>
-                                             </span>
-                                             @endif
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <label>Additional Information</label>
-                                            <textarea class="form-control" name="additional_info" placeholder="Description" rows="5">{{ old('additional_info', $user->patient? $user->patient->additional_info:'') }}</textarea>
-                                            @if ($errors->has('additional_info'))
-                                            <span class="text-danger">
-                                            <strong>{{ $errors->first('additional_info') }}</strong>
-                                            </span>
-                                            @endif
-                                        </div>
                                     </div>
                                     </div>
                                   </div>
                                 </div>
-                                <div class="row">
-                                 <div class="form-group col-sm-5 pull-right"></div>
-                                   <div class="form-group col-sm-2 pull-right"><br/>
-                                       <button class="btn btn-primary pull-right" type="submit">Submit</button>
-                                   </div>
-                                 <div class="form-group col-sm-5 pull-right"></div>
-                               </div>
                               </div>
+                              <br>
+                              <div class="card">
+                                <div class="card-header" style="background-color: #ddd;">
+                                   <h5>Other Info</h5>
+                                </div>
+                                <div class="tab-content row">
+                                 <div class="tab-pane fade show active col-md-12" id="tab-2">
+                                   <div class="card-body">
+                                     <div class="row">
+                                       <div class="col-sm-4 form-group">
+                                           <label>Diagnosis</label>
+                                            <select class="form-control" name="diagnose_id" >
+                                               @foreach($diagnosis as $diagnose)
+                                               <option value="{{ $diagnose->id }}" {{ ($user->patient?$user->patient->diagnose_id:old('diagnose')) == $diagnose->id ? 'selected' : '' }}>{{ $diagnose->title }}</option>
+                                               @endforeach
+                                            </select>
+                                           @if ($errors->has('diagnose'))
+                                               <span class="text-danger">
+                                                   <strong>{{ $errors->first('diagnose') }}</strong>
+                                               </span>
+                                           @endif
+                                       </div>
+                                       <div class="col-sm-4 form-group">
+                                           <label>Availability</label>
+                                           <select class="form-control" name="availability">
+                                              <option value="24-hours" {{ ($user->patient?$user->patient->availability:old('availability')) == '24-hours' ? 'selected' : '' }}>24-hours</option>
+                                              <option value="12-hours(Day shift)" {{ ($user->patient?$user->patient->availability:old('availability')) == '12-hours(Day shift)' ? 'selected' : '' }}>12-hours(Day shift)</option>
+                                              <option value="12-hours(Night shift)" {{ ($user->patient?$user->patient->availability:old('availability')) == '12-hours(Night shift)' ? 'selected' : '' }}>12-hours(Night shift)</option>
+                                           </select>
+                                           @if ($errors->has('availability'))
+                                               <span class="text-danger">
+                                                   <strong>{{ $errors->first('availability') }}</strong>
+                                               </span>
+                                           @endif
+                                       </div>
+                                       <div class="col-sm-4  form-group">
+                                           <label>Discipline</label>
+                                           <?php if(old('qualification') != null)
+                                           $selected_disciplines = old('qualification');
+                                           ?>
+                                           <select name="qualification[]" class="form-control {{ $errors->has('qualification') ? ' is-invalid' : '' }} multiple" multiple="multiple">
+                                               <option disabled="true" > -- Select Discipline --</option>
+                                               @foreach($qualifications as $qualification)
+                                                 <option value="{{ $qualification->id }}" {{ (in_array($qualification->id, $selected_disciplines)) ? 'selected' :''}} >{{ $qualification->name }}</option>
+                                               @endforeach
+                                           </select>
+                                           @if ($errors->has('qualification'))
+                                               <span class="text-danger">
+                                                   <strong>{{ $errors->first('qualification') }}</strong>
+                                               </span>
+                                           @endif
+                                       </div>
+                                       <div class="col-sm-4 form-group">
+                                          <label>Long Term Care insuranc</label>
+                                          <div>
+                                           <input type="radio" name="long_term" value="yes" {{ ($user->patient?$user->patient->long_term:old('long_term')) == '1' ? 'checked' : '' }}>
+                                           <label for="yes">Yes</label>
+
+                                           <input type="radio" name="long_term" value="no" {{ ($user->patient?$user->patient->long_term:old('long_term')) == '0' ? 'checked' : '' }}>
+                                           <label for="no">No</label>
+                                         </div>
+                                          @if ($errors->has('long_term'))
+                                          <span class="text-danger">
+                                          <strong>{{ $errors->first('long_term') }}</strong>
+                                          </span>
+                                          @endif
+                                       </div>
+                                       <div class="col-sm-2 form-group">
+                                          <label>Pets</label>
+                                          <div>
+                                           <input type="radio" id="yes"
+                                            name="pets" value="yes" {{ ($user->patient?$user->patient->pets:old('pets')) == '1' ? 'checked' : '' }}>
+                                           <label for="yes">Yes</label>
+
+                                           <input type="radio" id="no"
+                                            name="pets" value="no" {{ ($user->patient?$user->patient->pets:old('pets')) == '0' ? 'checked' : '' }}>
+                                           <label for="no">No</label>
+                                         </div>
+                                          @if ($errors->has('pets'))
+                                          <span class="text-danger">
+                                          <strong>{{ $errors->first('pets') }}</strong>
+                                          </span>
+                                          @endif
+                                       </div>
+                                       <div class="form-group col-md-6 yes describe">
+                                           <label>Please Describe</label>
+                                           <textarea class="form-control" name="pets_description" rows="3">{{ old('pets_description', $user->patient? $user->patient->pets_description:'') }}</textarea>
+                                            @if ($errors->has('pets_description'))
+                                            <span class="text-danger">
+                                            <strong>{{ $errors->first('pets_description') }}</strong>
+                                            </span>
+                                            @endif
+                                       </div>
+                                       <div class="form-group col-md-12">
+                                           <label>Additional Information</label>
+                                           <textarea class="form-control" name="additional_info" placeholder="Description" rows="5">{{ old('additional_info', $user->patient? $user->patient->additional_info:'') }}</textarea>
+                                           @if ($errors->has('additional_info'))
+                                           <span class="text-danger">
+                                           <strong>{{ $errors->first('additional_info') }}</strong>
+                                           </span>
+                                           @endif
+                                       </div>
+                                   </div>
+                                   </div>
+                                 </div>
+                               </div>
+                             </div>
+                             <div class="row">
+                              <div class="form-group col-sm-5 pull-right"></div>
+                                <div class="form-group col-sm-2 pull-right"><br/>
+                                    <button class="btn btn-primary pull-right" type="submit">Submit</button>
+                                </div>
+                              <div class="form-group col-sm-5 pull-right"></div>
+                            </div>
                             </form>
                           </div>
                         </div>
