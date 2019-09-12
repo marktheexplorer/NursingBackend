@@ -37,8 +37,11 @@ class PatientsController extends Controller{
     public function edit($id){
         $user = User::findOrFail($id);
         $diagnosis = Diagnose::get();
-        $qualifications = Qualification::orderBy('name', 'asc')->get();
         $selected_disciplines = explode(',', $user->patient? $user->patient->disciplines: '');
+
+        $qualifications_selected = Qualification::whereIn('id',$selected_disciplines);
+        $qualifications = Qualification::where('is_blocked','0')->union($qualifications_selected)->get();
+
         $city_state = DB::table('us_location')->select('state_code')->where('city', '=', $user->city)->orderBy('state_code', 'asc')->get();
         return view('patients.edit' , compact('user','diagnosis','qualifications','selected_disciplines','city_state'));
     }
@@ -103,7 +106,7 @@ class PatientsController extends Controller{
 
         if($request->has('profile_image') && ($request->file('profile_image') != null)) {
                 $image = $request->file('profile_image');
-                
+
                 $user = User::findOrFail($id);
                 $input['profile_image'] = time().'.'.$image->getClientOriginalExtension();
                 $user->profile_image = $input['profile_image'];
@@ -178,7 +181,7 @@ class PatientsController extends Controller{
 
     public function create(){
         $diagnosis = Diagnose::get();
-        $qualifications = Qualification::orderBy('name', 'asc')->get();
+        $qualifications = Qualification::where('is_blocked','0')->orderBy('name', 'asc')->get();
         return view('patients.create', compact('diagnosis','qualifications'));
     }
 
