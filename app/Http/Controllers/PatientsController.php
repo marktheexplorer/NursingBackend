@@ -36,7 +36,9 @@ class PatientsController extends Controller{
 
     public function edit($id){
         $user = User::findOrFail($id);
-        $diagnosis = Diagnose::get();
+
+        $diagnosis_selected = Diagnose::where('id',$user->patient->diagnose_id);
+        $diagnosis = Diagnose::where('is_blocked','0')->union($diagnosis_selected)->get();
         $selected_disciplines = explode(',', $user->patient? $user->patient->disciplines: '');
 
         $qualifications_selected = Qualification::whereIn('id',$selected_disciplines);
@@ -180,7 +182,7 @@ class PatientsController extends Controller{
     }
 
     public function create(){
-        $diagnosis = Diagnose::get();
+        $diagnosis = Diagnose::where('is_blocked','0')->get();
         $qualifications = Qualification::where('is_blocked','0')->orderBy('name', 'asc')->get();
         return view('patients.create', compact('diagnosis','qualifications'));
     }
