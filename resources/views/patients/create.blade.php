@@ -205,7 +205,7 @@
                                          @endif
                                       </div>
                                       <div class="col-sm-4 form-group">
-                                         <label>Health Conditions</label>
+                                         <label>Diagnosis</label>
                                          <select class="form-control" name="diagnose_id">
                                             @foreach($diagnosis as $diagnose)
                                             <option value="{{ $diagnose->id }}">{{ $diagnose->title }}</option>

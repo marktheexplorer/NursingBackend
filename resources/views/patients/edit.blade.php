@@ -202,7 +202,7 @@
                                            @endif
                                         </div>
                                         <div class="col-sm-4 form-group">
-                                            <label>Health Conditions</label>
+                                            <label>Diagnosis</label>
                                              <select class="form-control" name="diagnose_id" >
                                                 @foreach($diagnosis as $diagnose)
                                                 <option value="{{ $diagnose->id }}" {{ ($user->patient?$user->patient->diagnose_id:old('diagnose')) == $diagnose->id ? 'selected' : '' }}>{{ $diagnose->title }}</option>
