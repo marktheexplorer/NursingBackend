@@ -36,25 +36,16 @@
                                         </div>
                                         <div class="card-body">
                                               <div class="row">
-                                                <div class="col-sm-12 form-group center" style="text-align: center;">
-
-                                                    <input type="file" class=" {{ $errors->has('profile_image') ? ' is-invalid' : '' }} form-control" name="profile_image" placeholder="Profile Image" value="{{ old('profile_image') }}" accept="image/*" style="display: none;" id="upload_image" onchange="readURL(this);" />
-
-                                                    <span style="text-align: center;position: absolute;top: 120px;margin-left: 101px;" >
-                                                        <button class="btn-sm btn-primary btn-cir" title="Edit" id="upload_image_icon" onclick="event.preventDefault();"><i class="fas fa-pencil-alt"></i></button>
-                                                    </span><?php
-                                                    if(empty($user->profile_image)){ ?>
-                                                        <img class="img-circle" src="{{ asset('admin/assets/img/admin-avatar.png') }}" /><?php
-                                                    }else{ ?>
-                                                        <img class="img-circle" style="height:150px;width: 150px;" src="<?php echo asset($user->profile_image); ?>" /><?php
-                                                    }   ?>
-                                                    @if ($errors->has('profile_image'))
-                                                        <div class="clearfix;"></div>
-                                                        <span class="invalid-feedback" role="alert" style="text-align: center;">
-                                                            <strong>{{ $errors->first('profile_image') }} </strong>
-                                                        </span>
-                                                    @endif
-                                                </div>
+                                                <div class="form-group col-sm-12 center" style="text-align: center;">
+                                                   <span style="text-align: center;position: absolute;top: 120px;margin-left: 101px;" id="upload_image_icon" onclick="event.preventDefault();">
+                                                     <button class="btn-sm btn-primary btn-cir" title="Edit"><i class="fas fa-pencil-alt"></i></button>
+                                                   </span>
+                                                     <img class="img-circle" src="<?php if($user->profile_image){ echo asset(config($user->profile_image)); }else{ echo asset('admin/assets/img/admin-avatar.png') ;} ?>" style="width:150px;height:150px;"/>
+                                                       <input type="file" id="upload_image" name="profile_image" value="{{ old('profile_image') }}" onchange="readURL(this);" accept="image/*"/ style="display:none;"><br/><br/>
+                                                       <span class="text-danger image_error">
+                                                       <strong>{{ $errors->has('profile_image')?$errors->first('profile_image'):'' }}</strong>
+                                                       </span>
+                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-sm-3 form-group">
@@ -568,15 +559,62 @@
         $("#upload_image").click();
         //e.preventDefault();
     });
-
     function readURL(input) {
-        if (input.files && input.files[0]){
+      if (input.files && input.files[0]) {
+        if($.inArray(input.files[0].type, ['image/png','image/jpg','image/jpeg']) == 0){
+          console.log(input.files[0].type);
             var reader = new FileReader();
             reader.onload = function (e) {
-                $('.img-circle').attr('src', e.target.result);
+              $('.img-circle').attr('src', e.target.result);
             };
             reader.readAsDataURL(input.files[0]);
         }
+      }
     }
+
+    (function($) {
+    $.fn.checkFileType = function(options) {
+        var defaults = {
+            allowedExtensions: [],
+            success: function() {},
+            error: function() {}
+        };
+        options = $.extend(defaults, options);
+
+        return this.each(function() {
+
+            $(this).on('change', function() {
+                var value = $(this).val(),
+                    file = value.toLowerCase(),
+                    extension = file.substring(file.lastIndexOf('.') + 1);
+
+                if ($.inArray(extension, options.allowedExtensions) == -1) {
+                    options.error();
+                    $(this).focus();
+                } else {
+                    options.success();
+
+                }
+
+            });
+
+        });
+    };
+
+})(jQuery);
+
+$(function() {
+    $('#upload_image').checkFileType({
+        allowedExtensions: ['jpg', 'jpeg','png'],
+        success: function() {
+            $('.image_error').text('');
+        },
+        error: function() {
+          $('#upload_image').val('')
+          $('.image_error').text('Please upload a jpg , jpeg or png image .');
+        }
+    });
+
+});
 </script>
 @endsection
