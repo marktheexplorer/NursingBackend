@@ -28,7 +28,7 @@
                         </ul>
                         <div class="tab-content">
                            <div class="tab-pane fade show active" id="tab-2">
-                             <form action="{{ route('patients.update', ['id' => $user->id]) }}" enctype = 'multipart/form-data' method="post" class="form-horizontal">
+                             <form action="{{ route('patients.update', ['id' => $user->id]) }}" enctype = 'multipart/form-data' method="post" class="form-horizontal patientForm">
                                @csrf
                                @method('put')
                                <div class="card">
@@ -338,17 +338,6 @@
         e.preventDefault();
     });
 
-    function readURL(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-
-            reader.onload = function (e) {
-                $('.img-circle').attr('src', e.target.result);
-            };
-
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
  $(function(){
     function split( val ) {
         return val.split( /,\s*/ );
@@ -469,6 +458,19 @@ $("#state").change(function () {
         //e.preventDefault();
     });
 
+    function readURL(input) {
+      if (input.files && input.files[0]) {
+        if($.inArray(input.files[0].type, ['image/png','image/jpg','image/jpeg']) == 0){
+          console.log(input.files[0].type);
+            var reader = new FileReader();
+            reader.onload = function (e) {
+              $('.img-circle').attr('src', e.target.result);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+      }
+    }
+
     (function($) {
     $.fn.checkFileType = function(options) {
         var defaults = {
@@ -507,7 +509,8 @@ $(function() {
             $('.image_error').text('');
         },
         error: function() {
-            $('.image_error').text('Please upload a jpg , jpeg or png image .');
+          $('#profile_image').val('')
+          $('.image_error').text('Please upload a jpg , jpeg or png image .');
         }
     });
 

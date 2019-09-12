@@ -103,6 +103,7 @@ class PatientsController extends Controller{
 
         if($request->has('profile_image') && ($request->file('profile_image') != null)) {
                 $image = $request->file('profile_image');
+                
                 $user = User::findOrFail($id);
                 $input['profile_image'] = time().'.'.$image->getClientOriginalExtension();
                 $user->profile_image = $input['profile_image'];
