@@ -291,9 +291,15 @@
                                                     <label>Service Area </label>
                                                     <select name="service_area[]" class="form-control {{ $errors->has('service_area') ? ' is-invalid' : '' }} select2" multiple="multiple" id="servicearea" >
                                                         @foreach($service_area_list as $row)
-                                                            <option value="{{ $row->id }}" {{ (collect(old('service_area'))->contains($row->id)) ? 'selected':'' }} >
-                                                                {{ $row->area }}
-                                                            </option>
+                                                            @if(old('service_area') === null)
+                                                                <option value="{{ $row->id }}" <?php if(in_array($row->id, old('non_service_area'))){ echo 'disabled'; } ?>>
+                                                                    {{ $row->area }}
+                                                                </option>
+                                                            @else
+                                                                <option value="{{ $row->id }}" <?php if(in_array($row->id, old('service_area'))){ echo 'selected'; } ?>  <?php if(in_array($row->id, old('non_service_area'))){ echo 'disabled'; } ?>>
+                                                                    {{ $row->area }}
+                                                                </option>
+                                                            @endif    
                                                         @endforeach
                                                     </select>
                                                     @if ($errors->has('service_area'))
@@ -308,9 +314,15 @@
                                                     <label>Non Service Area </label>
                                                     <select name="non_service_area[]" class="form-control {{ $errors->has('non_service_area') ? ' is-invalid' : '' }} select2" multiple="multiple" id="nonservicearea">
                                                         @foreach($service_area_list as $row)
-                                                            <option value="{{ $row->id }}" id="non{{ $row->id }}" {{ (collect(old('non_service_area'))->contains($row->id)) ? 'selected':'' }}>
-                                                                {{ ucfirst($row->area) }}
-                                                            </option>
+                                                            @if(old('non_service_area') === null)
+                                                                <option value="{{ $row->id }}" <?php if(in_array($row->id, old('service_area'))){ echo 'disabled'; } ?>>
+                                                                    {{ $row->area }}
+                                                                </option>
+                                                            @else
+                                                                <option value="{{ $row->id }}" <?php if(in_array($row->id, old('non_service_area'))){ echo 'selected'; } ?> <?php if(in_array($row->id, old('service_area'))){ echo 'disabled'; } ?> >
+                                                                    {{ $row->area }}
+                                                                </option>
+                                                            @endif 
                                                         @endforeach
                                                     </select>
                                                     @if ($errors->has('non_service_area'))

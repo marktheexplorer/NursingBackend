@@ -7,15 +7,19 @@ use App\Faq;
 use Validator;
 use DB;
 
-class FaqController extends Controller
-{
+class FaqController extends Controller{
+    public function __construct(){ 
+        $this->middleware('preventBackHistory');
+        $this->middleware('auth'); 
+    }
+    
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        $faqs = Faq::orderBy('id', 'DESC')->get();
+        $faqs = Faq::orderBy('faq_order', 'ASC')->get();
         return view('faqs.index', compact('faqs'));
     }
 

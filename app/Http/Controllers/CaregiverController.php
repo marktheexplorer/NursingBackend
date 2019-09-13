@@ -18,6 +18,11 @@ use App\Exports\CaregiverExport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class CaregiverController extends Controller{
+    public function __construct(){ 
+        $this->middleware('preventBackHistory');
+        $this->middleware('auth'); 
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -222,22 +227,18 @@ class CaregiverController extends Controller{
 
             //send mail about reset password
             if($input['issentmail'] == '1'){
-                $token = md5(uniqid(rand(), true));
                 $objDemo = new \stdClass();
                 $objDemo->sender = env('APP_NAME');
-                $objDemo->receiver = ucfirst($name);
-                $objDemo->type = 'password_reset_mail';
+                $objDemo->receiver = ucfirst($user->name);
+                $objDemo->type = 'password_on_mail';
                 $objDemo->format = 'basic';
-                $objDemo->subject = '24*7 Nursing : Password Reset Mail';
+                $objDemo->subject = '24*7 Nursing : Password Mail';
                 $objDemo->mail_from = env('MAIL_FROM_EMAIL');
                 $objDemo->mail_from_name = env('MAIL_FROM_NAME');
-                $objDemo->weburl = env('APP_URL')."set_password/".$token;
-                //return view('mail.basic_carepack_confirmed', compact('objDemo'));
-                //$issemd = Mail::to('sonu.shokeen@saffrontech.net')->send(new MailHelper($objDemo));
+                $objDemo->email = $user->email;
+                $objDemo->password = $input['password'];
+                //return view('mail.password_on_mail', compact('objDemo'));
                 $issemd = Mail::to($input['email'])->send(new MailHelper($objDemo));
-
-                //update token in table
-                $service_request = DB::table('users')->where('email', '=', $input['email'])->update(array('email_activation_token' => $token));
             }
 
             //redirect to index page.
@@ -437,22 +438,18 @@ class CaregiverController extends Controller{
 
         //send mail about reset password
         if($input['issentmail'] == '1'){
-            $token = md5(uniqid(rand(), true));
             $objDemo = new \stdClass();
             $objDemo->sender = env('APP_NAME');
-            $objDemo->receiver = ucfirst($name);
-            $objDemo->type = 'password_reset_mail';
+            $objDemo->receiver = ucfirst($user->name);
+            $objDemo->type = 'password_on_mail';
             $objDemo->format = 'basic';
-            $objDemo->subject = '24*7 Nursing : Password Information';
+            $objDemo->subject = '24*7 Nursing : Password Mail';
             $objDemo->mail_from = env('MAIL_FROM_EMAIL');
             $objDemo->mail_from_name = env('MAIL_FROM_NAME');
-            $objDemo->weburl = env('APP_URL')."set_password/".$token;
-            //return view('mail.basic_carepack_confirmed', compact('objDemo'));
-            //$issemd = Mail::to('sonu.shokeen@saffrontech.net')->send(new MailHelper($objDemo));
+            $objDemo->email = $user->email;
+            $objDemo->password = $input['password'];
+            //return view('mail.password_on_mail', compact('objDemo'));
             $issemd = Mail::to($input['email'])->send(new MailHelper($objDemo));
-
-            //update token in table
-            $service_request = DB::table('users')->where('email', '=', $input['email'])->update(array('email_activation_token' => $token));
         }
 
         $caregiverid = DB::table('caregiver')->select('id')->where('user_id','=', $id)->first();
@@ -514,7 +511,7 @@ class CaregiverController extends Controller{
                 'value' => $value,
                 'type' => 'service'
             );
-        }
+        }            
 
         DB::table('caregiver_attributes')->insert($data);
 

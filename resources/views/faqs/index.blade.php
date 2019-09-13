@@ -30,8 +30,8 @@
                  	@foreach($faqs as $key => $faq)
 	            		<tr>
 	            			<td>{{ ++$key }}</td>
-	              			<td>{{ $faq->question }}</td>
-                            <td>{{ date_format(date_create($faq->created_at) , 'd M ,y') }}
+	              			<td>{{ ucfirst($faq->question) }}</td>
+                            <td>{{ date_format(date_create($faq->created_at) , 'd M ,Y') }}
 	              			<td>
 	              				<ul class="actions-menu">
                                     <li>

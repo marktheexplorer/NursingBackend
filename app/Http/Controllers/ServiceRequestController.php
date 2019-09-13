@@ -16,6 +16,11 @@ use App\Exports\RequestExport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ServiceRequestController extends Controller{
+    public function __construct(){ 
+        $this->middleware('preventBackHistory');
+        $this->middleware('auth'); 
+    }
+    
     /**
      * Display a listing of the resource.
      *

@@ -40,6 +40,10 @@ class MailHelper extends Mailable{
           //send password reset mail from caregiver create form
             $objDemo = $this->objDemo;
             return $this->from($this->objDemo->mail_from, $this->objDemo->mail_from_name)->subject($this->objDemo->subject)->view('mail.basic_carepack_confirmed', compact('objDemo'));
+        }else if($this->objDemo->type == 'password_on_mail'){
+          //send password reset mail from caregiver create form
+            $objDemo = $this->objDemo;
+            return $this->from($this->objDemo->mail_from, $this->objDemo->mail_from_name)->subject($this->objDemo->subject)->view('mail.password_on_mail', compact('objDemo'));
         }
     }
 

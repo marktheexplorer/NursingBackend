@@ -13,6 +13,11 @@ use Cache;
 use Artisan;
 
 class ProfileController extends Controller{
+    public function __construct(){ 
+        $this->middleware('preventBackHistory');
+        $this->middleware('auth'); 
+    }
+    
     public function viewProfile(){
     	return view('profile.index');
     }
