@@ -23,7 +23,7 @@ class CreateUsersTable extends Migration
             $table->string('country_code')->nullable();
             $table->string('gender')->nullable();
             $table->date('dob')->nullable();
-            $table->string('mobile_number')->unique();
+            $table->string('mobile_number')->nullable()->unique();
             $table->boolean('mobile_number_verified')->default(0);
             $table->string('otp')->nullable();
             $table->enum('type', ['caregiver', 'patient'])->default('caregiver');
