@@ -8,7 +8,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 use Illuminate\Http\Request;
-use DB; 
+use DB;
 
 class MailHelper extends Mailable{
     use Queueable, SerializesModels;
@@ -45,7 +45,7 @@ class MailHelper extends Mailable{
 
     /*public function basic_email() {
         $data = array('name'=>"Virat Gandhi");
-   
+
         Mail::send(['text'=>'mail'], $data, function($message) {
             $message->to('abc@gmail.com', 'Tutorials Point')->subject('Laravel Basic Testing Mail');
             $message->from('xyz@gmail.com','Virat Gandhi');

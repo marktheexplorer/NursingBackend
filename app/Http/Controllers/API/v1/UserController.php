@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\API\v1;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Notifications\SignupActivate;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Mail;
+use App\Http\Controllers\Controller;
+use App\Notifications\SignupActivate;
+use App\Mail\ForgotPassword;
 use App\User;
 use App\Helper;
 use App\FcmUser;
@@ -78,7 +80,8 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'email' => 'required',
-            'password' => 'required|min:6'
+            'password' => 'required|min:6',
+            'type' => ['required', Rule::in(['caregiver', 'patient'])]
         ]);
 
         if ($validator->fails())
@@ -119,27 +122,23 @@ class UserController extends Controller
     public function resetPassword(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'username' => 'required',
-            'password' => 'required|min:6',
+            'email' => 'required',
         ]);
 
-        if ($validator->fails())
-            return response()->json(['status_code'=> 400, 'message'=> $validator->errors()->first(), 'data' => null]);
-
-        if (is_numeric($request->input('username')))
-            $field = 'mobile_number';
-        elseif (filter_var($request->input('username'), FILTER_VALIDATE_EMAIL))
-            $field = 'email';
-        else
-            $field = 'email';
-
-        $request->merge([$field => $request->input('username')]);
-
-        $user = User::where($field, $request->input('username'))->first();
+        $user = User::where('email', $request->input('email'))->first();
         if ($user) {
-            $user->password = Hash::make($request->input('password'));
-            $user->save();
-            return response()->json(['status_code' => $this->successStatus , 'message' => 'Password reset successfully.', 'data' => null]);
+            User::where('email', $request->input('email'))->update(['otp' => rand(1000,9999)]);
+            // $objDemo = new \stdClass();
+            // $objDemo->sender = env('APP_NAME');
+            // $objDemo->receiver = $user->name;
+            // $objDemo->otp = $user->otp;
+            // $objDemo->subject = '24*7 Nursing : Password Reset Mail';
+            // $objDemo->mail_from = env('MAIL_FROM_EMAIL');
+            // $objDemo->mail_from_name = env('MAIL_FROM_NAME');
+
+            Mail::to('kajal.garg@saffrontech.net')->send(new ForgotPassword($user));
+
+            return response()->json(['status_code' => $this->successStatus , 'message' => 'Your One Time Password has been sent to your mail.', 'data' => null]);
         } else {
             return response()->json(['status_code' => 400 , 'message' => 'Unauthorized.', 'data' => null]);
         }

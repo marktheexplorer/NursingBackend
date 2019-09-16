@@ -16,7 +16,6 @@ use Illuminate\Http\Request;
 Route::group(['namespace' => 'API\v1'], function(){
 	Route::post('register', 'UserController@register');
 	Route::post('login', 'UserController@login');
-	Route::post('social-login', 'UserController@socialLogin');
 	Route::post('reset-password', 'UserController@resetPassword');
 	Route::post('check-status', 'UserController@checkUserStatus');
 	Route::post('verify-otp', 'UserController@verifyOtp');
