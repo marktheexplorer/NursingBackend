@@ -31,7 +31,7 @@ class UserController extends Controller
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
+            'name' => 'required|max:40',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6',
             'type' => ['required', Rule::in(['caregiver', 'patient'])],
@@ -69,139 +69,6 @@ class UserController extends Controller
     }
 
     /**
-     * Send / Resend otp api
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function sendOtp(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'username' => 'required',
-        ]);
-
-        if ($validator->fails())
-            return response()->json(['status_code'=> $this->errorStatus, 'message'=> $validator->errors()->first(), 'data' => null]);
-
-        if (is_numeric($request->input('username')))
-            $field = 'mobile_number';
-        elseif (filter_var($request->input('username'), FILTER_VALIDATE_EMAIL))
-            $field = 'email';
-        else
-            $field = 'email';
-
-        $request->merge([$field => $request->input('username')]);
-
-        $user = User::where($field, $request->input('username'))->first();
-
-        if ($user) {
-            $user->otp = '4567';
-            $user->save();
-
-            if ($field == 'email') {
-                if ($user->email_verified != 1) {
-                    $user->notify(new SignupActivate($user));
-                    return response()->json(['status_code' => $this->errorStatus, 'message' => 'Please verify your email address, link send to your registered email id.', 'data' => null]);
-                } else {
-
-                    return response()->json(['status_code' => $this->successStatus, 'message' => 'Otp, send it to your registered email.', 'data'=> null]);
-                }
-            } else {
-                if ($user->mobile_number_verified != 1) {
-                    //send otp to mobile no.
-                    return response()->json(['status_code' => 300, 'message' => 'Please verify the mobile number to proceed. Otp, send it to your registered mobile number.', 'data'=> null]);
-                } else  {
-                    //send otp to mobile no.
-                    return response()->json(['status_code' => $this->successStatus, 'message' => 'Otp, send it to your registered mobile number.', 'data'=> null]);
-                }
-            }
-        } else {
-            return response()->json(['status_code' => 400, 'message' => 'No record found.', 'data'=> null]);
-        }
-    }
-
-    /**
-     * Check otp api
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function verifyOtp(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'username' => 'required',
-            'otp' => 'required|max:4',
-            'type' => ['required', Rule::in([1, 2])],
-        ]);
-
-        if ($validator->fails())
-            return response()->json(['status_code'=> 400, 'message'=> $validator->errors()->first(), 'data' => null]);
-
-        if (is_numeric($request->input('username')))
-            $field = 'mobile_number';
-        elseif (filter_var($request->input('username'), FILTER_VALIDATE_EMAIL))
-            $field = 'email';
-        else
-            $field = 'email';
-
-        $request->merge([$field => $request->input('username')]);
-
-        $check = User::where($field, $request->input('username'))->first();
-
-        if ($check) {
-            $otp = User::where($field, $request->input('username'))->where('otp', $request->input('otp'))->first();
-
-            if ($otp) {
-                $otp->otp = '';
-                $otp->mobile_number_verified = 1;
-                $otp->save();
-
-                DB::table('oauth_access_tokens')
-                    ->where('user_id', $otp->id)
-                    ->update([
-                        'revoked' => 1
-                    ]);
-                $success['token'] = $otp->createToken($otp->name)->accessToken;
-                $success['name'] =  $otp->name;
-                $success['email'] = $otp->email;
-                $success['mobile_number'] = $otp->mobile_number;
-                $success['profile_image'] = $otp->profile_image;
-                return response()->json(['status_code' => $this->successStatus, 'message' => 'Otp Verified.', 'data'=> ($request->input('type') == 1) ? $success : null]);
-            } else {
-                return response()->json(['status_code' => 400, 'message' => 'Incorrect Otp.', 'data'=> null]);
-            }
-        } else {
-            if ($field == 'mobile_number')
-                return response()->json(['status_code' => 400, 'message' => 'The mobile number does not register with us.', 'data'=> null]);
-            else
-                return response()->json(['status_code' => 400, 'message' => 'The email address does not register with us.', 'data'=> null]);
-        }
-    }
-
-    /**
-     * Email verification link api
-     *
-     * @param  token
-     * @return \Illuminate\Http\Response
-     */
-    public function signupActivate($token)
-    {
-        $user = User::where('email_activation_token', $token)->first();
-
-        if (!$user) {
-            flash()->error('The activation link is invalid.');
-            return view('verify.email');
-        }
-
-        $user->email_verified = true;
-        $user->email_activation_token = '';
-        $user->save();
-
-        flash()->success('Your account is verified successfully.');
-        return view('verify.email');
-    }
-
-    /**
      * login api
      *
      * @param  \Illuminate\Http\Request  $request
@@ -210,28 +77,22 @@ class UserController extends Controller
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'username' => 'required',
-            'password' => 'required|min:6',
-            'fcm_reg_id' => 'required|string'
+            'email' => 'required',
+            'password' => 'required|min:6'
         ]);
 
         if ($validator->fails())
-            return response()->json(['status_code'=> 400, 'message'=> $validator->errors()->first(), 'data' => null]);
+            return response()->json(['status_code'=> $this->errorStatus, 'message'=> $validator->errors()->first(), 'data' => null]);
 
-            $email = $request->input('username');
+            $email = $request->input('email');
             $password = $request->input('password');
 
         if (Auth::attempt(['email' => $email, 'password' => $password])) {
 
             $user = Auth::user();
-            $input = $request->input();
-            FcmUser::where('user_id',$user->id)->update(['fcm_reg_id' => $input['fcm_reg_id']]);
 
             if ($user->is_blocked) {
                 return response()->json(['status_code' => 999, 'message' => 'Your account is blocked by admin. Please contact to admin.', 'data' => null]);
-            } elseif (!$user->email_verified) {
-                $user->notify(new SignupActivate($user));
-                return response()->json(['status_code' => 400, 'message' => 'Please verify your email address, link send to your registered email id.', 'data' => null]);
             } else {
                 DB::table('oauth_access_tokens')
                     ->where('user_id', $user->id)
@@ -239,17 +100,13 @@ class UserController extends Controller
                         'revoked' => 1
                     ]);
                 $success['token'] =  $user->createToken($user->name)->accessToken;
-                $success['type'] =  $user->type;
                 $success['name'] =  $user->name;
                 $success['email'] = $user->email;
-                $success['country_code'] = $user->country_code;
-                $success['mobile_number'] = $user->mobile_number;
-                $success['profile_image'] = $user->profile_image;
 
                 return response()->json(['status_code' => $this->successStatus, 'message' => '', 'data' => $success]);
             }
         } else {
-            return response()->json(['status_code' => 400, 'message' => 'Invalid Credentials.', 'data' => null]);
+            return response()->json(['status_code' => $this->errorStatus, 'message' => 'Invalid Credentials.', 'data' => null]);
         }
     }
 
