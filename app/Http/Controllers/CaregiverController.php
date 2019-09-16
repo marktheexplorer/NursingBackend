@@ -341,7 +341,6 @@ class CaregiverController extends Controller{
         $temp_number = str_replace(array("(", ")", "_", "-", " "), "", $request->input('mobile_number'));
         $request->merge(array('mobile_number' => $temp_number));
         $input = $request->input();
-
         $validator =  Validator::make($input,[
             'first_name' => 'required|string|max:40',
             'last_name' => 'required|string|max:40',

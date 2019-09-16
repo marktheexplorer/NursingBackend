@@ -40,7 +40,7 @@
                                                    <span style="text-align: center;position: absolute;top: 120px;margin-left: 101px;" id="upload_image_icon" onclick="event.preventDefault();">
                                                      <button class="btn-sm btn-primary btn-cir" title="Edit"><i class="fas fa-pencil-alt"></i></button>
                                                    </span>
-                                                     <img class="img-circle" src="<?php if($user->profile_image){ echo asset(config($user->profile_image)); }else{ echo asset('admin/assets/img/admin-avatar.png') ;} ?>" style="width:150px;height:150px;"/>
+                                                     <img class="img-circle" src="<?php if($user->profile_image){ echo asset($user->profile_image); }else{ echo asset('admin/assets/img/admin-avatar.png') ;} ?>" style="width:150px;height:150px;"/>
                                                        <input type="file" id="upload_image" name="profile_image" value="{{ old('profile_image') }}" onchange="readURL(this);" accept="image/*"/ style="display:none;"><br/><br/>
                                                        <span class="text-danger image_error">
                                                        <strong>{{ $errors->has('profile_image')?$errors->first('profile_image'):'' }}</strong>
