@@ -32,7 +32,7 @@
                 @endif
             </div>
         </div><!--
-        <div class="form-group d-flex justify-content-between">            
+        <div class="form-group d-flex justify-content-between">
              @if (Route::has('password.request'))
                 <a href="{{ route('password.request') }}" id="to-recover">Forget password?</a>
             @endif

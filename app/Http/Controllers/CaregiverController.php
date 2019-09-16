@@ -61,6 +61,7 @@ class CaregiverController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request){
+        $mobile_number = $request->input('mobile_number');
         $temp_number = str_replace(array("(", ")", "_", "-", " "), "", $request->input('mobile_number'));
         $request->merge(array('mobile_number' => $temp_number));
 
@@ -72,7 +73,7 @@ class CaregiverController extends Controller{
             'fname' => 'required|string|max:40',
             'lname' => 'required|string|max:40',
             'email' => 'email|required|string|unique:users,email',
-            'mobile_number' => 'required|unique:users,mobile_number|min:8|max:15',
+            'mobile_number' => 'required|unique:users,mobile_number|min:10|max:10',
             'service' => 'required|not_in:0',
             'password' => 'required|min:6',
             'gender' => 'required',
@@ -132,10 +133,10 @@ class CaregiverController extends Controller{
         }
 
         $input['mobile_number'] = str_replace(array("(", ")", "_", "-", " "), "", $input['mobile_number']);
-        if(strlen($input['mobile_number']) > 15){
+        if(strlen($input['mobile_number']) > 10){
             $validator->errors()->add('area', 'The Mobile Number must be less then 16 charecter.');
             return redirect()->back()->withErrors($validator)->withInput($request->except('password'));
-        }else if(strlen($input['mobile_number']) < 8){
+        }else if(strlen($input['mobile_number']) < 10){
             $validator->errors()->add('area', 'The Mobile Number must be greater then 8 charecter.');
             return redirect()->back()->withErrors($validator)->withInput($request->except('password'));
         }
@@ -151,7 +152,7 @@ class CaregiverController extends Controller{
         $user->name = $name;
         $user->email = $input['email'];
         $user->email_verified = 1;
-        $user->mobile_number = $input['mobile_number'];
+        $user->mobile_number = $mobile_number;
         $user->country_code = '+1';
         $user->type = 1;
         $user->mobile_number_verified = 1;
@@ -337,6 +338,7 @@ class CaregiverController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id){
+        $mobile_number = $request->input('mobile_number');
         $temp_number = str_replace(array("(", ")", "_", "-", " "), "", $request->input('mobile_number'));
         $request->merge(array('mobile_number' => $temp_number));
         $input = $request->input();
@@ -345,7 +347,7 @@ class CaregiverController extends Controller{
             'first_name' => 'required|string|max:40',
             'last_name' => 'required|string|max:40',
             'email' => 'email|required|string',
-            'mobile_number' => 'required|min:8|max:15',
+            'mobile_number' => 'required|min:10|max:10',
             'service' => 'required|not_in:0',
             'gender' => 'required',
             'language' => 'required',
@@ -415,7 +417,7 @@ class CaregiverController extends Controller{
         $user->name = $name;
         $user->email = $input['email'];
         $user->email_verified = 1;
-        $user->mobile_number = $input['mobile_number'];
+        $user->mobile_number = $mobile_number;
         $user->country_code = '+1';
         $user->type = 1;
         $user->mobile_number_verified = 1;
@@ -425,9 +427,6 @@ class CaregiverController extends Controller{
         //$user->country = 'USA';
         $user->gender = $input['gender'];
         $user->dob = date("Y-m-d", strtotime($input['dob']));
-        if ($input['password'] != null) {
-            $user->password = Hash::make($input['password']);
-        }
 
         //upload file
         if(!empty($upload_image)){
@@ -437,7 +436,7 @@ class CaregiverController extends Controller{
         $user->save();
 
         //send mail about reset password
-        if($input['issentmail'] == '1'){
+        if(isset($input['issentmail']) && $input['issentmail'] == '1'){
             $objDemo = new \stdClass();
             $objDemo->sender = env('APP_NAME');
             $objDemo->receiver = ucfirst($user->name);

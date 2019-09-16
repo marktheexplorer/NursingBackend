@@ -31,7 +31,7 @@
                                 @csrf
                                     <div class="card">
                                         <div class="card-header" style="background-color: #ddd;">
-                                            <h5>Persona Info</h5>
+                                            <h5>Personal Information</h5>
                                         </div>
                                         <div class="card-body">
                                             <div class="row">
@@ -40,12 +40,11 @@
                                                         <button class="btn-sm btn-primary btn-cir" title="Edit"><i class="fas fa-pencil-alt"></i></button>
                                                     </span>
                                                     <img class="img-circle" src="{{ asset('admin/assets/img/admin-avatar.png') }}" style="width:150px;height:150px;"/>
-                                                    @if ($errors->has('profile_image'))
+
                                                         <div class="clearfix;"></div>
-                                                        <span class="invalid-feedback" role="alert" style="text-align: center;display: inline;">
-                                                            <strong>{{ $errors->first('profile_image') }} </strong>
+                                                        <span class="text-danger image_error">
+                                                            <strong>{{ $errors->has('profile_image')?$errors->first('profile_image'):'' }}</strong>
                                                         </span>
-                                                    @endif
                                                 </div>
                                                 <input type="file" class="{{ $errors->has('profile_image') ? ' is-invalid' : '' }} form-control" name="profile_image" placeholder="Profile Image" value="{{ old('profile_image') }}" accept="image/*"/ style="padding-left:0px;padding:0px;border:0px;display: none;" id="profile_image" onchange="readURL(this);">
                                             </div>
@@ -147,7 +146,7 @@
                                                     @if ($errors->has('height'))
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $errors->first('height') }}</strong>
-                                                        </span>
+                                                         </span>
                                                     @endif
                                                 </div>
 
@@ -233,7 +232,7 @@
                                     </div><br/>
                                     <div class="card">
                                         <div class="card-header" style="background-color: #ddd;">
-                                            <h5>Service Info</h5>
+                                            <h5>Service Information</h5>
                                         </div>
                                         <div class="card-body">
                                             <div class="row">
@@ -291,12 +290,24 @@
                                                     <label>Service Area </label>
                                                     <select name="service_area[]" class="form-control {{ $errors->has('service_area') ? ' is-invalid' : '' }} select2" multiple="multiple" id="servicearea" >
                                                         @foreach($service_area_list as $row)
-                                                            @if(old('service_area') === null)
-                                                                <option value="{{ $row->id }}" <?php if(in_array($row->id, old('non_service_area'))){ echo 'disabled'; } ?>>
-                                                                    {{ $row->area }}
-                                                                </option>
+                                                            @if (count($errors) > 0)
+                                                                @if(empty(old('non_service_area')))
+                                                                    <option value="{{ $row->id }}" <?php if(in_array($row->id, old('service_area'))){ echo 'selected'; } ?>>
+                                                                        {{ $row->area }}
+                                                                    </option>
+                                                                @else
+                                                                    @if(empty(old('service_area')))
+                                                                        <option value="{{ $row->id }}" <?php if(in_array($row->id, old('non_service_area'))){ echo 'disabled'; } ?> >
+                                                                            {{ $row->area }}
+                                                                        </option>
+                                                                    @else
+                                                                        <option value="{{ $row->id }}" <?php if(in_array($row->id, old('service_area'))){ echo 'selected'; } ?> <?php if(in_array($row->id, old('non_service_area'))){ echo 'disabled'; } ?> >
+                                                                        {{ $row->area }}
+                                                                    </option>
+                                                                    @endif
+                                                                @endif    
                                                             @else
-                                                                <option value="{{ $row->id }}" <?php if(in_array($row->id, old('service_area'))){ echo 'selected'; } ?>  <?php if(in_array($row->id, old('non_service_area'))){ echo 'disabled'; } ?>>
+                                                                <option value="{{ $row->id }}" >
                                                                     {{ $row->area }}
                                                                 </option>
                                                             @endif    
@@ -314,12 +325,24 @@
                                                     <label>Non Service Area </label>
                                                     <select name="non_service_area[]" class="form-control {{ $errors->has('non_service_area') ? ' is-invalid' : '' }} select2" multiple="multiple" id="nonservicearea">
                                                         @foreach($service_area_list as $row)
-                                                            @if(old('non_service_area') === null)
-                                                                <option value="{{ $row->id }}" <?php if(in_array($row->id, old('service_area'))){ echo 'disabled'; } ?>>
-                                                                    {{ $row->area }}
-                                                                </option>
+                                                            @if (count($errors) > 0)
+                                                                @if(empty(old('service_area')))
+                                                                    <option value="{{ $row->id }}" <?php if(in_array($row->id, old('non_service_area'))){ echo 'selected'; } ?>>
+                                                                        {{ $row->area }}
+                                                                    </option>
+                                                                @else
+                                                                    @if(empty(old('non_service_area')))
+                                                                        <option value="{{ $row->id }}"  <?php if(in_array($row->id, old('service_area'))){ echo 'disabled'; } ?> >
+                                                                            {{ $row->area }}
+                                                                        </option>
+                                                                    @else
+                                                                        <option value="{{ $row->id }}" <?php if(in_array($row->id, old('non_service_area'))){ echo 'selected'; } ?> <?php if(in_array($row->id, old('service_area'))){ echo 'disabled'; } ?> >
+                                                                        {{ $row->area }}
+                                                                    </option>
+                                                                    @endif
+                                                                @endif    
                                                             @else
-                                                                <option value="{{ $row->id }}" <?php if(in_array($row->id, old('non_service_area'))){ echo 'selected'; } ?> <?php if(in_array($row->id, old('service_area'))){ echo 'disabled'; } ?> >
+                                                                <option value="{{ $row->id }}" >
                                                                     {{ $row->area }}
                                                                 </option>
                                                             @endif 
@@ -564,13 +587,59 @@
     });
 
     function readURL(input) {
-        if (input.files && input.files[0]){
+      if (input.files && input.files[0]) {
+        if($.inArray(input.files[0].type, ['image/png','image/jpg','image/jpeg']) == 0){
+          console.log(input.files[0].type);
             var reader = new FileReader();
             reader.onload = function (e) {
-                $('.img-circle').attr('src', e.target.result);
+              $('.img-circle').attr('src', e.target.result);
             };
             reader.readAsDataURL(input.files[0]);
         }
+      }
     }
+
+    (function($) {
+    $.fn.checkFileType = function(options) {
+        var defaults = {
+            allowedExtensions: [],
+            success: function() {},
+            error: function() {}
+        };
+        options = $.extend(defaults, options);
+
+        return this.each(function() {
+
+            $(this).on('change', function() {
+                var value = $(this).val(),
+                    file = value.toLowerCase(),
+                    extension = file.substring(file.lastIndexOf('.') + 1);
+
+                if ($.inArray(extension, options.allowedExtensions) == -1) {
+                    options.error();
+                    $(this).focus();
+                } else {
+                    options.success();
+                }
+
+            });
+
+        });
+    };
+
+    })(jQuery);
+
+    $(function() {
+      $('#profile_image').checkFileType({
+          allowedExtensions: ['jpg', 'jpeg','png'],
+          success: function() {
+              $('.image_error').text('');
+          },
+          error: function() {
+            $('#profile_image').val('')
+            $('.image_error').text('Please upload a jpg , jpeg or png image .');
+          }
+      });
+    });
 </script>
 @endsection

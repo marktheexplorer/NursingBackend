@@ -34,7 +34,7 @@
                     <div class="ibox-body">
                         <ul class="nav nav-tabs tabs-line">
                             <li class="nav-item">
-                                <a class="nav-link active" href="#tab-1" data-toggle="tab"><i class="ti-bar-chart"></i> Caregiver Details</a>
+                                <a class="nav-link active" href="#tab-1" data-toggle="tab"><i class="ti-bar-chart"></i> Personal Information</a>
                             </li>
                         </ul>
                         <div class="tab-content">
@@ -64,6 +64,49 @@
                                             <div class="media-heading">{{ $user->location.", ".$user->city.", ".$user->state.", ".$user->zipcode  }} </div>
                                         </div>
                                     </li>
+                                    <li class="media">
+                                        <div class="media-img  col-md-3">Language</div>
+                                        <div class="media-body">
+                                            <div class="media-heading">{{ $user->language }} </div>
+                                        </div>
+                                    </li>
+                                    <li class="media">
+                                        <div class="media-img  col-md-3">Gender</div>
+                                        <div class="media-body">
+                                            <div class="media-heading">{{ $user->gender }} </div>
+                                        </div>
+                                    </li>
+                                    <li class="media">
+                                        <div class="media-img  col-md-3">Height</div>
+                                        <div class="media-body">
+                                            <div class="media-heading">{{ $user->height }}</div>
+                                        </div>
+                                    </li>
+                                    <li class="media">
+                                        <div class="media-img  col-md-3">Weight</div>
+                                        <div class="media-body">
+                                            <div class="media-heading">{{ $user->weight }}</div>
+                                        </div>
+                                    </li>
+                                    <li class="media">
+                                        <div class="media-img  col-md-3">Date of Birth</div>
+                                        <div class="media-body">
+                                            <div class="media-heading">{{ date_format(date_create($user->dob), 'd M, Y') }} </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ibox-body">
+                        <ul class="nav nav-tabs tabs-line">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#tab-1" data-toggle="tab"><i class="ti-bar-chart"></i> Service Information</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="tab-1">
+                                <ul class="media-list media-list-divider m-0">
                                     <li class="media">
                                         <div class="media-img  col-md-3">Services</div>
                                         <div class="media-body">
@@ -103,37 +146,7 @@
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img  col-md-3">Language</div>
-                                        <div class="media-body">
-                                            <div class="media-heading">{{ $user->language }} </div>
-                                        </div>
-                                    </li>
-                                    <li class="media">
-                                        <div class="media-img  col-md-3">Gender</div>
-                                        <div class="media-body">
-                                            <div class="media-heading">{{ $user->gender }} </div>
-                                        </div>
-                                    </li>
-                                    <li class="media">
-                                        <div class="media-img  col-md-3">Height</div>
-                                        <div class="media-body">
-                                            <div class="media-heading">{{ $user->height }}</div>
-                                        </div>
-                                    </li>
-                                    <li class="media">
-                                        <div class="media-img  col-md-3">Weight</div>
-                                        <div class="media-body">
-                                            <div class="media-heading">{{ $user->weight }}</div>
-                                        </div>
-                                    </li>
-                                    <li class="media">
-                                        <div class="media-img  col-md-3">Date of Birth</div>
-                                        <div class="media-body">
-                                            <div class="media-heading">{{ date_format(date_create($user->dob), 'd M, Y') }} </div>
-                                        </div>
-                                    </li>
-                                    <li class="media">
-                                        <div class="media-img  col-md-3">Servicable Area</div>
+                                        <div class="media-img  col-md-3">Service Area</div>
                                         <div class="media-body">
                                             <div class="media-heading"><?php
                                                 if(empty($user->service_area)){

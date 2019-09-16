@@ -41,9 +41,14 @@ class PatientsController extends Controller{
 
     public function edit($id){
         $user = User::findOrFail($id);
-        $diagnosis = Diagnose::get();
-        $qualifications = Qualification::orderBy('name', 'asc')->get();
+
+        $diagnosis_selected = Diagnose::where('id',$user->patient->diagnose_id);
+        $diagnosis = Diagnose::where('is_blocked','0')->union($diagnosis_selected)->get();
         $selected_disciplines = explode(',', $user->patient? $user->patient->disciplines: '');
+
+        $qualifications_selected = Qualification::whereIn('id',$selected_disciplines);
+        $qualifications = Qualification::where('is_blocked','0')->union($qualifications_selected)->get();
+
         $city_state = DB::table('us_location')->select('state_code')->where('city', '=', $user->city)->orderBy('state_code', 'asc')->get();
         return view('patients.edit' , compact('user','diagnosis','qualifications','selected_disciplines','city_state'));
     }
@@ -57,6 +62,7 @@ class PatientsController extends Controller{
      */
     public function update(Request $request, $id)
     {
+        $mobile_number = $request->input('mobile_number');
         $temp_number = str_replace(array("(", ")", "_", "-", " "), "", $request->input('mobile_number'));
         $request->merge(array('mobile_number' => $temp_number));
         $input = $request->input();
@@ -65,7 +71,7 @@ class PatientsController extends Controller{
             'm_name' => 'nullable|string|max:20',
             'l_name' => 'required|string|max:20',
             'email' => 'required|email|string|max:60',
-            'mobile_number' => 'required||min:8|max:15',
+            'mobile_number' => 'required||min:10|max:10',
             'dob' => 'required',
             'gender' => 'required',
             'pin_code' => 'required|numeric',
@@ -82,7 +88,8 @@ class PatientsController extends Controller{
             'weight' => 'required',
             'language' => 'required',
             'pets' => 'required',
-            'pets_description' => 'nullable|max:2000'
+            'pets_description' => 'nullable|max:2000',
+            'additional_info' => 'max:150'
         ],
         $messages = [
             'f_name.required'    => 'The First name is required.',
@@ -106,6 +113,7 @@ class PatientsController extends Controller{
 
         if($request->has('profile_image') && ($request->file('profile_image') != null)) {
                 $image = $request->file('profile_image');
+
                 $user = User::findOrFail($id);
                 $input['profile_image'] = time().'.'.$image->getClientOriginalExtension();
                 $user->profile_image = $input['profile_image'];
@@ -117,7 +125,7 @@ class PatientsController extends Controller{
                 $user = User::findOrFail($id);
                 $user->name = $input['f_name'].' '.$input['m_name'].' '.$input['l_name'];
                 $user->email = $input['email'];
-                $user->mobile_number = $input['mobile_number'];
+                $user->mobile_number = $mobile_number;
                 $user->city = $input['city'];
                 $user->state = $input['state'];
                 $user->street = $input['street'];
@@ -179,12 +187,13 @@ class PatientsController extends Controller{
     }
 
     public function create(){
-        $diagnosis = Diagnose::get();
-        $qualifications = Qualification::orderBy('name', 'asc')->get();
+        $diagnosis = Diagnose::where('is_blocked','0')->get();
+        $qualifications = Qualification::where('is_blocked','0')->orderBy('name', 'asc')->get();
         return view('patients.create', compact('diagnosis','qualifications'));
     }
 
     public function store(Request $request){
+        $mobile_number = $request->input('mobile_number');
         $temp_number = str_replace(array("(", ")", "_", "-", " "), "", $request->input('mobile_number'));
         $request->merge(array('mobile_number' => $temp_number));
         $input = $request->input();
@@ -193,7 +202,7 @@ class PatientsController extends Controller{
             'm_name' => 'nullable|string|max:20',
             'l_name' => 'required|string|max:20',
             'email' => 'required|email|string|max:60|unique:users',
-            'mobile_number' => 'required|unique:users|min:8|max:15',
+            'mobile_number' => 'required|unique:users|min:10|max:10',
             'dob' => 'required',
             'gender' => 'required',
             'pin_code' => 'required|numeric',
@@ -210,7 +219,8 @@ class PatientsController extends Controller{
             'weight' => 'required',
             'language' => 'required',
             'pets_description' => 'max:2000',
-            'long_term' => 'required'
+            'long_term' => 'required',
+            'additional_info' => 'max:150'
         ],
         $messages = [
             'f_name.required'    => 'The First name is required.',
@@ -246,7 +256,7 @@ class PatientsController extends Controller{
             $input['name'] = $input['f_name'].' '.$input['m_name'].' '.$input['l_name'];
             $input['role_id'] = 3;
             $input['email'] = $input['email'];
-            $input['mobile_number'] = $input['mobile_number'];
+            $input['mobile_number'] = $mobile_number;
             $input['city'] = $input['city'];
             $input['state'] = $input['state'];
             $input['street'] = $input['street'];
