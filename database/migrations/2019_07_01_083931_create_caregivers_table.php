@@ -15,16 +15,16 @@ class CreateCaregiversTable extends Migration
        Schema::create('caregiver', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id');
-            $table->string('service');
-            $table->float('min_price');
-            $table->float('max_price');
-            $table->longText('description');
-            $table->string('zipcode');
-            $table->string('height');
-            $table->string('weight');
+            $table->string('service')->nullable();
+            $table->float('min_price')->nullable();
+            $table->float('max_price')->nullable();
+            $table->longText('description')->nullable();
+            $table->string('zipcode')->nullable();
+            $table->string('height')->nullable();
+            $table->string('weight')->nullable();
             $table->string('first_name');
-            $table->string('middle_name');
-            $table->string('last_name');
+            $table->string('middle_name')->nullable();
+            $table->string('last_name')->nullable();
             $table->timestamps();
         });
 
@@ -43,7 +43,7 @@ class CreateCaregiversTable extends Migration
             $table->dropForeign('caregiver_user_id_foreign');
             $table->dropColumn('user_id');
          });
-            
+
           Schema::dropIfExists('caregiver');
     }
 }
