@@ -45,7 +45,7 @@ class CaregiverController extends Controller{
     public function create(){
         $service_list = DB::table('services')->orderBy('title', 'asc')->get();
         $qualification = DB::table('qualifications')->orderBy('name', 'asc')->get();
-        $service_area_list = DB::table('county_areas')->select('id', 'county', 'area')->where('area', '!=', '0')->orderBy('area', 'asc')->get();
+        $service_area_list = DB::table('county_areas')->select('id', 'county', 'area')->where('area', '!=', '0')->where('is_area_blocked' , '1')->orderBy('area', 'asc')->get();
         return view('caregiver.create', compact('service_list', 'service_area_list', 'qualification'));
     }
 
@@ -324,7 +324,7 @@ class CaregiverController extends Controller{
         $qualification = DB::table('qualifications')->orderBy('name', 'asc')->get();
         $city_state = DB::table('us_location')->select('state_code')->where('city', '=', $user->city)->where('zip', '=', $user->zipcode)->orderBy('state_code', 'asc')->get();
 
-        $service_area_list = DB::table('county_areas')->select('id', 'county', 'area')->where('area', '!=', '0')->orderBy('area', 'asc')->get();
+        $service_area_list = DB::table('county_areas')->select('id', 'county', 'area')->where('is_area_blocked' , '1')->where('area', '!=', '0')->orderBy('area', 'asc')->get();
 
         return view('caregiver.edit', compact('user', 'qualification', 'service_list', 'city_state', 'service_area_list'));
     }

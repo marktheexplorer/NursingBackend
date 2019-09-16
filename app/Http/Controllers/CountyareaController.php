@@ -57,8 +57,8 @@ class CountyareaController extends Controller{
                 $temp->county = $input['county'];
                 $temp->save();
                 flash()->success('County Edit successfully');
-            }    
-        } 
+            }
+        }
         return redirect()->route('county.index');
     }
 
@@ -98,8 +98,8 @@ class CountyareaController extends Controller{
                 $temp->area = $input['area'];
                 $temp->save();
                 flash()->success('County Area Edit successfully');
-            }    
-        } 
+            }
+        }
         return redirect()->route('county.show', [$input['countyid']]);
     }
 
@@ -117,7 +117,7 @@ class CountyareaController extends Controller{
         }else{
             $countyareas = Countyareas::where('county', '=', $county->id)->where('area', '!=', '0')->orderBy('area', 'asc')->get();
             return view('countyarea.view', compact('county', 'countyareas'));
-        }    
+        }
     }
 
     /**
@@ -141,11 +141,11 @@ class CountyareaController extends Controller{
 
         $county->is_blocked = !$county->is_blocked;
         $county->save();
-       
+
         if ($county->is_blocked)
-            flash()->success("Countyblocked successfully."); 
-        else 
-            flash()->success("County Unblocked successfully."); 
+            flash()->success("County blocked successfully.");
+        else
+            flash()->success("County Unblocked successfully.");
         return redirect()->route('county.index');
     }
 
@@ -159,11 +159,12 @@ class CountyareaController extends Controller{
 
         $county->is_area_blocked = !$county->is_area_blocked;
         $county->save();
-       
+        // dd($county);
+
         if ($county->is_area_blocked)
-            flash()->success("Area Unblocked successfully."); 
-        else 
-            flash()->success("Area blocked successfully."); 
+            flash()->success("Area Unblocked successfully.");
+        else
+            flash()->success("Area blocked successfully.");
         return redirect()->route('county.show', [$county->county]);
     }
 
