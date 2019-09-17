@@ -20,6 +20,13 @@ Route::group(['namespace' => 'API\v1'], function(){
 	Route::post('check-status', 'UserController@checkUserStatus');
 	Route::post('verify-otp', 'UserController@verifyOtp');
 	Route::post('send-otp', 'UserController@sendOtp');
+	Route::post('getDisciplineList', 'UserController@getDisciplineList');
+	Route::post('getServices', 'UserController@getServices');
+	Route::post('getDiagnose', 'UserController@getDiagnose');
+	Route::post('getCounty', 'UserController@getCounty');
+	Route::post('getCountyArea', 'UserController@getCountyArea');
+	Route::post('addServiceRequest', 'UserController@addServiceRequest');
+	Route::post('updateServiceRequest', 'UserController@updateServiceRequest');
 });
 
 Route::group(['middleware' => 'auth:api', 'namespace' => 'API\v1'], function(){
@@ -33,11 +40,4 @@ Route::group(['middleware' => 'auth:api', 'namespace' => 'API\v1'], function(){
 	Route::get('dashboard', 'HomeController@dashboard');
 	Route::post('contact-us', 'HomeController@savecontactusData');
 	Route::post('feedback', 'HomeController@addFeedback');
-	Route::post('teck-details', 'TeckController@teckDetails');
-	Route::post('add-quick-teck', 'TeckController@addQuickTeck');
-	Route::post('add-my-teck', 'TeckController@addMyTeck');
-	Route::post('delete-teck', 'TeckController@deleteTeck');
-	Route::post('inactivate-teck', 'TeckController@inactivateTeck');
-	Route::post('notify-teck', 'TeckController@notifyTeck');
-
 });
