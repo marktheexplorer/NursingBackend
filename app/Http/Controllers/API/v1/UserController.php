@@ -120,28 +120,93 @@ class UserController extends Controller{
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function resetPassword(Request $request)
+    public function forgotPassword(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'email' => 'required',
         ]);
 
-        $user = User::where('email', $request->input('email'))->first();
-        if ($user) {
+        $userDetails = User::where('email', $request->input('email'))->first();
+        if ($userDetails) {
             User::where('email', $request->input('email'))->update(['otp' => rand(1000,9999)]);
-            // $objDemo = new \stdClass();
-            // $objDemo->sender = env('APP_NAME');
-            // $objDemo->receiver = $user->name;
-            // $objDemo->otp = $user->otp;
-            // $objDemo->subject = '24*7 Nursing : Password Reset Mail';
-            // $objDemo->mail_from = env('MAIL_FROM_EMAIL');
-            // $objDemo->mail_from_name = env('MAIL_FROM_NAME');
-
-            Mail::to('kajal.garg@saffrontech.net')->send(new ForgotPassword($user));
+            $user = User::where('email', $request->input('email'))->first();
+            Mail::to($request->input('email'))->send(new ForgotPassword($user));
 
             return response()->json(['status_code' => $this->successStatus , 'message' => 'Your One Time Password has been sent to your mail.', 'data' => null]);
         } else {
-            return response()->json(['status_code' => 400 , 'message' => 'Unauthorized.', 'data' => null]);
+            return response()->json(['status_code' => $this->errorStatus , 'message' => 'Unauthorized.', 'data' => null]);
+        }
+    }
+
+    /**
+     * Verify OTP api
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function verifyOtp(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required',
+            'otp' => 'required|max:4'
+        ],[
+            'required' => 'Please enter :attribute.'
+        ]);
+
+        if ($validator->fails())
+            return response()->json(['status_code'=> $this->errorStatus, 'message'=> $validator->errors()->first(), 'data' => null]);
+
+        $check = User::where('email', $request->input('email'))->first();
+
+        if ($check) {
+            $otp = User::where('email', $request->input('email'))->where('otp', $request->input('otp'))->first();
+
+            if ($otp) {
+                $otp->otp = '';
+                $otp->save();
+
+                DB::table('oauth_access_tokens')
+                    ->where('user_id', $otp->id)
+                    ->update([
+                        'revoked' => 1
+                    ]);
+
+                return response()->json(['status_code' => $this->successStatus, 'message' => 'Otp Verified.', 'data'=> null]);
+            } else {
+                return response()->json(['status_code' => 400, 'message' => 'Incorrect Otp.', 'data'=> null]);
+            }
+        } else {
+            return response()->json(['status_code' => 400, 'message' => 'Please enter registered email Id.', 'data'=> null]);
+        }
+    }
+
+    /**
+     * Reset password api
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function resetPassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required',
+            'password' => 'required|min:6',
+        ]);
+
+        if ($validator->fails())
+            return response()->json(['status_code'=> 400, 'message'=> $validator->errors()->first(), 'data' => null]);
+
+        $user = User::where('email',$request->input('email'))->first();
+
+        if($user){
+            if ($user->is_blocked) {
+                return response()->json(['status_code' => 999, 'message' => 'Your account is blocked by admin. Please contact to admin.', 'data' => null]);
+            } else {
+                User::where('email', $request->input('email'))->update(['password' => Hash::make($request->input('password'))]);
+                return response()->json(['status_code' => $this->successStatus, 'message' => 'Password changed successfully.', 'data' => null]);
+            }
+        } else {
+            return response()->json(['status_code' => 400 , 'message' => 'Unauthorized', 'data' => null]);
         }
     }
 
@@ -173,6 +238,22 @@ class UserController extends Controller{
             } else {
                 return response()->json(['status_code' => 400 , 'message' => 'Old Password is not correct.', 'data' => null]);
             }
+        } else {
+            return response()->json(['status_code' => 400 , 'message' => 'Unauthorized', 'data' => null]);
+        }
+    }
+
+    /**
+     * logout api
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function logout()
+    {
+        if (Auth::check()) {
+            Auth::user()->OauthAcessToken()->delete();
+            return response()->json(['status_code' => $this->successStatus , 'message' => 'Logged out successfully.', 'data' => null]);
         } else {
             return response()->json(['status_code' => 400 , 'message' => 'Unauthorized', 'data' => null]);
         }
@@ -243,21 +324,7 @@ class UserController extends Controller{
             return response()->json(['status_code' => 400 , 'message' => 'Profile details cannot be updated. Please try again!', 'data' => null]);
     }
 
-    /**
-     * logout api
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function logout()
-    {
-        if (Auth::check()) {
-            Auth::user()->OauthAcessToken()->delete();
-            return response()->json(['status_code' => $this->successStatus , 'message' => 'Logged out successfully.', 'data' => null]);
-        } else {
-            return response()->json(['status_code' => 400 , 'message' => 'Unauthorized', 'data' => null]);
-        }
-    }
+
 
     /**
      * Upload user profile image api
