@@ -185,6 +185,36 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    public function resetPassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required',
+            'password' => 'required|min:6',
+        ]);
+
+        if ($validator->fails())
+            return response()->json(['status_code'=> 400, 'message'=> $validator->errors()->first(), 'data' => null]);
+
+        $user = User::where('email',$request->input('email'))->first();
+
+        if($user){
+            if ($user->is_blocked) {
+                return response()->json(['status_code' => 999, 'message' => 'Your account is blocked by admin. Please contact to admin.', 'data' => null]);
+            } else {
+                User::where('email', $request->input('email'))->update(['password' => Hash::make($request->input('password'))]);
+                return response()->json(['status_code' => $this->successStatus, 'message' => 'Password changed successfully.', 'data' => null]);
+            }
+        } else {
+            return response()->json(['status_code' => 400 , 'message' => 'Unauthorized', 'data' => null]);
+        }
+    }
+
+    /**
+     * change password api
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function changePassword(Request $request)
     {
         $validator = Validator::make($request->all(), [
