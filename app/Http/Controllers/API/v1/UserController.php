@@ -11,6 +11,8 @@ use App\Http\Controllers\Controller;
 use App\Notifications\SignupActivate;
 use App\Mail\ForgotPassword;
 use App\User;
+use App\Diagnose;
+use App\Countyareas;
 use App\Helper;
 use App\FcmUser;
 use App\PatientProfile;
@@ -103,9 +105,17 @@ class UserController extends Controller{
                     ->update([
                         'revoked' => 1
                     ]);
+                $diagnosis = Diagnose::select('id', 'title')->where('is_blocked',0)->orderBy('title', 'asc')->get();
+                $service_area = Countyareas::select('id', 'county')->where('is_blocked', '=', '1')->where('area', '=', '0')->orderBy('county', 'asc')->get();
+                foreach ($service_area as $key => $value) {
+                    $county = Countyareas::select('area')->where('is_area_blocked', '=', '1')->where('county', '=', $value->id)->get();
+                    $service_area[$key]['county_area']=$county;
+                }
+
                 $success['token'] =  $user->createToken($user->name)->accessToken;
-                $success['name'] =  $user->name;
-                $success['email'] = $user->email;
+                $success['userDetails'] =  $user;
+                $success['diagnosis'] =  $diagnosis;
+                $success['service_area'] =  $service_area;
 
                 return response()->json(['status_code' => $this->successStatus, 'message' => '', 'data' => $success]);
             }
@@ -427,7 +437,7 @@ class UserController extends Controller{
             return response()->json(['status_code'=> 400, 'message'=> 'County Not Found', 'data' => null]);
         }else{
             if($county->is_blocked == 0)
-                return response()->json(['status_code'=> 400, 'message'=> 'County is blocked', 'data' => null]);    
+                return response()->json(['status_code'=> 400, 'message'=> 'County is blocked', 'data' => null]);
 
             $countyareas = DB::table('county_areas')->where('county', '=', $input['county_id'])->where('is_area_blocked', '=', '1')->orderBy('area', 'asc')->get();
             return response()->json(['status_code' => $this->successStatus , 'message' => 'Get list of enable County Area list', 'data' => $countyareas]);
@@ -436,14 +446,14 @@ class UserController extends Controller{
 
     //add request service
     public function addServiceRequest(Request $request){
-        $input = $request->input();        
+        $input = $request->input();
         $validator =  Validator::make($input,
             [
                 'user_id' => 'required|not_in:0',
                 'service' => 'required|not_in:0',
                 'start_date' => 'required|date',
                 'start_time' => 'required',
-                'end_date' => 'required|date|after:start_date',                
+                'end_date' => 'required|date|after:start_date',
                 'end_time' => 'required',
                 'min_expected_bill' => 'required|min:0',
                 'max_expected_bill' => 'required|min:1|gt:min_expected_bill',
@@ -476,7 +486,7 @@ class UserController extends Controller{
             'status' => 2,
             'updated_at' => date('Y-m-d h:i:s')
         );
-        DB::table('service_requests')->insert($service_request);        
+        DB::table('service_requests')->insert($service_request);
         return response()->json(['status_code' => $this->successStatus , 'message' => 'Request created successfully.', 'data' => null]);
     }
 
