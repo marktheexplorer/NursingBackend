@@ -49,7 +49,7 @@ class CaregiverController extends Controller{
      */
     public function create(){
         $service_list = DB::table('services')->orderBy('title', 'asc')->get();
-        $qualification = DB::table('qualifications')->orderBy('name', 'asc')->get();
+        $qualification = DB::table('qualifications')->where('is_blocked', '=', '0')->orderBy('name', 'asc')->get();
         $service_area_list = DB::table('county_areas')->select('id', 'county', 'area')->where('area', '!=', '0')->where('is_area_blocked' , '1')->orderBy('area', 'asc')->get();
         return view('caregiver.create', compact('service_list', 'service_area_list', 'qualification'));
     }
@@ -322,7 +322,9 @@ class CaregiverController extends Controller{
         }
 
         $service_list = DB::table('services')->orderBy('title', 'asc')->get();
-        $qualification = DB::table('qualifications')->orderBy('name', 'asc')->get();
+
+        $qualification = DB::table('qualifications')->where('is_blocked', '=', '0')->orderBy('name', 'asc')->get();
+
         $city_state = DB::table('us_location')->select('state_code')->where('city', '=', $user->city)->where('zip', '=', $user->zipcode)->orderBy('state_code', 'asc')->get();
 
         $service_area_list = DB::table('county_areas')->select('id', 'county', 'area')->where('is_area_blocked' , '1')->where('area', '!=', '0')->orderBy('area', 'asc')->get();
@@ -341,6 +343,7 @@ class CaregiverController extends Controller{
         $mobile_number = $request->input('mobile_number');
         $temp_number = str_replace(array("(", ")", "_", "-", " "), "", $request->input('mobile_number'));
         $request->merge(array('mobile_number' => $temp_number));
+
         $input = $request->input();
         $validator =  Validator::make($input,[
             'first_name' => 'required|string|max:40',
@@ -399,6 +402,25 @@ class CaregiverController extends Controller{
                 $upload_image =  "/uploads/profile_images/".$imageName;
             }
         }
+
+        /*$disabled_qualification = DB::table('qualifications')->select('id')->where('is_blocked', '=', '1')->orderBy('name', 'asc')->get()->toArray();
+        $temp_disabled_id = array();
+        if(!empty($disabled_qualification)){
+            foreach ($disabled_qualification as $key) {
+                $temp_disabled_id[] = $key->id;
+            }
+        }
+
+        if(count($disabled_qualification) > 0 && isset($input['qualification'])){
+            foreach($input['qualification'] as $value){
+                if(in_array($value, $temp_disabled_id)){
+                    die('error must be show...');
+                    $validator->after(function($validator){
+                        $validator->errors()->add('qualification', 'Disabled Discipline are not allowed.');
+                    });
+                }
+            }
+        }*/
 
         if ($validator->fails()) {
             //return redirect()->back()->withInput($request->all())->withErrors($validator->errors()); // will return only the errors
