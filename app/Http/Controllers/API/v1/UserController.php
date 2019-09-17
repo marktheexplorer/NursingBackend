@@ -243,6 +243,22 @@ class UserController extends Controller
     }
 
     /**
+     * logout api
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function logout()
+    {
+        if (Auth::check()) {
+            Auth::user()->OauthAcessToken()->delete();
+            return response()->json(['status_code' => $this->successStatus , 'message' => 'Logged out successfully.', 'data' => null]);
+        } else {
+            return response()->json(['status_code' => 400 , 'message' => 'Unauthorized', 'data' => null]);
+        }
+    }
+
+    /**
      * details api
      *
      * @param  \Illuminate\Http\Request  $request
@@ -307,21 +323,7 @@ class UserController extends Controller
             return response()->json(['status_code' => 400 , 'message' => 'Profile details cannot be updated. Please try again!', 'data' => null]);
     }
 
-    /**
-     * logout api
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function logout()
-    {
-        if (Auth::check()) {
-            Auth::user()->OauthAcessToken()->delete();
-            return response()->json(['status_code' => $this->successStatus , 'message' => 'Logged out successfully.', 'data' => null]);
-        } else {
-            return response()->json(['status_code' => 400 , 'message' => 'Unauthorized', 'data' => null]);
-        }
-    }
+
 
     /**
      * Upload user profile image api
