@@ -17,18 +17,16 @@ Route::group(['namespace' => 'API\v1'], function(){
 	Route::post('register', 'UserController@register');
 	Route::post('login', 'UserController@login');
 	Route::post('forgot-password', 'UserController@forgotPassword');
-	Route::post('reset-password', 'UserController@resetPassword');
-	Route::post('check-status', 'UserController@checkUserStatus');
 	Route::post('verify-otp', 'UserController@verifyOtp');
-	Route::post('send-otp', 'UserController@sendOtp');
+	Route::post('reset-password', 'UserController@resetPassword');
 });
 
 Route::group(['middleware' => 'auth:api', 'namespace' => 'API\v1'], function(){
+	Route::post('change-password', 'UserController@changePassword');
 	Route::post('set-notification', 'UserController@setNotification');
 	Route::post('upload-image', 'UserController@uploadProfileImage');
 	Route::post('edit-profile', 'UserController@editProfileDetails');
 	Route::get('details', 'UserController@details');
-	Route::post('change-password', 'UserController@changePassword');
 	Route::post('current-location', 'UserController@getCurrentLocation');
 	Route::post('logout', 'UserController@logout');
 	Route::get('dashboard', 'HomeController@dashboard');

@@ -180,7 +180,7 @@ class UserController extends Controller
     }
 
     /**
-     * change password api
+     * Reset password api
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
