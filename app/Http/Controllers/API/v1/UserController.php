@@ -125,18 +125,11 @@ class UserController extends Controller
             'email' => 'required',
         ]);
 
-        $user = User::where('email', $request->input('email'))->first();
-        if ($user) {
+        $userDetails = User::where('email', $request->input('email'))->first();
+        if ($userDetails) {
             User::where('email', $request->input('email'))->update(['otp' => rand(1000,9999)]);
-            // $objDemo = new \stdClass();
-            // $objDemo->sender = env('APP_NAME');
-            // $objDemo->receiver = $user->name;
-            // $objDemo->otp = $user->otp;
-            // $objDemo->subject = '24*7 Nursing : Password Reset Mail';
-            // $objDemo->mail_from = env('MAIL_FROM_EMAIL');
-            // $objDemo->mail_from_name = env('MAIL_FROM_NAME');
-
-            Mail::to('kajal.garg@saffrontech.net')->send(new ForgotPassword($user));
+            $user = User::where('email', $request->input('email'))->first();
+            Mail::to($request->input('email'))->send(new ForgotPassword($user));
 
             return response()->json(['status_code' => $this->successStatus , 'message' => 'Your One Time Password has been sent to your mail.', 'data' => null]);
         } else {
