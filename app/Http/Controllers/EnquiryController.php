@@ -6,6 +6,11 @@ use Illuminate\Http\Request;
 use App\Enquiry;
 
 class EnquiryController extends Controller{
+    public function __construct(){ 
+        $this->middleware('preventBackHistory');
+        $this->middleware('auth'); 
+    }
+    
     public function index(){
     	$enquiries = Enquiry::orderBy('created_at', 'desc')->get();
     	return view('enquiries.index', compact('enquiries'));

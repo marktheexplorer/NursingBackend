@@ -18,6 +18,11 @@ use App\Exports\CaregiverExport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class CaregiverController extends Controller{
+    public function __construct(){ 
+        $this->middleware('preventBackHistory');
+        $this->middleware('auth'); 
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -44,7 +49,7 @@ class CaregiverController extends Controller{
      */
     public function create(){
         $service_list = DB::table('services')->orderBy('title', 'asc')->get();
-        $qualification = DB::table('qualifications')->orderBy('name', 'asc')->get();
+        $qualification = DB::table('qualifications')->where('is_blocked', '=', '0')->orderBy('name', 'asc')->get();
         $service_area_list = DB::table('county_areas')->select('id', 'county', 'area')->where('area', '!=', '0')->where('is_area_blocked' , '1')->orderBy('area', 'asc')->get();
         return view('caregiver.create', compact('service_list', 'service_area_list', 'qualification'));
     }
@@ -223,22 +228,18 @@ class CaregiverController extends Controller{
 
             //send mail about reset password
             if($input['issentmail'] == '1'){
-                $token = md5(uniqid(rand(), true));
                 $objDemo = new \stdClass();
                 $objDemo->sender = env('APP_NAME');
-                $objDemo->receiver = ucfirst($name);
-                $objDemo->type = 'password_reset_mail';
+                $objDemo->receiver = ucfirst($user->name);
+                $objDemo->type = 'password_on_mail';
                 $objDemo->format = 'basic';
-                $objDemo->subject = '24*7 Nursing : Password Reset Mail';
+                $objDemo->subject = '24*7 Nursing : Password Mail';
                 $objDemo->mail_from = env('MAIL_FROM_EMAIL');
                 $objDemo->mail_from_name = env('MAIL_FROM_NAME');
-                $objDemo->weburl = env('APP_URL')."set_password/".$token;
-                //return view('mail.basic_carepack_confirmed', compact('objDemo'));
-                //$issemd = Mail::to('sonu.shokeen@saffrontech.net')->send(new MailHelper($objDemo));
+                $objDemo->email = $user->email;
+                $objDemo->password = $input['password'];
+                //return view('mail.password_on_mail', compact('objDemo'));
                 $issemd = Mail::to($input['email'])->send(new MailHelper($objDemo));
-
-                //update token in table
-                $service_request = DB::table('users')->where('email', '=', $input['email'])->update(array('email_activation_token' => $token));
             }
 
             //redirect to index page.
@@ -321,7 +322,9 @@ class CaregiverController extends Controller{
         }
 
         $service_list = DB::table('services')->orderBy('title', 'asc')->get();
-        $qualification = DB::table('qualifications')->orderBy('name', 'asc')->get();
+
+        $qualification = DB::table('qualifications')->where('is_blocked', '=', '0')->orderBy('name', 'asc')->get();
+
         $city_state = DB::table('us_location')->select('state_code')->where('city', '=', $user->city)->where('zip', '=', $user->zipcode)->orderBy('state_code', 'asc')->get();
 
         $service_area_list = DB::table('county_areas')->select('id', 'county', 'area')->where('is_area_blocked' , '1')->where('area', '!=', '0')->orderBy('area', 'asc')->get();
@@ -340,6 +343,7 @@ class CaregiverController extends Controller{
         $mobile_number = $request->input('mobile_number');
         $temp_number = str_replace(array("(", ")", "_", "-", " "), "", $request->input('mobile_number'));
         $request->merge(array('mobile_number' => $temp_number));
+
         $input = $request->input();
         $validator =  Validator::make($input,[
             'first_name' => 'required|string|max:40',
@@ -399,6 +403,25 @@ class CaregiverController extends Controller{
             }
         }
 
+        /*$disabled_qualification = DB::table('qualifications')->select('id')->where('is_blocked', '=', '1')->orderBy('name', 'asc')->get()->toArray();
+        $temp_disabled_id = array();
+        if(!empty($disabled_qualification)){
+            foreach ($disabled_qualification as $key) {
+                $temp_disabled_id[] = $key->id;
+            }
+        }
+
+        if(count($disabled_qualification) > 0 && isset($input['qualification'])){
+            foreach($input['qualification'] as $value){
+                if(in_array($value, $temp_disabled_id)){
+                    die('error must be show...');
+                    $validator->after(function($validator){
+                        $validator->errors()->add('qualification', 'Disabled Discipline are not allowed.');
+                    });
+                }
+            }
+        }*/
+
         if ($validator->fails()) {
             //return redirect()->back()->withInput($request->all())->withErrors($validator->errors()); // will return only the errors
             return redirect()->back()->withInput($request->all())->withErrors($validator);
@@ -432,6 +455,22 @@ class CaregiverController extends Controller{
         }
 
         $user->save();
+
+        //send mail about reset password
+        if(isset($input['issentmail']) && $input['issentmail'] == '1'){
+            $objDemo = new \stdClass();
+            $objDemo->sender = env('APP_NAME');
+            $objDemo->receiver = ucfirst($user->name);
+            $objDemo->type = 'password_on_mail';
+            $objDemo->format = 'basic';
+            $objDemo->subject = '24*7 Nursing : Password Mail';
+            $objDemo->mail_from = env('MAIL_FROM_EMAIL');
+            $objDemo->mail_from_name = env('MAIL_FROM_NAME');
+            $objDemo->email = $user->email;
+            $objDemo->password = $input['password'];
+            //return view('mail.password_on_mail', compact('objDemo'));
+            $issemd = Mail::to($input['email'])->send(new MailHelper($objDemo));
+        }
 
         $caregiverid = DB::table('caregiver')->select('id')->where('user_id','=', $id)->first();
         $caregiver = Caregiver::findOrFail($caregiverid->id);
@@ -492,7 +531,7 @@ class CaregiverController extends Controller{
                 'value' => $value,
                 'type' => 'service'
             );
-        }
+        }            
 
         DB::table('caregiver_attributes')->insert($data);
 

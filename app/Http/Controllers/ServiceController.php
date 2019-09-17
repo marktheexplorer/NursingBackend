@@ -7,8 +7,12 @@ use App\Service;
 use Image; 
 use Validator;
 
-class ServiceController extends Controller
-{
+class ServiceController extends Controller{
+    public function __construct(){ 
+        $this->middleware('preventBackHistory');
+        $this->middleware('auth'); 
+    }
+    
     /**
      * Display a listing of the resource.
      *

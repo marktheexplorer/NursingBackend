@@ -4,8 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class FeedBackController extends Controller
-{
+class FeedBackController extends Controller{
+    public function __construct(){ 
+        $this->middleware('preventBackHistory');
+        $this->middleware('auth'); 
+    }
+    
     /**
      * Display a listing of the resource.
      *

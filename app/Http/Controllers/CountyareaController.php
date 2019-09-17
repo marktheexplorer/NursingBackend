@@ -7,6 +7,12 @@ use Validator;
 use App\Rules\UniqueArea;
 
 class CountyareaController extends Controller{
+    public function __construct(){ 
+        $this->middleware('preventBackHistory');
+        $this->middleware('auth'); 
+    }
+
+    
     /**
      * Display a listing of the resource.
      *

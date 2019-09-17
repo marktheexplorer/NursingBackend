@@ -32,7 +32,7 @@
                                 @method('put')
                                     <div class="card">
                                         <div class="card-header" style="background-color: #ddd;">
-                                            <h5>Personal Info</h5>
+                                            <h5>Personal Information</h5>
                                         </div>
                                         <div class="card-body">
                                               <div class="row">
@@ -210,7 +210,7 @@
                                     </div><br/>
                                     <div class="card">
                                         <div class="card-header" style="background-color: #ddd;">
-                                            <h5>Service Info</h5>
+                                            <h5>Service Information</h5>
                                         </div>
                                         <div class="card-body">
                                             <div class="row">
@@ -284,9 +284,34 @@
                                                     <label>Service Area </label>
                                                     <select name="service_area[]" class="form-control {{ $errors->has('service_area') ? ' is-invalid' : '' }} select2" multiple="multiple" id="servicearea">
                                                         @foreach($service_area_list as $row)
-                                                            <option value="{{ $row->id }}" <?php if(in_array($row->id, old('service_area', $user->service_area)) ){ echo 'selected'; } ?>>
-                                                                {{ $row->area }}
-                                                            </option>
+                                                            @if(count($errors) > 0)
+                                                                @if(empty(old('service_area')))
+                                                                    @if(empty(old('non_service_area')))
+                                                                        <option value="{{ $row->id }}" >
+                                                                            {{ $row->area }}
+                                                                        </option>
+                                                                     @else
+                                                                         <option value="{{ $row->id }}" <?php if(in_array($row->id, old('non_service_area', $user->non_service_area))){ echo 'disabled'; } ?>>
+                                                                            {{ $row->area }}
+                                                                        </option>
+                                                                     @endif   
+                                                                @else
+                                                                    @if(empty(old('non_service_area')))
+                                                                        <option value="{{ $row->id }}" <?php if(in_array($row->id, old('service_area', $user->service_area))){ echo 'selected'; } ?> >
+                                                                            {{ $row->area }}
+                                                                        </option>
+                                                                    @else
+                                                                        <option value="{{ $row->id }}" <?php if(in_array($row->id, old('service_area', $user->service_area))){ echo 'selected'; } ?> <?php if(in_array($row->id, old('non_service_area', $user->non_service_area))){ echo 'disabled'; } ?>>
+                                                                            {{ $row->area }}
+                                                                        </option>
+                                                                    @endif    
+
+                                                                @endif    
+                                                            @else
+                                                                <option value="{{ $row->id }}" <?php if(in_array($row->id, $user->service_area)){ echo 'selected'; } ?> >
+                                                                    {{ $row->area }}*-*-
+                                                                </option>
+                                                            @endif    
                                                         @endforeach
                                                     </select>
                                                     @if ($errors->has('service_area'))
@@ -299,11 +324,35 @@
                                             <div class="row">
                                                 <div class="form-group col-sm-12" >
                                                     <label>Non Service Area </label>
-                                                    <select name="non_service_area[]" class="form-control {{ $errors->has('non_service_area') ? ' is-invalid' : '' }} select2" multiple="multiple" id="nonservicearea">
+                                                    <select name="non_service_area[]" class="form-control {{ $errors->has('non_service_area') ? ' is-invalid' : '' }} select2" multiple="multiple" id="nonservicearea" placeholder="dddddd">
                                                         @foreach($service_area_list as $row)
-                                                            <option value="{{ $row->id }}" <?php if(in_array($row->id, old('non_service_area', $user->non_service_area))){ echo 'selected'; } ?>>
-                                                                {{ $row->area }}
-                                                            </option>
+                                                            @if(count($errors) > 0)
+                                                                @if(empty(old('non_service_area')))
+                                                                    @if(empty(old('service_area')))
+                                                                        <option value="{{ $row->id }}" >
+                                                                            {{ $row->area }}1
+                                                                        </option>
+                                                                    @else
+                                                                        <option value="{{ $row->id }}" <?php if(in_array($row->id, old('service_area', $user->service_area))){ echo 'disabled'; } ?>>
+                                                                            {{ $row->area }}
+                                                                        </option>
+                                                                    @endif    
+                                                                @else
+                                                                    @if(empty(old('service_area')))
+                                                                        <option value="{{ $row->id }}" <?php if(in_array($row->id, old('non_service_area', $user->non_service_area))){ echo 'selected'; }?> >
+                                                                            {{ $row->area }}
+                                                                        </option>
+                                                                    @else
+                                                                        <option value="{{ $row->id }}" <?php if(in_array($row->id, old('non_service_area', $user->non_service_area))){ echo 'selected'; } ?>  <?php if(in_array($row->id, old('service_area', $user->service_area))){ echo 'disabled'; } ?> >
+                                                                        {{ $row->area }}
+                                                                    </option>
+                                                                    @endif 
+                                                                @endif 
+                                                            @else
+                                                                <option value="{{ $row->id }}" <?php if(in_array($row->id, $user->non_service_area)){ echo 'selected'; } ?> >
+                                                                    {{ $row->area }}
+                                                                </option>
+                                                            @endif    
                                                         @endforeach
                                                     </select>
                                                     @if ($errors->has('non_service_area'))
@@ -562,7 +611,7 @@
     function readURL(input) {
       if (input.files && input.files[0]) {
         if($.inArray(input.files[0].type, ['image/png','image/jpg','image/jpeg']) == 0){
-          console.log(input.files[0].type);
+            console.log(input.files[0].type);
             var reader = new FileReader();
             reader.onload = function (e) {
               $('.img-circle').attr('src', e.target.result);
@@ -572,17 +621,15 @@
       }
     }
 
-    (function($) {
-    $.fn.checkFileType = function(options) {
-        var defaults = {
-            allowedExtensions: [],
-            success: function() {},
-            error: function() {}
-        };
-        options = $.extend(defaults, options);
-
-        return this.each(function() {
-
+    (function($){
+        $.fn.checkFileType = function(options) {
+            var defaults = {
+                allowedExtensions: [],
+                success: function() {},
+                error: function() {}
+            };
+            options = $.extend(defaults, options);
+            return this.each(function() {
             $(this).on('change', function() {
                 var value = $(this).val(),
                     file = value.toLowerCase(),
@@ -595,23 +642,20 @@
                     options.success();
 
                 }
-
             });
-
         });
     };
-
 })(jQuery);
 
 $(function() {
     $('#upload_image').checkFileType({
-        allowedExtensions: ['jpg', 'jpeg','png'],
+        allowedExtensions: ['jpg', 'jpeg', 'png'],
         success: function() {
             $('.image_error').text('');
         },
         error: function() {
           $('#upload_image').val('')
-          $('.image_error').text('Please upload a jpg , jpeg or png image .');
+          $('.image_error').text('Please upload a jpg, jpeg or png image only');
         }
     });
 

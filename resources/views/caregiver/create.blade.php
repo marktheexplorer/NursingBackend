@@ -31,7 +31,7 @@
                                 @csrf
                                     <div class="card">
                                         <div class="card-header" style="background-color: #ddd;">
-                                            <h5>Personal Info</h5>
+                                            <h5>Personal Information</h5>
                                         </div>
                                         <div class="card-body">
                                             <div class="row">
@@ -232,7 +232,7 @@
                                     </div><br/>
                                     <div class="card">
                                         <div class="card-header" style="background-color: #ddd;">
-                                            <h5>Service Info</h5>
+                                            <h5>Service Information</h5>
                                         </div>
                                         <div class="card-body">
                                             <div class="row">
@@ -290,9 +290,27 @@
                                                     <label>Service Area </label>
                                                     <select name="service_area[]" class="form-control {{ $errors->has('service_area') ? ' is-invalid' : '' }} select2" multiple="multiple" id="servicearea" >
                                                         @foreach($service_area_list as $row)
-                                                            <option value="{{ $row->id }}" {{ (collect(old('service_area'))->contains($row->id)) ? 'selected':'' }} >
-                                                                {{ $row->area }}
-                                                            </option>
+                                                            @if (count($errors) > 0)
+                                                                @if(empty(old('non_service_area')))
+                                                                    <option value="{{ $row->id }}" <?php if(in_array($row->id, old('service_area'))){ echo 'selected'; } ?>>
+                                                                        {{ $row->area }}
+                                                                    </option>
+                                                                @else
+                                                                    @if(empty(old('service_area')))
+                                                                        <option value="{{ $row->id }}" <?php if(in_array($row->id, old('non_service_area'))){ echo 'disabled'; } ?> >
+                                                                            {{ $row->area }}
+                                                                        </option>
+                                                                    @else
+                                                                        <option value="{{ $row->id }}" <?php if(in_array($row->id, old('service_area'))){ echo 'selected'; } ?> <?php if(in_array($row->id, old('non_service_area'))){ echo 'disabled'; } ?> >
+                                                                        {{ $row->area }}
+                                                                    </option>
+                                                                    @endif
+                                                                @endif    
+                                                            @else
+                                                                <option value="{{ $row->id }}" >
+                                                                    {{ $row->area }}
+                                                                </option>
+                                                            @endif    
                                                         @endforeach
                                                     </select>
                                                     @if ($errors->has('service_area'))
@@ -307,9 +325,27 @@
                                                     <label>Non Service Area </label>
                                                     <select name="non_service_area[]" class="form-control {{ $errors->has('non_service_area') ? ' is-invalid' : '' }} select2" multiple="multiple" id="nonservicearea">
                                                         @foreach($service_area_list as $row)
-                                                            <option value="{{ $row->id }}" id="non{{ $row->id }}" {{ (collect(old('non_service_area'))->contains($row->id)) ? 'selected':'' }}>
-                                                                {{ ucfirst($row->area) }}
-                                                            </option>
+                                                            @if (count($errors) > 0)
+                                                                @if(empty(old('service_area')))
+                                                                    <option value="{{ $row->id }}" <?php if(in_array($row->id, old('non_service_area'))){ echo 'selected'; } ?>>
+                                                                        {{ $row->area }}
+                                                                    </option>
+                                                                @else
+                                                                    @if(empty(old('non_service_area')))
+                                                                        <option value="{{ $row->id }}"  <?php if(in_array($row->id, old('service_area'))){ echo 'disabled'; } ?> >
+                                                                            {{ $row->area }}
+                                                                        </option>
+                                                                    @else
+                                                                        <option value="{{ $row->id }}" <?php if(in_array($row->id, old('non_service_area'))){ echo 'selected'; } ?> <?php if(in_array($row->id, old('service_area'))){ echo 'disabled'; } ?> >
+                                                                        {{ $row->area }}
+                                                                    </option>
+                                                                    @endif
+                                                                @endif    
+                                                            @else
+                                                                <option value="{{ $row->id }}" >
+                                                                    {{ $row->area }}
+                                                                </option>
+                                                            @endif 
                                                         @endforeach
                                                     </select>
                                                     @if ($errors->has('non_service_area'))

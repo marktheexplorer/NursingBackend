@@ -27,7 +27,7 @@
                                     @foreach($faqs as $key => $faq)
                                         <li class="ui-state-default sortbalclass" id="{{ $faq->id }}" >
                                             <strong>
-                                                <span class="ui-icon ui-icon-arrowthick-2-n-s"></span>{{ $faq->question }}
+                                                <span class="ui-icon ui-icon-arrowthick-2-n-s"></span>{{ ucfirst($faq->question) }}
                                             </strong>
                                         </li>
                                         <?php $oldorders .= $faq->id.",";?>

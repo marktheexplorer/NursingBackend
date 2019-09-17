@@ -33,7 +33,7 @@
                                @method('put')
                                <div class="card">
                                  <div class="card-header" style="background-color: #ddd;">
-                                    <h5>Personal Info</h5>
+                                    <h5>Personal Information</h5>
                                  </div>
                                  <div class="tab-content row">
                                   <div class="tab-pane fade show active col-md-12" id="tab-2">
@@ -209,7 +209,7 @@
                               <br>
                               <div class="card">
                                 <div class="card-header" style="background-color: #ddd;">
-                                   <h5>Other Info</h5>
+                                   <h5>Service Information</h5>
                                 </div>
                                 <div class="tab-content row">
                                  <div class="tab-pane fade show active col-md-12" id="tab-2">

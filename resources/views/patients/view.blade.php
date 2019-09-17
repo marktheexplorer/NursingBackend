@@ -1,3 +1,4 @@
+
 @extends('layouts.app')
 
 @section('content')
@@ -35,7 +36,7 @@
                     <div class="ibox-body">
                         <ul class="nav nav-tabs tabs-line">
                             <li class="nav-item">
-                                <a class="nav-link active" href="#tab-1" data-toggle="tab"><i class="ti-bar-chart"></i> Personal Details</a>
+                                <a class="nav-link active" href="#tab-1" data-toggle="tab"><i class="ti-bar-chart"></i> Personal Information</a>
                             </li>
                         </ul>
                         <div class="tab-content">
@@ -120,7 +121,7 @@
                     <div class="ibox-body">
                         <ul class="nav nav-tabs tabs-line">
                             <li class="nav-item">
-                                <a class="nav-link active" href="#tab-1" data-toggle="tab"><i class="ti-bar-chart"></i> Other Details</a>
+                                <a class="nav-link active" href="#tab-1" data-toggle="tab"><i class="ti-bar-chart"></i>Service Information</a>
                             </li>
                         </ul>
                         <div class="tab-content">

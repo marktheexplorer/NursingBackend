@@ -12,16 +12,16 @@ use App\Service;
 use App\Diagnose;
 use App\Service_requests;
 
-class DashboardController extends Controller
-{
+class DashboardController extends Controller{
+
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
-    {
+    public function __construct(){
         $this->middleware('auth');
+        $this->middleware('preventBackHistory');
     }
 
     /**

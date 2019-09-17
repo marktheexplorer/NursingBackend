@@ -6,15 +6,18 @@ use Illuminate\Http\Request;
 use App\CmsPage;
 use Validator;
 
-class CmsPageController extends Controller
-{
+class CmsPageController extends Controller{
+    public function __construct(){ 
+        $this->middleware('preventBackHistory');
+        $this->middleware('auth'); 
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index(){
         $cms = CmsPage::orderBy('updated_at', 'desc')->get();
         return view('cms_pages.index', compact('cms'));
     }
@@ -24,8 +27,7 @@ class CmsPageController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
+    public function create(){
         return view('cms_pages.create');
     }
 
@@ -35,8 +37,7 @@ class CmsPageController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         $input = $request->input(); 
         $validator =  Validator::make($input,[
             'title' => 'required|string|max:200',
@@ -64,8 +65,7 @@ class CmsPageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
+    public function show($id){
         $cms = CmsPage::findOrFail($id);
         return view('cms_pages.view', compact('cms'));
     }
@@ -76,8 +76,7 @@ class CmsPageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
+    public function edit($id){
         $cms = CmsPage::findOrFail($id);
         return view('cms_pages.edit', compact('cms'));
     }
@@ -89,8 +88,7 @@ class CmsPageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id){
         $input = $request->input();
         $validator =  Validator::make($input,[
             'title' => 'required|string|max:200',
@@ -119,8 +117,7 @@ class CmsPageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
+    public function destroy($id){
         $cms = CmsPage::findOrFail($id);
         if ($cms->delete()) {
             $response = array(
@@ -142,14 +139,12 @@ class CmsPageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function view_cms($slug)
-    {
+    public function view_cms($slug){
         $cms = CmsPage::where('slug', 'LIKE', '%' . $slug . '%')->first();
         return view('cms_view', compact('cms'));
     }
 
-    public static function slugify($text)
-    {
+    public static function slugify($text){
         // replace non letter or digits by -
         $text = preg_replace('~[^\pL\d]+~u', '-', $text);
 

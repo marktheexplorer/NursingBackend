@@ -6,8 +6,12 @@ use Illuminate\Http\Request;
 use App\Qualification;
 use Validator;
 
-class QualificationController extends Controller
-{
+class QualificationController extends Controller{
+    public function __construct(){ 
+        $this->middleware('preventBackHistory');
+        $this->middleware('auth'); 
+    }
+    
      /**
      * Display a listing of the resource.
      *

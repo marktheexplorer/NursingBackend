@@ -19,6 +19,11 @@ use App\Exports\PatientExport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class PatientsController extends Controller{
+    public function __construct(){ 
+        $this->middleware('preventBackHistory');
+        $this->middleware('auth'); 
+    }
+    
     public function index(){
         $patients = User::where('role_id','3')->orderBy('created_at', 'DESC')->get();
         return view('patients.index', compact('patients'));

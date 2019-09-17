@@ -6,8 +6,12 @@ use Illuminate\Http\Request;
 use App\Diagnose;
 use Validator;
 
-class DiagnoseController extends Controller
-{
+class DiagnoseController extends Controller{
+    public function __construct(){ 
+        $this->middleware('preventBackHistory');
+        $this->middleware('auth'); 
+    }
+    
     public function index(){
     	$diagnosis = Diagnose::get();
     	return view('diagnose.index' , compact('diagnosis'));
