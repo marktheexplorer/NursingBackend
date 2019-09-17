@@ -259,6 +259,36 @@ class UserController extends Controller
     }
 
     /**
+     * Upload user profile image api
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function uploadProfileImage(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'profile_image' => 'required|image|mimes:jpeg,jpg,png|max:2048',
+        ]);
+
+        if ($validator->fails())
+            return response()->json(['status_code'=> 400, 'message'=> $validator->errors()->first(), 'data' => null]);
+
+        $user = Auth::user();
+
+        $image = $request->file('profile_image');
+        $input['imagename'] = time().'.'.$image->getClientOriginalExtension();
+        $image->move(config('image.user_image_path'), $input['imagename']);
+        $user->profile_image = $input['imagename'];
+
+        if ($user->save()) {
+            $success['profile_image'] = $user->profile_image;
+            return response()->json(['status_code' => $this->successStatus , 'message' => 'Profile image updated successfully.', 'data' => $success]);
+        } else {
+            return response()->json(['status_code' => 400 , 'message' => 'Profile image cannot be uploaded. Please try again!', 'data' => null]);
+        }
+    }
+
+    /**
      * details api
      *
      * @param  \Illuminate\Http\Request  $request
@@ -323,37 +353,6 @@ class UserController extends Controller
             return response()->json(['status_code' => 400 , 'message' => 'Profile details cannot be updated. Please try again!', 'data' => null]);
     }
 
-
-
-    /**
-     * Upload user profile image api
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function uploadProfileImage(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'profile_image' => 'required|image|mimes:jpeg,jpg,png|max:2048',
-        ]);
-
-        if ($validator->fails())
-            return response()->json(['status_code'=> 400, 'message'=> $validator->errors()->first(), 'data' => null]);
-
-        $user = Auth::user();
-
-        $image = $request->file('profile_image');
-        $input['imagename'] = time().'.'.$image->getClientOriginalExtension();
-        $image->move(config('image.user_image_path'), $input['imagename']);
-        $user->profile_image = $input['imagename'];
-
-        if ($user->save()) {
-            $success['profile_image'] = $user->profile_image;
-            return response()->json(['status_code' => $this->successStatus , 'message' => 'Profile image updated successfully.', 'data' => $success]);
-        } else {
-            return response()->json(['status_code' => 400 , 'message' => 'Profile image cannot be uploaded. Please try again!', 'data' => null]);
-        }
-    }
 
     /**
      * get user current location api
