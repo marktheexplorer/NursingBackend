@@ -15,9 +15,7 @@ use Illuminate\Http\Request;
 
 Route::group(['namespace' => 'API\v1'], function(){
 	Route::post('register', 'UserController@register');
-	Route::get('signup/activate/{token}', 'UserController@signupActivate');
 	Route::post('login', 'UserController@login');
-	Route::post('social-login', 'UserController@socialLogin');
 	Route::post('reset-password', 'UserController@resetPassword');
 	Route::post('check-status', 'UserController@checkUserStatus');
 	Route::post('verify-otp', 'UserController@verifyOtp');
@@ -41,5 +39,5 @@ Route::group(['middleware' => 'auth:api', 'namespace' => 'API\v1'], function(){
 	Route::post('delete-teck', 'TeckController@deleteTeck');
 	Route::post('inactivate-teck', 'TeckController@inactivateTeck');
 	Route::post('notify-teck', 'TeckController@notifyTeck');
-	
+
 });
