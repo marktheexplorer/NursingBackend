@@ -309,7 +309,7 @@
                                                                 @endif    
                                                             @else
                                                                 <option value="{{ $row->id }}" <?php if(in_array($row->id, $user->service_area)){ echo 'selected'; } ?> >
-                                                                    {{ $row->area }}*-*-
+                                                                    {{ $row->area }}
                                                                 </option>
                                                             @endif    
                                                         @endforeach

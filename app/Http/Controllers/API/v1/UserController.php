@@ -19,8 +19,10 @@ use Image;
 use Validator;
 use DB;
 
-class UserController extends Controller
-{
+use App\Service_requests;
+use App\Service_requests_attributes;
+
+class UserController extends Controller{
     public $successStatus = 200;
     public $errorStatus = 400;
 
@@ -91,7 +93,6 @@ class UserController extends Controller
             $password = $request->input('password');
 
         if (Auth::attempt(['email' => $email, 'password' => $password])) {
-
             $user = Auth::user();
 
             if ($user->is_blocked) {
@@ -383,5 +384,142 @@ class UserController extends Controller
             return response()->json(['status_code' => $this->successStatus , 'message' => 'Current location save successfully', 'data' => null]);
         else
             return response()->json(['status_code' => 400 , 'message' => 'Current location is not saved. Please try again!', 'data' => null]);
+    }
+
+    //get master list
+    //get discipline list
+    public function getDisciplineList(Request $request){
+        $discipline = DB::table('qualifications')->select('id', 'name')->where('is_blocked', '=', '1')->orderBy('name', 'asc')->get();
+        return response()->json(['status_code' => $this->successStatus , 'message' => 'Get list of all enable Discipline list', 'data' => $discipline]);
+    }
+
+    //get service list
+    public function getServices(Request $request){
+        $service = DB::table('services')->select('id', 'title', 'description', 'service_image')->where('is_blocked', '=', '0')->orderBy('title', 'asc')->get();
+        return response()->json(['status_code' => $this->successStatus , 'message' => 'Get list of all enable Services list', 'data' => $service]);
+    }
+
+    //get service list
+    public function getDiagnose(Request $request){
+        $diagnose = DB::table('diagnosis')->select('id', 'title')->where('is_blocked', '=', '1')->orderBy('title', 'asc')->get();
+        return response()->json(['status_code' => $this->successStatus , 'message' => 'Get list of all enable Diagnose list', 'data' => $diagnose]);
+    }
+
+    //get county list
+    public function getCounty(Request $request){
+        $county = DB::table('county_areas')->select('id', 'county')->where('is_blocked', '=', '1')->where('area', '=', '0')->orderBy('county', 'asc')->get();
+        return response()->json(['status_code' => $this->successStatus , 'message' => 'Get list of all enable County list', 'data' => $county]);
+    }
+
+    //get county area
+    public function getCountyArea(Request $request){
+        $validator = Validator::make($request->all(), [
+            'county_id' => 'required|string',
+        ]);
+
+        if ($validator->fails())
+            return response()->json(['status_code'=> 400, 'message'=> $validator->errors()->first(), 'data' => null]);
+
+        $input = $request->input();
+
+        $county = DB::table('county_areas')->where('area', '=', '0')->where('id', '=', $input['county_id'])->first();
+        if(empty($county)){
+            return response()->json(['status_code'=> 400, 'message'=> 'County Not Found', 'data' => null]);
+        }else{
+            if($county->is_blocked == 0)
+                return response()->json(['status_code'=> 400, 'message'=> 'County is blocked', 'data' => null]);    
+
+            $countyareas = DB::table('county_areas')->where('county', '=', $input['county_id'])->where('is_area_blocked', '=', '1')->orderBy('area', 'asc')->get();
+            return response()->json(['status_code' => $this->successStatus , 'message' => 'Get list of enable County Area list', 'data' => $countyareas]);
+        }
+    }
+
+    //add request service
+    public function addServiceRequest(Request $request){
+        $input = $request->input();        
+        $validator =  Validator::make($input,
+            [
+                'user_id' => 'required|not_in:0',
+                'service' => 'required|not_in:0',
+                'start_date' => 'required|date',
+                'start_time' => 'required',
+                'end_date' => 'required|date|after:start_date',                
+                'end_time' => 'required',
+                'min_expected_bill' => 'required|min:0',
+                'max_expected_bill' => 'required|min:1|gt:min_expected_bill',
+                'location' => 'required',
+                'zipcode' => 'required',
+                'city' => 'required',
+                'state' => 'required',
+                'description' => 'required'
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json(['status_code'=> 400, 'message'=> $validator->errors()->first(), 'data' => null]);
+        }
+
+        $service_request = array(
+            'user_id' => $input['user_id'],
+            'location' => $input['location'],
+            'city' => $input['city'],
+            'state' => $input['state'],
+            'zip' => $input['zipcode'],
+            'service' => $input['service'],
+            'min_expected_bill' => $input['min_expected_bill'],
+            'max_expected_bill' => $input['max_expected_bill'],
+            'start_time' => $input['start_time'],
+            'end_time' => $input['end_time'],
+            'start_date' => date('Y-m-d', strtotime($input['start_date'])),
+            'end_date' => date('Y-m-d', strtotime($input['end_date'])),
+            'description' => $input['description'],
+            'status' => 2,
+            'updated_at' => date('Y-m-d h:i:s')
+        );
+        DB::table('service_requests')->insert($service_request);        
+        return response()->json(['status_code' => $this->successStatus , 'message' => 'Request created successfully.', 'data' => null]);
+    }
+
+    public function updateServiceRequest(Request $request){
+        $input = $request->input();
+
+        $validator =  Validator::make($input,[
+            'request_id' => 'required',
+            'service' => 'required|not_in:0',
+            'start_date' => 'required',
+            'end_date' => 'required|date|after:start_date',
+            'start_time' => 'required',
+            'end_time' => 'required',
+            'min_expected_bill' => 'required|min:0',
+            'max_expected_bill' => 'required|min:1|gt:min_expected_bill',
+            'location' => 'required',
+            'zipcode' => 'required',
+            'city' => 'required',
+            'state' => 'required',
+            'description' => 'required'
+        ],
+        ['max_expected_bill.gt' => 'The max price must be greater than min price.']);
+
+        if ($validator->fails()) {
+            return response()->json(['status_code'=> 400, 'message'=> $validator->errors()->first(), 'data' => null]);
+        }
+
+        $service_request = Service_requests::findOrFail($input['request_id']);
+        $service_request->location = $input['location'];
+        $service_request->city = $input['city'];
+        $service_request->state = $input['state'];
+        $service_request->zip = $input['zipcode'];
+        $service_request->service = $input['service'];
+        $service_request->min_expected_bill = $input['min_expected_bill'];
+        $service_request->max_expected_bill = $input['max_expected_bill'];
+        $service_request->start_time = $input['start_time'];
+        $service_request->end_time = $input['end_time'];
+        //$service_request->start_date = $input['start_date'];
+        //$service_request->end_date = $input['end_date'];
+        $service_request->description = $input['description'];
+        $service_request->updated_at = date('Y-m-d h:i:s');
+        $service_request->save();
+
+        return response()->json(['status_code' => $this->successStatus , 'message' => 'Request detail updated successfully.', 'data' => null]);
     }
 }
