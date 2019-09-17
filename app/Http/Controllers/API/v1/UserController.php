@@ -133,7 +133,49 @@ class UserController extends Controller
 
             return response()->json(['status_code' => $this->successStatus , 'message' => 'Your One Time Password has been sent to your mail.', 'data' => null]);
         } else {
-            return response()->json(['status_code' => 400 , 'message' => 'Unauthorized.', 'data' => null]);
+            return response()->json(['status_code' => $this->errorStatus , 'message' => 'Unauthorized.', 'data' => null]);
+        }
+    }
+
+    /**
+     * Verify OTP api
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function verifyOtp(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required',
+            'otp' => 'required|max:4'
+        ],[
+            'required' => 'Please enter :attribute.'
+        ]);
+
+        if ($validator->fails())
+            return response()->json(['status_code'=> $this->errorStatus, 'message'=> $validator->errors()->first(), 'data' => null]);
+
+        $check = User::where('email', $request->input('email'))->first();
+
+        if ($check) {
+            $otp = User::where('email', $request->input('email'))->where('otp', $request->input('otp'))->first();
+
+            if ($otp) {
+                $otp->otp = '';
+                $otp->save();
+
+                DB::table('oauth_access_tokens')
+                    ->where('user_id', $otp->id)
+                    ->update([
+                        'revoked' => 1
+                    ]);
+
+                return response()->json(['status_code' => $this->successStatus, 'message' => 'Otp Verified.', 'data'=> null]);
+            } else {
+                return response()->json(['status_code' => 400, 'message' => 'Incorrect Otp.', 'data'=> null]);
+            }
+        } else {
+            return response()->json(['status_code' => 400, 'message' => 'Please enter registered email Id.', 'data'=> null]);
         }
     }
 
