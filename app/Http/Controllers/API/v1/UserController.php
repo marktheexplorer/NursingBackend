@@ -143,9 +143,10 @@ class UserController extends Controller{
     {
         $validator = Validator::make($request->all(), [
             'email' => 'required',
+            'type' => ['required', Rule::in(['caregiver', 'patient'])]
         ]);
 
-        $userDetails = User::where('email', $request->input('email'))->first();
+        $userDetails = User::where('email', $request->input('email'))->where('type' ,$request->input('type') )->first();
         if ($userDetails) {
             User::where('email', $request->input('email'))->update(['otp' => rand(1000,9999)]);
             $user = User::where('email', $request->input('email'))->first();
@@ -153,7 +154,7 @@ class UserController extends Controller{
 
             return response()->json(['status_code' => $this->successStatus , 'message' => 'Your One Time Password has been sent to your mail.', 'data' => null]);
         } else {
-            return response()->json(['status_code' => $this->errorStatus , 'message' => 'Unauthorized.', 'data' => null]);
+            return response()->json(['status_code' => $this->errorStatus , 'message' => 'Unauthorized user.', 'data' => null]);
         }
     }
 
