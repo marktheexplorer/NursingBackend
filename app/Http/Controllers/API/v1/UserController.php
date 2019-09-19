@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Controller;
 use App\Notifications\SignupActivate;
 use App\Mail\ForgotPassword;
+use App\Mail\VerifyMail;
 use App\User;
 use App\Diagnose;
 use App\Countyareas;
@@ -68,6 +69,9 @@ class UserController extends Controller{
         }
 
         if ($user) {
+            User::where('email',$input['email'])->update(['otp' => rand(1000,9999)]);
+            $user = User::where('email', $input['email'])->first();
+            Mail::to($input['email'])->send(new VerifyMail($user));
             return response()->json(['status_code' => $this->successStatus, 'message' => 'You are successfully registered.', 'data'=> null]);
         } else {
             return response()->json(['status_code' => $this->errorStatus, 'message' => 'Unable to register. Please try again.', 'data'=> null]);
@@ -93,34 +97,39 @@ class UserController extends Controller{
 
             $email = $request->input('email');
             $password = $request->input('password');
+            $type = $request->input('type');
 
-        if (Auth::attempt(['email' => $email, 'password' => $password])) {
+        if (Auth::attempt(['email' => $email, 'password' => $password , 'type' => $type])) {
             $user = Auth::user();
+            if($user->is_blocked){
 
-            if ($user->is_blocked) {
-                return response()->json(['status_code' => 999, 'message' => 'Your account is blocked by admin. Please contact to admin.', 'data' => null]);
-            } else {
-                DB::table('oauth_access_tokens')
-                    ->where('user_id', $user->id)
-                    ->update([
-                        'revoked' => 1
-                    ]);
-                $diagnosis = Diagnose::select('id', 'title')->where('is_blocked',0)->orderBy('title', 'asc')->get();
-                $service_area = Countyareas::select('id', 'county')->where('is_blocked', '=', '1')->where('area', '=', '0')->orderBy('county', 'asc')->get();
-                foreach ($service_area as $key => $value) {
-                    $county = Countyareas::select('area')->where('is_area_blocked', '=', '1')->where('county', '=', $value->id)->get();
-                    $service_area[$key]['county_area']=$county;
-                }
+                if ($user->is_blocked) {
+                    return response()->json(['status_code' => 999, 'message' => 'Your account is blocked by admin. Please contact to admin.', 'data' => null]);
+                } else {
+                    DB::table('oauth_access_tokens')
+                        ->where('user_id', $user->id)
+                        ->update([
+                            'revoked' => 1
+                        ]);
+                    $diagnosis = Diagnose::select('id', 'title')->where('is_blocked',0)->orderBy('title', 'asc')->get();
+                    $service_area = Countyareas::select('id', 'county')->where('is_blocked', '=', '1')->where('area', '=', '0')->orderBy('county', 'asc')->get();
+                    foreach ($service_area as $key => $value) {
+                        $county = Countyareas::select('area')->where('is_area_blocked', '=', '1')->where('county', '=', $value->id)->get();
+                        $service_area[$key]['county_area']=$county;
+                    }
 
-                $success['token'] =  $user->createToken($user->name)->accessToken;
-                $success['userDetails'] =  $user;
-                $success['diagnosis'] =  $diagnosis;
-                $success['service_area'] =  $service_area;
+                    $success['token'] =  $user->createToken($user->name)->accessToken;
+                    $success['userDetails'] =  $user;
+                    $success['diagnosis'] =  $diagnosis;
+                    $success['service_area'] =  $service_area;
 
-                return response()->json(['status_code' => $this->successStatus, 'message' => '', 'data' => $success]);
+                    return response()->json(['status_code' => $this->successStatus, 'message' => '', 'data' => $success]);
+                } 
+            }else{
+                return response()->json(['status_code' => 300, 'message' => 'Your email is not verified . Please verify your email first.', 'data' => null]);
             }
         } else {
-            return response()->json(['status_code' => $this->errorStatus, 'message' => 'Invalid Credentials.', 'data' => null]);
+            return response()->json(['status_code' => $this->errorStatus, 'message' => 'You have entered Invalid Credentials.', 'data' => null]);
         }
     }
 
@@ -173,6 +182,7 @@ class UserController extends Controller{
 
             if ($otp) {
                 $otp->otp = '';
+                $otp->email_verified = 1;
                 $otp->save();
 
                 DB::table('oauth_access_tokens')
