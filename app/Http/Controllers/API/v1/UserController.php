@@ -101,7 +101,7 @@ class UserController extends Controller{
 
         if (Auth::attempt(['email' => $email, 'password' => $password , 'type' => $type])) {
             $user = Auth::user();
-            if($user->is_blocked){
+            if($user->email_verified){
 
                 if ($user->is_blocked) {
                     return response()->json(['status_code' => 999, 'message' => 'Your account is blocked by admin. Please contact to admin.', 'data' => null]);
