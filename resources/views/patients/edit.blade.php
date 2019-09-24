@@ -150,7 +150,7 @@
                                             <label>Language</label>
                                             <select name="language" class="form-control {{ $errors->has('language') ? ' is-invalid' : '' }}">
                                                 <option disabled="true" selected="true"> -- Select Language --</option>
-                                                @foreach(LANGUAGES as $val)
+                                                @foreach(PROFILE_LANGUAGE as $val)
                                                     <option value="{{ $val }}" {{ ($user->patient?$user->patient->language:old('language')) == $val ? 'selected' : '' }}>{{$val}}</option>
                                                 @endforeach
                                             </select>
@@ -353,20 +353,6 @@
     });
 
  $(function(){
-    function split( val ) {
-        return val.split( /,\s*/ );
-    }
-
-    function extractLast( term ) {
-        //return split( term ).pop();
-        temp = $.trim($("#pin_code").val());
-        fnd = ','
-        if(temp.indexOf(fnd) != -1){
-            term =  temp+" "+term;
-        }
-        console.log(term);
-        return term;
-    }
 
     // don't navigate away from the field on tab when selecting an item
     $( "#citysuggest" ).on( "keydown", function( event ) {

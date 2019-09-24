@@ -326,6 +326,30 @@ class UserController extends Controller{
     }
 
     /**
+     * edit user profile details api
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function editProfileDetails(Request $request)
+    {
+        $input = $request->input();
+        $user = Auth::user();
+        $user->fill($input);
+        $user->save();
+
+        if($user->type == 'patient'){
+            $input['f_name'] = $user->name;
+            $user->patient->where('user_id',$user->id)->first()->fill($input)->save();
+        }
+
+        if ($user)
+            return response()->json(['status_code' => $this->successStatus , 'message' => 'Profile details updated successfully.', 'data' => $user]);
+        else
+            return response()->json(['status_code' => 400 , 'message' => 'Profile details cannot be updated. Please try again!', 'data' => null]);
+    }
+
+    /**
      * set notification status api
      *
      * @param  \Illuminate\Http\Request  $request
@@ -350,30 +374,7 @@ class UserController extends Controller{
             return response()->json(['status_code' => 400 , 'message' => 'Notification Settings cannot be updated. Please try again.', 'data' => null]);
     }
 
-    /**
-     * edit user profile details api
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function editProfileDetails(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:30',
-        ]);
-
-        if ($validator->fails())
-            return response()->json(['status_code'=> 400, 'message'=> $validator->errors()->first(), 'data' => null]);
-
-        $input = $request->input();
-        $user = Auth::user();
-        $user->fill($input);
-
-        if ($user->save())
-            return response()->json(['status_code' => $this->successStatus , 'message' => 'Profile details updated successfully.', 'data' => $user]);
-        else
-            return response()->json(['status_code' => 400 , 'message' => 'Profile details cannot be updated. Please try again!', 'data' => null]);
-    }
+   
 
 
     /**
