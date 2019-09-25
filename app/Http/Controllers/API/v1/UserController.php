@@ -36,13 +36,22 @@ class UserController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function register(Request $request)
-    {
+    {   
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:40',
-            'email' => 'required|email|unique:users',
+            'email' => 'required|email',
             'password' => 'required|min:6',
             'type' => ['required', Rule::in(['caregiver', 'patient'])],
         ]);
+
+        $user_exist = User::where('email', $request->email)->first();
+        if($user_exist){
+            if($user_exist->email_verified == 0)
+            return response()->json(['status_code' => 300, 'message' => 'Your email is not verified . Please verify your email first.', 'data' => null]);
+
+            else
+            return response()->json(['status_code' => 400, 'message' => 'Email Already Exists.', 'data' => null]);    
+        }
 
         if ($validator->fails())
             return response()->json(['status_code'=> $this->errorStatus, 'message'=> $validator->errors()->first(), 'data' => null]);
