@@ -30,6 +30,8 @@ class CreatePatientsProfilesTable extends Migration
             $table->boolean('pets')->default(0);
             $table->text('pets_description')->nullable();
             $table->text('additional_info')->nullable();
+            $table->text('alt_contact_name')->nullable();
+            $table->text('alt_contact_no')->nullable();
             $table->timestamps();
         });
 
