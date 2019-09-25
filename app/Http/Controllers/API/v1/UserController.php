@@ -81,7 +81,7 @@ class UserController extends Controller{
             User::where('email',$input['email'])->update(['otp' => rand(1000,9999)]);
             $user = User::where('email', $input['email'])->first();
             Mail::to($input['email'])->send(new VerifyMail($user));
-            return response()->json(['status_code' => $this->successStatus, 'message' => 'You are successfully registered.', 'data'=> null]);
+            return response()->json(['status_code' => 300, 'message' => 'Your email is not verified . Please verify your email first.', 'data' => null]);
         } else {
             return response()->json(['status_code' => $this->errorStatus, 'message' => 'Unable to register. Please try again.', 'data'=> null]);
         }
