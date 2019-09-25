@@ -127,10 +127,16 @@ class UserController extends Controller{
                         $service_area[$key]['county_area']=$county;
                     }
 
+                    $services = DB::table('services')->select('id', 'title', 'description', 'service_image')->where('is_blocked', '=', '0')->orderBy('title', 'asc')->get();
+
                     $success['token'] =  $user->createToken($user->name)->accessToken;
                     $success['userDetails'] =  $user;
+                    $success['services'] =  $services;
                     $success['diagnosis'] =  $diagnosis;
                     $success['service_area'] =  $service_area;
+                    $success['height'] = PROFILE_HEIGHT;
+                    $success['weight'] = PROFILE_WEIGHT;
+                    $success['language'] = PROFILE_LANGUAGE;
 
                     return response()->json(['status_code' => $this->successStatus, 'message' => '', 'data' => $success]);
                 } 
