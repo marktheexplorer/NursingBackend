@@ -120,9 +120,6 @@ class UserController extends Controller{
                         ->update([
                             'revoked' => 1
                         ]);
-                    if($request->input('type') == 'patient'){
-                        $user =  User::where('users.id', Auth::id())->join('patients_profiles', 'users.id', 'user_id')->first();
-                    }
                     $diagnosis = Diagnose::select('id', 'title')->where('is_blocked',0)->orderBy('title', 'asc')->get();
 
                     $service_area = Countyareas::select('id', 'county')->where('is_blocked', '=', '1')->where('area', '=', '0')->orderBy('county', 'asc')->get();
@@ -134,6 +131,10 @@ class UserController extends Controller{
                     $services = DB::table('services')->select('id', 'title', 'description', 'service_image')->where('is_blocked', '=', '0')->orderBy('title', 'asc')->get();
 
                     $success['token'] =  $user->createToken($user->name)->accessToken;
+                    
+                    if($request->input('type') == 'patient'){
+                        $user =  User::where('users.id', Auth::id())->join('patients_profiles', 'users.id', 'user_id')->first();
+                    }
                     $success['userDetails'] =  $user;
                     $success['services'] =  $services;
                     $success['diagnosis'] =  $diagnosis;
