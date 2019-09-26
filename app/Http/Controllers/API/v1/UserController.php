@@ -120,7 +120,11 @@ class UserController extends Controller{
                         ->update([
                             'revoked' => 1
                         ]);
+                    if($request->input('type') == 'patient'){
+                        $user =  User::where('users.id', Auth::id())->join('patients_profiles', 'users.id', 'user_id')->first();
+                    }
                     $diagnosis = Diagnose::select('id', 'title')->where('is_blocked',0)->orderBy('title', 'asc')->get();
+
                     $service_area = Countyareas::select('id', 'county')->where('is_blocked', '=', '1')->where('area', '=', '0')->orderBy('county', 'asc')->get();
                     foreach ($service_area as $key => $value) {
                         $county = Countyareas::select('area')->where('is_area_blocked', '=', '1')->where('county', '=', $value->id)->get();
