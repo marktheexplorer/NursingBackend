@@ -104,11 +104,9 @@ class UserController extends Controller{
         if ($validator->fails())
             return response()->json(['status_code'=> $this->errorStatus, 'message'=> $validator->errors()->first(), 'data' => null]);
 
-            $email = $request->input('email');
-            $password = $request->input('password');
-            $type = $request->input('type');
+            $input = $request->input();
 
-        if (Auth::attempt(['email' => $email, 'password' => $password , 'type' => $type])) {
+        if (Auth::attempt(['email' => $input['email'], 'password' => $input['password'] , 'type' => $input['type']])) {
             $user = Auth::user();
             if($user->email_verified){
 
@@ -120,28 +118,32 @@ class UserController extends Controller{
                         ->update([
                             'revoked' => 1
                         ]);
-                    $diagnosis = Diagnose::select('id', 'title')->where('is_blocked',0)->orderBy('title', 'asc')->get();
 
                     $service_area = Countyareas::select('id', 'county')->where('is_blocked', '=', '1')->where('area', '=', '0')->orderBy('county', 'asc')->get();
                     foreach ($service_area as $key => $value) {
                         $county = Countyareas::select('area')->where('is_area_blocked', '=', '1')->where('county', '=', $value->id)->get();
                         $service_area[$key]['county_area']=$county;
                     }
-
-                    $services = DB::table('services')->select('id', 'title', 'description', 'service_image')->where('is_blocked', '=', '0')->orderBy('title', 'asc')->get();
-
-                    $success['token'] =  $user->createToken($user->name)->accessToken;
+                    $token = $user->createToken($user->name)->accessToken;
                     
-                    if($request->input('type') == 'patient'){
-                        $user =  User::where('users.id', Auth::id())->join('patients_profiles', 'users.id', 'user_id')->first();
-                    }
-                    $success['userDetails'] =  $user;
-                    $success['services'] =  $services;
-                    $success['diagnosis'] =  $diagnosis;
-                    $success['service_area'] =  $service_area;
-                    $success['height'] = PROFILE_HEIGHT;
-                    $success['weight'] = PROFILE_WEIGHT;
-                    $success['language'] = PROFILE_LANGUAGE;
+                    if($input['type'] == 'patient'){
+
+                        $userDetails =  User::where('users.id', Auth::id())->join('patients_profiles', 'users.id', 'user_id')->first();
+                        $services = DB::table('services')->select('id', 'title', 'description', 'service_image')->where('is_blocked', '=', '0')->orderBy('title', 'asc')->get();
+                        $diagnosis = Diagnose::select('id', 'title')->where('is_blocked',0)->orderBy('title', 'asc')->get();
+                        $success['token'] =  $token;
+                        $success['userDetails'] =  $userDetails;
+                        $success['services'] =  $services;
+                        $success['diagnosis'] =  $diagnosis;
+                        $success['service_area'] =  $service_area;
+                        $success['height'] = PROFILE_HEIGHT;
+                        $success['weight'] = PROFILE_WEIGHT;
+                        $success['language'] = PROFILE_LANGUAGE;
+                    }else{
+                        $success['token'] =  $token;
+                        $success['userDetails'] =  $user;
+                        $success['service_area'] =  $service_area;
+                    }           
 
                     return response()->json(['status_code' => $this->successStatus, 'message' => '', 'data' => $success]);
                 } 
