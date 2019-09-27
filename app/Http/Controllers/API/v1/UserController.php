@@ -125,7 +125,7 @@ class UserController extends Controller{
                         $service_area[$key]['county_area']=$county;
                     }
                     $token = $user->createToken($user->name)->accessToken;
-                    
+
                     if($input['type'] == 'patient'){
 
                         $userDetails =  User::where('users.id', Auth::id())->join('patients_profiles', 'users.id', 'user_id')->first();
@@ -311,7 +311,7 @@ class UserController extends Controller{
     public function uploadProfileImage(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'profile_image' => 'required|image|mimes:jpeg,jpg,png|max:2048',
+            'profile_image' => 'required',
         ]);
 
         if ($validator->fails())
@@ -319,14 +319,29 @@ class UserController extends Controller{
 
         $user = Auth::user();
 
-        $image = $request->file('profile_image');
-        $input['imagename'] = time().'.'.$image->getClientOriginalExtension();
-        $image->move(config('image.user_image_path'), $input['imagename']);
-        $user->profile_image = $input['imagename'];
+
+
+        $data = $request->input('profile_image');
+
+        $img = str_replace('data:image/jpeg;base64,', '', $data);
+        $img = str_replace(' ', '+', $img);
+
+        $data = base64_decode($img);
+
+        $fileName = md5(uniqid(rand(), true));
+
+        $image = $fileName.'.'.'png';
+
+        $file = config('image.user_image_path').$image;
+
+        $success = file_put_contents($file, $data);
+
+        $img = Image::make(config('image.user_image_path').$image);
+
+        $user->profile_image = $image;
 
         if ($user->save()) {
-            $success['profile_image'] = $user->profile_image;
-            return response()->json(['status_code' => $this->successStatus , 'message' => 'Profile image updated successfully.', 'data' => $success]);
+            return response()->json(['status_code' => $this->successStatus , 'message' => 'Profile image updated successfully.', 'data' => $user->profile_image]);
         } else {
             return response()->json(['status_code' => 400 , 'message' => 'Profile image cannot be uploaded. Please try again!', 'data' => null]);
         }
