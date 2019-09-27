@@ -341,7 +341,7 @@ class UserController extends Controller{
         $user->profile_image = $image;
 
         if ($user->save()) {
-            return response()->json(['status_code' => $this->successStatus , 'message' => 'Profile image updated successfully.', 'data' => $user->profile_image]);
+            return response()->json(['status_code' => $this->successStatus , 'message' => 'Profile image updated successfully.', 'data' => url('/public/uploads/users/').'/'.$user->profile_image]);
         } else {
             return response()->json(['status_code' => 400 , 'message' => 'Profile image cannot be uploaded. Please try again!', 'data' => null]);
         }
