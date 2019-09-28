@@ -14,9 +14,9 @@ use DB;
 class PatientExport implements FromCollection, WithHeadings, ShouldAutoSize{
     public function collection(){
         $user_data = DB::table('users')
-        ->select('users.*', 'patients_profiles.pin_code','patients_profiles.disciplines','patients_profiles.diagnose_id')
+        ->select('users.*', 'patients_profiles.pin_code','patients_profiles.disciplines','patients_profiles.diagnose_id','patients_profiles.language')
         ->Join('patients_profiles', 'patients_profiles.user_id', '=', 'users.id')
-        ->orderBy('users.name', 'desc')->get();
+        ->orderBy('users.created_at', 'desc')->get();
 
         foreach ($user_data as $key => $value) {
           $value->diagnosis = Diagnose::select('title')->where('id',$value->diagnose_id)->first();
@@ -34,6 +34,7 @@ class PatientExport implements FromCollection, WithHeadings, ShouldAutoSize{
                     $row->mobile_number,
                     $row->gender,
                     date("d-m-Y", strtotime($row->dob)),
+                    $row->language,
                     ucfirst($row->street),
                     $row->city,
                     $row->state,
@@ -57,6 +58,7 @@ class PatientExport implements FromCollection, WithHeadings, ShouldAutoSize{
             'Mobile No.',
             'Gender',
             'Date Of Birth',
+            'Language',
             'Street',
             'City',
             'State',
