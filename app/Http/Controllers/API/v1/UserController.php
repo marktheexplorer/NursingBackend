@@ -141,20 +141,13 @@ class UserController extends Controller{
                         $success['language'] = PROFILE_LANGUAGE;
                     }else{
                         $userDetails =  User::where('users.id', Auth::id())->first();
-                        $services = DB::table('caregiver_attributes')
+                        $userDetails['service_in'] = DB::table('caregiver_attributes')
+                                    ->select('county_areas.id','county_areas.area')
+                                    ->join('county_areas', 'county_areas.id','caregiver_attributes.value')
                                     ->where('caregiver_id', '=', $userDetails->id)
-                                    ->where('type', '=', 'service_area')
-                                    ->pluck('value')->toArray();
-
-                        $service_area_selected = array();
-                        foreach ($services as $key => $value) {
-                           $service_area_selected[] = DB::table('county_areas')->select('id','area')
-                           ->where('id', $value)->first();
-                        }
-
+                                    ->where('type', '=', 'service_area')->get();
                         $success['token'] =  $token;
                         $success['userDetails'] =  $userDetails;
-                        $success['service_area_selected'] =  $service_area_selected;
                         $success['service_area'] =  $service_area;
                     }           
 
@@ -395,6 +388,19 @@ class UserController extends Controller{
             $input['first_name'] = $user->name;
             Caregiver::where('user_id',$user->id)->first()->fill($input)->save();
 
+            DB::table('caregiver_attributes')->where('caregiver_id', '=', $user->id)->where('type', '=', 'service_area')->delete();
+            
+            $service_area = $input['service_in'];
+            foreach($service_area as $area){
+                $data[] = array(
+                    'caregiver_id' => $user->id,
+                    'value' => $area,
+                    'type' => 'service_area'
+                );
+            }
+            DB::table('caregiver_attributes')->insert($data);
+
+            $user['service_in'] = DB::table('caregiver_attributes')->select('county_areas.id','county_areas.area')->join('county_areas', 'county_areas.id','caregiver_attributes.value')->where('caregiver_id', '=', $user->id)->where('type', '=', 'service_area')->get();
         }
 
         if ($user)
