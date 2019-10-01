@@ -145,6 +145,8 @@ class UserController extends Controller{
                                     ->where('caregiver_id', '=', $userDetails->id)
                                     ->where('type', '=', 'service_area')
                                     ->pluck('value')->toArray();
+                                    
+                        $service_area_selected = array();
                         foreach ($services as $key => $value) {
                            $service_area_selected[] = DB::table('county_areas')->select('id','area')
                            ->where('id', $value)->first();
@@ -389,6 +391,10 @@ class UserController extends Controller{
             $user->patient->where('user_id',$user->id)->first()->fill($input)->save();
 
             $user = User::where('users.id', Auth::id())->join('patients_profiles', 'users.id', 'user_id')->first();
+        }else{
+            $input['first_name'] = $user->name;
+            Caregiver::where('user_id',$user->id)->first()->fill($input)->save();
+
         }
 
         if ($user)
