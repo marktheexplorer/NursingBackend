@@ -140,8 +140,19 @@ class UserController extends Controller{
                         $success['weight'] = PROFILE_WEIGHT;
                         $success['language'] = PROFILE_LANGUAGE;
                     }else{
+                        $userDetails =  User::where('users.id', Auth::id())->first();
+                        $services = DB::table('caregiver_attributes')
+                                    ->where('caregiver_id', '=', $userDetails->id)
+                                    ->where('type', '=', 'service_area')
+                                    ->pluck('value')->toArray();
+                        foreach ($services as $key => $value) {
+                           $service_area_selected[] = DB::table('county_areas')->select('area')
+                           ->where('id', $value)->first();
+                        }
+                        
                         $success['token'] =  $token;
-                        $success['userDetails'] =  $user;
+                        $success['userDetails'] =  $userDetails;
+                        $success['service_area_selected'] =  $service_area_selected;
                         $success['service_area'] =  $service_area;
                     }           
 
