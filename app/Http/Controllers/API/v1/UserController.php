@@ -121,7 +121,7 @@ class UserController extends Controller{
 
                     $service_area = Countyareas::select('id', 'county')->where('is_blocked', '=', '1')->where('area', '=', '0')->orderBy('county', 'asc')->get();
                     foreach ($service_area as $key => $value) {
-                        $county = Countyareas::select('area')->where('is_area_blocked', '=', '1')->where('county', '=', $value->id)->get();
+                        $county = Countyareas::select('id','area')->where('is_area_blocked', '=', '1')->where('county', '=', $value->id)->get();
                         $service_area[$key]['county_area']=$county;
                     }
                     $token = $user->createToken($user->name)->accessToken;
@@ -146,10 +146,10 @@ class UserController extends Controller{
                                     ->where('type', '=', 'service_area')
                                     ->pluck('value')->toArray();
                         foreach ($services as $key => $value) {
-                           $service_area_selected[] = DB::table('county_areas')->select('area')
+                           $service_area_selected[] = DB::table('county_areas')->select('id','area')
                            ->where('id', $value)->first();
                         }
-                        
+
                         $success['token'] =  $token;
                         $success['userDetails'] =  $userDetails;
                         $success['service_area_selected'] =  $service_area_selected;
