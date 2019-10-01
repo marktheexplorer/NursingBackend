@@ -145,7 +145,7 @@ class UserController extends Controller{
                                     ->where('caregiver_id', '=', $userDetails->id)
                                     ->where('type', '=', 'service_area')
                                     ->pluck('value')->toArray();
-                                    
+
                         $service_area_selected = array();
                         foreach ($services as $key => $value) {
                            $service_area_selected[] = DB::table('county_areas')->select('id','area')
@@ -381,7 +381,7 @@ class UserController extends Controller{
      */
     public function editProfileDetails(Request $request)
     {
-        $input = $request->input();
+        $input = $request->input(); 
         $user = Auth::user();
         $user->fill($input);
         $user->save();
