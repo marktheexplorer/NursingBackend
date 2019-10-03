@@ -119,11 +119,7 @@ class UserController extends Controller{
                             'revoked' => 1
                         ]);
 
-                    $service_area = Countyareas::select('id', 'county')->where('is_blocked', '=', '1')->where('area', '=', '0')->orderBy('county', 'asc')->get();
-                    foreach ($service_area as $key => $value) {
-                        $county = Countyareas::select('id','area')->where('is_area_blocked', '=', '1')->where('county', '=', $value->id)->get();
-                        $service_area[$key]['county_area']=$county;
-                    }
+                    $county = Countyareas::select('id','area')->where('area', '!=' ,'0')->where('is_area_blocked', '=', '1')->orderBy('area', 'ASC')->get();
                     $token = $user->createToken($user->name)->accessToken;
 
                     if($input['type'] == 'patient'){
@@ -135,7 +131,7 @@ class UserController extends Controller{
                         $success['userDetails'] =  $userDetails;
                         $success['services'] =  $services;
                         $success['diagnosis'] =  $diagnosis;
-                        $success['service_area'] =  $service_area;
+                        $success['service_area'] =  $county;
                         $success['height'] = PROFILE_HEIGHT;
                         $success['weight'] = PROFILE_WEIGHT;
                         $success['language'] = PROFILE_LANGUAGE;
@@ -148,7 +144,7 @@ class UserController extends Controller{
                                     ->where('type', '=', 'service_area')->get();
                         $success['token'] =  $token;
                         $success['userDetails'] =  $userDetails;
-                        $success['service_area'] =  $service_area;
+                        $success['service_area'] =  $county;
                     }           
 
                     return response()->json(['status_code' => $this->successStatus, 'message' => '', 'data' => $success]);
