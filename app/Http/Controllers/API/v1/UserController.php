@@ -389,17 +389,18 @@ class UserController extends Controller{
             Caregiver::where('user_id',$user->id)->first()->fill($input)->save();
 
             DB::table('caregiver_attributes')->where('caregiver_id', '=', $user->id)->where('type', '=', 'service_area')->delete();
-            
-            $service_area = $input['service_in'];
-            foreach($service_area as $area){
-                $data[] = array(
-                    'caregiver_id' => $user->id,
-                    'value' => $area,
-                    'type' => 'service_area'
-                );
+            if($request->exists('service_in')){                
+                $service_area = $input['service_in'];
+                foreach($service_area as $area){
+                    $data[] = array(
+                        'caregiver_id' => $user->id,
+                        'value' => $area,
+                        'type' => 'service_area'
+                    );
+                }
+                DB::table('caregiver_attributes')->insert($data);
             }
-            DB::table('caregiver_attributes')->insert($data);
-
+            
             $user['service_in'] = DB::table('caregiver_attributes')->select('county_areas.id','county_areas.area')->join('county_areas', 'county_areas.id','caregiver_attributes.value')->where('caregiver_id', '=', $user->id)->where('type', '=', 'service_area')->get();
         }
 
