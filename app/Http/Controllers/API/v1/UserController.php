@@ -128,7 +128,7 @@ class UserController extends Controller{
                         $services = DB::table('services')->select('id', 'title', 'description', 'service_image')->where('is_blocked', '=', '0')->orderBy('title', 'asc')->get();
                         $diagnosis = Diagnose::select('id', 'title')->where('is_blocked',0)->orderBy('title', 'asc')->get();
                         $success['token'] =  $token;
-                        $success['userDetails'] =  $userDetails == 'null' ? $user : $userDetails;
+                        $success['userDetails'] =  $userDetails == null ? $user : $userDetails;
                         $success['services'] =  $services;
                         $success['diagnosis'] =  $diagnosis;
                         $success['service_area'] =  $county;
