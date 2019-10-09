@@ -76,7 +76,9 @@
                                          <strong>{{ $errors->first('l_name') }}</strong>
                                          </span>
                                          @endif
-                                      </div>
+                                      </div>                                      
+                                    </div>
+                                    <div class="row">  
                                       <div class="col-sm-4 form-group">
                                          <label>Email</label>
                                          <input type="text" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" placeholder="Email" value="{{ old('email') }}"/>
@@ -107,7 +109,9 @@
                                          </span>
                                          @endif
                                       </div>
-                                       <div class="col-sm-4  form-group">
+                                    </div>
+                                    <div class="row">  
+                                       <div class="col-sm-3  form-group">
                                           <label>Height</label>
                                           <select name="height" class="form-control {{ $errors->has('height') ? ' is-invalid' : '' }} select2">
                                               <option disabled="true" selected="true"> -- Select Height --</option>
@@ -121,7 +125,7 @@
                                               </span>
                                           @endif
                                       </div>
-                                      <div class="col-sm-4 form-group">
+                                      <div class="col-sm-3 form-group">
                                           <label>Weight</label>
                                           <select name="weight" class="form-control {{ $errors->has('weight') ? ' is-invalid' : '' }} select2">
                                               <option disabled="true" selected="true"> -- Select Weight --</option>
@@ -135,7 +139,7 @@
                                               </span>
                                           @endif
                                       </div>
-                                      <div class="col-sm-4 form-group">
+                                      <div class="col-sm-3 form-group">
                                          <label>Gender</label>
                                          <select class="form-control" name="gender">
                                             <option value="Male">Male</option>
@@ -147,7 +151,7 @@
                                          </span>
                                          @endif
                                       </div>
-                                      <div class="col-sm-4 form-group">
+                                      <div class="col-sm-3 form-group">
                                           <label>Language</label>
                                           <select name="language" class="form-control {{ $errors->has('language') ? ' is-invalid' : '' }} select2">
                                               <option disabled="true" selected="true"> -- Select Language --</option>
@@ -161,7 +165,9 @@
                                               </span>
                                           @endif
                                       </div>
-                                      <div class="col-sm-4 form-group">
+                                    </div>
+                                    <div class="row">  
+                                      <div class="col-sm-6 form-group">
                                          <label>Street</label>
                                          <input type="text" class="form-control {{ $errors->has('street') ? ' is-invalid' : '' }}" name="street" id="street" placeholder="street" value="{{ old('street') }}" />
                                          @if ($errors->has('street'))
@@ -170,7 +176,7 @@
                                          </span>
                                          @endif
                                       </div>
-                                      <div class="col-sm-4 form-group">
+                                      <div class="col-sm-2 form-group">
                                          <label>City</label>
                                          <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" id="citysuggest" placeholder="City" value="{{ old('city') }}" />
                                          @if ($errors->has('city'))
@@ -179,7 +185,7 @@
                                          </span>
                                          @endif
                                       </div>
-                                      <div class="col-sm-4 form-group">
+                                      <div class="col-sm-2 form-group">
                                          <label>State</label>
                                          <select name="state" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" readonly="true" id="state">
                                               <option disabled="true" selected=""> -- Select State --</option>
@@ -195,7 +201,7 @@
                                          </span>
                                          @endif
                                       </div>
-                                      <div class="col-sm-4 form-group">
+                                      <div class="col-sm-2 form-group">
                                          <label>Zip Code</label>
                                          <input type="text" class="form-control {{ $errors->has('pin_code') ? ' is-invalid' : '' }}" id="pin_code" name="pin_code" placeholder="Zip Code" value="{{ old('pin_code') }}" readonly/>
                                          @if ($errors->has('pin_code'))

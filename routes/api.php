@@ -26,6 +26,8 @@ Route::group(['namespace' => 'API\v1'], function(){
 	Route::post('getCountyArea', 'UserController@getCountyArea');
 	Route::post('addServiceRequest', 'UserController@addServiceRequest');
 	Route::post('updateServiceRequest', 'UserController@updateServiceRequest');
+	Route::post('getRequestDetails', 'UserController@getRequestDetails');
+	
 	Route::post('reset-password', 'UserController@resetPassword');
 });
 

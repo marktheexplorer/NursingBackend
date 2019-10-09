@@ -70,9 +70,9 @@
 	              					<li>
                                         <a href="{{ url('admin/service_request/blocked/'.$srvc->id) }}">
                                             @if($srvc->status)
-                                                <button type="button" class="btn-sm btn-danger btn-cir" title="Unblock"><i class="fas fa-lock"></i></button>
-                                            @else
                                                 <button type="button" class="btn-sm btn-success btn-cir" title="Block"><i class="fas fa-lock-open"></i></button>
+                                            @else
+                                                <button type="button" class="btn-sm btn-danger btn-cir" title="Unblock"><i class="fas fa-lock"></i></button>
                                             @endif
                                         </a>
                                     </li>    <!--

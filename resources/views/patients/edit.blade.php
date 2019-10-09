@@ -76,6 +76,8 @@
                                                 </span>
                                             @endif
                                         </div>
+                                      </div>
+                                      <div class="row">  
                                         <div class="col-sm-4 form-group">
                                             <label>Email</label>
                                             <input type="text" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" placeholder="Email" value="{{ old('email', $user->email) }}" readonly />
@@ -106,7 +108,9 @@
                                            </span>
                                            @endif
                                         </div>
-                                        <div class="col-sm-4  form-group">
+                                      </div>
+                                      <div class="row">  
+                                        <div class="col-sm-3  form-group">
                                             <label>Height</label>
                                             <select name="height" class="form-control {{ $errors->has('height') ? ' is-invalid' : '' }}">
                                                 <option disabled="true" selected="true"> -- Select Height --</option>
@@ -120,7 +124,7 @@
                                                 </span>
                                             @endif
                                         </div>
-                                        <div class="col-sm-4 form-group">
+                                        <div class="col-sm-3 form-group">
                                             <label>Weight</label>
                                             <select name="weight" class="form-control {{ $errors->has('weight') ? ' is-invalid' : '' }}">
                                                 <option disabled="true" selected="true"> -- Select Weight --</option>
@@ -134,7 +138,7 @@
                                                 </span>
                                             @endif
                                         </div>
-                                        <div class="col-sm-4 form-group">
+                                        <div class="col-sm-3 form-group">
                                             <label>Gender</label>
                                             <select class="form-control" name="gender">
                                                <option value="Male" {{ ($user->gender?$user->gender:old('gender')) == 'Male' ? 'selected' : '' }}>Male</option>
@@ -146,7 +150,7 @@
                                                 </span>
                                             @endif
                                         </div>
-                                        <div class="col-sm-4  form-group">
+                                        <div class="col-sm-3  form-group">
                                             <label>Language</label>
                                             <select name="language" class="form-control {{ $errors->has('language') ? ' is-invalid' : '' }}">
                                                 <option disabled="true" selected="true"> -- Select Language --</option>
@@ -160,7 +164,9 @@
                                                 </span>
                                             @endif
                                         </div>
-                                        <div class="col-sm-4 form-group">
+                                      </div>
+                                      <div class="row">  
+                                        <div class="col-sm-6 form-group">
                                             <label>Street</label>
                                             <input type="text" class="form-control {{ $errors->has('street') ? ' is-invalid' : '' }}" name="street" placeholder="street" value="{{ old('street', $user->street) }}" id="street" />
                                             @if ($errors->has('street'))
@@ -169,7 +175,7 @@
                                                 </span>
                                             @endif
                                         </div>
-                                        <div class="col-sm-4 form-group">
+                                        <div class="col-sm-2 form-group">
                                             <label>City</label>
                                             <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" placeholder="City" value="{{ old('city', $user->city) }}" id="citysuggest"/>
                                             @if ($errors->has('city'))
@@ -178,7 +184,7 @@
                                                 </span>
                                             @endif
                                         </div>
-                                        <div class="col-sm-4 form-group">
+                                        <div class="col-sm-2 form-group">
                                             <label>State</label>
                                             <select name="state" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" readonly="true" id="state">
                                                 <option disabled="true" selected=""> -- Select State --</option>
@@ -192,7 +198,7 @@
                                                 </span>
                                             @endif
                                         </div>
-                                        <div class="col-sm-4 form-group">
+                                        <div class="col-sm-2 form-group">
                                            <label>Zip Code</label>
                                            <input type="text" class="form-control {{ $errors->has('pin_code') ? ' is-invalid' : '' }}" name="pin_code" placeholder="Zip Code" value="{{ old('pin_code' ,$user->patient ?$user->patient->pin_code:'') }}" id="pin_code" readonly />
                                            @if ($errors->has('pin_code'))

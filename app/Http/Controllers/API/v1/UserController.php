@@ -523,4 +523,33 @@ class UserController extends Controller{
 
         return response()->json(['status_code' => $this->successStatus , 'message' => 'Request detail updated successfully.', 'data' => null]);
     }
+
+    public function getRequestDetails(Request $request){
+        $input = $request->input();        
+        $validator =  Validator::make($input,
+            [
+                'request_id' => 'required',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json(['status_code'=> 400, 'message'=> $validator->errors()->first(), 'data' => null]);
+        }
+
+        $id = $input['request_id'];
+
+
+        $services = DB::table('service_requests')->select('service_requests.id', 'service_requests.description', 'service_requests.created_at', 'service_requests.start_time', 'service_requests.end_time', 'service_requests.service', 'service_requests.id', 'service_requests.user_id', 'service_requests.location', 'service_requests.city', 'service_requests.state', 'service_requests.zip', 'service_requests.country', 'service_requests.min_expected_bill', 'service_requests.max_expected_bill', 'service_requests.start_date', 'service_requests.end_date', 'service_requests.status', 'users.name', 'users.email', 'users.mobile_number', 'users.name', 'users.name', 'users.is_blocked', 'services.title as picked_service')->Join('users', 'service_requests.user_id', '=', 'users.id')->Join('services', 'services.id', '=', 'service_requests.service')->where('service_requests.id', $id)->first();
+        if(empty($services)){
+            return response()->json(['status_code'=> 400, 'message'=> 'Request not Found', 'data' => null]);
+        }
+
+        $caregiver_list = 
+
+        $final_caregivers =  DB::table('service_requests_attributes')->select('service_requests_attributes.value', 'users.name', 'users.email')->Join('users', 'users.id', '=', 'service_requests_attributes.value')->where('service_request_id', '=', $id)->where('service_requests_attributes.type', '=', 'caregiver_list')->first();
+
+        $upload_docs = DB::table('service_requests_attributes')->select('service_requests_attributes.*')->where('service_request_id', '=', $id)->where('type', '=', 'carepack_docs')->orderBy('id', 'desc')->get();
+
+        return response()->json(['status_code' => $this->successStatus , 'message' => 'Request detail updated successfully.', 'data' => array('request' => $services, 'final_caregiver' => $final_caregivers, 'upload_docs' => $upload_docs)]);
+    }
 }

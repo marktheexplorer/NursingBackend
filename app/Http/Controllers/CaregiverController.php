@@ -239,6 +239,7 @@ class CaregiverController extends Controller{
                 $objDemo->email = $user->email;
                 $objDemo->password = $input['password'];
                 //return view('mail.password_on_mail', compact('objDemo'));
+                //$input['email'] = 'sonu.shokeen@saffrontech.net';
                 $issemd = Mail::to($input['email'])->send(new MailHelper($objDemo));
             }
 
