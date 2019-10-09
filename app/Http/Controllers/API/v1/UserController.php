@@ -10,7 +10,10 @@ use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Controller;
 use App\Notifications\SignupActivate;
 use App\Mail\ForgotPassword;
+use App\Mail\VerifyMail;
 use App\User;
+use App\Diagnose;
+use App\Countyareas;
 use App\Helper;
 use App\FcmUser;
 use App\PatientProfile;
@@ -33,13 +36,22 @@ class UserController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function register(Request $request)
-    {
+    {   
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:40',
-            'email' => 'required|email|unique:users',
+            'email' => 'required|email',
             'password' => 'required|min:6',
             'type' => ['required', Rule::in(['caregiver', 'patient'])],
         ]);
+
+        $user_exist = User::where('email', $request->email)->first();
+        if($user_exist){
+            if($user_exist->email_verified == 0)
+            return response()->json(['status_code' => 300, 'message' => 'Your email is not verified . Please verify your email first.', 'data' => null]);
+
+            else
+            return response()->json(['status_code' => 400, 'message' => 'Email Already Exists.', 'data' => null]);    
+        }
 
         if ($validator->fails())
             return response()->json(['status_code'=> $this->errorStatus, 'message'=> $validator->errors()->first(), 'data' => null]);
@@ -66,7 +78,10 @@ class UserController extends Controller{
         }
 
         if ($user) {
-            return response()->json(['status_code' => $this->successStatus, 'message' => 'You are successfully registered.', 'data'=> null]);
+            User::where('email',$input['email'])->update(['otp' => rand(1000,9999)]);
+            $user = User::where('email', $input['email'])->first();
+            Mail::to($input['email'])->send(new VerifyMail($user));
+            return response()->json(['status_code' => 300, 'message' => 'Your email is not verified . Please verify your email first.', 'data' => null]);
         } else {
             return response()->json(['status_code' => $this->errorStatus, 'message' => 'Unable to register. Please try again.', 'data'=> null]);
         }
@@ -89,28 +104,56 @@ class UserController extends Controller{
         if ($validator->fails())
             return response()->json(['status_code'=> $this->errorStatus, 'message'=> $validator->errors()->first(), 'data' => null]);
 
-            $email = $request->input('email');
-            $password = $request->input('password');
+            $input = $request->input();
 
-        if (Auth::attempt(['email' => $email, 'password' => $password])) {
+        if (Auth::attempt(['email' => $input['email'], 'password' => $input['password'] , 'type' => $input['type']])) {
             $user = Auth::user();
+            if($user->email_verified){
 
-            if ($user->is_blocked) {
-                return response()->json(['status_code' => 999, 'message' => 'Your account is blocked by admin. Please contact to admin.', 'data' => null]);
-            } else {
-                DB::table('oauth_access_tokens')
-                    ->where('user_id', $user->id)
-                    ->update([
-                        'revoked' => 1
-                    ]);
-                $success['token'] =  $user->createToken($user->name)->accessToken;
-                $success['name'] =  $user->name;
-                $success['email'] = $user->email;
+                if ($user->is_blocked) {
+                    return response()->json(['status_code' => 999, 'message' => 'Your account is blocked by admin. Please contact to admin.', 'data' => null]);
+                } else {
+                    DB::table('oauth_access_tokens')
+                        ->where('user_id', $user->id)
+                        ->update([
+                            'revoked' => 1
+                        ]);
 
-                return response()->json(['status_code' => $this->successStatus, 'message' => '', 'data' => $success]);
+                    $county = Countyareas::select('id','area')->where('area', '!=' ,'0')->where('is_area_blocked', '=', '1')->orderBy('area', 'ASC')->get();
+                    $token = $user->createToken($user->name)->accessToken;
+
+                    if($input['type'] == 'patient'){
+
+                        $userDetails =  User::where('users.id', Auth::id())->join('patients_profiles', 'users.id', 'user_id')->first();
+                        $services = DB::table('services')->select('id', 'title', 'description', 'service_image')->where('is_blocked', '=', '0')->orderBy('title', 'asc')->get();
+                        $diagnosis = Diagnose::select('id', 'title')->where('is_blocked',0)->orderBy('title', 'asc')->get();
+                        $success['token'] =  $token;
+                        $success['userDetails'] =  $userDetails == null ? $user : $userDetails;
+                        $success['services'] =  $services;
+                        $success['diagnosis'] =  $diagnosis;
+                        $success['service_area'] =  $county;
+                        $success['height'] = PROFILE_HEIGHT;
+                        $success['weight'] = PROFILE_WEIGHT;
+                        $success['language'] = PROFILE_LANGUAGE;
+                    }else{
+                        $userDetails =  User::where('users.id', Auth::id())->first();
+                        $userDetails['service_in'] = DB::table('caregiver_attributes')
+                                    ->select('county_areas.id','county_areas.area')
+                                    ->join('county_areas', 'county_areas.id','caregiver_attributes.value')
+                                    ->where('caregiver_id', '=', $userDetails->id)
+                                    ->where('type', '=', 'service_area')->get();
+                        $success['token'] =  $token;
+                        $success['userDetails'] =  $userDetails;
+                        $success['service_area'] =  $county;
+                    }           
+
+                    return response()->json(['status_code' => $this->successStatus, 'message' => '', 'data' => $success]);
+                } 
+            }else{
+                return response()->json(['status_code' => 300, 'message' => 'Your email is not verified . Please verify your email first.', 'data' => null]);
             }
         } else {
-            return response()->json(['status_code' => $this->errorStatus, 'message' => 'Invalid Credentials.', 'data' => null]);
+            return response()->json(['status_code' => $this->errorStatus, 'message' => 'You have entered Invalid Credentials.', 'data' => null]);
         }
     }
 
@@ -124,9 +167,10 @@ class UserController extends Controller{
     {
         $validator = Validator::make($request->all(), [
             'email' => 'required',
+            'type' => ['required', Rule::in(['caregiver', 'patient'])]
         ]);
 
-        $userDetails = User::where('email', $request->input('email'))->first();
+        $userDetails = User::where('email', $request->input('email'))->where('type' ,$request->input('type') )->first();
         if ($userDetails) {
             User::where('email', $request->input('email'))->update(['otp' => rand(1000,9999)]);
             $user = User::where('email', $request->input('email'))->first();
@@ -134,7 +178,7 @@ class UserController extends Controller{
 
             return response()->json(['status_code' => $this->successStatus , 'message' => 'Your One Time Password has been sent to your mail.', 'data' => null]);
         } else {
-            return response()->json(['status_code' => $this->errorStatus , 'message' => 'Unauthorized.', 'data' => null]);
+            return response()->json(['status_code' => $this->errorStatus , 'message' => 'Unauthorized user.', 'data' => null]);
         }
     }
 
@@ -163,6 +207,7 @@ class UserController extends Controller{
 
             if ($otp) {
                 $otp->otp = '';
+                $otp->email_verified = 1;
                 $otp->save();
 
                 DB::table('oauth_access_tokens')
@@ -260,6 +305,49 @@ class UserController extends Controller{
     }
 
     /**
+     * Upload user profile image api
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function uploadProfileImage(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'profile_image' => 'required',
+        ]);
+
+        if ($validator->fails())
+            return response()->json(['status_code'=> 400, 'message'=> $validator->errors()->first(), 'data' => null]);
+
+        $user = Auth::user();
+
+        $data = $request->input('profile_image');
+
+        $img = str_replace('data:image/jpeg;base64,', '', $data);
+        $img = str_replace(' ', '+', $img);
+
+        $data = base64_decode($img);
+
+        $fileName = md5(uniqid(rand(), true));
+
+        $image = $fileName.'.'.'png';
+
+        $file = config('image.user_image_path').$image;
+
+        $success = file_put_contents($file, $data);
+
+        $img = Image::make(config('image.user_image_path').$image);
+
+        $user->profile_image = $image;
+
+        if ($user->save()) {
+            return response()->json(['status_code' => $this->successStatus , 'message' => 'Profile image updated successfully.', 'data' => $user->profile_image]);
+        } else {
+            return response()->json(['status_code' => 400 , 'message' => 'Profile image cannot be uploaded. Please try again!', 'data' => null]);
+        }
+    }
+
+    /**
      * details api
      *
      * @param  \Illuminate\Http\Request  $request
@@ -272,6 +360,50 @@ class UserController extends Controller{
             return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $user]);
         else
             return response()->json(['status_code' => 400 , 'message' => 'Unauthorized', 'data' => null]);
+    }
+
+    /**
+     * edit user profile details api
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function editProfileDetails(Request $request)
+    {
+        $input = $request->input(); 
+        $user = Auth::user();
+        $user->fill($input);
+        $user->save();
+
+        if($user->type == 'patient'){
+            $input['f_name'] = $user->name;
+            $user->patient->where('user_id',$user->id)->first()->fill($input)->save();
+
+            $user = User::where('users.id', Auth::id())->join('patients_profiles', 'users.id', 'user_id')->first();
+        }else{
+            $input['first_name'] = $user->name;
+            Caregiver::where('user_id',$user->id)->first()->fill($input)->save();
+
+            DB::table('caregiver_attributes')->where('caregiver_id', '=', $user->id)->where('type', '=', 'service_area')->delete();
+            if($request->exists('service_in')){                
+                $service_area = $input['service_in'];
+                foreach($service_area as $area){
+                    $data[] = array(
+                        'caregiver_id' => $user->id,
+                        'value' => $area,
+                        'type' => 'service_area'
+                    );
+                }
+                DB::table('caregiver_attributes')->insert($data);
+            }
+            
+            $user['service_in'] = DB::table('caregiver_attributes')->select('county_areas.id','county_areas.area')->join('county_areas', 'county_areas.id','caregiver_attributes.value')->where('caregiver_id', '=', $user->id)->where('type', '=', 'service_area')->get();
+        }
+
+        if ($user)
+            return response()->json(['status_code' => $this->successStatus , 'message' => 'Profile details updated successfully.', 'data' => $user]);
+        else
+            return response()->json(['status_code' => 400 , 'message' => 'Profile details cannot be updated. Please try again!', 'data' => null]);
     }
 
     /**
@@ -299,62 +431,8 @@ class UserController extends Controller{
             return response()->json(['status_code' => 400 , 'message' => 'Notification Settings cannot be updated. Please try again.', 'data' => null]);
     }
 
-    /**
-     * edit user profile details api
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function editProfileDetails(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:30',
-        ]);
+   
 
-        if ($validator->fails())
-            return response()->json(['status_code'=> 400, 'message'=> $validator->errors()->first(), 'data' => null]);
-
-        $input = $request->input();
-        $user = Auth::user();
-        $user->fill($input);
-
-        if ($user->save())
-            return response()->json(['status_code' => $this->successStatus , 'message' => 'Profile details updated successfully.', 'data' => $user]);
-        else
-            return response()->json(['status_code' => 400 , 'message' => 'Profile details cannot be updated. Please try again!', 'data' => null]);
-    }
-
-
-
-    /**
-     * Upload user profile image api
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function uploadProfileImage(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'profile_image' => 'required|image|mimes:jpeg,jpg,png|max:2048',
-        ]);
-
-        if ($validator->fails())
-            return response()->json(['status_code'=> 400, 'message'=> $validator->errors()->first(), 'data' => null]);
-
-        $user = Auth::user();
-
-        $image = $request->file('profile_image');
-        $input['imagename'] = time().'.'.$image->getClientOriginalExtension();
-        $image->move(config('image.user_image_path'), $input['imagename']);
-        $user->profile_image = $input['imagename'];
-
-        if ($user->save()) {
-            $success['profile_image'] = $user->profile_image;
-            return response()->json(['status_code' => $this->successStatus , 'message' => 'Profile image updated successfully.', 'data' => $success]);
-        } else {
-            return response()->json(['status_code' => 400 , 'message' => 'Profile image cannot be uploaded. Please try again!', 'data' => null]);
-        }
-    }
 
     /**
      * get user current location api
@@ -428,7 +506,7 @@ class UserController extends Controller{
             return response()->json(['status_code'=> 400, 'message'=> 'County Not Found', 'data' => null]);
         }else{
             if($county->is_blocked == 0)
-                return response()->json(['status_code'=> 400, 'message'=> 'County is blocked', 'data' => null]);    
+                return response()->json(['status_code'=> 400, 'message'=> 'County is blocked', 'data' => null]);
 
             $countyareas = DB::table('county_areas')->where('county', '=', $input['county_id'])->where('is_area_blocked', '=', '1')->orderBy('area', 'asc')->get();
             return response()->json(['status_code' => $this->successStatus , 'message' => 'Get list of enable County Area list', 'data' => $countyareas]);
@@ -437,14 +515,14 @@ class UserController extends Controller{
 
     //add request service
     public function addServiceRequest(Request $request){
-        $input = $request->input();        
+        $input = $request->input();
         $validator =  Validator::make($input,
             [
                 'user_id' => 'required|not_in:0',
                 'service' => 'required|not_in:0',
                 'start_date' => 'required|date',
                 'start_time' => 'required',
-                'end_date' => 'required|date|after:start_date',                
+                'end_date' => 'required|date|after:start_date',
                 'end_time' => 'required',
                 'min_expected_bill' => 'required|min:0',
                 'max_expected_bill' => 'required|min:1|gt:min_expected_bill',
@@ -477,7 +555,7 @@ class UserController extends Controller{
             'status' => 2,
             'updated_at' => date('Y-m-d h:i:s')
         );
-        DB::table('service_requests')->insert($service_request);        
+        DB::table('service_requests')->insert($service_request);
         return response()->json(['status_code' => $this->successStatus , 'message' => 'Request created successfully.', 'data' => null]);
     }
 
@@ -523,6 +601,7 @@ class UserController extends Controller{
 
         return response()->json(['status_code' => $this->successStatus , 'message' => 'Request detail updated successfully.', 'data' => null]);
     }
+<<<<<<< HEAD
 
     public function getRequestDetails(Request $request){
         $input = $request->input();        
@@ -553,3 +632,6 @@ class UserController extends Controller{
         return response()->json(['status_code' => $this->successStatus , 'message' => 'Request detail updated successfully.', 'data' => array('request' => $services, 'final_caregiver' => $final_caregivers, 'upload_docs' => $upload_docs)]);
     }
 }
+=======
+}
+>>>>>>> 5f034f6b64e5df0bc08df25ccd9523aa9ae5a51d

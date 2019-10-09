@@ -34,9 +34,9 @@ Route::group(['namespace' => 'API\v1'], function(){
 Route::group(['middleware' => 'auth:api', 'namespace' => 'API\v1'], function(){
 	Route::post('change-password', 'UserController@changePassword');
 	Route::post('logout', 'UserController@logout');
-	Route::post('set-notification', 'UserController@setNotification');
 	Route::post('upload-image', 'UserController@uploadProfileImage');
 	Route::post('edit-profile', 'UserController@editProfileDetails');
+	Route::post('set-notification', 'UserController@setNotification');
 	Route::get('details', 'UserController@details');
 	Route::post('current-location', 'UserController@getCurrentLocation');
 	Route::get('dashboard', 'HomeController@dashboard');

@@ -14,6 +14,6 @@ class Caregiver extends Model{
     public $table = 'caregiver';
     
     protected $fillable = [
-        'user_id', 'service', 'min_price','max_price','description','gender','dob','height','weight','first_name','middle_name','last_name'
+        'user_id', 'service', 'min_price','max_price','description','gender','height','weight','first_name','middle_name','last_name'
     ];
 }
