@@ -53,6 +53,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function()
 	Route::post('updateorder', 'FaqController@updateorder')->name('faqs.updateorder');
 	Route::resource('cms', 'CmsPageController');
 	Route::resource('enquiries', 'EnquiryController');
+	Route::resource('relations', 'RelationController');
 
 	//caregiver controller it automatically route the default route	
 	Route::get('caregiver/getzip', 'CaregiverController@getzip');

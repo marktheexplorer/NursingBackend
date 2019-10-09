@@ -128,7 +128,13 @@ class UserController extends Controller{
                         $services = DB::table('services')->select('id', 'title', 'description', 'service_image')->where('is_blocked', '=', '0')->orderBy('title', 'asc')->get();
                         $diagnosis = Diagnose::select('id', 'title')->where('is_blocked',0)->orderBy('title', 'asc')->get();
                         $success['token'] =  $token;
-                        $success['userDetails'] =  $userDetails == null ? $user : $userDetails;
+                        if($userDetails == null){
+                            $user->height = null;
+                            $user->weight = null;
+                            $success['userDetails'] =  $user;
+                        }else{
+                            $success['userDetails'] =  $userDetails ;
+                        }
                         $success['services'] =  $services;
                         $success['diagnosis'] =  $diagnosis;
                         $success['service_area'] =  $county;

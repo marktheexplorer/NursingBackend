@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Relation;
+use Validator;
 
 class RelationController extends Controller
 {
@@ -13,7 +15,8 @@ class RelationController extends Controller
      */
     public function index()
     {
-        //
+        $relations = Relation::get();
+        return view('relations.index' , compact('relations'));   
     }
 
     /**
@@ -23,7 +26,7 @@ class RelationController extends Controller
      */
     public function create()
     {
-        //
+        return view('relations.create');
     }
 
     /**
@@ -34,7 +37,28 @@ class RelationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $input = $request->input();
+
+        $attributes = ['name' => 'Title'];
+        $validator = validator::make($input,
+            [
+                'title' => 'required|string|max:60',
+            ],
+            [
+                'title.required' => 'The title field is required.',
+                'title.max' => 'The title may not be greater than 60 characters.',
+            ]
+         );
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $input['title'] = $input['title'];
+        $relation = Relation::create($input);
+
+        flash()->success('New Relation added successfully');
+        return redirect()->route('relations.index');
     }
 
     /**
@@ -56,7 +80,8 @@ class RelationController extends Controller
      */
     public function edit($id)
     {
-        //
+        $relation = Relation::findOrFail($id);
+        return view('relations.edit', compact('relation'));
     }
 
     /**
@@ -68,7 +93,26 @@ class RelationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $input = $request->input();
+        $validator = validator::make($input,[
+            'title' => 'required|string|max:60'
+        ],
+            [
+                'title.required' => 'The title field is required.',
+                'title.max' => 'The title may not be greater than 60 characters.',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+                $relation = Relation::findOrFail($id);
+                $relation->title = $input['title'];
+                $relation->save();
+
+                flash()->success('Relation updated successfully');
+                return redirect()->route('relations.index');
     }
 
     /**

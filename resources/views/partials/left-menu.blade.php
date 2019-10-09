@@ -59,6 +59,9 @@
                         <a href="{{ route('qualifications.index') }}"><i class="sidebar-item-icon fa fa-graduation-cap"></i>Disciplines</a>
                     </li>
                     <li>
+                        <a href="{{ route('relations.index') }}"><i class="sidebar-item-icon fa fa-user-friends"></i>Relations</a>
+                    </li>
+                    <li>
                         <a href="{{ route('services.index') }}"><i class="sidebar-item-icon fas fa fa-user"></i>Services</a>
                     </li>
                 </ul>
