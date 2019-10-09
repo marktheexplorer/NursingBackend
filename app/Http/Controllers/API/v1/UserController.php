@@ -131,6 +131,7 @@ class UserController extends Controller{
                         if($userDetails == null){
                             $user->height = null;
                             $user->weight = null;
+                            $user->language = null;
                             $success['userDetails'] =  $user;
                         }else{
                             $success['userDetails'] =  $userDetails ;
