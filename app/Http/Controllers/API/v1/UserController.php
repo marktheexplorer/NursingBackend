@@ -601,7 +601,6 @@ class UserController extends Controller{
 
         return response()->json(['status_code' => $this->successStatus , 'message' => 'Request detail updated successfully.', 'data' => null]);
     }
-<<<<<<< HEAD
 
     public function getRequestDetails(Request $request){
         $input = $request->input();        
@@ -632,6 +631,3 @@ class UserController extends Controller{
         return response()->json(['status_code' => $this->successStatus , 'message' => 'Request detail updated successfully.', 'data' => array('request' => $services, 'final_caregiver' => $final_caregivers, 'upload_docs' => $upload_docs)]);
     }
 }
-=======
-}
->>>>>>> 5f034f6b64e5df0bc08df25ccd9523aa9ae5a51d

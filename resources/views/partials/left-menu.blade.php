@@ -53,15 +53,14 @@
                         <a href="{{ route('county.index') }}"><i class="sidebar-item-icon fas fa-map-signs"></i>County</a>
                     </li>
                     <li>
-                        <a href="{{ route('services.index') }}"><i class="sidebar-item-icon fas fa fa-user"></i>Services</a>
+                        <a href="{{ route('diagnosis.index') }}"><i class="sidebar-item-icon fas fa-diagnoses"></i>Diagnosis</a>
                     </li>
                     <li>
                         <a href="{{ route('qualifications.index') }}"><i class="sidebar-item-icon fa fa-graduation-cap"></i>Disciplines</a>
                     </li>
                     <li>
-                        <a href="{{ route('diagnosis.index') }}"><i class="sidebar-item-icon fas fa-diagnoses"></i>Diagnosis</a>
+                        <a href="{{ route('services.index') }}"><i class="sidebar-item-icon fas fa fa-user"></i>Services</a>
                     </li>
-
                 </ul>
             </li>
             <li>
