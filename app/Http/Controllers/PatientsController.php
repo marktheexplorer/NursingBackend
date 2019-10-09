@@ -42,7 +42,7 @@ class PatientsController extends Controller{
     public function edit($id){
         $user = User::findOrFail($id);
 
-        $diagnosis_selected = Diagnose::where('id',$user->patient->diagnose_id);
+        $diagnosis_selected = Diagnose::where('id',$user->patient? $user->patient->diagnose_id : '');
         $diagnosis = Diagnose::where('is_blocked','0')->union($diagnosis_selected)->get();
         $selected_disciplines = explode(',', $user->patient? $user->patient->disciplines: '');
 
