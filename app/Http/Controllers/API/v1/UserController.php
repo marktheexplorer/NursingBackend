@@ -422,7 +422,7 @@ class UserController extends Controller{
     {   
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:3',
-            'mobile_number' => 'required|min:9',
+            'mobile_number' => 'required|min:9|unique:user_relations',
             'relation' => 'required'
         ]);
 
