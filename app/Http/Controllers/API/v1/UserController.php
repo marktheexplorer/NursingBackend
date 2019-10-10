@@ -18,6 +18,7 @@ use App\Helper;
 use App\FcmUser;
 use App\PatientProfile;
 use App\Caregiver;
+use App\Relation;
 use Image;
 use Validator;
 use DB;
@@ -127,6 +128,8 @@ class UserController extends Controller{
                         $userDetails =  User::where('users.id', Auth::id())->join('patients_profiles', 'users.id', 'user_id')->first();
                         $services = DB::table('services')->select('id', 'title', 'description', 'service_image')->where('is_blocked', '=', '0')->orderBy('title', 'asc')->get();
                         $diagnosis = Diagnose::select('id', 'title')->where('is_blocked',0)->orderBy('title', 'asc')->get();
+                        $relations = Relation::select('id', 'title')->orderBy('title', 'asc')->get();
+
                         $success['token'] =  $token;
                         if($userDetails == null){
                             $user->height = null;
@@ -136,6 +139,7 @@ class UserController extends Controller{
                         }else{
                             $success['userDetails'] =  $userDetails ;
                         }
+                        $success['relations'] =  $relations;
                         $success['services'] =  $services;
                         $success['diagnosis'] =  $diagnosis;
                         $success['service_area'] =  $county;
@@ -414,6 +418,61 @@ class UserController extends Controller{
     }
 
     /**
+     * Booking API 
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function addServiceRequest(Request $request){
+        
+        $input = $request->input();
+        $user = Auth::user();
+        $validator =  Validator::make($input,
+            [
+                'booking_for' => 'required|string',
+                'date' => 'required|date',
+                'time' => 'required',
+                'height' =>'required',
+                'weight' =>'required',
+                'pets' => 'required',
+                'diagnosis' => 'required',
+                'service_location' => 'required',
+                'location' =>'required',
+                'country' => 'required',
+                'city' => 'required',
+                'state' => 'required',
+                'zipcode' => 'required'
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json(['status_code'=> 400, 'message'=> $validator->errors()->first(), 'data' => null]);
+        }
+
+        $service_request = array(
+            'user_id' => $user->id,
+            'location' => $input['location'],
+            'city' => $input['city'],
+            'state' => $input['state'],
+            'zip' => $input['zipcode'],
+            'status' => 2,
+            'start_date' => 'required',
+            'start_time' => 'required'
+        );
+        $user_profile = array(
+            'user_id' => $user->id,
+            'location' => $input['location'],
+            'city' => $input['city'],
+            'state' => $input['state'],
+            'zip' => $input['zipcode'],
+            'status' => 2,
+        );
+        DB::table('service_requests')->insert($service_request);
+
+        return response()->json(['status_code' => $this->successStatus , 'message' => 'Booking created successfully.', 'data' => null]);
+    }
+
+    /**
      * set notification status api
      *
      * @param  \Illuminate\Http\Request  $request
@@ -520,51 +579,7 @@ class UserController extends Controller{
         }
     }
 
-    //add request service
-    public function addServiceRequest(Request $request){
-        $input = $request->input();
-        $validator =  Validator::make($input,
-            [
-                'user_id' => 'required|not_in:0',
-                'service' => 'required|not_in:0',
-                'start_date' => 'required|date',
-                'start_time' => 'required',
-                'end_date' => 'required|date|after:start_date',
-                'end_time' => 'required',
-                'min_expected_bill' => 'required|min:0',
-                'max_expected_bill' => 'required|min:1|gt:min_expected_bill',
-                'location' => 'required',
-                'zipcode' => 'required',
-                'city' => 'required',
-                'state' => 'required',
-                'description' => 'required'
-            ]
-        );
-
-        if ($validator->fails()) {
-            return response()->json(['status_code'=> 400, 'message'=> $validator->errors()->first(), 'data' => null]);
-        }
-
-        $service_request = array(
-            'user_id' => $input['user_id'],
-            'location' => $input['location'],
-            'city' => $input['city'],
-            'state' => $input['state'],
-            'zip' => $input['zipcode'],
-            'service' => $input['service'],
-            'min_expected_bill' => $input['min_expected_bill'],
-            'max_expected_bill' => $input['max_expected_bill'],
-            'start_time' => $input['start_time'],
-            'end_time' => $input['end_time'],
-            'start_date' => date('Y-m-d', strtotime($input['start_date'])),
-            'end_date' => date('Y-m-d', strtotime($input['end_date'])),
-            'description' => $input['description'],
-            'status' => 2,
-            'updated_at' => date('Y-m-d h:i:s')
-        );
-        DB::table('service_requests')->insert($service_request);
-        return response()->json(['status_code' => $this->successStatus , 'message' => 'Request created successfully.', 'data' => null]);
-    }
+    
 
     public function updateServiceRequest(Request $request){
         $input = $request->input();
