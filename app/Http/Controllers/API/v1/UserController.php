@@ -135,6 +135,8 @@ class UserController extends Controller{
                             $user->height = null;
                             $user->weight = null;
                             $user->language = null;
+                            $user->alt_contact_name = null;
+                            $user->alt_contact_no = null;
                             $success['userDetails'] =  $user;
                         }else{
                             $success['userDetails'] =  $userDetails ;
