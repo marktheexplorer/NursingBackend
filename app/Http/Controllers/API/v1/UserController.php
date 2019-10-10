@@ -389,8 +389,14 @@ class UserController extends Controller{
         $user->save();
 
         if($user->type == 'patient'){
-            $input['f_name'] = $user->name;
-            $user->patient->where('user_id',$user->id)->first()->fill($input)->save();
+            if($user->patient){
+                $user->patient->where('user_id',$user->id)->first()->fill($input)->save();
+            }else{
+                $userPatient = new PatientProfile;
+                $userPatient->user_id = $user->id;
+                $userPatient->f_name = $user->name;
+                $userPatient->save();
+            }
 
             $user = User::where('users.id', Auth::id())->join('patients_profiles', 'users.id', 'user_id')->first();
         }else{
