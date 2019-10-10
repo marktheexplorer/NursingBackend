@@ -132,11 +132,11 @@ class UserController extends Controller{
 
                         $success['token'] =  $token;
                         if($userDetails == null){
-                            $user->height = null;
-                            $user->weight = null;
-                            $user->language = null;
-                            $user->alt_contact_name = null;
-                            $user->alt_contact_no = null;
+                            $user->height = '';
+                            $user->weight = '';
+                            $user->language = '';
+                            $user->alt_contact_name = '';
+                            $user->alt_contact_no = '';
                             $success['userDetails'] =  $user;
                         }else{
                             $success['userDetails'] =  $userDetails ;
