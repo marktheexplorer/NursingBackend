@@ -423,7 +423,7 @@ class UserController extends Controller{
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:3',
             'mobile_number' => 'required|min:9',
-            'relation_id' => 'required'
+            'relation' => 'required'
         ]);
 
         if ($validator->fails())
@@ -431,8 +431,8 @@ class UserController extends Controller{
 
         $user = Auth::user();
         $input = $request->input(); 
-        $input['relation_id'] = Relation::where('title', $input['relation_id'])->pluck('id')[0];
-        $addedRelation = UserRelation::where('name', $input['name'])->where('relation_id', $input['relation_id'])->where('user_id', $user->id)->get();
+        $input['relation'] = Relation::where('title', $input['relation'])->pluck('id')[0];
+        $addedRelation = UserRelation::where('name', $input['name'])->where('relation_id', $input['relation'])->where('user_id', $user->id)->get();
 
         if(count($addedRelation)>0){
             return response()->json(['status_code'=> 400, 'message'=> 'This name already exists for the selected relation.', 'data' => null]);
@@ -441,7 +441,7 @@ class UserController extends Controller{
         $data['user_id'] = $user->id;
         $data['name'] = $input['name'];
         $data['mobile_number'] = $input['mobile_number'];
-        $data['relation_id'] = $input['relation_id'];
+        $data['relation_id'] = $input['relation'];
         $relation = UserRelation::create($data);
 
         $relation = UserRelation::join('relations' , 'relation_id' , 'relations.id')->where('user_id', $user->id)->get();
