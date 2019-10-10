@@ -434,10 +434,10 @@ class UserController extends Controller{
         $input['relation'] = Relation::where('title', $input['relation'])->pluck('id')[0];
         $addedRelation = UserRelation::where('name', $input['name'])->where('relation_id', $input['relation'])->where('user_id', $user->id)->get();
 
-        if(count($addedRelation)>0){
+        if(count($addedRelation) > 0){
             return response()->json(['status_code'=> 400, 'message'=> 'This name already exists for the selected relation.', 'data' => null]);
         }
-
+ 
         $data['user_id'] = $user->id;
         $data['name'] = $input['name'];
         $data['mobile_number'] = $input['mobile_number'];
@@ -447,7 +447,7 @@ class UserController extends Controller{
         $relation = UserRelation::join('relations' , 'relation_id' , 'relations.id')->where('user_id', $user->id)->get();
 
         if (!empty($relation))
-            return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $relation]);
+            return response()->json(['status_code' => $this->successStatus , 'message' => 'User Relation Added Successfully. ', 'data' => $relation]);
         else
             return response()->json(['status_code' => 400 , 'message' => 'Unauthorized', 'data' => null]);
     }
