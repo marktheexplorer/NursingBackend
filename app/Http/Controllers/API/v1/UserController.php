@@ -395,8 +395,6 @@ class UserController extends Controller{
                 $userPatient = new PatientProfile;
                 $userPatient->user_id = $user->id;
                 $userPatient->f_name = $user->name;
-                $userPatient->alt_contact_name = '';
-                $userPatient->alt_contact_no = '';
                 $userPatient->save();
             }
 
