@@ -18,7 +18,8 @@ Route::group(['namespace' => 'API\v1'], function(){
 	Route::post('login', 'UserController@login');
 	Route::post('forgot-password', 'UserController@forgotPassword');
 	Route::post('verify-otp', 'UserController@verifyOtp');
-	Route::post('send-otp', 'UserController@sendOtp');
+	Route::post('send-otp', 'UserController@sendOtp');	
+	Route::post('reset-password', 'UserController@resetPassword');
 	Route::post('getDisciplineList', 'UserController@getDisciplineList');
 	Route::post('getServices', 'UserController@getServices');
 	Route::post('getDiagnose', 'UserController@getDiagnose');
@@ -27,8 +28,6 @@ Route::group(['namespace' => 'API\v1'], function(){
 	Route::post('addServiceRequest', 'UserController@addServiceRequest');
 	Route::post('updateServiceRequest', 'UserController@updateServiceRequest');
 	Route::post('getRequestDetails', 'UserController@getRequestDetails');
-	
-	Route::post('reset-password', 'UserController@resetPassword');
 });
 
 Route::group(['middleware' => 'auth:api', 'namespace' => 'API\v1'], function(){
@@ -36,6 +35,7 @@ Route::group(['middleware' => 'auth:api', 'namespace' => 'API\v1'], function(){
 	Route::post('logout', 'UserController@logout');
 	Route::post('upload-image', 'UserController@uploadProfileImage');
 	Route::post('edit-profile', 'UserController@editProfileDetails');
+	Route::post('addUserRelation', 'UserController@addUserRelation');
 	Route::post('set-notification', 'UserController@setNotification');
 	Route::get('details', 'UserController@details');
 	Route::post('current-location', 'UserController@getCurrentLocation');

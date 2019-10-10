@@ -15,6 +15,7 @@ class CreateUserRelationsTable extends Migration
     {
         Schema::create('user_relations', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->bigIncrements('user_id');
             $table->timestamps();
         });
     }

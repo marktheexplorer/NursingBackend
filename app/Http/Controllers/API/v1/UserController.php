@@ -128,7 +128,7 @@ class UserController extends Controller{
                         $userDetails =  User::where('users.id', Auth::id())->join('patients_profiles', 'users.id', 'user_id')->first();
                         $services = DB::table('services')->select('id', 'title', 'description', 'service_image')->where('is_blocked', '=', '0')->orderBy('title', 'asc')->get();
                         $diagnosis = Diagnose::select('id', 'title')->where('is_blocked',0)->orderBy('title', 'asc')->get();
-                        $relations = Relation::select('id', 'title')->orderBy('title', 'asc')->get();
+                        $relations = Relation::pluck('title');
 
                         $success['token'] =  $token;
                         if($userDetails == null){
@@ -360,20 +360,6 @@ class UserController extends Controller{
         }
     }
 
-    /**
-     * details api
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function details()
-    {
-        $user = Auth::user();
-        if (!empty($user))
-            return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $user]);
-        else
-            return response()->json(['status_code' => 400 , 'message' => 'Unauthorized', 'data' => null]);
-    }
 
     /**
      * edit user profile details api
@@ -424,6 +410,50 @@ class UserController extends Controller{
         else
             return response()->json(['status_code' => 400 , 'message' => 'Profile details cannot be updated. Please try again!', 'data' => null]);
     }
+
+    /**
+     * User Relations API
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function addUserRelation(Request $request)
+    {   
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|min:3',
+            'number' => 'required|min:9',
+            'relation' => 'required'
+        ]);
+
+        // $user = 
+
+        if ($validator->fails())
+            return response()->json(['status_code'=> 400, 'message'=> $validator->errors()->first(), 'data' => null]);
+
+        $user = Auth::user();
+        $input = $request->input();  
+
+        if (!empty($user))
+            return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $user]);
+        else
+            return response()->json(['status_code' => 400 , 'message' => 'Unauthorized', 'data' => null]);
+    }
+
+    /**
+     * details api
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function details()
+    {
+        $user = Auth::user();
+        if (!empty($user))
+            return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $user]);
+        else
+            return response()->json(['status_code' => 400 , 'message' => 'Unauthorized', 'data' => null]);
+    }
+
 
     /**
      * Booking API 
