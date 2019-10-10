@@ -19,6 +19,7 @@ use App\FcmUser;
 use App\PatientProfile;
 use App\Caregiver;
 use App\Relation;
+use App\UserRelation;
 use Image;
 use Validator;
 use DB;
@@ -421,20 +422,32 @@ class UserController extends Controller{
     {   
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:3',
-            'number' => 'required|min:9',
-            'relation' => 'required'
+            'mobile_number' => 'required|min:9',
+            'relation_id' => 'required'
         ]);
-
-        // $user = 
 
         if ($validator->fails())
             return response()->json(['status_code'=> 400, 'message'=> $validator->errors()->first(), 'data' => null]);
 
         $user = Auth::user();
-        $input = $request->input();  
+        $input = $request->input(); 
+        $input['relation_id'] = Relation::where('title', $input['relation_id'])->pluck('id')[0];
+        $addedRelation = UserRelation::where('name', $input['name'])->where('relation_id', $input['relation_id'])->where('user_id', $user->id)->get();
 
-        if (!empty($user))
-            return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $user]);
+        if(count($addedRelation)>0){
+            return response()->json(['status_code'=> 400, 'message'=> 'This name already exists for the selected relation.', 'data' => null]);
+        }
+
+        $data['user_id'] = $user->id;
+        $data['name'] = $input['name'];
+        $data['mobile_number'] = $input['mobile_number'];
+        $data['relation_id'] = $input['relation_id'];
+        $relation = UserRelation::create($data);
+
+        $relation = UserRelation::join('relations' , 'relation_id' , 'relations.id')->where('user_id', $user->id)->get();
+
+        if (!empty($relation))
+            return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $relation]);
         else
             return response()->json(['status_code' => 400 , 'message' => 'Unauthorized', 'data' => null]);
     }
