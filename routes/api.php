@@ -36,6 +36,7 @@ Route::group(['middleware' => 'auth:api', 'namespace' => 'API\v1'], function(){
 	Route::post('upload-image', 'UserController@uploadProfileImage');
 	Route::post('edit-profile', 'UserController@editProfileDetails');
 	Route::post('addUserRelation', 'UserController@addUserRelation');
+	Route::post('destroyRelation', 'UserController@destroyUserRelation');
 	Route::post('set-notification', 'UserController@setNotification');
 	Route::get('details', 'UserController@details');
 	Route::post('current-location', 'UserController@getCurrentLocation');

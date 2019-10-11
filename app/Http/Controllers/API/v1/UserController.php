@@ -130,7 +130,7 @@ class UserController extends Controller{
                         $services = DB::table('services')->select('id', 'title', 'description', 'service_image')->where('is_blocked', '=', '0')->orderBy('title', 'asc')->get();
                         $diagnosis = Diagnose::select('id', 'title')->where('is_blocked',0)->orderBy('title', 'asc')->get();
                         $relations = Relation::pluck('title');
-                        $user_added_relations = UserRelation::join('relations' , 'relation_id' , 'relations.id')->where('user_id', $user->id)->get();
+                        $user_added_relations = UserRelation::select('user_relations.*', 'relations.title')->join('relations' , 'relation_id' , 'relations.id')->where('user_id', $user->id)->get();
 
                         $success['token'] =  $token;
                         if($userDetails == null){
@@ -452,6 +452,32 @@ class UserController extends Controller{
             return response()->json(['status_code' => $this->successStatus , 'message' => 'User Relation Added Successfully. ', 'data' => $relation]);
         else
             return response()->json(['status_code' => 400 , 'message' => 'Unauthorized', 'data' => null]);
+    }
+
+    /**
+     * Delete User Relation API
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function destroyUserRelation(Request $request)
+    {   
+        $validator = Validator::make($request->all(), [
+            'id' => 'required'
+        ]);
+
+        if ($validator->fails())
+            return response()->json(['status_code'=> 400, 'message'=> $validator->errors()->first(), 'data' => null]);
+
+        $user = Auth::User();
+         
+        $relationdelete = UserRelation::where('id' , $request->input('id'))->where('user_id' , $user->id)->delete();
+        $relation = UserRelation::select('user_relations.*', 'relations.title')->join('relations' , 'relation_id' , 'relations.id')->where('user_id', $user->id)->get();     
+
+        if($relationdelete)
+            return response()->json(['status_code' => $this->successStatus , 'message' => 'User Relation Deleted successfully.' , 'data' => $relation]);
+        else
+            return response()->json(['status_code' => 400 , 'message' => 'User Relation cannot be deleted.']);
     }
 
     /**
