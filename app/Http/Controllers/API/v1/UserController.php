@@ -446,7 +446,7 @@ class UserController extends Controller{
         $data['relation_id'] = $input['relation'];
         $relation = UserRelation::create($data);
 
-        $relation = UserRelation::join('relations' , 'relation_id' , 'relations.id')->where('user_id', $user->id)->get();
+        $relation = UserRelation::select('user_relations.*', 'relations.title')->join('relations' , 'relation_id' , 'relations.id')->where('user_id', $user->id)->get();
 
         if (!empty($relation))
             return response()->json(['status_code' => $this->successStatus , 'message' => 'User Relation Added Successfully. ', 'data' => $relation]);
