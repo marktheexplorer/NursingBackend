@@ -130,6 +130,7 @@ class UserController extends Controller{
                         $services = DB::table('services')->select('id', 'title', 'description', 'service_image')->where('is_blocked', '=', '0')->orderBy('title', 'asc')->get();
                         $diagnosis = Diagnose::select('id', 'title')->where('is_blocked',0)->orderBy('title', 'asc')->get();
                         $relations = Relation::pluck('title');
+                        $user_added_relations = UserRelation::join('relations' , 'relation_id' , 'relations.id')->where('user_id', $user->id)->get();
 
                         $success['token'] =  $token;
                         if($userDetails == null){
@@ -143,6 +144,7 @@ class UserController extends Controller{
                             $success['userDetails'] =  $userDetails ;
                         }
                         $success['relations'] =  $relations;
+                        $success['user_added_relations'] =  $user_added_relations;
                         $success['services'] =  $services;
                         $success['diagnosis'] =  $diagnosis;
                         $success['service_area'] =  $county;
