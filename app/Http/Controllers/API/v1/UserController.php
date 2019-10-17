@@ -18,6 +18,8 @@ use App\Helper;
 use App\FcmUser;
 use App\PatientProfile;
 use App\Caregiver;
+use App\Relation;
+use App\UserRelation;
 use Image;
 use Validator;
 use DB;
@@ -127,8 +129,22 @@ class UserController extends Controller{
                         $userDetails =  User::where('users.id', Auth::id())->join('patients_profiles', 'users.id', 'user_id')->first();
                         $services = DB::table('services')->select('id', 'title', 'description', 'service_image')->where('is_blocked', '=', '0')->orderBy('title', 'asc')->get();
                         $diagnosis = Diagnose::select('id', 'title')->where('is_blocked',0)->orderBy('title', 'asc')->get();
+                        $relations = Relation::pluck('title');
+                        $user_added_relations = UserRelation::select('user_relations.*', 'relations.title')->join('relations' , 'relation_id' , 'relations.id')->where('user_id', $user->id)->get();
+
                         $success['token'] =  $token;
-                        $success['userDetails'] =  $userDetails == null ? $user : $userDetails;
+                        if($userDetails == null){
+                            $user->height = '';
+                            $user->weight = '';
+                            $user->language = '';
+                            $user->alt_contact_name = '';
+                            $user->alt_contact_no = '';
+                            $success['userDetails'] =  $user;
+                        }else{
+                            $success['userDetails'] =  $userDetails ;
+                        }
+                        $success['relations'] =  $relations;
+                        $success['user_added_relations'] =  $user_added_relations;
                         $success['services'] =  $services;
                         $success['diagnosis'] =  $diagnosis;
                         $success['service_area'] =  $county;
@@ -347,20 +363,6 @@ class UserController extends Controller{
         }
     }
 
-    /**
-     * details api
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function details()
-    {
-        $user = Auth::user();
-        if (!empty($user))
-            return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $user]);
-        else
-            return response()->json(['status_code' => 400 , 'message' => 'Unauthorized', 'data' => null]);
-    }
 
     /**
      * edit user profile details api
@@ -376,8 +378,14 @@ class UserController extends Controller{
         $user->save();
 
         if($user->type == 'patient'){
-            $input['f_name'] = $user->name;
-            $user->patient->where('user_id',$user->id)->first()->fill($input)->save();
+            if($user->patient){
+                $user->patient->where('user_id',$user->id)->first()->fill($input)->save();
+            }else{
+                $userPatient = new PatientProfile;
+                $userPatient->user_id = $user->id;
+                $userPatient->f_name = $user->name;
+                $userPatient->save();
+            }
 
             $user = User::where('users.id', Auth::id())->join('patients_profiles', 'users.id', 'user_id')->first();
         }else{
@@ -404,6 +412,143 @@ class UserController extends Controller{
             return response()->json(['status_code' => $this->successStatus , 'message' => 'Profile details updated successfully.', 'data' => $user]);
         else
             return response()->json(['status_code' => 400 , 'message' => 'Profile details cannot be updated. Please try again!', 'data' => null]);
+    }
+
+    /**
+     * User Relations API
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function addUserRelation(Request $request)
+    {   
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|min:3',
+            'mobile_number' => 'required|min:9|unique:user_relations',
+            'relation' => 'required'
+        ]);
+
+        if ($validator->fails())
+            return response()->json(['status_code'=> 400, 'message'=> $validator->errors()->first(), 'data' => null]);
+
+        $user = Auth::user();
+        $input = $request->input(); 
+        $input['relation'] = Relation::where('title', $input['relation'])->pluck('id')[0];
+        $addedRelation = UserRelation::where('name', $input['name'])->where('relation_id', $input['relation'])->where('user_id', $user->id)->get();
+
+        if(count($addedRelation) > 0){
+            return response()->json(['status_code'=> 400, 'message'=> 'This name already exists for the selected relation.', 'data' => null]);
+        }
+ 
+        $data['user_id'] = $user->id;
+        $data['name'] = $input['name'];
+        $data['mobile_number'] = $input['mobile_number'];
+        $data['relation_id'] = $input['relation'];
+        $relation = UserRelation::create($data);
+
+        $relation = UserRelation::select('user_relations.*', 'relations.title')->join('relations' , 'relation_id' , 'relations.id')->where('user_id', $user->id)->get();
+
+        if (!empty($relation))
+            return response()->json(['status_code' => $this->successStatus , 'message' => 'User Relation Added Successfully. ', 'data' => $relation]);
+        else
+            return response()->json(['status_code' => 400 , 'message' => 'Unauthorized', 'data' => null]);
+    }
+
+    /**
+     * Delete User Relation API
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function destroyUserRelation(Request $request)
+    {   
+        $validator = Validator::make($request->all(), [
+            'id' => 'required'
+        ]);
+
+        if ($validator->fails())
+            return response()->json(['status_code'=> 400, 'message'=> $validator->errors()->first(), 'data' => null]);
+
+        $user = Auth::User();
+         
+        $relationdelete = UserRelation::where('id' , $request->input('id'))->where('user_id' , $user->id)->delete();
+        $relation = UserRelation::select('user_relations.*', 'relations.title')->join('relations' , 'relation_id' , 'relations.id')->where('user_id', $user->id)->get();     
+
+        if($relationdelete)
+            return response()->json(['status_code' => $this->successStatus , 'message' => 'User Relation Deleted successfully.' , 'data' => $relation]);
+        else
+            return response()->json(['status_code' => 400 , 'message' => 'User Relation cannot be deleted.']);
+    }
+
+    /**
+     * details api
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function details()
+    {
+        $user = Auth::user();
+        if (!empty($user))
+            return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $user]);
+        else
+            return response()->json(['status_code' => 400 , 'message' => 'Unauthorized', 'data' => null]);
+    }
+
+
+    /**
+     * Booking API 
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function addServiceRequest(Request $request){
+        
+        $input = $request->input();
+        $user = Auth::user();
+        $validator =  Validator::make($input,
+            [
+                'booking_for' => 'required|string',
+                'date' => 'required|date',
+                'time' => 'required',
+                'height' =>'required',
+                'weight' =>'required',
+                'pets' => 'required',
+                'diagnosis' => 'required',
+                'service_location' => 'required',
+                'location' =>'required',
+                'country' => 'required',
+                'city' => 'required',
+                'state' => 'required',
+                'zipcode' => 'required'
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json(['status_code'=> 400, 'message'=> $validator->errors()->first(), 'data' => null]);
+        }
+
+        $service_request = array(
+            'user_id' => $user->id,
+            'location' => $input['location'],
+            'city' => $input['city'],
+            'state' => $input['state'],
+            'zip' => $input['zipcode'],
+            'status' => 2,
+            'start_date' => 'required',
+            'start_time' => 'required'
+        );
+        $user_profile = array(
+            'user_id' => $user->id,
+            'location' => $input['location'],
+            'city' => $input['city'],
+            'state' => $input['state'],
+            'zip' => $input['zipcode'],
+            'status' => 2,
+        );
+        DB::table('service_requests')->insert($service_request);
+
+        return response()->json(['status_code' => $this->successStatus , 'message' => 'Booking created successfully.', 'data' => null]);
     }
 
     /**
@@ -513,51 +658,7 @@ class UserController extends Controller{
         }
     }
 
-    //add request service
-    public function addServiceRequest(Request $request){
-        $input = $request->input();
-        $validator =  Validator::make($input,
-            [
-                'user_id' => 'required|not_in:0',
-                'service' => 'required|not_in:0',
-                'start_date' => 'required|date',
-                'start_time' => 'required',
-                'end_date' => 'required|date|after:start_date',
-                'end_time' => 'required',
-                'min_expected_bill' => 'required|min:0',
-                'max_expected_bill' => 'required|min:1|gt:min_expected_bill',
-                'location' => 'required',
-                'zipcode' => 'required',
-                'city' => 'required',
-                'state' => 'required',
-                'description' => 'required'
-            ]
-        );
-
-        if ($validator->fails()) {
-            return response()->json(['status_code'=> 400, 'message'=> $validator->errors()->first(), 'data' => null]);
-        }
-
-        $service_request = array(
-            'user_id' => $input['user_id'],
-            'location' => $input['location'],
-            'city' => $input['city'],
-            'state' => $input['state'],
-            'zip' => $input['zipcode'],
-            'service' => $input['service'],
-            'min_expected_bill' => $input['min_expected_bill'],
-            'max_expected_bill' => $input['max_expected_bill'],
-            'start_time' => $input['start_time'],
-            'end_time' => $input['end_time'],
-            'start_date' => date('Y-m-d', strtotime($input['start_date'])),
-            'end_date' => date('Y-m-d', strtotime($input['end_date'])),
-            'description' => $input['description'],
-            'status' => 2,
-            'updated_at' => date('Y-m-d h:i:s')
-        );
-        DB::table('service_requests')->insert($service_request);
-        return response()->json(['status_code' => $this->successStatus , 'message' => 'Request created successfully.', 'data' => null]);
-    }
+    
 
     public function updateServiceRequest(Request $request){
         $input = $request->input();
@@ -601,7 +702,6 @@ class UserController extends Controller{
 
         return response()->json(['status_code' => $this->successStatus , 'message' => 'Request detail updated successfully.', 'data' => null]);
     }
-<<<<<<< HEAD
 
     public function getRequestDetails(Request $request){
         $input = $request->input();        
@@ -632,6 +732,3 @@ class UserController extends Controller{
         return response()->json(['status_code' => $this->successStatus , 'message' => 'Request detail updated successfully.', 'data' => array('request' => $services, 'final_caregiver' => $final_caregivers, 'upload_docs' => $upload_docs)]);
     }
 }
-=======
-}
->>>>>>> 5f034f6b64e5df0bc08df25ccd9523aa9ae5a51d
