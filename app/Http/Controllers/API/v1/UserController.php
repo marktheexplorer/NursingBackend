@@ -14,7 +14,6 @@ use App\Mail\VerifyMail;
 use App\User;
 use App\Diagnose;
 use App\Countyareas;
-use App\Helper;
 use App\FcmUser;
 use App\PatientProfile;
 use App\Caregiver;
@@ -576,39 +575,6 @@ class UserController extends Controller{
             return response()->json(['status_code' => 400 , 'message' => 'Notification Settings cannot be updated. Please try again.', 'data' => null]);
     }
 
-   
-
-
-    /**
-     * get user current location api
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function getCurrentLocation(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'current_lat_lng' => 'required|string',
-        ]);
-
-        if ($validator->fails())
-            return response()->json(['status_code'=> 400, 'message'=> $validator->errors()->first(), 'data' => null]);
-
-        $input = $request->input();
-
-        $currentLocation = Helper::geocode($input['current_lat_lng']);
-
-        $input['city'] = $currentLocation['city'];
-        $input['state'] = $currentLocation['state'];
-        $input['country'] = $currentLocation['country'];
-
-        $user = User::find(Auth::id());
-
-        if ($user->update($input))
-            return response()->json(['status_code' => $this->successStatus , 'message' => 'Current location save successfully', 'data' => null]);
-        else
-            return response()->json(['status_code' => 400 , 'message' => 'Current location is not saved. Please try again!', 'data' => null]);
-    }
 
     //get master list
     //get discipline list
