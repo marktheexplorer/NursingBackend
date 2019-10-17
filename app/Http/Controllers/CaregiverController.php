@@ -61,9 +61,6 @@ class CaregiverController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request){
-        $mobile_number = $request->input('mobile_number');
-        $temp_number = str_replace(array("(", ")", "_", "-", " "), "", $request->input('mobile_number'));
-        $request->merge(array('mobile_number' => $temp_number));
 
         $input = $request->input();
         $profile_image = $request->file('profile_image');
@@ -73,7 +70,7 @@ class CaregiverController extends Controller{
             'fname' => 'required|string|max:40',
             'lname' => 'required|string|max:40',
             'email' => 'email|required|string|unique:users,email',
-            'mobile_number' => 'required|unique:users,mobile_number|min:10|max:10',
+            'mobile_number' => 'required|unique:users,mobile_number|regex:/^\(?([0-9]{3})\)?[-]?([0-9]{3})[-]?([0-9]{4})$/',
             'service' => 'required|not_in:0',
             'password' => 'required|min:6',
             'gender' => 'required',
@@ -92,7 +89,10 @@ class CaregiverController extends Controller{
             'description' => 'required|max:150',
             'qualification' => 'required|not_in:0',
         ],
-        ['max_price.gt' => 'The max price must be greater than min price.']);
+        [   
+            'max_price.gt' => 'The max price must be greater than min price.',
+            'mobile_number.regex' => 'The mobile number must be 10 digits.'
+        ]);
 
         //show custome name of field in validation errors
         $attributeNames = array(
@@ -132,15 +132,6 @@ class CaregiverController extends Controller{
             return redirect()->back()->withErrors($validator)->withInput($request->except('password'));
         }
 
-        $input['mobile_number'] = str_replace(array("(", ")", "_", "-", " "), "", $input['mobile_number']);
-        if(strlen($input['mobile_number']) > 10){
-            $validator->errors()->add('area', 'The Mobile Number must be less then 16 charecter.');
-            return redirect()->back()->withErrors($validator)->withInput($request->except('password'));
-        }else if(strlen($input['mobile_number']) < 10){
-            $validator->errors()->add('area', 'The Mobile Number must be greater then 8 charecter.');
-            return redirect()->back()->withErrors($validator)->withInput($request->except('password'));
-        }
-
         $name = $input['fname'];
         if(!empty($input['mname'])){
             $name .= " ".$input['mname'];
@@ -152,7 +143,7 @@ class CaregiverController extends Controller{
         $user->name = $name;
         $user->email = $input['email'];
         $user->email_verified = 1;
-        $user->mobile_number = $mobile_number;
+        $user->mobile_number = $input['mobile_number'];
         $user->country_code = '+1';
         $user->type = 1;
         $user->mobile_number_verified = 1;
@@ -162,7 +153,6 @@ class CaregiverController extends Controller{
         $user->location = $input['location'];
         $user->city = $input['city'];
         $user->state = $input['state'];
-        //$user->country = 'USA';
         $user->password = Hash::make($input['password']);
         if($user->save()){
             //save caregiver profile info
@@ -238,8 +228,6 @@ class CaregiverController extends Controller{
                 $objDemo->mail_from_name = env('MAIL_FROM_NAME');
                 $objDemo->email = $user->email;
                 $objDemo->password = $input['password'];
-                //return view('mail.password_on_mail', compact('objDemo'));
-                //$input['email'] = 'sonu.shokeen@saffrontech.net';
                 $issemd = Mail::to($input['email'])->send(new MailHelper($objDemo));
             }
 
@@ -341,16 +329,12 @@ class CaregiverController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id){
-        $mobile_number = $request->input('mobile_number');
-        $temp_number = str_replace(array("(", ")", "_", "-", " "), "", $request->input('mobile_number'));
-        $request->merge(array('mobile_number' => $temp_number));
-
         $input = $request->input();
         $validator =  Validator::make($input,[
             'first_name' => 'required|string|max:40',
             'last_name' => 'required|string|max:40',
             'email' => 'email|required|string',
-            'mobile_number' => 'required|min:10|max:10',
+            'mobile_number' => 'required|regex:/^\(?([0-9]{3})\)?[-]?([0-9]{3})[-]?([0-9]{4})$/',
             'service' => 'required|not_in:0',
             'gender' => 'required',
             'language' => 'required',
@@ -368,7 +352,10 @@ class CaregiverController extends Controller{
             'description' => 'required|max:150',
             'qualification' => 'required|not_in:0',
         ],
-        ['max_price.gt' => 'The max price must be greater than min price.']);
+        [
+            'max_price.gt' => 'The max price must be greater than min price.',
+            'mobile_number.regex' => 'The mobile number must be 10 digits.'
+        ]);
 
         //show custome name of field in validation errors
         $attributeNames = array(
@@ -404,27 +391,8 @@ class CaregiverController extends Controller{
             }
         }
 
-        /*$disabled_qualification = DB::table('qualifications')->select('id')->where('is_blocked', '=', '1')->orderBy('name', 'asc')->get()->toArray();
-        $temp_disabled_id = array();
-        if(!empty($disabled_qualification)){
-            foreach ($disabled_qualification as $key) {
-                $temp_disabled_id[] = $key->id;
-            }
-        }
-
-        if(count($disabled_qualification) > 0 && isset($input['qualification'])){
-            foreach($input['qualification'] as $value){
-                if(in_array($value, $temp_disabled_id)){
-                    die('error must be show...');
-                    $validator->after(function($validator){
-                        $validator->errors()->add('qualification', 'Disabled Discipline are not allowed.');
-                    });
-                }
-            }
-        }*/
-
         if ($validator->fails()) {
-            //return redirect()->back()->withInput($request->all())->withErrors($validator->errors()); // will return only the errors
+
             return redirect()->back()->withInput($request->all())->withErrors($validator);
         }
 
@@ -439,14 +407,13 @@ class CaregiverController extends Controller{
         $user->name = $name;
         $user->email = $input['email'];
         $user->email_verified = 1;
-        $user->mobile_number = $mobile_number;
+        $user->mobile_number = $input['mobile_number'];
         $user->country_code = '+1';
         $user->type = 1;
         $user->mobile_number_verified = 1;
         $user->location = $input['location'];
         $user->city = $input['city'];
         $user->state = $input['state'];
-        //$user->country = 'USA';
         $user->gender = $input['gender'];
         $user->dob = date("Y-m-d", strtotime($input['dob']));
 
@@ -469,7 +436,6 @@ class CaregiverController extends Controller{
             $objDemo->mail_from_name = env('MAIL_FROM_NAME');
             $objDemo->email = $user->email;
             $objDemo->password = $input['password'];
-            //return view('mail.password_on_mail', compact('objDemo'));
             $issemd = Mail::to($input['email'])->send(new MailHelper($objDemo));
         }
 
