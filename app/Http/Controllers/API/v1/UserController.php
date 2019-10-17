@@ -51,7 +51,7 @@ class UserController extends Controller{
             return response()->json(['status_code' => 300, 'message' => 'Your email is not verified . Please verify your email first.', 'data' => null]);
 
             else
-            return response()->json(['status_code' => 400, 'message' => 'Email Already Exists.', 'data' => null]);    
+            return response()->json(['status_code' => 400, 'message' => 'Email already exists.', 'data' => null]);    
         }
 
         if ($validator->fails())
@@ -168,7 +168,7 @@ class UserController extends Controller{
                 return response()->json(['status_code' => 300, 'message' => 'Your email is not verified . Please verify your email first.', 'data' => null]);
             }
         } else {
-            return response()->json(['status_code' => $this->errorStatus, 'message' => 'You have entered Invalid Credentials.', 'data' => null]);
+            return response()->json(['status_code' => $this->errorStatus, 'message' => 'You have entered invalid credentials.', 'data' => null]);
         }
     }
 
@@ -191,7 +191,7 @@ class UserController extends Controller{
             $user = User::where('email', $request->input('email'))->first();
             Mail::to($request->input('email'))->send(new ForgotPassword($user));
 
-            return response()->json(['status_code' => $this->successStatus , 'message' => 'Your One Time Password has been sent to your mail.', 'data' => null]);
+            return response()->json(['status_code' => $this->successStatus , 'message' => 'Your one time password has been sent to your mail.', 'data' => null]);
         } else {
             return response()->json(['status_code' => $this->errorStatus , 'message' => 'Unauthorized user.', 'data' => null]);
         }
@@ -231,9 +231,9 @@ class UserController extends Controller{
                         'revoked' => 1
                     ]);
 
-                return response()->json(['status_code' => $this->successStatus, 'message' => 'Otp Verified.', 'data'=> null]);
+                return response()->json(['status_code' => $this->successStatus, 'message' => 'Otp verified.', 'data'=> null]);
             } else {
-                return response()->json(['status_code' => 400, 'message' => 'Incorrect Otp.', 'data'=> null]);
+                return response()->json(['status_code' => 400, 'message' => 'Incorrect otp.', 'data'=> null]);
             }
         } else {
             return response()->json(['status_code' => 400, 'message' => 'Please enter registered email Id.', 'data'=> null]);
@@ -266,7 +266,7 @@ class UserController extends Controller{
                 return response()->json(['status_code' => $this->successStatus, 'message' => 'Password changed successfully.', 'data' => null]);
             }
         } else {
-            return response()->json(['status_code' => 400 , 'message' => 'Unauthorized', 'data' => null]);
+            return response()->json(['status_code' => 400 , 'message' => 'Unauthorized user.', 'data' => null]);
         }
     }
 
@@ -296,10 +296,10 @@ class UserController extends Controller{
 
                 return response()->json(['status_code' => $this->successStatus , 'message' => 'Password updated successfully.', 'data' => null]);
             } else {
-                return response()->json(['status_code' => 400 , 'message' => 'Old Password is not correct.', 'data' => null]);
+                return response()->json(['status_code' => 400 , 'message' => 'Old password is not correct.', 'data' => null]);
             }
         } else {
-            return response()->json(['status_code' => 400 , 'message' => 'Unauthorized', 'data' => null]);
+            return response()->json(['status_code' => 400 , 'message' => 'Unauthorized user.', 'data' => null]);
         }
     }
 
@@ -315,7 +315,7 @@ class UserController extends Controller{
             Auth::user()->OauthAcessToken()->delete();
             return response()->json(['status_code' => $this->successStatus , 'message' => 'Logged out successfully.', 'data' => null]);
         } else {
-            return response()->json(['status_code' => 400 , 'message' => 'Unauthorized', 'data' => null]);
+            return response()->json(['status_code' => 400 , 'message' => 'Unauthorized user.', 'data' => null]);
         }
     }
 
@@ -448,9 +448,9 @@ class UserController extends Controller{
         $relation = UserRelation::select('user_relations.*', 'relations.title')->join('relations' , 'relation_id' , 'relations.id')->where('user_id', $user->id)->get();
 
         if (!empty($relation))
-            return response()->json(['status_code' => $this->successStatus , 'message' => 'User Relation Added Successfully. ', 'data' => $relation]);
+            return response()->json(['status_code' => $this->successStatus , 'message' => 'User relation added successfully. ', 'data' => $relation]);
         else
-            return response()->json(['status_code' => 400 , 'message' => 'Unauthorized', 'data' => null]);
+            return response()->json(['status_code' => 400 , 'message' => 'Unauthorized user.', 'data' => null]);
     }
 
     /**
@@ -474,9 +474,9 @@ class UserController extends Controller{
         $relation = UserRelation::select('user_relations.*', 'relations.title')->join('relations' , 'relation_id' , 'relations.id')->where('user_id', $user->id)->get();     
 
         if($relationdelete)
-            return response()->json(['status_code' => $this->successStatus , 'message' => 'User Relation Deleted successfully.' , 'data' => $relation]);
+            return response()->json(['status_code' => $this->successStatus , 'message' => 'User relation deleted successfully.' , 'data' => $relation]);
         else
-            return response()->json(['status_code' => 400 , 'message' => 'User Relation cannot be deleted.']);
+            return response()->json(['status_code' => 400 , 'message' => 'User relation cannot be deleted.']);
     }
 
     /**
@@ -491,7 +491,7 @@ class UserController extends Controller{
         if (!empty($user))
             return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $user]);
         else
-            return response()->json(['status_code' => 400 , 'message' => 'Unauthorized', 'data' => null]);
+            return response()->json(['status_code' => 400 , 'message' => 'Unauthorized user.', 'data' => null]);
     }
 
 
@@ -570,9 +570,9 @@ class UserController extends Controller{
         $user->save();
 
         if (!empty($user))
-            return response()->json(['status_code' => $this->successStatus , 'message' => 'Notification Settings updated successfully.', 'data' => null]);
+            return response()->json(['status_code' => $this->successStatus , 'message' => 'Notification settings updated successfully.', 'data' => null]);
         else
-            return response()->json(['status_code' => 400 , 'message' => 'Notification Settings cannot be updated. Please try again.', 'data' => null]);
+            return response()->json(['status_code' => 400 , 'message' => 'Notification settings cannot be updated. Please try again.', 'data' => null]);
     }
 
 
@@ -580,25 +580,25 @@ class UserController extends Controller{
     //get discipline list
     public function getDisciplineList(Request $request){
         $discipline = DB::table('qualifications')->select('id', 'name')->where('is_blocked', '=', '1')->orderBy('name', 'asc')->get();
-        return response()->json(['status_code' => $this->successStatus , 'message' => 'Get list of all enable Discipline list', 'data' => $discipline]);
+        return response()->json(['status_code' => $this->successStatus , 'message' => 'Get list of all enable discipline list', 'data' => $discipline]);
     }
 
     //get service list
     public function getServices(Request $request){
         $service = DB::table('services')->select('id', 'title', 'description', 'service_image')->where('is_blocked', '=', '0')->orderBy('title', 'asc')->get();
-        return response()->json(['status_code' => $this->successStatus , 'message' => 'Get list of all enable Services list', 'data' => $service]);
+        return response()->json(['status_code' => $this->successStatus , 'message' => 'Get list of all enable services list', 'data' => $service]);
     }
 
     //get service list
     public function getDiagnose(Request $request){
         $diagnose = DB::table('diagnosis')->select('id', 'title')->where('is_blocked', '=', '1')->orderBy('title', 'asc')->get();
-        return response()->json(['status_code' => $this->successStatus , 'message' => 'Get list of all enable Diagnose list', 'data' => $diagnose]);
+        return response()->json(['status_code' => $this->successStatus , 'message' => 'Get list of all enable diagnose list', 'data' => $diagnose]);
     }
 
     //get county list
     public function getCounty(Request $request){
         $county = DB::table('county_areas')->select('id', 'county')->where('is_blocked', '=', '1')->where('area', '=', '0')->orderBy('county', 'asc')->get();
-        return response()->json(['status_code' => $this->successStatus , 'message' => 'Get list of all enable County list', 'data' => $county]);
+        return response()->json(['status_code' => $this->successStatus , 'message' => 'Get list of all enable county list', 'data' => $county]);
     }
 
     //get county area
@@ -614,13 +614,13 @@ class UserController extends Controller{
 
         $county = DB::table('county_areas')->where('area', '=', '0')->where('id', '=', $input['county_id'])->first();
         if(empty($county)){
-            return response()->json(['status_code'=> 400, 'message'=> 'County Not Found', 'data' => null]);
+            return response()->json(['status_code'=> 400, 'message'=> 'County not found', 'data' => null]);
         }else{
             if($county->is_blocked == 0)
                 return response()->json(['status_code'=> 400, 'message'=> 'County is blocked', 'data' => null]);
 
             $countyareas = DB::table('county_areas')->where('county', '=', $input['county_id'])->where('is_area_blocked', '=', '1')->orderBy('area', 'asc')->get();
-            return response()->json(['status_code' => $this->successStatus , 'message' => 'Get list of enable County Area list', 'data' => $countyareas]);
+            return response()->json(['status_code' => $this->successStatus , 'message' => 'Get list of enable county area list', 'data' => $countyareas]);
         }
     }
 
