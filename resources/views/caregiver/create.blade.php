@@ -292,9 +292,15 @@
                                                         @foreach($service_area_list as $row)
                                                             @if (count($errors) > 0)
                                                                 @if(empty(old('non_service_area')))
-                                                                    <option value="{{ $row->id }}" <?php if(in_array($row->id, old('service_area'))){ echo 'selected'; } ?>>
-                                                                        {{ $row->area }}
-                                                                    </option>
+                                                                    @if(empty(old('service_area')))
+                                                                        <option value="{{ $row->id }}" >
+                                                                            {{ $row->area }}
+                                                                        </option>
+                                                                    @else
+                                                                        <option value="{{ $row->id }}" <?php if(in_array($row->id, old('service_area'))){ echo 'selected'; } ?>>
+                                                                            {{ $row->area }}
+                                                                        </option>
+                                                                    @endif    
                                                                 @else
                                                                     @if(empty(old('service_area')))
                                                                         <option value="{{ $row->id }}" <?php if(in_array($row->id, old('non_service_area'))){ echo 'disabled'; } ?> >
@@ -327,9 +333,15 @@
                                                         @foreach($service_area_list as $row)
                                                             @if (count($errors) > 0)
                                                                 @if(empty(old('service_area')))
-                                                                    <option value="{{ $row->id }}" <?php if(in_array($row->id, old('non_service_area'))){ echo 'selected'; } ?>>
-                                                                        {{ $row->area }}
-                                                                    </option>
+                                                                    @if(empty(old('old_service_area')))
+                                                                        <option value="{{ $row->id }}" >
+                                                                            {{ $row->area }}
+                                                                        </option>
+                                                                    @else
+                                                                        <option value="{{ $row->id }}" <?php if(in_array($row->id, old('non_service_area'))){ echo 'selected'; } ?>>
+                                                                            {{ $row->area }}
+                                                                        </option>
+                                                                    @endif    
                                                                 @else
                                                                     @if(empty(old('non_service_area')))
                                                                         <option value="{{ $row->id }}"  <?php if(in_array($row->id, old('service_area'))){ echo 'disabled'; } ?> >
