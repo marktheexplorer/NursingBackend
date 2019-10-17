@@ -62,16 +62,13 @@ class PatientsController extends Controller{
      */
     public function update(Request $request, $id)
     {
-        $mobile_number = $request->input('mobile_number');
-        $temp_number = str_replace(array("(", ")", "_", "-", " "), "", $request->input('mobile_number'));
-        $request->merge(array('mobile_number' => $temp_number));
         $input = $request->input();
         $validator = validator::make($input,[
             'f_name' => 'required|string|max:20',
             'm_name' => 'nullable|string|max:20',
             'l_name' => 'required|string|max:20',
             'email' => 'required|email|string|max:60',
-            'mobile_number' => 'required||min:10|max:10',
+            'mobile_number' => 'required|regex:/^\(?([0-9]{3})\)?[-]?([0-9]{3})[-]?([0-9]{4})$/',
             'dob' => 'required',
             'gender' => 'required',
             'pin_code' => 'required|numeric',
@@ -100,6 +97,7 @@ class PatientsController extends Controller{
             'pets.required'    => 'Pets is required.',
             'long_term.required'    => 'Long terms insurance is required.',
             'qualification.required'    => 'Discipline is required.',
+            'mobile_number.regex' => 'The mobile number must be 10 digits.'
         ]);
         if(isset($input['pets']) && $input['pets'] == 'yes'){
             $this->validate($request, [
@@ -125,7 +123,7 @@ class PatientsController extends Controller{
                 $user = User::findOrFail($id);
                 $user->name = $input['f_name'].' '.$input['m_name'].' '.$input['l_name'];
                 $user->email = $input['email'];
-                $user->mobile_number = $mobile_number;
+                $user->mobile_number = $input['mobile_number'];
                 $user->city = $input['city'];
                 $user->state = $input['state'];
                 $user->street = $input['street'];
@@ -193,16 +191,13 @@ class PatientsController extends Controller{
     }
 
     public function store(Request $request){
-        $mobile_number = $request->input('mobile_number');
-        $temp_number = str_replace(array("(", ")", "_", "-", " "), "", $request->input('mobile_number'));
-        $request->merge(array('mobile_number' => $temp_number));
         $input = $request->input();
         $validator = validator::make($input,[
             'f_name' => 'required|string|max:20',
             'm_name' => 'nullable|string|max:20',
             'l_name' => 'required|string|max:20',
             'email' => 'required|email|string|max:60|unique:users',
-            'mobile_number' => 'required|unique:users|min:10|max:10',
+            'mobile_number' => 'required|unique:users|regex:/^\(?([0-9]{3})\)?[-]?([0-9]{3})[-]?([0-9]{4})$/',
             'dob' => 'required',
             'gender' => 'required',
             'pin_code' => 'required|numeric',
@@ -231,6 +226,7 @@ class PatientsController extends Controller{
             'pets.required'    => 'Pets is required.',
             'long_term.required'    => 'Long terms insurance is required.',
             'qualification.required'    => 'Discipline is required.',
+            'mobile_number.regex' => 'The mobile number must be 10 digits.'
         ]);
 
 
@@ -256,7 +252,7 @@ class PatientsController extends Controller{
             $input['name'] = $input['f_name'].' '.$input['m_name'].' '.$input['l_name'];
             $input['role_id'] = 3;
             $input['email'] = $input['email'];
-            $input['mobile_number'] = $mobile_number;
+            $input['mobile_number'] = $input['mobile_number'];
             $input['city'] = $input['city'];
             $input['state'] = $input['state'];
             $input['street'] = $input['street'];
