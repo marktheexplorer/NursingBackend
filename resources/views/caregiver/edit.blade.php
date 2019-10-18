@@ -377,10 +377,11 @@
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-sm-5 pull-right"></div>
-                                        <div class="form-group col-sm-2 pull-right"><br/>
+                                        <div class="form-group col-sm-3 pull-right"><br/>
                                             <button class="btn btn-primary pull-right" type="submit">Submit</button>
+                                            <input type="reset" value="Cancel" class="btn btn-danger" onclick="window.location.reload()">
                                         </div>
-                                        <div class="form-group col-sm-5 pull-right"></div>
+                                        <div class="form-group col-sm-4 pull-right"></div>
                                     </div>
                                 </form>
                             </div>

@@ -49,6 +49,7 @@
                                 </div>    
                                 <div class="form-group col-md-12" style="padding-left: 0px;">
                                     <button class="btn btn-info" type="submit">Submit</button>
+                                    <input type="reset" value="Cancel" class="btn btn-danger" onclick="window.location.reload()">
                                 </div>
                             </form>
                         </div>

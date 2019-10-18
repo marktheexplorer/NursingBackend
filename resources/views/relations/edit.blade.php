@@ -40,6 +40,7 @@
                                         </div>
                                         <div class="form-group col-md-12">
                                             <button class="btn btn-default" type="submit">Submit</button>
+                                            <input type="reset" value="Cancel" class="btn btn-danger" onclick="window.location.reload()">
                                         </div>
                                     </div>
                                 </form>

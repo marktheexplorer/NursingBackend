@@ -43,7 +43,10 @@
                                     </div>
                                 </div>    
                                 <div class="form-group col-md-12" style="padding-left: 0px;">
-                                    <div class="form-group"><button class="btn btn-info" type="submit">Submit</button></div>
+                                    <div class="form-group">
+                                        <button class="btn btn-info" type="submit">Submit</button>
+                                        <input type="reset" value="Cancel" class="btn btn-danger" onclick="window.location.reload()">
+                                    </div>
                                 </div>
                             </form>
                         </div>
