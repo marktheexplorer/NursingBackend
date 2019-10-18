@@ -516,8 +516,8 @@ class CaregiverController extends Controller{
     public function destroy($id){
 
         $user = User::findOrFail($id);
-        $caregiver = Caregiver::where('user_id' , $id)->get();
-        $attributes = CaregiverAttribute::where('caregiver_id' , $id)->get();
+        $caregiver = Caregiver::where('user_id' , $id)->delete();
+        $attributes = CaregiverAttribute::where('caregiver_id' , $id)->delete();
 
         if ($user->delete()) {
             $response = array(

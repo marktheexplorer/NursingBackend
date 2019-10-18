@@ -67,6 +67,12 @@
 	              							<button class="btn-sm btn-warning btn-cir" title="View"><i class="fas fa-eye"></i></button>
 	              						</a>
 	              					</li>
+                                    <li>
+                                        <form action="{{ route('patients.destroy',['id' => $patient->id]) }}" method="POST" onsubmit="deletePatient('{{ $patient->id }}', '{{ $patient->name }}', event,this)">
+                                        @csrf
+                                            <button class="btn-sm btn-danger btn-cir" title="Delete"><i class="fas fa-trash-alt"></i></button>
+                                        </form>
+                                    </li>
 	              				</ul>
 	              			</td>
 	            		</tr>
@@ -83,5 +89,56 @@
     $(document).ready( function () {
         $('#data-table').DataTable();
     });
+
+    function deletePatient(id, title, event,form)
+    {
+        event.preventDefault();
+        swal({
+            title: "Are you sure?",
+            text: "You want to delete "+title+" user",
+            icon: "warning",
+            buttons: {
+                cancel: true,
+                confirm: true,
+            },
+            closeModal: false,
+            closeModal: false,
+            closeOnEsc: false,
+        })
+       .then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                url: $(form).attr('action'),
+                data: $(form).serialize(),
+                type: 'DELETE',
+                success: function(data) {
+                    data = JSON.parse(data);
+                    if(data['status']) {
+                        swal({
+                            title: data['message'],
+                            text: "Press ok to continue",
+                            icon: "success",
+                            buttons: {
+                                cancel: true,
+                                confirm: true,
+                            },
+                            closeOnConfirm: false,
+                            closeOnEsc: false,
+                        })
+                        .then((willDelete) => {
+                            if (willDelete) {
+                                window.location.reload();
+                            }
+                            });
+                        } else {
+                             swal("Error", data['message'], "error");
+                        }
+                    }
+                });
+            } else {
+                swal("Cancelled", title+" user will not be deleted.", "error");
+            }
+        });
+    }
 </script>
 @endsection

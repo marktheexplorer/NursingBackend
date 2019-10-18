@@ -307,6 +307,31 @@ class PatientsController extends Controller{
         return view('patients.view', compact('user','diagnosis','services','disciplines_name'));
     }
 
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id){
+
+        $user = User::findOrFail($id);
+        $patient = PatientProfile::where('user_id' , $id)->delete();
+
+        if ($user->delete()) {
+            $response = array(
+                'status' => 'success',
+                'message' => 'Patient deleted successfully',
+            );
+        } else {
+            $response = array(
+                'status' => 'error',
+                'message' => 'Patient can not be deleted.Please try again',
+            );
+        }
+        return json_encode($response);
+    }
+
     public function download_excel(){
         return Excel::download(new PatientExport, 'Client_list.xlsx');
     }
