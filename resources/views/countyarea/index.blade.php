@@ -62,16 +62,7 @@
 	              						<a href="{{ route('county.show',['id' => $row->id]) }}">
 	              							<button class="btn-sm btn-warning btn-cir" title="View"><i class="fas fa-eye"></i></button>
 	              						</a>
-	              					</li><!--
-	              					<li>
-                                        <a href="{{ url('admin/county/blocked/'.$row->id) }}">
-                                        @if($row->is_blocked)
-                                            <button type="button" class="btn-sm btn-danger btn-cir" title="Unblock"><i class="fa fa-unlock"></i></button>
-                                        @else
-                                            <button type="button" class="btn-sm btn-success btn-cir" title="Block"><i class="fa fa-ban"></i></button>
-                                        @endif
-                                        </a>
-                                    </li>-->
+	              					</li>
 	              				</ul>
 	              			</td>
 	            		</tr>
