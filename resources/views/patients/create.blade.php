@@ -11,7 +11,7 @@
          <li class="breadcrumb-item">
             <a href="{{ route('dashboard') }}"><i class="fas fa-home"></i></a>
          </li>
-         <li class="breadcrumb-item"><a href="{{ route('patients.index') }}">Clients</a></li>
+         <li class="breadcrumb-item"><a href="{{ route('patients.index') }}">Client</a></li>
       </ol>
    </div>
    <div class="page-content fade-in-up">

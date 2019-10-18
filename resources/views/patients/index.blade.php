@@ -4,12 +4,12 @@
 <div class="content-wrapper">
     <!-- START PAGE CONTENT-->
     <div class="page-heading">
-        <h1 class="page-title">Clients Management</h1>
+        <h1 class="page-title">Client Management</h1>
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
                 <a href="{{ route('dashboard') }}"><i class="fas fa-home"></i></a>
             </li>
-            <li class="breadcrumb-item"><a href="{{ route('patients.index')}}" >Clients</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('patients.index')}}" >Client</a></li>
         </ol>
     </div>
     @include('flash::message')
@@ -18,8 +18,8 @@
             <div class="ibox-head">
                 <div class="ibox-title">Client Data</div>
                 <div>
-                    <a href="{{ route('patients.active') }}"><button class="btn btn-primary">Active Clients</button></a>
-                    <a href="{{ route('patients.inactive') }}"><button class="btn btn-primary">Inactive Clients</button></a>
+                    <a href="{{ route('patients.active') }}"><button class="btn btn-primary">Active Client</button></a>
+                    <a href="{{ route('patients.inactive') }}"><button class="btn btn-primary">Inactive Client</button></a>
                 </div>
                 <div>
                     <a href="{{ route('patients.create') }}"><button class="btn btn-info"><i class="fas fa-plus"></i> Add</button></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
