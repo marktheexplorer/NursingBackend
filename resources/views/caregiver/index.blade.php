@@ -48,25 +48,31 @@
 	              			<td>{{ date_format(date_create($user->created_at), 'd M, Y')}}
 	              			<td>
 	              				<ul class="actions-menu" style="padding-left: 0px;">
-                          <li>
-                            <a href="{{ url('admin/caregiver/blocked/'.$user->id) }}">
-                                @if($user->is_blocked)
-                                    <button type="button" class="btn-sm btn-danger btn-cir" title="Block"><i class="fas fa-lock"></i></button>
-                                @else
-                                    <button type="button" class="btn-sm btn-success btn-cir" title="Unblock"><i class="fas fa-lock-open"></i></button>
-                                @endif
-                            </a>
-                          </li>
-	              					<li>
-	              						<a href="{{ route('caregiver.edit',['id' => $user->id]) }}">
-	              							<button class="btn-sm btn-primary btn-cir" title="Edit"><i class="fas fa-pencil-alt"></i></button>
-	              						</a>
-	              					</li>
+                                    <li>
+                                    <a href="{{ url('admin/caregiver/blocked/'.$user->id) }}">
+                                        @if($user->is_blocked)
+                                            <button type="button" class="btn-sm btn-danger btn-cir" title="Block"><i class="fas fa-lock"></i></button>
+                                        @else
+                                            <button type="button" class="btn-sm btn-success btn-cir" title="Unblock"><i class="fas fa-lock-open"></i></button>
+                                        @endif
+                                    </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('caregiver.edit',['id' => $user->id]) }}">
+                                            <button class="btn-sm btn-primary btn-cir" title="Edit"><i class="fas fa-pencil-alt"></i></button>
+                                        </a>
+                                    </li>
 	              					<li>
 	              						<a href="{{ route('caregiver.show',['id' => $user->id]) }}">
 	              							<button class="btn-sm btn-warning btn-cir" title="View"><i class="fas fa-eye"></i></button>
 	              						</a>
 	              					</li>
+                                    <li>
+                                        <form action="{{ route('caregiver.destroy',['id' => $user->id]) }}" method="POST" onsubmit="deleteCaregiver('{{ $user->id }}', '{{ $user->name }}', event,this)">
+                                        @csrf
+                                            <button class="btn-sm btn-danger btn-cir" title="Delete"><i class="fas fa-trash-alt"></i></button>
+                                        </form>
+                                    </li>
 	              				</ul>
 	              			</td>
 	            		</tr>
@@ -85,23 +91,23 @@
     	$('#data-table').DataTable();
 	});
 
-	function deleteUser(id, name, event,form)
+	function deleteCaregiver(id, title, event,form)
     {
         event.preventDefault();
         swal({
             title: "Are you sure?",
-            text: "You want to delete "+name+" user",
+            text: "You want to delete "+title+" user",
             icon: "warning",
             buttons: {
-				cancel: true,
-				confirm: true,
-			},
+                cancel: true,
+                confirm: true,
+            },
             closeModal: false,
             closeModal: false,
             closeOnEsc: false,
         })
        .then((willDelete) => {
-          	if (willDelete) {
+            if (willDelete) {
                 $.ajax({
                 url: $(form).attr('action'),
                 data: $(form).serialize(),
@@ -114,15 +120,15 @@
                             text: "Press ok to continue",
                             icon: "success",
                             buttons: {
-    							cancel: true,
-    							confirm: true,
-  							},
+                                cancel: true,
+                                confirm: true,
+                            },
                             closeOnConfirm: false,
                             closeOnEsc: false,
                         })
                         .then((willDelete) => {
-          					if (willDelete) {
-                            	window.location.reload();
+                            if (willDelete) {
+                                window.location.reload();
                             }
                             });
                         } else {
@@ -131,7 +137,7 @@
                     }
                 });
             } else {
-                swal("Cancelled", name+"'s user will not be deleted.", "error");
+                swal("Cancelled", title+" user will not be deleted.", "error");
             }
         });
     }

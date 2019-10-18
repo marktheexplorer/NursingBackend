@@ -58,6 +58,12 @@
                                         @endif
                                         </a>
                                     </li>
+                                    <li>
+                                        <form action="{{ route('services.destroy',['id' => $service->id]) }}" method="POST" onsubmit="deleteService('{{ $service->id }}', '{{ $service->title }}', event,this)">
+                                        @csrf
+                                            <button class="btn-sm btn-danger btn-cir" title="Delete"><i class="fas fa-trash-alt"></i></button>
+                                        </form>
+                                    </li>
 	              				</ul>
 	              			</td>
 	            		</tr>

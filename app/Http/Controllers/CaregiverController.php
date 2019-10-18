@@ -9,6 +9,7 @@ use App\Us_location;
 use App\Nonservice_zipcode;
 use Validator;
 use App\State;
+use App\CaregiverAttribute;
 use App\Service_requests_attributes;
 use DB;
 use App\Mail\MailHelper;
@@ -513,7 +514,23 @@ class CaregiverController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function destroy($id){
-        //
+
+        $user = User::findOrFail($id);
+        $caregiver = Caregiver::where('user_id' , $id)->get();
+        $attributes = CaregiverAttribute::where('caregiver_id' , $id)->get();
+
+        if ($user->delete()) {
+            $response = array(
+                'status' => 'success',
+                'message' => 'Caregiver deleted successfully',
+            );
+        } else {
+            $response = array(
+                'status' => 'error',
+                'message' => 'Caregiver can not be deleted.Please try again',
+            );
+        }
+        return json_encode($response);
     }
 
     public function searchcity(Request $request){

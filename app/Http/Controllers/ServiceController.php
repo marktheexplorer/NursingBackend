@@ -141,7 +141,7 @@ class ServiceController extends Controller{
      */
     public function destroy($id)
     {
-         $service = Service::findOrFail($id);
+        $service = Service::findOrFail($id);
         if ($service->delete()) {
             $response = array(
                 'status' => 'success',
