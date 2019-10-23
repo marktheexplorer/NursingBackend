@@ -119,18 +119,14 @@ class UserController extends Controller{
                         ->update([
                             'revoked' => 1
                         ]);
-
-                    $county = Countyareas::select('id','area')->where('area', '!=' ,'0')->where('is_area_blocked', '=', '1')->orderBy('area', 'ASC')->get();
+                    
                     $token = $user->createToken($user->name)->accessToken;
+                    $data = Self::getAllListData();
 
                     if($input['type'] == 'patient'){
 
                         $userDetails =  User::where('users.id', Auth::id())->join('patients_profiles', 'users.id', 'user_id')->first();
-                        $services = DB::table('services')->select('id', 'title', 'description', 'service_image')->where('is_blocked', '=', '0')->orderBy('title', 'asc')->get();
-                        $diagnosis = Diagnose::select('id', 'title')->where('is_blocked',0)->orderBy('title', 'asc')->get();
-                        $relations = Relation::pluck('title');
-                        $user_added_relations = UserRelation::select('user_relations.*', 'relations.title')->join('relations' , 'relation_id' , 'relations.id')->where('user_id', $user->id)->get();
-
+                        
                         $success['token'] =  $token;
                         if($userDetails == null){
                             $user->height = '';
@@ -142,11 +138,11 @@ class UserController extends Controller{
                         }else{
                             $success['userDetails'] =  $userDetails ;
                         }
-                        $success['relations'] =  $relations;
-                        $success['user_added_relations'] =  $user_added_relations;
-                        $success['services'] =  $services;
-                        $success['diagnosis'] =  $diagnosis;
-                        $success['service_area'] =  $county;
+                        $success['relations'] =  $data['relations'];
+                        $success['user_added_relations'] =  $data['user_added_relations'];
+                        $success['services'] =  $data['services'];
+                        $success['diagnosis'] =  $data['diagnosis'];
+                        $success['service_area'] =  $data['county'];
                         $success['height'] = PROFILE_HEIGHT;
                         $success['weight'] = PROFILE_WEIGHT;
                         $success['language'] = PROFILE_LANGUAGE;
@@ -159,7 +155,7 @@ class UserController extends Controller{
                                     ->where('type', '=', 'service_area')->get();
                         $success['token'] =  $token;
                         $success['userDetails'] =  $userDetails;
-                        $success['service_area'] =  $county;
+                        $success['service_area'] =  $data['county'];
                     }           
 
                     return response()->json(['status_code' => $this->successStatus, 'message' => '', 'data' => $success]);
@@ -488,10 +484,64 @@ class UserController extends Controller{
     public function details()
     {
         $user = Auth::user();
+        $data = Self::getAllListData();
+
+        if($user->type == 'patient'){
+
+            $userDetails =  User::where('users.id', Auth::id())->join('patients_profiles', 'users.id', 'user_id')->first();
+            if($userDetails == null){
+                $user->height = '';
+                $user->weight = '';
+                $user->language = '';
+                $user->alt_contact_name = '';
+                $user->alt_contact_no = '';
+                $success['userDetails'] =  $user;
+            }else{
+                $success['userDetails'] =  $userDetails ;
+            }
+            $success['relations'] =  $data['relations'];
+            $success['user_added_relations'] =  $data['user_added_relations'];
+            $success['services'] =  $data['services'];
+            $success['diagnosis'] =  $data['diagnosis'];
+            $success['service_area'] =  $data['county'];
+            $success['height'] = PROFILE_HEIGHT;
+            $success['weight'] = PROFILE_WEIGHT;
+            $success['language'] = PROFILE_LANGUAGE;
+        }else{
+            $userDetails =  User::where('users.id', Auth::id())->first();
+            $userDetails['service_in'] = DB::table('caregiver_attributes')
+                        ->select('county_areas.id','county_areas.area')
+                        ->join('county_areas', 'county_areas.id','caregiver_attributes.value')
+                        ->where('caregiver_id', '=', $userDetails->id)
+                        ->where('type', '=', 'service_area')->get();
+            $success['userDetails'] =  $userDetails;
+            $success['service_area'] =  $data['county'];
+        }          
         if (!empty($user))
-            return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $user]);
+            return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $success]);
         else
             return response()->json(['status_code' => 400 , 'message' => 'Unauthorized user.', 'data' => null]);
+    }
+
+    /**
+     * listing data api
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getAllListData()
+    {
+        $success['county'] = Countyareas::select('id','area')->where('area', '!=' ,'0')->where('is_area_blocked', '=', '1')->orderBy('area', 'ASC')->get();
+
+        $success['services'] = DB::table('services')->select('id', 'title', 'description', 'service_image')->where('is_blocked', '=', '0')->orderBy('title', 'asc')->get();
+
+        $success['diagnosis'] = Diagnose::select('id', 'title')->where('is_blocked',0)->orderBy('title', 'asc')->get();
+
+        $success['relations'] = Relation::pluck('title');
+
+        $success['user_added_relations'] = UserRelation::select('user_relations.*', 'relations.title')->join('relations' , 'relation_id' , 'relations.id')->where('user_id', Auth::id())->get();
+
+        return $success;
     }
 
 
