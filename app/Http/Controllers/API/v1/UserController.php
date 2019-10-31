@@ -19,10 +19,11 @@ use App\PatientProfile;
 use App\Caregiver;
 use App\Relation;
 use App\UserRelation;
+use App\Booking;
 use Image;
 use Validator;
 use DB;
-
+use Carbon\Carbon;
 use App\Service_requests;
 use App\Service_requests_attributes;
 
@@ -419,7 +420,7 @@ class UserController extends Controller{
     {   
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:3',
-            'mobile_number' => 'required|min:9|unique:user_relations',
+            'mobile_number' => 'required|min:9|numeric|unique:user_relations',
             'relation' => 'required'
         ]);
 
@@ -551,25 +552,20 @@ class UserController extends Controller{
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function addServiceRequest(Request $request){
+    public function booking(Request $request){
         
         $input = $request->input();
         $user = Auth::user();
         $validator =  Validator::make($input,
             [
-                'booking_for' => 'required|string',
-                'date' => 'required|date',
-                'time' => 'required',
+                'relation_id' => 'required|string',
+                'booking_type' => 'required',
                 'height' =>'required',
                 'weight' =>'required',
                 'pets' => 'required',
-                'diagnosis' => 'required',
-                'service_location' => 'required',
-                'location' =>'required',
-                'country' => 'required',
-                'city' => 'required',
-                'state' => 'required',
-                'zipcode' => 'required'
+                'diagnosis_id' => 'required',
+                'service_location_id' => 'required',
+                'date'=>'date'
             ]
         );
 
@@ -577,27 +573,22 @@ class UserController extends Controller{
             return response()->json(['status_code'=> 400, 'message'=> $validator->errors()->first(), 'data' => null]);
         }
 
-        $service_request = array(
-            'user_id' => $user->id,
-            'location' => $input['location'],
-            'city' => $input['city'],
-            'state' => $input['state'],
-            'zip' => $input['zipcode'],
-            'status' => 2,
-            'start_date' => 'required',
-            'start_time' => 'required'
-        );
-        $user_profile = array(
-            'user_id' => $user->id,
-            'location' => $input['location'],
-            'city' => $input['city'],
-            'state' => $input['state'],
-            'zip' => $input['zipcode'],
-            'status' => 2,
-        );
-        DB::table('service_requests')->insert($service_request);
+        $input['user_id'] = $user->id;
+        if($input['booking_type'] == 'Today'){
+            $input['start_date'] = Carbon::now()->format('Y-m-d');
+            $input['end_date'] = Carbon::now()->format('Y-m-d');
+        }elseif($input['booking_type'] == 'Select date'){
+            $input['start_date'] = Carbon::parse($input['date'])->format('Y-m-d');
+            $input['end_date'] = Carbon::parse($input['date'])->format('Y-m-d');
+        }
 
-        return response()->json(['status_code' => $this->successStatus , 'message' => 'Booking created successfully.', 'data' => null]);
+        $booking = Booking::create($input);
+
+        if($booking){
+            return response()->json(['status_code' => $this->successStatus , 'message' => 'Booking created successfully.', 'data' => null]);
+        }else{
+            return response()->json(['status_code' => $this->errorStatus , 'message' => 'Booking not created successfully.', 'data' => null]);
+        }
     }
 
     /**

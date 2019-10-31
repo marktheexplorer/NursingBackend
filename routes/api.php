@@ -25,7 +25,6 @@ Route::group(['namespace' => 'API\v1'], function(){
 	Route::post('getDiagnose', 'UserController@getDiagnose');
 	Route::post('getCounty', 'UserController@getCounty');
 	Route::post('getCountyArea', 'UserController@getCountyArea');
-	Route::post('addServiceRequest', 'UserController@addServiceRequest');
 	Route::post('updateServiceRequest', 'UserController@updateServiceRequest');
 	Route::post('getRequestDetails', 'UserController@getRequestDetails');
 });
@@ -37,6 +36,7 @@ Route::group(['middleware' => 'auth:api', 'namespace' => 'API\v1'], function(){
 	Route::post('edit-profile', 'UserController@editProfileDetails');
 	Route::post('addUserRelation', 'UserController@addUserRelation');
 	Route::post('destroyRelation', 'UserController@destroyUserRelation');
+	Route::post('booking', 'UserController@booking');
 	Route::post('set-notification', 'UserController@setNotification');
 	Route::get('details', 'UserController@details');
 	Route::post('current-location', 'UserController@getCurrentLocation');
