@@ -113,7 +113,7 @@ class UserController extends Controller{
             if($user->email_verified){
 
                 if ($user->is_blocked) {
-                    return response()->json(['status_code' => 999, 'message' => 'Your account is blocked by admin. Please contact to admin.', 'data' => null]);
+                    return response()->json(['status_code' => 999, 'message' => 'Your account is blocked by admin. Please contact to admin: admin@gmail.com.', 'data' => null]);
                 } else {
                     DB::table('oauth_access_tokens')
                         ->where('user_id', $user->id)
@@ -257,7 +257,7 @@ class UserController extends Controller{
 
         if($user){
             if ($user->is_blocked) {
-                return response()->json(['status_code' => 999, 'message' => 'Your account is blocked by admin. Please contact to admin.', 'data' => null]);
+                return response()->json(['status_code' => 999, 'message' => 'Your account is blocked by admin. Please contact to admin: admin@gmail.com.', 'data' => null]);
             } else {
                 User::where('email', $request->input('email'))->update(['password' => Hash::make($request->input('password'))]);
                 return response()->json(['status_code' => $this->successStatus, 'message' => 'Password changed successfully.', 'data' => null]);
