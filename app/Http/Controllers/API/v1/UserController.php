@@ -230,7 +230,7 @@ class UserController extends Controller{
 
                 return response()->json(['status_code' => $this->successStatus, 'message' => 'Otp verified.', 'data'=> null]);
             } else {
-                return response()->json(['status_code' => 400, 'message' => 'Incorrect otp.', 'data'=> null]);
+                return response()->json(['status_code' => 400, 'message' => 'Incorrect OTP.', 'data'=> null]);
             }
         } else {
             return response()->json(['status_code' => 400, 'message' => 'Please enter registered email Id.', 'data'=> null]);
