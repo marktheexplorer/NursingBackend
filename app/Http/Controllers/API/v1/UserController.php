@@ -565,10 +565,29 @@ class UserController extends Controller{
                 'pets' => 'required',
                 'diagnosis_id' => 'required',
                 'service_location_id' => 'required',
-                'date'=>'date'
+                'start_date'=>'required',
+                'end_date'=>'required',
+                'weekdays' => 'array',
+                '24_hours' => 'required',
+                'start_time' => 'required',
+                'end_time' =>'required',
+                'no_of_weeks' =>'required',
+                'address' => 'required',
+                'country' => 'required',
+                'state' => 'required',
+                'city' => 'required',
+                'zip_code' => 'required',
+                'timezone' => 'required'
             ]
         );
 
+        if($input['relation_id'] == 'Myself' )
+            $input['relation_id'] = null;
+        
+        $input['diagnosis_id'] = Diagnose::select('id')->where('title', 'like', '%'.$input['diagnosis_id'].'%')->first()->id;
+
+        $input['service_location_id'] = Countyareas::select('id')->where('area', 'like', '%'.$input['service_location_id'].'%')->first()->id;
+        
         if ($validator->fails()) {
             return response()->json(['status_code'=> 400, 'message'=> $validator->errors()->first(), 'data' => null]);
         }
