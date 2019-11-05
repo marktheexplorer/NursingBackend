@@ -37,6 +37,7 @@ Route::group(['middleware' => 'auth:api', 'namespace' => 'API\v1'], function(){
 	Route::post('addUserRelation', 'UserController@addUserRelation');
 	Route::post('destroyRelation', 'UserController@destroyUserRelation');
 	Route::post('booking', 'UserController@booking');
+	Route::get('my_bookings', 'UserController@my_bookings');
 	Route::post('set-notification', 'UserController@setNotification');
 	Route::get('details', 'UserController@details');
 	Route::post('current-location', 'UserController@getCurrentLocation');

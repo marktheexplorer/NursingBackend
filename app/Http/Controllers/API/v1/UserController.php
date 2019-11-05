@@ -611,6 +611,25 @@ class UserController extends Controller{
     }
 
     /**
+     * Booking API 
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function my_bookings(){
+        $user = Auth::user();
+
+        $bookings = Booking::where('user_id' , $user->id)->get();
+
+        if($bookings){
+            return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $bookings]);
+        }else{
+            return response()->json(['status_code' => $this->errorStatus , 'message' => 'No bookings yet.', 'data' => null]);
+        }
+
+    }
+
+    /**
      * set notification status api
      *
      * @param  \Illuminate\Http\Request  $request
