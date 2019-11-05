@@ -621,7 +621,7 @@ class UserController extends Controller{
 
         $bookings = Booking::where('user_id' , $user->id)->get();
 
-        if($bookings){
+        if(count($bookings) > 0){
             return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $bookings]);
         }else{
             return response()->json(['status_code' => $this->errorStatus , 'message' => 'No bookings yet.', 'data' => null]);
