@@ -593,14 +593,6 @@ class UserController extends Controller{
         }
 
         $input['user_id'] = $user->id;
-        if($input['booking_type'] == 'Today'){
-            $input['start_date'] = Carbon::now()->format('Y-m-d');
-            $input['end_date'] = Carbon::now()->format('Y-m-d');
-        }elseif($input['booking_type'] == 'Select date'){
-            $input['start_date'] = Carbon::parse($input['start_date'])->format('Y-m-d');
-            $input['end_date'] = Carbon::parse($input['end_date'])->format('Y-m-d');
-        }
-
         $booking = Booking::create($input);
 
         if($booking){
@@ -611,7 +603,7 @@ class UserController extends Controller{
     }
 
     /**
-     * Booking API 
+     * MyBookings API 
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
