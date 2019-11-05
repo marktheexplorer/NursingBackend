@@ -597,8 +597,8 @@ class UserController extends Controller{
             $input['start_date'] = Carbon::now()->format('Y-m-d');
             $input['end_date'] = Carbon::now()->format('Y-m-d');
         }elseif($input['booking_type'] == 'Select date'){
-            $input['start_date'] = Carbon::parse($input['date'])->format('Y-m-d');
-            $input['end_date'] = Carbon::parse($input['date'])->format('Y-m-d');
+            $input['start_date'] = Carbon::parse($input['start_date'])->format('Y-m-d');
+            $input['end_date'] = Carbon::parse($input['end_date'])->format('Y-m-d');
         }
 
         $booking = Booking::create($input);
