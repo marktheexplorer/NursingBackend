@@ -553,7 +553,6 @@ class UserController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function booking(Request $request){
-        
         $input = $request->input();
         $user = Auth::user();
         $validator =  Validator::make($input,
@@ -581,18 +580,36 @@ class UserController extends Controller{
             ]
         );
 
-        if($input['relation_id'] == 'Myself' )
-            $input['relation_id'] = null;
-        
-        $input['diagnosis_id'] = Diagnose::select('id')->where('title', 'like', '%'.$input['diagnosis_id'].'%')->first()->id;
+        if($input['booking_type'] == 'Select from week' )
+            $validator = Validator::make($input, ['weekdays.0' => 'required'],['weekdays.0.required' => 'Weekdays is required.']);
 
-        $input['service_location_id'] = Countyareas::select('id')->where('area', 'like', '%'.$input['service_location_id'].'%')->first()->id;
-        
         if ($validator->fails()) {
             return response()->json(['status_code'=> 400, 'message'=> $validator->errors()->first(), 'data' => null]);
         }
 
+        if($input['relation_id'] == 'Myself' )
+            $input['relation_id'] = null;
+
+        if(($input['booking_type'] == 'Daily') || ($input['booking_type'] == 'Select date') || ($input['booking_type'] == 'Select from week')){
+            if($input['24_hours'] == '1'){
+                $input['start_time'] = '00:00:00';
+                $input['end_time'] = '23:59:59';
+            }
+        }
+
+        if($input['booking_type'] == 'Select from week'){
+             $input['start_date'] = Carbon::now()->format('m/d/Y');
+             $input['end_date'] = Carbon::now()->addweek($input['no_of_weeks'])->format('m/d/Y');
+        }
+
+
+        
+        $input['diagnosis_id'] = Diagnose::select('id')->where('title', 'like', '%'.$input['diagnosis_id'].'%')->first()->id;
+
+        $input['service_location_id'] = Countyareas::select('id')->where('area', 'like', '%'.$input['service_location_id'].'%')->first()->id;
+
         $input['user_id'] = $user->id;
+        $input['weekdays'] = serialize($input['weekdays']);
         $booking = Booking::create($input);
 
         if($booking){

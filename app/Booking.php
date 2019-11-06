@@ -14,6 +14,6 @@ class Booking extends Model
      * @var array
      */
     protected $fillable = [
-        'id', 'user_id', 'relation_id','height','weight','pets','diagnosis_id','service_location_id','address','county','state','country','zipcode','booking_type', 'caregiver_assigned','start_date','end_date','24_hours','no_of_weeks','timezone'
+        'id', 'user_id', 'relation_id','height','weight','pets','diagnosis_id','service_location_id','address','county','state','country','zipcode','booking_type', 'caregiver_assigned','start_date','end_date','24_hours','no_of_weeks','timezone','weekdays','start_time','end_time'
     ];
 }
