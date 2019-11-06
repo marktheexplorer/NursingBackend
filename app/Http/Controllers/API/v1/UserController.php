@@ -601,8 +601,6 @@ class UserController extends Controller{
              $input['start_date'] = Carbon::now()->format('m/d/Y');
              $input['end_date'] = Carbon::now()->addweek($input['no_of_weeks'])->format('m/d/Y');
         }
-
-
         
         $input['diagnosis_id'] = Diagnose::select('id')->where('title', 'like', '%'.$input['diagnosis_id'].'%')->first()->id;
 
@@ -628,7 +626,15 @@ class UserController extends Controller{
     public function my_bookings(){
         $user = Auth::user();
 
-        $bookings = Booking::where('user_id' , $user->id)->get();
+        $bookings = Booking::where('user_id' , $user->id)->get()->toArray();
+         // dd(unserialize($bookings));
+        foreach ($bookings as $key => $value) {
+            if($value['weekdays'] != null){
+                $data = array();
+                $data = unserialize($value['weekdays']);
+                $bookings[$key]['weekdays'] = $data;
+            }
+        }
 
         if(count($bookings) > 0){
             return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $bookings]);
