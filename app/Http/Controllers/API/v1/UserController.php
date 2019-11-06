@@ -627,12 +627,13 @@ class UserController extends Controller{
         $user = Auth::user();
 
         $bookings = Booking::where('user_id' , $user->id)->get()->toArray();
-         // dd(unserialize($bookings));
+         
         foreach ($bookings as $key => $value) {
             if($value['weekdays'] != null){
-                $data = array();
                 $data = unserialize($value['weekdays']);
                 $bookings[$key]['weekdays'] = $data;
+
+                $bookings[$key]['dates'] = Self::getDates($value['start_date'] , $value['end_date'] , unserialize($value['weekdays']));
             }
         }
 
@@ -642,6 +643,25 @@ class UserController extends Controller{
             return response()->json(['status_code' => $this->errorStatus , 'message' => 'No bookings yet.', 'data' => null]);
         }
 
+    }
+
+    public function getDates($startDate , $endDate ,$weekDays)
+    {
+        $startDate = Carbon::parse($startDate);
+        $endDate = Carbon::parse($endDate);
+        
+        $today=Carbon::now();
+        $data = array();
+
+        while($endDate->gte($startDate))
+        {  
+            if (in_array($today->format('D'), $weekDays)) {
+                $data[]= $startDate->format('Y-m-d');
+            }
+            $startDate = $startDate->addDay(1);
+            $today= $today->addDay(1);
+        }
+        return $data;
     }
 
     /**
