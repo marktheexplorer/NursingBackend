@@ -601,13 +601,17 @@ class UserController extends Controller{
              $input['start_date'] = Carbon::now()->format('m/d/Y');
              $input['end_date'] = Carbon::now()->addweek($input['no_of_weeks'])->format('m/d/Y');
         }
-        
-        $input['diagnosis_id'] = Diagnose::select('id')->where('title', 'like', '%'.$input['diagnosis_id'].'%')->first()->id;
+
+        foreach ($input['diagnosis_id'] as $key => $value) {
+            $input['diagnosis'][] = Diagnose::select('id')->where('title', 'like', '%'.$value.'%')->first()->id;
+        }
 
         $input['service_location_id'] = Countyareas::select('id')->where('area', 'like', '%'.$input['service_location_id'].'%')->first()->id;
 
         $input['user_id'] = $user->id;
         $input['weekdays'] = serialize($input['weekdays']);
+        $input['diagnosis_id'] = serialize($input['diagnosis']);
+        $input['status'] = 'Booking Request';
         $booking = Booking::create($input);
 
         if($booking){
@@ -635,6 +639,12 @@ class UserController extends Controller{
 
                 $bookings[$key]['dates'] = Self::getDates($value['start_date'] , $value['end_date'] , unserialize($value['weekdays']));
             }
+
+            $diagnosis = unserialize($value['diagnosis_id']);
+            foreach ($diagnosis as $a => $value) {
+                $diagnose[$a]= Diagnose::select('title')->where('id', $value)->get()->toArray()[0]['title'];
+            }
+            $bookings[$key]['diagnosis_id'] = $diagnose;
         }
 
         if(count($bookings) > 0){
