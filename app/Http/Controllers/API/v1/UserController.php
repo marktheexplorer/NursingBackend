@@ -696,7 +696,7 @@ class UserController extends Controller{
                 $bookings[$key]['caregivers'][$k]['profile_image'] = $care->caregiver->user->profile_image;
                 $bookings[$key]['caregivers'][$k]['language'] = $care->caregiver->language;
                 $bookings[$key]['caregivers'][$k]['description'] = $care->caregiver->description;
-                $bookings[$key]['caregivers'][$k]['discipline'] = Qualification::select('name')->join('caregiver_attributes' ,'caregiver_attributes.value' , 'qualifications.id')->where('type' , 'qualification')->where('caregiver_id', Auth::id())->get()->toArray();
+                $bookings[$key]['caregivers'][$k]['discipline'] = Qualification::select('name')->join('caregiver_attributes' ,'caregiver_attributes.value' , 'qualifications.id')->where('type' , 'qualification')->where('caregiver_id', $care->caregiver->user->id)->get()->toArray();
             }
         }
 
