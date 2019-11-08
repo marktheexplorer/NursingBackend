@@ -41,8 +41,4 @@ class User extends Authenticatable
         return $this->hasOne('App\PatientProfile', 'user_id', 'id');
     }
 
-    public function service(){
-        return $this->hasOne('App\Service_requests', 'service', 'id');
-    }
-
 }

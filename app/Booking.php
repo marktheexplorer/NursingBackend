@@ -14,6 +14,22 @@ class Booking extends Model
      * @var array
      */
     protected $fillable = [
-        'id', 'user_id', 'relation_id','height','weight','pets','diagnosis_id','service_location_id','address','county','state','country','zipcode','booking_type', 'caregiver_assigned','start_date','end_date','24_hours','no_of_weeks','timezone','weekdays','start_time','end_time'
+        'id', 'user_id', 'relation_id','height','weight','pets','diagnosis_id','service_location_id','address','county','state','country','zipcode','booking_type','start_date','end_date','24_hours','no_of_weeks','timezone','weekdays','start_time','end_time','status'
     ];
+
+    public function user(){
+        return $this->hasOne('App\User' , 'id' ,'user_id');
+    }
+
+    public function relation(){
+        return $this->hasOne('App\UserRelation' , 'id' ,'relation_id');
+    }
+
+    public function service_location(){
+        return $this->hasOne('App\Countyareas' , 'id' ,'service_location_id');
+    }
+
+    public function caregivers(){
+        return $this->hasMany('App\AssignedCaregiver');
+    }
 }

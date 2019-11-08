@@ -16,4 +16,8 @@ class Caregiver extends Model{
     protected $fillable = [
         'user_id', 'service', 'min_price','max_price','description','gender','height','weight','first_name','middle_name','last_name'
     ];
+
+    public function user(){
+        return $this->hasOne('App\User' , 'id' ,'user_id');
+    }
 }
