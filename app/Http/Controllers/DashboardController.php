@@ -10,7 +10,7 @@ use DB;
 use App\Faq;
 use App\Service;
 use App\Diagnose;
-use App\Service_requests;
+use App\Booking;
 
 class DashboardController extends Controller{
 
@@ -35,7 +35,7 @@ class DashboardController extends Controller{
 
         $services = Service::count();
         $diagnosis = Diagnose::count();
-        $service_requests = Service_requests::count();
+        $bookings = Booking::count();
 
         $enquiries = Enquiry::count();
         $faqs = Faq::count();
@@ -69,6 +69,6 @@ class DashboardController extends Controller{
         $chart->labels(['2 days ago', 'Yesterday', 'Today']);
         $chart->dataset('Dataset', 'line', [$users_2_days_ago, $yesterday_users, $today_users]);*/
 
-        return view('dashboard', compact('users', 'enquiries', 'chart', 'faqs' ,'services','diagnosis','service_requests'));
+        return view('dashboard', compact('users', 'enquiries', 'chart', 'faqs' ,'services','diagnosis','bookings'));
     }
 }

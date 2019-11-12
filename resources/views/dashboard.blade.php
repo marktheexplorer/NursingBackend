@@ -25,11 +25,11 @@
                 </a>
             </div>
             <div class="col-lg-3 col-md-6">
-                <a href="{{ route('service_request.index') }}">
+                <a href="{{ route('bookings.index') }}">
                     <div class="ibox bg-danger color-white widget-stat">
                         <div class="ibox-body">
-                            <h2 class="m-b-5 font-strong">{{ $service_requests }}</h2>
-                            <div class="m-b-5">Total Requests</div><i class="fas fa-calendar-week widget-stat-icon"></i>
+                            <h2 class="m-b-5 font-strong">{{ $bookings }}</h2>
+                            <div class="m-b-5">Total Bookings</div><i class="fas fa-calendar-week widget-stat-icon"></i>
                         </div>
                     </div>
                 </a>
