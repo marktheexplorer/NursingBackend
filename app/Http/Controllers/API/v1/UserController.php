@@ -682,7 +682,7 @@ class UserController extends Controller{
         foreach ($bookings as $key => $value) {
 
             if($value['relation_id'] != null){
-                $value['booking_for'] = $value->relation->name .'-'. $value->relation->user->name;
+                $value['booking_for'] = $value->relation->name .' - '. $value->relation->user->name;
             }else{
                 $value['booking_for'] = 'Myself';
             }

@@ -38,9 +38,13 @@
                 <a href="{{ route('patients.index') }}" style="{{ (request()->is('admin/patients*')) ? 'background-color:#3498db;color:#fff;' : '' }}"><i class="sidebar-item-icon fas fa fa-wheelchair"></i>
                     <span class="nav-label">Client</span></a>
             </li>
-            <li>
+           <!--  <li>
                 <a href="{{ route('service_request.index') }}" style="{{ (request()->is('admin/service_request*')) ? 'background-color:#3498db;color:#fff;' : '' }}"><i class="sidebar-item-icon fas fa-book-medical"></i>
                     <span class="nav-label">Requests</span></a>
+            </li> -->
+            <li>
+                <a href="{{ route('bookings.index') }}" style="{{ (request()->is('admin/bookings*')) ? 'background-color:#3498db;color:#fff;' : '' }}"><i class="sidebar-item-icon fas fa-book-medical"></i>
+                    <span class="nav-label">Bookings</span></a>
             </li>
             <li>
                 @if((request()->is('admin/county*')) || (request()->is('admin/services*')) || (request()->is('admin/qualifications*')) || (request()->is('admin/diagnosis*')))

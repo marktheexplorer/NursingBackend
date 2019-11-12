@@ -64,6 +64,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function()
 	Route::get('caregiver/searchzip', 'CaregiverController@searchzip');
 	Route::get('caregiver/locationfromzip', 'CaregiverController@locationfromzip');	
 	Route::resource('caregiver', 'CaregiverController');
+
+	Route::get('bookings/index', 'BookingsController@index')->name('bookings.index');
+	Route::get('bookings/{id}', 'BookingsController@show')->name('bookings.show');
+	Route::post('bookings/assign', 'BookingsController@assign')->name('bookings.assign');
 	
 	Route::get('service_request/getzip', 'ServiceRequestController@getzip');
 	Route::get('service_request/searchcity', 'ServiceRequestController@searchcity');
