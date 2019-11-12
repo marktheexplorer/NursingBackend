@@ -642,6 +642,10 @@ class UserController extends Controller{
                 $bookings[$key]['dates'] = Self::getDates($value['start_date'] , $value['end_date'] , unserialize($value['weekdays']));
             }
 
+            if($value['booking_type'] == 'Daily'){
+                $bookings[$key]['dates'] = Self::getDates($value['start_date'] , $value['end_date'] , null);
+            }
+
             $diagnosis = unserialize($value['diagnosis_id']);
             foreach ($diagnosis as $a => $value) {
                 $diagnose[$a]= Diagnose::select('title')->where('id', $value)->get()->toArray()[0]['title'];
@@ -662,16 +666,17 @@ class UserController extends Controller{
         $startDate = Carbon::parse($startDate);
         $endDate = Carbon::parse($endDate);
         
-        $today=Carbon::now();
         $data = array();
 
         while($endDate->gte($startDate))
         {  
-            if (in_array($today->format('D'), $weekDays)) {
+            if($weekDays == null){
+                $data[]= $startDate->format('Y-m-d');
+            }else if(in_array($startDate->format('D'), $weekDays)) {
                 $data[]= $startDate->format('Y-m-d');
             }
+
             $startDate = $startDate->addDay(1);
-            $today= $today->addDay(1);
         }
         return $data;
     }
