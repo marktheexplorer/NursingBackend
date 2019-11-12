@@ -547,7 +547,6 @@ class UserController extends Controller{
         return $success;
     }
 
-
     /**
      * Booking API 
      *
@@ -622,6 +621,58 @@ class UserController extends Controller{
             return response()->json(['status_code' => $this->errorStatus , 'message' => 'Booking not created successfully.', 'data' => null]);
         }
     }
+
+        /**
+     * Booking API 
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function edit_booking(Request $request){
+        $input = $request->input();
+        $user = Auth::user();
+        $booking = Booking::where('id', $input['booking_id'])->first();
+        $validator =  Validator::make($input,
+            [
+                'booking_id' => 'required',
+                'start_date'=>'required',
+                'end_date'=>'required',
+                'weekdays' => 'array',
+                '24_hours' => 'required',
+                'start_time' => 'required',
+                'end_time' =>'required',
+            ]
+        );
+
+        if($booking->booking_type == 'Select from week' )
+            $validator = Validator::make($input, ['weekdays.0' => 'required'],['weekdays.0.required' => 'Weekdays is required.']);
+
+        if ($validator->fails()) {
+            return response()->json(['status_code'=> 400, 'message'=> $validator->errors()->first(), 'data' => null]);
+        }
+
+        if(($booking->booking_type == 'Daily') || ($booking->booking_type == 'Select date') || ($booking->booking_type == 'Select from week')){
+            if($input['24_hours'] == '1'){
+                $input['start_time'] = '00:00:00';
+                $input['end_time'] = '23:59:59';
+            }
+        }
+
+        if($booking->booking_type == 'Select from week'){
+             $input['start_date'] = Carbon::now()->format('m/d/Y');
+             $input['end_date'] = Carbon::now()->addweek($input['no_of_weeks'])->format('m/d/Y');
+        }
+
+        $input['weekdays'] = serialize($input['weekdays']);
+        $booking->fill($input);
+
+        if($booking->save()){
+            return response()->json(['status_code' => $this->successStatus , 'message' => 'Booking updated successfully.', 'data' => null]);
+        }else{
+            return response()->json(['status_code' => $this->errorStatus , 'message' => 'Booking not updated successfully.', 'data' => null]);
+        }
+    }
+
 
     /**
      * MyBookings API 
