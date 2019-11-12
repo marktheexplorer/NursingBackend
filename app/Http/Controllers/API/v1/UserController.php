@@ -27,6 +27,7 @@ use DB;
 use Carbon\Carbon;
 use App\Service_requests;
 use App\Service_requests_attributes;
+use App\AssignedCaregiver;
 
 class UserController extends Controller{
     public $successStatus = 200;
@@ -704,6 +705,20 @@ class UserController extends Controller{
             return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $bookings]);
         }else{
             return response()->json(['status_code' => $this->errorStatus , 'message' => 'No bookings.', 'data' => null]);
+        }
+    }
+
+    public function request_for_booking(Request $request){
+
+        $input = $request->input();
+        $assign = AssignedCaregiver::where('booking_id' , $input['booking_id'])->where('caregiver_id', $input['caregiver_id'])->update(array('status' => 'Caregiver Requested'));
+        //Status Update
+        Booking::where('id', '=', $input['booking_id'])->update(array('status' =>  'Caregiver Requested'));
+
+        if($assign){
+            return response()->json(['status_code' => $this->successStatus , 'message' => 'Request sent successfully.', 'data' => '']);
+        }else{
+            return response()->json(['status_code' => $this->errorStatus , 'message' => 'Request not sent successfully.', 'data' => null]);
         }
     }
 

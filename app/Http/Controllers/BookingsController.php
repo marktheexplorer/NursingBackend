@@ -40,11 +40,13 @@ class BookingsController extends Controller
         $input = $request->input();
         $exists = AssignedCaregiver::where('booking_id',$input['booking_id'])->where('caregiver_id', $input['caregiver_id'])->get();
         if(count($exists) < 1){
+
             AssignedCaregiver::insert(['booking_id'=>$input['booking_id'],'caregiver_id'=> $input['caregiver_id']]);
             //Status Update
             Booking::where('id', '=', $input['booking_id'])->update(array('status' =>  'Caregiver Assigned'));
             flash()->success("Caregiver assigned.");
         }else{
+            
             AssignedCaregiver::where('booking_id',$input['booking_id'])->where('caregiver_id', $input['caregiver_id'])->delete();
             flash()->success("Caregiver removed.");
 
