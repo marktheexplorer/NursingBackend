@@ -128,8 +128,9 @@ class UserController extends Controller{
 
                     if($input['type'] == 'patient'){
 
-                        $userDetails =  User::where('users.id', Auth::id())->join('patients_profiles', 'users.id', 'user_id')->first();
-                        
+                        $userDetails =  User::where('users.id', Auth::id())->join('patients_profiles', 'users.id', 'user_id')->first(); 
+                        if($userDetails->profile_image == null)
+                            $userDetails->profile_image = 'default.png';
                         $success['token'] =  $token;
                         if($userDetails == null){
                             $user->height = '';
@@ -151,6 +152,8 @@ class UserController extends Controller{
                         $success['language'] = PROFILE_LANGUAGE;
                     }else{
                         $userDetails =  User::where('users.id', Auth::id())->first();
+                        if($userDetails['profile_image'] == null)
+                            $userDetails['profile_image'] = 'default.png';
                         $userDetails['service_in'] = DB::table('caregiver_attributes')
                                     ->select('county_areas.id','county_areas.area')
                                     ->join('county_areas', 'county_areas.id','caregiver_attributes.value')
@@ -402,7 +405,8 @@ class UserController extends Controller{
                 }
                 DB::table('caregiver_attributes')->insert($data);
             }
-            
+            if($user['profile_image'] == null)
+                $user['profile_image'] = 'default.png';
             $user['service_in'] = DB::table('caregiver_attributes')->select('county_areas.id','county_areas.area')->join('county_areas', 'county_areas.id','caregiver_attributes.value')->where('caregiver_id', '=', $user->id)->where('type', '=', 'service_area')->get();
         }
 
@@ -512,6 +516,8 @@ class UserController extends Controller{
             $success['language'] = PROFILE_LANGUAGE;
         }else{
             $userDetails =  User::where('users.id', Auth::id())->first();
+            if($userDetails['profile_image'] == null)
+                $userDetails['profile_image'] = 'default.png';
             $userDetails['service_in'] = DB::table('caregiver_attributes')
                         ->select('county_areas.id','county_areas.area')
                         ->join('county_areas', 'county_areas.id','caregiver_attributes.value')
