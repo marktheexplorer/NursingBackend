@@ -713,7 +713,7 @@ class UserController extends Controller{
         if(count($bookings) > 0){
             return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $bookings]);
         }else{
-            return response()->json(['status_code' => $this->errorStatus , 'message' => 'No bookings yet.', 'data' => null]);
+            return response()->json(['status_code' => $this->errorStatus , 'message' => '', 'data' => null]);
         }
 
     }
@@ -756,7 +756,11 @@ class UserController extends Controller{
 
             foreach ($value->caregivers as $k => $care) {
                 $bookings[$key]['caregivers'][$k]['name'] = $care->caregiver->user->name;
+                if($care->caregiver->user->profile_image == null)
+                    $bookings[$key]['caregivers'][$k]['profile_image'] = 'default.png';
+                else
                 $bookings[$key]['caregivers'][$k]['profile_image'] = $care->caregiver->user->profile_image;
+            
                 $bookings[$key]['caregivers'][$k]['language'] = $care->caregiver->language;
                 $bookings[$key]['caregivers'][$k]['description'] = $care->caregiver->description;
                 $bookings[$key]['caregivers'][$k]['discipline'] = Qualification::select('name')->join('caregiver_attributes' ,'caregiver_attributes.value' , 'qualifications.id')->where('type' , 'qualification')->where('caregiver_id', $care->caregiver->user->id)->get()->toArray();
@@ -766,7 +770,7 @@ class UserController extends Controller{
         if(count($bookings) > 0){
             return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $bookings]);
         }else{
-            return response()->json(['status_code' => $this->errorStatus , 'message' => 'No bookings.', 'data' => null]);
+            return response()->json(['status_code' => $this->errorStatus , 'message' => '', 'data' => null]);
         }
     }
 
