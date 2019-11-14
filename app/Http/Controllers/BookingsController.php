@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 class BookingsController extends Controller
 {
     public function index(){
-    	$bookings = Booking::get();
+    	$bookings = Booking::orderBy('created_at', 'DESC')->get();
         return view('bookings.index' , compact('bookings')); 
     }
 

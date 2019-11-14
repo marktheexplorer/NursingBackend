@@ -756,10 +756,10 @@ class UserController extends Controller{
 
             foreach ($value->caregivers as $k => $care) {
                 $bookings[$key]['caregivers'][$k]['name'] = $care->caregiver->user->name;
-                if($care->caregiver->user->profile_image == null)
+                if($care->caregiver->user->profile_image == null || empty($care->caregiver->user->profile_image))
                     $bookings[$key]['caregivers'][$k]['profile_image'] = 'default.png';
                 else
-                $bookings[$key]['caregivers'][$k]['profile_image'] = $care->caregiver->user->profile_image;
+                    $bookings[$key]['caregivers'][$k]['profile_image'] = $care->caregiver->user->profile_image;
             
                 $bookings[$key]['caregivers'][$k]['language'] = $care->caregiver->language;
                 $bookings[$key]['caregivers'][$k]['description'] = $care->caregiver->description;
