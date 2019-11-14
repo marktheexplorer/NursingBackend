@@ -129,7 +129,7 @@
                                         <div class="media-img col-md-3">Caregivers Assigned</div>
                                         <div class="media-body">
                                             <div class="media-heading">
-                                               @foreach($assignedCaregiversName as $key => $caregiver) {{ $key+1 }}.  {{ $caregiver }}<br> @endforeach</div>
+                                               @foreach($assignedCaregivers as $key => $caregiver) {{ $key+1 }}.  {{ $caregiver['name'] }}  ({{ $caregiver['email'] }})  <br> @endforeach</div>
                                         </div>
                                     </li>
                                 </ul>
@@ -165,7 +165,7 @@
                                             @csrf
                                                 <input type="hidden" name="booking_id" value="{{ $booking->id }}" />
                                                 <input type="hidden" name="caregiver_id" value="{{ $caregiver->caregiverId }}" />
-                                                @if(in_array($caregiver->caregiverId, $assignedCaregivers))
+                                                @if(in_array($caregiver->caregiverId, $assignedCaregiversId))
                                                 <input type="checkbox" title="Un-Assign" checked class="form-control" style="cursor: pointer;" onclick="$(this).closest('form').submit();">
                                                 @else
                                                 <input type="checkbox" title="Assign" class="form-control" style="cursor: pointer;" onclick="$(this).closest('form').submit();">

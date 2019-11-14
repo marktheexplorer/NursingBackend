@@ -22,17 +22,18 @@ class BookingsController extends Controller
 
         $assigned_caregivers = AssignedCaregiver::where('booking_id',$id)->get();
         $assignedCaregivers = array();
+        $assignedCaregiversId = array();
         foreach ($assigned_caregivers as $key => $value) {
-            $assignedCaregivers[] = $value->caregiver_id;
-            $assignedCaregiversName[] = $value->caregiver->user->name;
+            $assignedCaregiversId[] = $value->caregiver_id;
+            $assignedCaregivers[$key]['name'] = $value->caregiver->user->name;
+            $assignedCaregivers[$key]['email'] = $value->caregiver->user->email;
         }
-
     	foreach (unserialize($booking->diagnosis_id) as $key => $value) {
     		$diagnosis[] = Diagnose::select('title')->where('id', $value)->get()[0]->title;
     	}
     	$diagnosis = implode(',', $diagnosis);
 
-    	return view('bookings.view' , compact('booking','caregivers','diagnosis','assignedCaregivers','assignedCaregiversName')); 
+    	return view('bookings.view' , compact('booking','caregivers','diagnosis','assignedCaregivers','assignedCaregiversId')); 
 
     }
 
