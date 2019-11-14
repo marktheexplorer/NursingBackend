@@ -24,6 +24,7 @@ class BookingsController extends Controller
         $assignedCaregivers = array();
         foreach ($assigned_caregivers as $key => $value) {
             $assignedCaregivers[] = $value->caregiver_id;
+            $assignedCaregiversName[] = $value->caregiver->user->name;
         }
 
     	foreach (unserialize($booking->diagnosis_id) as $key => $value) {
@@ -31,7 +32,7 @@ class BookingsController extends Controller
     	}
     	$diagnosis = implode(',', $diagnosis);
 
-    	return view('bookings.view' , compact('booking','caregivers','diagnosis','assignedCaregivers')); 
+    	return view('bookings.view' , compact('booking','caregivers','diagnosis','assignedCaregivers','assignedCaregiversName')); 
 
     }
 

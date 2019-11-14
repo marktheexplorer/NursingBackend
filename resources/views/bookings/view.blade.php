@@ -128,7 +128,8 @@
                                     <li class="media">
                                         <div class="media-img col-md-3">Caregivers Assigned</div>
                                         <div class="media-body">
-                                            <div class="media-heading">{{ $booking->caregiver_assigned }}</div>
+                                            <div class="media-heading">
+                                               @foreach($assignedCaregiversName as $key => $caregiver) {{ $key+1 }}.  {{ $caregiver }}<br> @endforeach</div>
                                         </div>
                                     </li>
                                 </ul>
