@@ -28,6 +28,7 @@ use Carbon\Carbon;
 use App\Service_requests;
 use App\Service_requests_attributes;
 use App\AssignedCaregiver;
+use Twilio\Rest\Client;
 
 class UserController extends Controller{
     public $successStatus = 200;
@@ -40,22 +41,14 @@ class UserController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function register(Request $request)
-    {   
+    {  
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:40',
-            'email' => 'required|email',
-            'password' => 'required|min:6',
+            'email' => 'required|email|unique:users',
+            'mobile_number' => 'required|numeric|unique:users',
+            'country_code' => 'required|numeric',
             'type' => ['required', Rule::in(['caregiver', 'patient'])],
-        ]);
-
-        $user_exist = User::where('email', $request->email)->first();
-        if($user_exist){
-            if($user_exist->email_verified == 0)
-            return response()->json(['status_code' => 300, 'message' => 'Your email is not verified . Please verify your email first.', 'data' => null]);
-
-            else
-            return response()->json(['status_code' => 400, 'message' => 'Email already exists.', 'data' => null]);    
-        }
+        ]);        
 
         if ($validator->fails())
             return response()->json(['status_code'=> $this->errorStatus, 'message'=> $validator->errors()->first(), 'data' => null]);
@@ -67,27 +60,130 @@ class UserController extends Controller{
         else
             $input['role_id'] = 3;
 
-        $input['password'] = Hash::make($input['password']);
-        $input['email_activation_token'] = str_random(60);
+        $input['otp'] = rand(1000,9999);
         $user = User::create($input);
 
-        if($user && $input['type'] == 'patient'){
+        if($user && $input['type'] == 'patient')
+        {
             $profile['user_id'] = $user->id;
             $profile['f_name'] = $input['name'];
             $profile = PatientProfile::create($profile);
-        }elseif($user && $input['type'] == 'caregiver'){
+        } elseif($user && $input['type'] == 'caregiver')
+        {
             $caregiver['user_id'] = $user->id;
             $caregiver['first_name'] = $input['name'];
             $caregiver = Caregiver::create($caregiver);
         }
 
         if ($user) {
-            User::where('email',$input['email'])->update(['otp' => rand(1000,9999)]);
-            $user = User::where('email', $input['email'])->first();
-            Mail::to($input['email'])->send(new VerifyMail($user));
-            return response()->json(['status_code' => 300, 'message' => 'Your email is not verified . Please verify your email first.', 'data' => null]);
+            $data = Self::sendTwilioOTP($input['mobile_number'], $input['country_code'], $input['otp']); 
+            return response()->json(['status_code' => 300, 'message' => 'Please verify the mobile number to proceed. Otp, send it to your registered mobile number.', 'data' => null]);
         } else {
             return response()->json(['status_code' => $this->errorStatus, 'message' => 'Unable to register. Please try again.', 'data'=> null]);
+        }
+    }
+
+    public function sendTwilioOTP($mobileNumber , $countryCode, $otp)
+    {
+        $client = new Client(env('TWILIO_SID'), env('TWILIO_TOKEN'));
+        $response = $client->messages->create(
+            // the number you'd like to send the message to
+            // '+'.$countryCode.$mobileNumber ,
+            '+918447690923',
+            array(
+                // A Twilio phone number you purchased at twilio.com/console
+                'from' => '+13343397984',
+                // the body of the text message you'd like to send
+                'body' => 'Your OTP is '.$otp.'. Enter this code to verify your phone number.'
+            )
+        )->toArray();
+
+        return $response;
+
+    }
+
+    /**
+     * Verify OTP api
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function verifyOtp(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'country_code' => 'required|numeric',
+            'mobile_number' => 'required|numeric',
+            'otp' => 'required|max:4'
+        ],[
+            'required' => 'Please enter :attribute.'
+        ]);
+
+        if ($validator->fails())
+            return response()->json(['status_code'=> $this->errorStatus, 'message'=> $validator->errors()->first(), 'data' => null]);
+
+        $check = User::where('mobile_number', $request->input('mobile_number'))->first();
+
+        if ($check) {
+            $user = User::where('mobile_number', $request->input('mobile_number'))->where('otp', $request->input('otp'))->first();
+
+            if ($user) {
+                $user->otp = '';
+                $user->mobile_number_verified = 1;
+                $user->save();
+
+                DB::table('oauth_access_tokens')
+                    ->where('user_id', $user->id)
+                    ->update([
+                        'revoked' => 1
+                    ]);
+
+                $token = $user->createToken($user->name)->accessToken;
+                $data = Self::getAllListData();
+
+                if($user->type == 'patient'){
+
+                    $userDetails =  User::where('users.id', $user->id)->join('patients_profiles', 'users.id', 'user_id')->first(); 
+                    if($userDetails->profile_image == null)
+                        $userDetails->profile_image = 'default.png';
+                    $success['token'] =  $token;
+                    if($userDetails == null){
+                        $user->height = '';
+                        $user->weight = '';
+                        $user->language = '';
+                        $user->alt_contact_name = '';
+                        $user->alt_contact_no = '';
+                        $success['userDetails'] =  $user;
+                    }else{
+                        $success['userDetails'] =  $userDetails ;
+                    }
+                    $success['relations'] =  $data['relations'];
+                    $success['user_added_relations'] =  $data['user_added_relations'];
+                    $success['services'] =  $data['services'];
+                    $success['diagnosis'] =  $data['diagnosis'];
+                    $success['service_area'] =  $data['county'];
+                    $success['height'] = PROFILE_HEIGHT;
+                    $success['weight'] = PROFILE_WEIGHT;
+                    $success['language'] = PROFILE_LANGUAGE;
+                }else{
+                    $userDetails =  User::where('users.id', Auth::id())->first();
+                    if($userDetails['profile_image'] == null)
+                        $userDetails['profile_image'] = 'default.png';
+                    $userDetails['service_in'] = DB::table('caregiver_attributes')
+                                ->select('county_areas.id','county_areas.area')
+                                ->join('county_areas', 'county_areas.id','caregiver_attributes.value')
+                                ->where('caregiver_id', '=', $userDetails->id)
+                                ->where('type', '=', 'service_area')->get();
+                    $success['token'] =  $token;
+                    $success['userDetails'] =  $userDetails;
+                    $success['service_area'] =  $data['county'];
+                } 
+
+                return response()->json(['status_code' => $this->successStatus, 'message' => 'Otp verified.', 'data'=> $success]);
+            } else {
+                return response()->json(['status_code' => 400, 'message' => 'Incorrect OTP.', 'data'=> null]);
+            }
+        } else {
+            return response()->json(['status_code' => 400, 'message' => 'Please enter registered mobile number.', 'data'=> null]);
         }
     }
 
@@ -100,8 +196,8 @@ class UserController extends Controller{
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required',
-            'password' => 'required|min:6',
+            'country_code' =>'required|numeric',
+            'mobile_number' => 'required|numeric',
             'type' => ['required', Rule::in(['caregiver', 'patient'])]
         ]);
 
@@ -109,66 +205,24 @@ class UserController extends Controller{
             return response()->json(['status_code'=> $this->errorStatus, 'message'=> $validator->errors()->first(), 'data' => null]);
 
             $input = $request->input();
+            $user = User::where('mobile_number', $input['mobile_number'])->where('type' , $input['type'])->first();
+        if ($user) {
+            if ($user->is_blocked) {
+                return response()->json(['status_code' => 999, 'message' => 'Your account is blocked by admin. Please contact to admin: admin@gmail.com.', 'data' => null]);
+            } else {
+                DB::table('oauth_access_tokens')
+                    ->where('user_id', $user->id)
+                    ->update([
+                        'revoked' => 1
+                    ]);
+                    $input['otp'] = rand(1000,9999);
 
-        if (Auth::attempt(['email' => $input['email'], 'password' => $input['password'] , 'type' => $input['type']])) {
-            $user = Auth::user();
-            if($user->email_verified){
-
-                if ($user->is_blocked) {
-                    return response()->json(['status_code' => 999, 'message' => 'Your account is blocked by admin. Please contact to admin: admin@gmail.com.', 'data' => null]);
-                } else {
-                    DB::table('oauth_access_tokens')
-                        ->where('user_id', $user->id)
-                        ->update([
-                            'revoked' => 1
-                        ]);
-                    
-                    $token = $user->createToken($user->name)->accessToken;
-                    $data = Self::getAllListData();
-
-                    if($input['type'] == 'patient'){
-
-                        $userDetails =  User::where('users.id', Auth::id())->join('patients_profiles', 'users.id', 'user_id')->first(); 
-                        if($userDetails->profile_image == null)
-                            $userDetails->profile_image = 'default.png';
-                        $success['token'] =  $token;
-                        if($userDetails == null){
-                            $user->height = '';
-                            $user->weight = '';
-                            $user->language = '';
-                            $user->alt_contact_name = '';
-                            $user->alt_contact_no = '';
-                            $success['userDetails'] =  $user;
-                        }else{
-                            $success['userDetails'] =  $userDetails ;
-                        }
-                        $success['relations'] =  $data['relations'];
-                        $success['user_added_relations'] =  $data['user_added_relations'];
-                        $success['services'] =  $data['services'];
-                        $success['diagnosis'] =  $data['diagnosis'];
-                        $success['service_area'] =  $data['county'];
-                        $success['height'] = PROFILE_HEIGHT;
-                        $success['weight'] = PROFILE_WEIGHT;
-                        $success['language'] = PROFILE_LANGUAGE;
-                    }else{
-                        $userDetails =  User::where('users.id', Auth::id())->first();
-                        if($userDetails['profile_image'] == null)
-                            $userDetails['profile_image'] = 'default.png';
-                        $userDetails['service_in'] = DB::table('caregiver_attributes')
-                                    ->select('county_areas.id','county_areas.area')
-                                    ->join('county_areas', 'county_areas.id','caregiver_attributes.value')
-                                    ->where('caregiver_id', '=', $userDetails->id)
-                                    ->where('type', '=', 'service_area')->get();
-                        $success['token'] =  $token;
-                        $success['userDetails'] =  $userDetails;
-                        $success['service_area'] =  $data['county'];
-                    }           
-
-                    return response()->json(['status_code' => $this->successStatus, 'message' => '', 'data' => $success]);
-                } 
-            }else{
-                return response()->json(['status_code' => 300, 'message' => 'Your email is not verified . Please verify your email first.', 'data' => null]);
-            }
+                    $user->otp = $input['otp'];
+                    $user->save();
+               
+                    $data = Self::sendTwilioOTP($input['mobile_number'], $input['country_code'], $input['otp']); 
+                return response()->json(['status_code' => $this->successStatus, 'message' => 'Please verify the mobile number to proceed. Otp, send it to your registered mobile number.', 'data' => '']);
+            } 
         } else {
             return response()->json(['status_code' => $this->errorStatus, 'message' => 'You have entered invalid credentials.', 'data' => null]);
         }
@@ -199,48 +253,6 @@ class UserController extends Controller{
         }
     }
 
-    /**
-     * Verify OTP api
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function verifyOtp(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required',
-            'otp' => 'required|max:4'
-        ],[
-            'required' => 'Please enter :attribute.'
-        ]);
-
-        if ($validator->fails())
-            return response()->json(['status_code'=> $this->errorStatus, 'message'=> $validator->errors()->first(), 'data' => null]);
-
-        $check = User::where('email', $request->input('email'))->first();
-
-        if ($check) {
-            $otp = User::where('email', $request->input('email'))->where('otp', $request->input('otp'))->first();
-
-            if ($otp) {
-                $otp->otp = '';
-                $otp->email_verified = 1;
-                $otp->save();
-
-                DB::table('oauth_access_tokens')
-                    ->where('user_id', $otp->id)
-                    ->update([
-                        'revoked' => 1
-                    ]);
-
-                return response()->json(['status_code' => $this->successStatus, 'message' => 'Otp verified.', 'data'=> null]);
-            } else {
-                return response()->json(['status_code' => 400, 'message' => 'Incorrect OTP.', 'data'=> null]);
-            }
-        } else {
-            return response()->json(['status_code' => 400, 'message' => 'Please enter registered email Id.', 'data'=> null]);
-        }
-    }
 
     /**
      * Reset password api
