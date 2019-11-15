@@ -77,6 +77,7 @@ class UserController extends Controller{
 
         if ($user) {
             $data = Self::sendTwilioOTP($input['mobile_number'], $input['country_code'], $input['otp']); 
+
             return response()->json(['status_code' => 300, 'message' => 'Please verify the mobile number to proceed. Otp, send it to your registered mobile number.', 'data' => null]);
         } else {
             return response()->json(['status_code' => $this->errorStatus, 'message' => 'Unable to register. Please try again.', 'data'=> null]);
@@ -89,7 +90,7 @@ class UserController extends Controller{
         $response = $client->messages->create(
             // the number you'd like to send the message to
             // '+'.$countryCode.$mobileNumber ,
-            '+918447690923',
+            '+919990575919',
             array(
                 // A Twilio phone number you purchased at twilio.com/console
                 'from' => '+13343397984',
