@@ -59,3 +59,29 @@ padding:10px;}
   .lineAlign{
     line-height: 1.5 !important;
   }
+
+  
+.select2-container:after {
+  content: '';
+  position: absolute;
+  border-top: 6px solid #495057;
+  border-left: 3px solid transparent;
+  border-right: 3px solid transparent;
+  right: 8px;
+  top: 13px;
+  z-index: 9;
+}
+#sidebar-collapse {
+  height: calc(100vh - 50px);
+  overflow: auto;
+}
+#sidebar-collapse::-webkit-scrollbar {
+  width: 7px;
+}
+#sidebar-collapse::-webkit-scrollbar-thumb {
+  background: #64b1e7;
+}
+#sidebar-collapse::-webkit-scrollbar-track {
+  background: #022f6d;
+  border-radius: 30px;
+}
