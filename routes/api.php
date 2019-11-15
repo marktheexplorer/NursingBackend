@@ -42,6 +42,7 @@ Route::group(['middleware' => 'auth:api', 'namespace' => 'API\v1'], function(){
 	Route::get('caregiverRequestsList', 'UserController@caregiverRequestsList');
 	Route::post('request-booking', 'UserController@request_for_booking');
 	Route::post('edit-booking', 'UserController@edit_booking');
+	Route::post('delete-booking', 'UserController@delete_booking');
 	Route::post('set-notification', 'UserController@setNotification');
 	Route::get('details', 'UserController@details');
 	Route::post('current-location', 'UserController@getCurrentLocation');

@@ -89,7 +89,7 @@ class UserController extends Controller{
         $response = $client->messages->create(
             // the number you'd like to send the message to
             // '+'.$countryCode.$mobileNumber ,
-            '+919990575919',
+            '+918447690923',
             array(
                 // A Twilio phone number you purchased at twilio.com/console
                 'from' => '+13343397984',
@@ -634,6 +634,25 @@ class UserController extends Controller{
             return response()->json(['status_code' => $this->successStatus , 'message' => 'Booking updated successfully.', 'data' => null]);
         }else{
             return response()->json(['status_code' => $this->errorStatus , 'message' => 'Booking not updated successfully.', 'data' => null]);
+        }
+    }
+
+    /**
+     * Delete Booking API 
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function delete_booking(Request $request){
+        $input = $request->input();
+        $user = Auth::user();
+        $booking = Booking::where('id', $input['booking_id'])->delete();
+        $assignedCaregivers = AssignedCaregiver::where('booking_id',$input['booking_id'])->delete();
+
+        if($booking){
+            return response()->json(['status_code' => $this->successStatus , 'message' => 'Booking deleted successfully.', 'data' => null]);
+        }else{
+            return response()->json(['status_code' => $this->errorStatus , 'message' => 'Booking not deleted successfully.', 'data' => null]);
         }
     }
 
