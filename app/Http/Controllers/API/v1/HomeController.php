@@ -19,12 +19,6 @@ class HomeController extends Controller
      */
     public function dashboard()
     {
-       $tecks = Teck::where('user_id', Auth::id())->orderBy('updated_at', 'desc')->get();
-
-        if (count($tecks) > 0)
-            return response()->json(['status_code'=> 200, 'message'=> null, 'data' => $tecks]);
-        else
-            return response()->json(['status_code'=> 400, 'message'=> 'No teck found.' ,'data' => null]);
     }
 
     /**
