@@ -18,6 +18,7 @@ Route::group(['namespace' => 'API\v1'], function(){
 	Route::post('login', 'UserController@login');
 	Route::post('forgot-password', 'UserController@forgotPassword');
 	Route::post('verify-otp', 'UserController@verifyOtp');
+	Route::post('resend-otp', 'UserController@resendOtp');
 	Route::post('send-otp', 'UserController@sendOtp');	
 	Route::post('reset-password', 'UserController@resetPassword');
 	Route::post('getDisciplineList', 'UserController@getDisciplineList');

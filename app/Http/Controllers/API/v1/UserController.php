@@ -77,7 +77,6 @@ class UserController extends Controller{
 
         if ($user) {
             $data = Self::sendTwilioOTP($input['mobile_number'], $input['country_code'], $input['otp']); 
-
             return response()->json(['status_code' => 300, 'message' => 'Please verify the mobile number to proceed. Otp, send it to your registered mobile number.', 'data' => null]);
         } else {
             return response()->json(['status_code' => $this->errorStatus, 'message' => 'Unable to register. Please try again.', 'data'=> null]);
@@ -122,10 +121,10 @@ class UserController extends Controller{
         if ($validator->fails())
             return response()->json(['status_code'=> $this->errorStatus, 'message'=> $validator->errors()->first(), 'data' => null]);
 
-        $check = User::where('mobile_number', $request->input('mobile_number'))->first();
+        $check = User::where('mobile_number', $request->input('mobile_number'))->where('country_code', $request->input('country_code'))->first();
 
         if ($check) {
-            $user = User::where('mobile_number', $request->input('mobile_number'))->where('otp', $request->input('otp'))->first();
+            $user = User::where('mobile_number', $request->input('mobile_number'))->where('country_code', $request->input('country_code'))->where('otp', $request->input('otp'))->first();
 
             if ($user) {
                 $user->otp = '';
@@ -206,7 +205,7 @@ class UserController extends Controller{
             return response()->json(['status_code'=> $this->errorStatus, 'message'=> $validator->errors()->first(), 'data' => null]);
 
             $input = $request->input();
-            $user = User::where('mobile_number', $input['mobile_number'])->where('type' , $input['type'])->first();
+            $user = User::where('mobile_number', $input['mobile_number'])->where('country_code', $input['country_code'])->where('type' , $input['type'])->first();
         if ($user) {
             if ($user->is_blocked) {
                 return response()->json(['status_code' => 999, 'message' => 'Your account is blocked by admin. Please contact to admin: admin@gmail.com.', 'data' => null]);
@@ -230,93 +229,39 @@ class UserController extends Controller{
     }
 
     /**
-     * Forgot / Reset password api
+     * Resend OTP api
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function forgotPassword(Request $request)
+    public function resendOtp(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required',
-            'type' => ['required', Rule::in(['caregiver', 'patient'])]
-        ]);
-
-        $userDetails = User::where('email', $request->input('email'))->where('type' ,$request->input('type') )->first();
-        if ($userDetails) {
-            User::where('email', $request->input('email'))->update(['otp' => rand(1000,9999)]);
-            $user = User::where('email', $request->input('email'))->first();
-            Mail::to($request->input('email'))->send(new ForgotPassword($user));
-
-            return response()->json(['status_code' => $this->successStatus , 'message' => 'Your one time password has been sent to your mail.', 'data' => null]);
-        } else {
-            return response()->json(['status_code' => $this->errorStatus , 'message' => 'Unauthorized user.', 'data' => null]);
-        }
-    }
-
-
-    /**
-     * Reset password api
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function resetPassword(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required',
-            'password' => 'required|min:6',
+            'country_code' => 'required|numeric',
+            'mobile_number' => 'required|numeric',
         ]);
 
         if ($validator->fails())
-            return response()->json(['status_code'=> 400, 'message'=> $validator->errors()->first(), 'data' => null]);
+            return response()->json(['status_code'=> $this->errorStatus, 'message'=> $validator->errors()->first(), 'data' => null]);
+        $input = $request->input();
+        $user = User::where('mobile_number', $request->input('mobile_number'))->where('country_code', $request->input('country_code'))->first();
 
-        $user = User::where('email',$request->input('email'))->first();
+        if ($user) {
 
-        if($user){
-            if ($user->is_blocked) {
-                return response()->json(['status_code' => 999, 'message' => 'Your account is blocked by admin. Please contact to admin: admin@gmail.com.', 'data' => null]);
-            } else {
-                User::where('email', $request->input('email'))->update(['password' => Hash::make($request->input('password'))]);
-                return response()->json(['status_code' => $this->successStatus, 'message' => 'Password changed successfully.', 'data' => null]);
-            }
+            $input['otp'] = rand(1000,9999);
+
+            $user->otp = $input['otp'];
+            $user->save();
+       
+            $data = Self::sendTwilioOTP($input['mobile_number'], $input['country_code'], $input['otp']); 
+
+            return response()->json(['status_code' => 200, 'message' => 'Please verify the mobile number to proceed. Otp, send it to your registered mobile number.', 'data'=> null]);
+            
         } else {
-            return response()->json(['status_code' => 400 , 'message' => 'Unauthorized user.', 'data' => null]);
+            return response()->json(['status_code' => 400, 'message' => 'Please enter registered mobile number.', 'data'=> null]);
         }
     }
 
-    /**
-     * change password api
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function changePassword(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'old_password' => 'required|min:6',
-            'new_password' => 'required|min:6',
-        ]);
-
-        if ($validator->fails())
-            return response()->json(['status_code'=> 400, 'message'=> $validator->errors()->first(), 'data' => null]);
-
-        $user = Auth::user();
-
-        if (!empty($user)) {
-            if (Hash::check($request->input('old_password'), Auth::user()->password)) {
-                $user = User::findOrFail(Auth::id());
-                $user->password = Hash::make($request->input('new_password'));
-                $user->save();
-
-                return response()->json(['status_code' => $this->successStatus , 'message' => 'Password updated successfully.', 'data' => null]);
-            } else {
-                return response()->json(['status_code' => 400 , 'message' => 'Old password is not correct.', 'data' => null]);
-            }
-        } else {
-            return response()->json(['status_code' => 400 , 'message' => 'Unauthorized user.', 'data' => null]);
-        }
-    }
 
     /**
      * logout api
