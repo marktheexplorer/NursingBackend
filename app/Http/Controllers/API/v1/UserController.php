@@ -77,8 +77,7 @@ class UserController extends Controller{
         $client = new Client(env('TWILIO_SID'), env('TWILIO_TOKEN'));
         $response = $client->messages->create(
             // the number you'd like to send the message to
-            // '+'.$countryCode.$mobileNumber ,
-            '+918447690923',
+            '+'.$countryCode.$mobileNumber ,
             array(
                 // A Twilio phone number you purchased at twilio.com/console
                 'from' => '+13343397984',
