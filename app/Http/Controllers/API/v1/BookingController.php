@@ -186,11 +186,11 @@ class BookingController extends Controller
     public function my_bookings(){
         $user = Auth::user();
 
-        $bookings = Booking::where('user_id' , $user->id)->get()->toArray();
+        $bookings = Booking::where('user_id' , $user->id)->with('relation')->with('user')->get()->toArray();
          
         foreach ($bookings as $key => $value) {
             if($value['relation_id'] != null){
-                $bookings[$key]['booking_for'] = $value->relation->name .' - '. $value->relation->user->name;
+                $bookings[$key]['booking_for'] = $value['relation']['name'] .' - '. $value['user']['name'];
             }else{
                 $bookings[$key]['booking_for'] = 'Myself';
             }
