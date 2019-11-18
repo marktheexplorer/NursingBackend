@@ -194,8 +194,14 @@ class BookingController extends Controller
                 'end_date'=>'required',
                 'weekdays' => 'array',
                 '24_hours' => 'required',
+                'service_location_id' => 'required',
                 'start_time' => 'required',
                 'end_time' =>'required',
+                'address' => 'required',
+                'country' => 'required',
+                'state' => 'required',
+                'city' => 'required',
+                'zip_code' => 'required',
             ]
         );
 
@@ -217,6 +223,8 @@ class BookingController extends Controller
              $input['start_date'] = Carbon::now()->format('m/d/Y');
              $input['end_date'] = Carbon::now()->addweek($input['no_of_weeks'])->format('m/d/Y');
         }
+        
+        $input['service_location_id'] = Countyareas::select('id')->where('area', 'like', '%'.$input['service_location_id'].'%')->first()->id;
 
         $input['weekdays'] = serialize($input['weekdays']);
         $booking->fill($input);
