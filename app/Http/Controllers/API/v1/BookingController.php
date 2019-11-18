@@ -10,6 +10,7 @@ use App\Diagnose;
 use App\Countyareas;
 use App\Booking;
 use App\Qualification;
+use App\Relation;
 use Validator;
 use DB;
 use Carbon\Carbon;
@@ -186,11 +187,12 @@ class BookingController extends Controller
     public function my_bookings(){
         $user = Auth::user();
 
-        $bookings = Booking::where('user_id' , $user->id)->with('relation')->with('user')->get()->toArray();
+        $bookings = Booking::where('user_id' , $user->id)->with('relation')->get()->toArray();
          
         foreach ($bookings as $key => $value) {
             if($value['relation_id'] != null){
-                $bookings[$key]['booking_for'] = $value['relation']['name'] .' - '. $value['user']['name'];
+                $relation = Relation::where('id' , $value['relation']['relation_id'])->first();
+                $bookings[$key]['booking_for'] = $value['relation']['name'] .' - '. $relation['title'];
             }else{
                 $bookings[$key]['booking_for'] = 'Myself';
             }
