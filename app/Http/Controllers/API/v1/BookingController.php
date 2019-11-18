@@ -64,17 +64,11 @@ class BookingController extends Controller
         if($input['relation_id'] == 'Myself' )
             $input['relation_id'] = null;
 
-       // if($input['booking_type'] == 'Today'){
-        	// $bookings = Booking::where('relation_id' , $input['relation_id'])->where('start_date' ,'>=' , $input['start_date'])->where('start_date' ,'<=', $input['end_date'])->get();
-        	
-        	//\DB::connection()->enableQueryLog();
-        	// $bookings = Booking::select('*')->where('relation_id' , $input['relation_id'])->whereRaw("STR_TO_DATE(".$input['start_date'].", 'm/d/Y') between STR_TO_DATE(start_date , 'm/d/Y') AND STR_TO_DATE(end_date , 'm/d/Y')")->get();
-        	// $query = \DB::getQueryLog();
-        	// Log::info($query);
-        	// Log::info('da');
+        $result = Self::validateBooking($input['start_date'], $input['end_date'], $input['start_time'], $input['end_time'], $input['booking_type'], $input['relation_id'], Auth::id(), $input['weekdays']);
 
-        	// select * from `bookings` where `relation_id` is null and STR_TO_DATE(11/15/2019, 'm/d/Y') between STR_TO_DATE(start_date , 'm/d/Y') AND STR_TO_DATE(end_date , 'm/d/Y') 
-    //    }
+        if($result == 'true'){
+            return response()->json(['status_code' => $this->errorStatus , 'message' => 'You already have a booking at the specified time.', 'data' => null]);
+        }
 
         if(($input['booking_type'] == 'Daily') || ($input['booking_type'] == 'Select date') || ($input['booking_type'] == 'Select from week')){
             if($input['24_hours'] == '1'){
@@ -105,6 +99,82 @@ class BookingController extends Controller
         }else{
             return response()->json(['status_code' => $this->errorStatus , 'message' => 'Booking not created successfully.', 'data' => null]);
         }
+    }
+
+    public function validateBooking($startDate , $endDate , $startTime , $endTime, $bookingType, $relationId, $id, $weekDays)
+    {
+        $startDate = Carbon::parse($startDate);
+        $endDate = Carbon::parse($endDate);
+
+        $bookings = Booking::where('relation_id' , $relationId)->where('user_id', $id)->get();
+
+        if($bookingType == 'Today' || $bookingType == 'Select date'){
+            
+            if(count($bookings) > 0){
+                foreach ($bookings as $key => $booking) {
+                $booking_startDate = Carbon::parse($booking->start_date);
+                $booking_endDate = Carbon::parse($booking->end_date);
+
+                    if(($startDate->gte($booking_startDate) && $startDate->lte($booking_endDate))||($endDate->gte($booking_startDate) && $endDate->lte($booking_endDate))){
+
+                        if (($startTime >= $booking->start_time && $startTime <= $booking->end_time)||($endTime >= $booking->start_time && $endTime <= $booking->end_time)) 
+                        {
+                            $result = true;
+
+                        }else{ $result = false; }
+
+                    }else{ $result = false; }
+                }
+            }else{ $result = false; }
+
+        }else if($bookingType == 'Daily'){
+            if(count($bookings) > 0){
+                foreach ($bookings as $key => $booking) {
+                $booking_startDate = Carbon::parse($booking->start_date);
+                $booking_endDate = Carbon::parse($booking->end_date);
+
+                    if(($startDate->gte($booking_startDate) && $startDate->lte($booking_endDate))||($endDate->gte($booking_startDate) && $endDate->lte($booking_endDate))){
+
+                        if (($startTime >= $booking->start_time && $startTime <= $booking->end_time)||($endTime >= $booking->start_time && $endTime <= $booking->end_time)) 
+                        {
+                            $result = true;
+
+                        }else{ $result = false; }
+
+                    }else if(($booking_startDate->gte($startDate) && $booking_startDate->lte($endDate))||($booking_endDate->gte($startDate) && $booking_endDate->lte($endDate))){
+
+                        if (($startTime >= $booking->start_time && $startTime <= $booking->end_time)||($endTime >= $booking->start_time && $endTime <= $booking->end_time)) 
+                        {
+                            $result = true;
+
+                        }else{ $result = false; }                        
+
+                    }else{ $result = false; }    
+                }
+            }else{ $result = false; }
+
+        }else if($bookingType == 'Select from week'){
+            if(count($bookings) > 0){
+                foreach ($bookings as $key => $booking) {
+                $booking_startDate = Carbon::parse($booking->start_date);
+                $booking_endDate = Carbon::parse($booking->end_date);
+
+                $dates = Self::getDates($startDate , $endDate , $weekDays);
+
+                    while($endDate->gte($startDate))
+                    {  
+                        if(in_array($booking_startDate->format('Y-m-d'), $dates))
+                            $result = true;
+                        else
+                            $result = false;
+                        $startDate = $startDate->addDay(1);
+                    }
+                }
+            }else{ $result = false; }
+            
+        }
+
+        return $result;
     }
 
         /**
