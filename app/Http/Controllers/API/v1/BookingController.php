@@ -14,6 +14,7 @@ use Validator;
 use DB;
 use Carbon\Carbon;
 use App\AssignedCaregiver;
+use Log;
 
 class BookingController extends Controller
 {	
@@ -40,6 +41,7 @@ class BookingController extends Controller
                 'start_date'=>'required',
                 'end_date'=>'required',
                 'weekdays' => 'array',
+                'weekdays.0' => 'sometimes|required',
                 '24_hours' => 'required',
                 'start_time' => 'required',
                 'end_time' =>'required',
@@ -50,18 +52,28 @@ class BookingController extends Controller
                 'city' => 'required',
                 'zip_code' => 'required',
                 'timezone' => 'required'
+            ],[
+            	'weekdays.0.required' => 'Weekdays is required.'
             ]
         );
-
-        if($input['booking_type'] == 'Select from week' )
-            $validator = Validator::make($input, ['weekdays.0' => 'required'],['weekdays.0.required' => 'Weekdays is required.']);
 
         if ($validator->fails()) {
             return response()->json(['status_code'=> 400, 'message'=> $validator->errors()->first(), 'data' => null]);
         }
-
         if($input['relation_id'] == 'Myself' )
             $input['relation_id'] = null;
+
+       // if($input['booking_type'] == 'Today'){
+        	// $bookings = Booking::where('relation_id' , $input['relation_id'])->where('start_date' ,'>=' , $input['start_date'])->where('start_date' ,'<=', $input['end_date'])->get();
+        	
+        	//\DB::connection()->enableQueryLog();
+        	// $bookings = Booking::select('*')->where('relation_id' , $input['relation_id'])->whereRaw("STR_TO_DATE(".$input['start_date'].", 'm/d/Y') between STR_TO_DATE(start_date , 'm/d/Y') AND STR_TO_DATE(end_date , 'm/d/Y')")->get();
+        	// $query = \DB::getQueryLog();
+        	// Log::info($query);
+        	// Log::info('da');
+
+        	// select * from `bookings` where `relation_id` is null and STR_TO_DATE(11/15/2019, 'm/d/Y') between STR_TO_DATE(start_date , 'm/d/Y') AND STR_TO_DATE(end_date , 'm/d/Y') 
+    //    }
 
         if(($input['booking_type'] == 'Daily') || ($input['booking_type'] == 'Select date') || ($input['booking_type'] == 'Select from week')){
             if($input['24_hours'] == '1'){
@@ -177,6 +189,11 @@ class BookingController extends Controller
         $bookings = Booking::where('user_id' , $user->id)->get()->toArray();
          
         foreach ($bookings as $key => $value) {
+            if($value['relation_id'] != null){
+                $bookings[$key]['booking_for'] = $value->relation->name .' - '. $value->relation->user->name;
+            }else{
+                $bookings[$key]['booking_for'] = 'Myself';
+            }
             if($value['weekdays'] != null){
                 $data = unserialize($value['weekdays']);
                 $bookings[$key]['weekdays'] = $data;
