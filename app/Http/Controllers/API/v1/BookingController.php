@@ -88,6 +88,7 @@ class BookingController extends Controller
 
         $input['service_location_id'] = Countyareas::select('id')->where('area', 'like', '%'.$input['service_location_id'].'%')->first()->id;
 
+        $input['zipcode'] = $input['zip_code'];
         $input['user_id'] = $user->id;
         $input['weekdays'] = serialize($input['weekdays']);
         $input['diagnosis_id'] = serialize($input['diagnosis']);
@@ -223,9 +224,10 @@ class BookingController extends Controller
              $input['start_date'] = Carbon::now()->format('m/d/Y');
              $input['end_date'] = Carbon::now()->addweek($input['no_of_weeks'])->format('m/d/Y');
         }
-        
+
         $input['service_location_id'] = Countyareas::select('id')->where('area', 'like', '%'.$input['service_location_id'].'%')->first()->id;
 
+        $input['zipcode'] = $input['zip_code'];
         $input['weekdays'] = serialize($input['weekdays']);
         $booking->fill($input);
 
@@ -265,7 +267,7 @@ class BookingController extends Controller
     public function my_bookings(){
         $user = Auth::user();
 
-        $bookings = Booking::where('user_id' , $user->id)->with('relation')->get()->toArray();
+        $bookings = Booking::where('user_id' , $user->id)->with('relation')->with('service_location')->get()->toArray();
          
         foreach ($bookings as $key => $value) {
             if($value['relation_id'] != null){
@@ -274,6 +276,9 @@ class BookingController extends Controller
             }else{
                 $bookings[$key]['booking_for'] = 'Myself';
             }
+
+            $bookings[$key]['service_location_id'] = $value['service_location']['area'];
+
             if($value['weekdays'] != null){
                 $data = unserialize($value['weekdays']);
                 $bookings[$key]['weekdays'] = $data;
