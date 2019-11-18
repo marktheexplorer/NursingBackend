@@ -33,7 +33,7 @@ class UserController extends Controller{
     {  
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:40',
-            'email' => 'required|email|unique:users',
+            'email' => 'required|email',
             'mobile_number' => 'required|numeric|unique:users',
             'country_code' => 'required|numeric',
             'type' => ['required', Rule::in(['caregiver', 'patient'])],
