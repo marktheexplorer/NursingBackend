@@ -64,7 +64,7 @@ class BookingController extends Controller
         if($input['relation_id'] == 'Myself' )
             $input['relation_id'] = null;
 
-        $result = Self::validateBooking($input['start_date'], $input['end_date'], $input['start_time'], $input['end_time'], $input['booking_type'], $input['relation_id'], Auth::id(), $input['weekdays']);
+        $result = Self::validateBooking($input['start_date'], $input['end_date'], $input['start_time'], $input['end_time'], $input['booking_type'], $input['relation_id'], Auth::id(), $input['weekdays'], 'add', null);
 
         if($result == 'true'){
             return response()->json(['status_code' => $this->errorStatus , 'message' => 'You already have a booking at the specified time.', 'data' => null]);
@@ -102,12 +102,15 @@ class BookingController extends Controller
         }
     }
 
-    public function validateBooking($startDate , $endDate , $startTime , $endTime, $bookingType, $relationId, $id, $weekDays)
+    public function validateBooking($startDate , $endDate , $startTime , $endTime, $bookingType, $relationId, $id, $weekDays, $type, $bookingId)
     {
         $startDate = Carbon::parse($startDate);
         $endDate = Carbon::parse($endDate);
 
-        $bookings = Booking::where('relation_id' , $relationId)->where('user_id', $id)->get();
+        if($type == 'add')
+            $bookings = Booking::where('relation_id' , $relationId)->where('user_id', $id)->get();
+        else
+            $bookings = Booking::where('relation_id' , $relationId)->where('user_id', $id)->where('id','!=',$bookingId)->get();
 
         if($bookingType == 'Today' || $bookingType == 'Select date'){
             
@@ -211,6 +214,12 @@ class BookingController extends Controller
 
         if ($validator->fails()) {
             return response()->json(['status_code'=> 400, 'message'=> $validator->errors()->first(), 'data' => null]);
+        }
+
+        $result = Self::validateBooking($input['start_date'], $input['end_date'], $input['start_time'], $input['end_time'], $booking->booking_type, $booking->relation_id, Auth::id(), $input['weekdays'], 'edit', $booking->id);
+
+        if($result == 'true'){
+            return response()->json(['status_code' => $this->errorStatus , 'message' => 'You already have a booking at the specified time.', 'data' => null]);
         }
 
         if(($booking->booking_type == 'Daily') || ($booking->booking_type == 'Select date') || ($booking->booking_type == 'Select from week')){
