@@ -245,7 +245,7 @@ class BookingController extends Controller
     public function override_booking(Request $request){
         $input = $request->input();
         $user = Auth::user();
-        $booking = Booking::where('id', $input['override_id'])->first();
+        $booking = Booking::where('id', $input['booking_id'])->first();
         $validator =  Validator::make($input,
             [
                 'relation_id' => 'required|string',
@@ -269,7 +269,7 @@ class BookingController extends Controller
                 'city' => 'required',
                 'zip_code' => 'required',
                 'timezone' => 'required',
-                'override_id' =>'required',
+                'booking_id' =>'required',
             ]
         );
 
