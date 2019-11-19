@@ -424,7 +424,8 @@ class BookingController extends Controller
         foreach ($bookings as $key => $value) {
 
             if($value['relation_id'] != null){
-                $value['booking_for'] = $value->relation->name .' - '. $value->relation->user->name;
+                $relation = Relation::where('id' , $value->relation->relation_id)->first();
+                $value['booking_for'] = $value->relation->name .' - '. $relation['title'];
             }else{
                 $value['booking_for'] = 'Myself';
             }
@@ -474,7 +475,8 @@ class BookingController extends Controller
         foreach ($bookings as $key => $value) {
 
             if($value['relation_id'] != null){
-                $value['booking_for'] = $value->relation->name .' - '. $value->relation->user->name;
+                $relation = Relation::where('id' , $value->relation->relation_id)->first();
+                $value['booking_for'] = $value->relation->name .' - '. $relation['title'];
             }else{
                 $value['booking_for'] = 'Myself';
             }
@@ -498,7 +500,8 @@ class BookingController extends Controller
         foreach ($bookings as $key => $value) {
 
             if($value['relation_id'] != null){
-                $value['booking_for'] = $value->relation->name .' - '. $value->relation->user->name;
+                $relation = Relation::where('id' , $value->relation->relation_id)->first();
+                $value['booking_for'] = $value->relation->name .' - '. $relation['title'];
             }else{
                 $value['booking_for'] = 'Myself';
             }
