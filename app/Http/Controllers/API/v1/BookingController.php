@@ -67,7 +67,7 @@ class BookingController extends Controller
         $result = Self::validateBooking($input['start_date'], $input['end_date'], $input['start_time'], $input['end_time'], $input['booking_type'], $input['relation_id'], Auth::id(), $input['weekdays'], 'add', null);
 
         if($result['status'] == 'true'){
-            return response()->json(['status_code' => 201 , 'message' => 'You already have a booking at the specified time.', 'data' => ["override_id" => $result['id']]]);
+            return response()->json(['status_code' => 201 , 'message' => 'You already have a booking at the specified time. Do you want to override it?', 'data' => ["override_id" => $result['id']]]);
         }
 
         if(($input['booking_type'] == 'Daily') || ($input['booking_type'] == 'Select date') || ($input['booking_type'] == 'Select from week')){
@@ -78,8 +78,12 @@ class BookingController extends Controller
         }
 
         if($input['booking_type'] == 'Select from week'){
-             $input['start_date'] = Carbon::now()->format('m/d/Y');
-             $input['end_date'] = Carbon::now()->addweek($input['no_of_weeks'])->format('m/d/Y');
+            $startDate = Carbon::now()->format('m/d/Y');
+            $endDate = Carbon::now()->addweek($input['no_of_weeks'])->format('m/d/Y');
+
+            $dates = Self::getDates($startDate , $endDate , $input['weekdays']);
+            $input['start_date'] = Carbon::parse($dates[0])->format('m/d/Y');
+            $input['end_date'] = Carbon::parse(end($dates))->format('m/d/Y');
         }
 
         foreach ($input['diagnosis_id'] as $key => $value) {
@@ -208,7 +212,7 @@ class BookingController extends Controller
         $result = Self::validateBooking($input['start_date'], $input['end_date'], $input['start_time'], $input['end_time'], $booking->booking_type, $booking->relation_id, Auth::id(), $input['weekdays'], 'edit', $booking->id);
 
         if($result['status'] == 'true'){
-            return response()->json(['status_code' => 201 , 'message' => 'You already have a booking at the specified time', 'data' => ["override_id" => $result['id']]]);
+            return response()->json(['status_code' => 201 , 'message' => 'You already have a booking at the specified time. Do you want to override it?', 'data' => ["override_id" => $result['id']]]);
         }
 
         if(($booking->booking_type == 'Daily') || ($booking->booking_type == 'Select date') || ($booking->booking_type == 'Select from week')){
@@ -219,8 +223,12 @@ class BookingController extends Controller
         }
 
         if($booking->booking_type == 'Select from week'){
-             $input['start_date'] = Carbon::now()->format('m/d/Y');
-             $input['end_date'] = Carbon::now()->addweek($input['no_of_weeks'])->format('m/d/Y');
+            $startDate = Carbon::now()->format('m/d/Y');
+            $endDate = Carbon::now()->addweek($input['no_of_weeks'])->format('m/d/Y');
+
+            $dates = Self::getDates($startDate , $endDate , $input['weekdays']);
+            $input['start_date'] = Carbon::parse($dates[0])->format('m/d/Y');
+            $input['end_date'] = Carbon::parse(end($dates))->format('m/d/Y');
         }
 
         $input['service_location_id'] = Countyareas::select('id')->where('area', 'like', '%'.$input['service_location_id'].'%')->first()->id;
@@ -291,8 +299,12 @@ class BookingController extends Controller
         }
 
         if($input['booking_type'] == 'Select from week'){
-             $input['start_date'] = Carbon::now()->format('m/d/Y');
-             $input['end_date'] = Carbon::now()->addweek($input['no_of_weeks'])->format('m/d/Y');
+            $startDate = Carbon::now()->format('m/d/Y');
+            $endDate = Carbon::now()->addweek($input['no_of_weeks'])->format('m/d/Y');
+
+            $dates = Self::getDates($startDate , $endDate , $input['weekdays']);
+            $input['start_date'] = Carbon::parse($dates[0])->format('m/d/Y');
+            $input['end_date'] = Carbon::parse(end($dates))->format('m/d/Y');
         }
 
         foreach ($input['diagnosis_id'] as $key => $value) {
