@@ -277,7 +277,6 @@ class BookingController extends Controller
                 'city' => 'required',
                 'zip_code' => 'required',
                 'timezone' => 'required',
-                'booking_id' =>'required',
                 'override_id' =>'required',
             ]
         );
@@ -488,7 +487,31 @@ class BookingController extends Controller
         if(count($bookings) > 0){
             return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $bookings]);
         }else{
-            return response()->json(['status_code' => $this->errorStatus , 'message' => '', 'data' => null]);
+            return response()->json(['status_code' => $this->errorStatus , 'message' => 'No Bookings', 'data' => null]);
+        }
+    }
+
+    public function upcoming_bookings(Request $request){
+
+        $bookings = Booking::select('id','relation_id', 'start_date', 'end_date', '24_hours', 'start_time', 'end_time','weekdays')->where('status', 'Upcoming')->where('user_id' , Auth::id())->get();
+
+        foreach ($bookings as $key => $value) {
+
+            if($value['relation_id'] != null){
+                $value['booking_for'] = $value->relation->name .' - '. $value->relation->user->name;
+            }else{
+                $value['booking_for'] = 'Myself';
+            }
+            if($value['weekdays'] != null){
+                $data = unserialize($value['weekdays']);
+                $bookings[$key]['weekdays'] = $data;
+            }
+        }
+
+        if(count($bookings) > 0){
+            return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $bookings]);
+        }else{
+            return response()->json(['status_code' => $this->errorStatus , 'message' => 'No Bookings', 'data' => null]);
         }
     }
 }
