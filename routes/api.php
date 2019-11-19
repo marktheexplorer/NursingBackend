@@ -34,6 +34,7 @@ Route::group(['middleware' => 'auth:api', 'namespace' => 'API\v1'], function(){
 	Route::post('edit-booking', 'BookingController@edit_booking');
 	Route::post('delete-booking', 'BookingController@delete_booking');
 	Route::post('override-booking', 'BookingController@override_booking');
+	Route::get('pending-bookings', 'BookingController@pending_bookings');
 	Route::post('contact-us', 'HomeController@savecontactusData');
 	Route::post('feedback', 'HomeController@addFeedback');
 });

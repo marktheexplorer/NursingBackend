@@ -282,7 +282,7 @@ class BookingController extends Controller
             ]
         );
 
-       if($booking->booking_type == 'Select from week' )
+       if($input['booking_type'] == 'Select from week' )
             $validator = Validator::make($input, ['weekdays.0' => 'required'],['weekdays.0.required' => 'Weekdays is required.']);
 
         if ($validator->fails()) {
@@ -420,7 +420,7 @@ class BookingController extends Controller
 
     public function caregiverRequestsList()
     {
-        $bookings = Booking::select('id','relation_id', 'start_date', 'end_date', '24_hours', 'start_time', 'end_time','weekdays')->where('status', 'Caregiver Assigned')->where('user_id' , Auth::id())->get();
+        $bookings = Booking::select('id','relation_id', 'start_date', 'end_date', '24_hours', 'start_time', 'end_time','weekdays')->where('status', 'Pending')->where('user_id' , Auth::id())->get();
 
         foreach ($bookings as $key => $value) {
 
@@ -457,9 +457,9 @@ class BookingController extends Controller
     public function request_for_booking(Request $request){
 
         $input = $request->input();
-        $assign = AssignedCaregiver::where('booking_id' , $input['booking_id'])->where('caregiver_id', $input['caregiver_id'])->update(array('status' => 'Caregiver Requested'));
+        $assign = AssignedCaregiver::where('booking_id' , $input['booking_id'])->where('caregiver_id', $input['caregiver_id'])->update(array('status' => 'Upcoming'));
         //Status Update
-        Booking::where('id', '=', $input['booking_id'])->update(array('status' =>  'Caregiver Requested'));
+        Booking::where('id', '=', $input['booking_id'])->update(array('status' =>  'Upcoming'));
 
         if($assign){
             return response()->json(['status_code' => $this->successStatus , 'message' => 'Request sent successfully.', 'data' => '']);
@@ -470,7 +470,7 @@ class BookingController extends Controller
 
     public function pending_bookings(Request $request){
 
-        $bookings = Booking::select('id','relation_id', 'start_date', 'end_date', '24_hours', 'start_time', 'end_time','weekdays')->where('status', 'Caregiver Assigned')->where('user_id' , Auth::id())->get();
+        $bookings = Booking::select('id','relation_id', 'start_date', 'end_date', '24_hours', 'start_time', 'end_time','weekdays')->where('status', 'Pending')->where('user_id' , Auth::id())->get();
 
         foreach ($bookings as $key => $value) {
 
@@ -482,18 +482,6 @@ class BookingController extends Controller
             if($value['weekdays'] != null){
                 $data = unserialize($value['weekdays']);
                 $bookings[$key]['weekdays'] = $data;
-            }
-
-            foreach ($value->caregivers as $k => $care) {
-                $bookings[$key]['caregivers'][$k]['name'] = $care->caregiver->user->name;
-                if($care->caregiver->user->profile_image == null || empty($care->caregiver->user->profile_image))
-                    $bookings[$key]['caregivers'][$k]['profile_image'] = 'default.png';
-                else
-                    $bookings[$key]['caregivers'][$k]['profile_image'] = $care->caregiver->user->profile_image;
-            
-                $bookings[$key]['caregivers'][$k]['language'] = $care->caregiver->language;
-                $bookings[$key]['caregivers'][$k]['description'] = $care->caregiver->description;
-                $bookings[$key]['caregivers'][$k]['discipline'] = Qualification::select('name')->join('caregiver_attributes' ,'caregiver_attributes.value' , 'qualifications.id')->where('type' , 'qualification')->where('caregiver_id', $care->caregiver->user->id)->get()->toArray();
             }
         }
 
