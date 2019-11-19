@@ -253,7 +253,7 @@ class BookingController extends Controller
     public function override_booking(Request $request){
         $input = $request->input();
         $user = Auth::user();
-        $booking = Booking::where('id', $input['booking_id'])->first();
+        $booking = Booking::where('id', $input['override_id'])->first();
         $validator =  Validator::make($input,
             [
                 'relation_id' => 'required|string',
@@ -278,6 +278,7 @@ class BookingController extends Controller
                 'zip_code' => 'required',
                 'timezone' => 'required',
                 'booking_id' =>'required',
+                'override_id' =>'required',
             ]
         );
 
@@ -319,6 +320,9 @@ class BookingController extends Controller
         $input['diagnosis_id'] = serialize($input['diagnosis']);
         $input['status'] = 'Booking Request';
         $booking->fill($input);
+
+        if($input['booking_id'] != null)
+             Booking::where('id', $input['booking_id'])->delete();
 
         if($booking->save()){
             return response()->json(['status_code' => $this->successStatus , 'message' => 'Booking updated successfully.', 'data' => null]);
@@ -461,6 +465,42 @@ class BookingController extends Controller
             return response()->json(['status_code' => $this->successStatus , 'message' => 'Request sent successfully.', 'data' => '']);
         }else{
             return response()->json(['status_code' => $this->errorStatus , 'message' => 'Request not sent successfully.', 'data' => null]);
+        }
+    }
+
+    public function pending_bookings(Request $request){
+
+        $bookings = Booking::select('id','relation_id', 'start_date', 'end_date', '24_hours', 'start_time', 'end_time','weekdays')->where('status', 'Caregiver Assigned')->where('user_id' , Auth::id())->get();
+
+        foreach ($bookings as $key => $value) {
+
+            if($value['relation_id'] != null){
+                $value['booking_for'] = $value->relation->name .' - '. $value->relation->user->name;
+            }else{
+                $value['booking_for'] = 'Myself';
+            }
+            if($value['weekdays'] != null){
+                $data = unserialize($value['weekdays']);
+                $bookings[$key]['weekdays'] = $data;
+            }
+
+            foreach ($value->caregivers as $k => $care) {
+                $bookings[$key]['caregivers'][$k]['name'] = $care->caregiver->user->name;
+                if($care->caregiver->user->profile_image == null || empty($care->caregiver->user->profile_image))
+                    $bookings[$key]['caregivers'][$k]['profile_image'] = 'default.png';
+                else
+                    $bookings[$key]['caregivers'][$k]['profile_image'] = $care->caregiver->user->profile_image;
+            
+                $bookings[$key]['caregivers'][$k]['language'] = $care->caregiver->language;
+                $bookings[$key]['caregivers'][$k]['description'] = $care->caregiver->description;
+                $bookings[$key]['caregivers'][$k]['discipline'] = Qualification::select('name')->join('caregiver_attributes' ,'caregiver_attributes.value' , 'qualifications.id')->where('type' , 'qualification')->where('caregiver_id', $care->caregiver->user->id)->get()->toArray();
+            }
+        }
+
+        if(count($bookings) > 0){
+            return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $bookings]);
+        }else{
+            return response()->json(['status_code' => $this->errorStatus , 'message' => '', 'data' => null]);
         }
     }
 }
