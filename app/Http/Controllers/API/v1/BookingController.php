@@ -96,7 +96,7 @@ class BookingController extends Controller
         $input['user_id'] = $user->id;
         $input['weekdays'] = serialize($input['weekdays']);
         $input['diagnosis_id'] = serialize($input['diagnosis']);
-        $input['status'] = 'Booking Request';
+        $input['status'] = 'Pending';
         $booking = Booking::create($input);
 
         if($booking){
@@ -317,7 +317,7 @@ class BookingController extends Controller
         $input['user_id'] = $user->id;
         $input['weekdays'] = serialize($input['weekdays']);
         $input['diagnosis_id'] = serialize($input['diagnosis']);
-        $input['status'] = 'Booking Request';
+        $input['status'] = 'Pending';
         $booking->fill($input);
 
         if($input['booking_id'] != null)
@@ -419,7 +419,7 @@ class BookingController extends Controller
 
     public function caregiverRequestsList()
     {
-        $bookings = Booking::select('id','relation_id', 'start_date', 'end_date', '24_hours', 'start_time', 'end_time','weekdays')->where('status', 'Pending')->where('user_id' , Auth::id())->get();
+        $bookings = Booking::select('id','relation_id', 'start_date', 'end_date', '24_hours', 'start_time', 'end_time','weekdays')->where('status', 'Caregiver Request')->where('user_id' , Auth::id())->get();
 
         foreach ($bookings as $key => $value) {
 
@@ -456,7 +456,7 @@ class BookingController extends Controller
     public function request_for_booking(Request $request){
 
         $input = $request->input();
-        $assign = AssignedCaregiver::where('booking_id' , $input['booking_id'])->where('caregiver_id', $input['caregiver_id'])->update(array('status' => 'Upcoming'));
+        $assign = AssignedCaregiver::where('booking_id' , $input['booking_id'])->where('caregiver_id', $input['caregiver_id'])->update(array('status' => 'Final'));
         //Status Update
         Booking::where('id', '=', $input['booking_id'])->update(array('status' =>  'Upcoming'));
 
