@@ -20,7 +20,7 @@ Route::group(['namespace' => 'API\v1'], function(){
 	Route::post('resend-otp', 'UserController@resendOtp');
 });
 
-Route::group(['middleware' => 'auth:api', 'namespace' => 'API\v1'], function(){
+Route::group(['middleware' => ['auth:api', 'blockedUser'], 'namespace' => 'API\v1'], function(){
 	Route::post('logout', 'UserController@logout');
 	Route::post('upload-image', 'UserController@uploadProfileImage');
 	Route::post('edit-profile', 'UserController@editProfileDetails');
