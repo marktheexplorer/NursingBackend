@@ -495,7 +495,7 @@ class BookingController extends Controller
 
     public function upcoming_bookings(Request $request){
 
-        $bookings = Booking::select('id','relation_id', 'start_date', 'end_date', '24_hours', 'start_time', 'end_time','weekdays')->where('status', 'Upcoming')->where('user_id' , Auth::id())->get();
+        $bookings = Booking::select('id','relation_id', 'start_date', 'end_date', '24_hours', 'start_time', 'end_time','weekdays','caregiver_id')->where('status', 'Upcoming')->where('user_id' , Auth::id())->get();
 
         foreach ($bookings as $key => $value) {
 
@@ -508,7 +508,7 @@ class BookingController extends Controller
             if($value['weekdays'] != null){
                 $data = unserialize($value['weekdays']);
                 $bookings[$key]['weekdays'] = $data;
-            }
+            }dd($value->caregiver_id);
             if($value->userCaregiver != null){
                 $bookings[$key]['caregivers']['name'] = $value->userCaregiver->name;
                 $bookings[$key]['caregivers']['profile_image'] = $value->userCaregiver->profile_image == null ? 'default.png' : $value->userCaregiver->profile_image ;
