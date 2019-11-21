@@ -424,7 +424,8 @@ class BookingController extends Controller
         foreach ($bookings as $key => $value) {
 
             if($value['relation_id'] != null){
-                $value['booking_for'] = $value->relation->name .' - '. $value->relation->user->name;
+                $relation = Relation::where('id' , $value->relation->relation_id)->first();
+                $value['booking_for'] = $value->relation->name .' - '. $relation['title'];
             }else{
                 $value['booking_for'] = 'Myself';
             }
@@ -458,7 +459,7 @@ class BookingController extends Controller
         $input = $request->input();
         $assign = AssignedCaregiver::where('booking_id' , $input['booking_id'])->where('caregiver_id', $input['caregiver_id'])->update(array('status' => 'Final'));
         //Status Update
-        Booking::where('id', '=', $input['booking_id'])->update(array('status' =>  'Upcoming'));
+        Booking::where('id', '=', $input['booking_id'])->update(array('status' =>  'Upcoming', 'caregiver_id' => $input['caregiver_id']));
 
         if($assign){
             return response()->json(['status_code' => $this->successStatus , 'message' => 'Request sent successfully.', 'data' => '']);
@@ -474,7 +475,8 @@ class BookingController extends Controller
         foreach ($bookings as $key => $value) {
 
             if($value['relation_id'] != null){
-                $value['booking_for'] = $value->relation->name .' - '. $value->relation->user->name;
+                $relation = Relation::where('id' , $value->relation->relation_id)->first();
+                $value['booking_for'] = $value->relation->name .' - '. $relation['title'];
             }else{
                 $value['booking_for'] = 'Myself';
             }
@@ -498,7 +500,8 @@ class BookingController extends Controller
         foreach ($bookings as $key => $value) {
 
             if($value['relation_id'] != null){
-                $value['booking_for'] = $value->relation->name .' - '. $value->relation->user->name;
+                $relation = Relation::where('id' , $value->relation->relation_id)->first();
+                $value['booking_for'] = $value->relation->name .' - '. $relation['title'];
             }else{
                 $value['booking_for'] = 'Myself';
             }
@@ -506,12 +509,19 @@ class BookingController extends Controller
                 $data = unserialize($value['weekdays']);
                 $bookings[$key]['weekdays'] = $data;
             }
+            if($value->userCaregiver != null){
+                $bookings[$key]['caregivers']['name'] = $value->userCaregiver->name;
+                $bookings[$key]['caregivers']['profile_image'] = $value->userCaregiver->profile_image == null ? 'default.png' : $value->userCaregiver->profile_image ;
+                $bookings[$key]['caregivers']['language'] = $value->userCaregiver->language;
+                $bookings[$key]['caregivers']['description'] = $value->userCaregiver->description;
+                $bookings[$key]['caregivers']['discipline'] = Qualification::select('name')->join('caregiver_attributes' ,'caregiver_attributes.value' , 'qualifications.id')->where('type' , 'qualification')->where('caregiver_id', $value->userCaregiver->id)->get()->toArray();
+            }
         }
 
         if(count($bookings) > 0){
             return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $bookings]);
         }else{
-            return response()->json(['status_code' => $this->errorStatus , 'message' => 'No Bookings', 'data' => null]);
+            return response()->json(['status_code' => $this->errorStatus , 'message' => '', 'data' => null]);
         }
     }
 }

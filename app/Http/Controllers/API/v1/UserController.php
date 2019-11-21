@@ -34,8 +34,8 @@ class UserController extends Controller{
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:40',
             'email' => 'required|email|unique:users',
-            'mobile_number' => 'required|numeric|unique:users',
-            'country_code' => 'required|numeric',
+            'mobile_number' => 'required|unique:users',
+            'country_code' => 'required',
             'type' => ['required', Rule::in(['caregiver', 'patient'])],
         ]);        
 
@@ -50,6 +50,10 @@ class UserController extends Controller{
             $input['role_id'] = 3;
 
         $input['otp'] = rand(1000,9999);
+        $data = Self::sendTwilioOTP($input['mobile_number'], $input['country_code'], $input['otp']); 
+        if($data == false){
+            return response()->json(['status_code' => $this->errorStatus, 'message' => 'Your mobile number is invalid.', 'data' => null]);
+        }
         $user = User::create($input);
 
         if($user && $input['type'] == 'patient')
@@ -65,7 +69,7 @@ class UserController extends Controller{
         }
 
         if ($user) {
-            $data = Self::sendTwilioOTP($input['mobile_number'], $input['country_code'], $input['otp']); 
+            
             return response()->json(['status_code' => 300, 'message' => 'Please verify the mobile number to proceed. Otp, send it to your registered mobile number.', 'data' => null]);
         } else {
             return response()->json(['status_code' => $this->errorStatus, 'message' => 'Unable to register. Please try again.', 'data'=> null]);
@@ -73,18 +77,24 @@ class UserController extends Controller{
     }
 
     public function sendTwilioOTP($mobileNumber , $countryCode, $otp)
-    {
+    {   
         $client = new Client(env('TWILIO_SID'), env('TWILIO_TOKEN'));
-        $response = $client->messages->create(
-            // the number you'd like to send the message to
-            '+'.$countryCode.$mobileNumber ,
-            array(
-                // A Twilio phone number you purchased at twilio.com/console
-                'from' => '+13343397984',
-                // the body of the text message you'd like to send
-                'body' => 'Your OTP is '.$otp.'. Enter this code to verify your phone number.'
-            )
-        )->toArray();
+
+        try{
+            $response = $client->messages->create(
+                // the number you'd like to send the message to
+                '+'.$countryCode.$mobileNumber ,
+                array(
+                    // A Twilio phone number you purchased at twilio.com/console
+                    'from' => '+13343397984',
+                    // the body of the text message you'd like to send
+                    'body' => 'Your OTP is '.$otp.'. Enter this code to verify your phone number.'
+                )
+            )->toArray();
+
+        }catch(\Exception $e){
+            $response = false;
+        }
 
         return $response;
 

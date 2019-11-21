@@ -53,7 +53,7 @@ class Handler extends ExceptionHandler
     protected function unauthenticated($request, AuthenticationException $exception)
     {
         if ($request->expectsJson()) {
-            $response = ['status_code' => 999, 'message' => 'Invalid Token.', 'data' => null];
+            $response = ['status_code' => 999, 'message' => 'Your session has been expired.', 'data' => null];
             return response()->json($response);
         }
         return redirect()->guest('login');
