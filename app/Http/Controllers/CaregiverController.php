@@ -12,9 +12,6 @@ use App\State;
 use App\CaregiverAttribute;
 use App\Service_requests_attributes;
 use DB;
-use App\Mail\MailHelper;
-use Illuminate\Support\Facades\Mail;
-
 use App\Exports\CaregiverExport;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -73,7 +70,6 @@ class CaregiverController extends Controller{
             'email' => 'email|required|string|unique:users,email',
             'mobile_number' => 'required|unique:users,mobile_number|regex:/^\(?([0-9]{3})\)?[-]?([0-9]{3})[-]?([0-9]{4})$/',
             'service' => 'required|not_in:0',
-            'password' => 'required|min:6',
             'gender' => 'required',
             'language' => 'required',
             'dob' => 'required',
@@ -130,7 +126,7 @@ class CaregiverController extends Controller{
         }
 
         if($validator->fails()){
-            return redirect()->back()->withErrors($validator)->withInput($request->except('password'));
+            return redirect()->back()->withErrors($validator)->withInput();
         }
 
         $name = $input['fname'];
@@ -154,7 +150,6 @@ class CaregiverController extends Controller{
         $user->location = $input['location'];
         $user->city = $input['city'];
         $user->state = $input['state'];
-        $user->password = Hash::make($input['password']);
         if($user->save()){
             //save caregiver profile info
             $caregiver = new Caregiver();
@@ -216,21 +211,6 @@ class CaregiverController extends Controller{
             }
 
             DB::table('caregiver_attributes')->insert($data);
-
-            //send mail about reset password
-            if($input['issentmail'] == '1'){
-                $objDemo = new \stdClass();
-                $objDemo->sender = env('APP_NAME');
-                $objDemo->receiver = ucfirst($user->name);
-                $objDemo->type = 'password_on_mail';
-                $objDemo->format = 'basic';
-                $objDemo->subject = '24*7 Nursing : Password Mail';
-                $objDemo->mail_from = env('MAIL_FROM_EMAIL');
-                $objDemo->mail_from_name = env('MAIL_FROM_NAME');
-                $objDemo->email = $user->email;
-                $objDemo->password = $input['password'];
-                $issemd = Mail::to($input['email'])->send(new MailHelper($objDemo));
-            }
 
             //redirect to index page.
             flash()->success('New Caregiver Add successfull');
@@ -424,21 +404,6 @@ class CaregiverController extends Controller{
         }
 
         $user->save();
-
-        //send mail about reset password
-        if(isset($input['issentmail']) && $input['issentmail'] == '1'){
-            $objDemo = new \stdClass();
-            $objDemo->sender = env('APP_NAME');
-            $objDemo->receiver = ucfirst($user->name);
-            $objDemo->type = 'password_on_mail';
-            $objDemo->format = 'basic';
-            $objDemo->subject = '24*7 Nursing : Password Mail';
-            $objDemo->mail_from = env('MAIL_FROM_EMAIL');
-            $objDemo->mail_from_name = env('MAIL_FROM_NAME');
-            $objDemo->email = $user->email;
-            $objDemo->password = $input['password'];
-            $issemd = Mail::to($input['email'])->send(new MailHelper($objDemo));
-        }
 
         $caregiverid = DB::table('caregiver')->select('id')->where('user_id','=', $id)->first();
         $caregiver = Caregiver::findOrFail($caregiverid->id);
@@ -645,29 +610,5 @@ class CaregiverController extends Controller{
 
     public function download_excel(){
         return Excel::download(new CaregiverExport, 'Caregiver_list.xlsx');
-    }
-
-    public function set_password($token){
-        $user  = DB::table('users')->select('users.*')->where('email_activation_token','=', $token)->first();
-        return view('resetpassword', compact('user'));
-    }
-
-    public function savepassword(Request $request){
-        $input = $request->input();
-
-        $validator =  Validator::make($input,[
-            'password' => 'required|string|max:255|min:8|required_with:cpassword|same:cpassword',
-            'cpassword' => 'required|string|max:255|min:8',
-            'token' => 'required|string',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator);
-        }
-
-        $user_password = Hash::make($input['password']);
-        $service_request = DB::table('users')->where('email_activation_token','=',$input['token'])->update(array('password' => $user_password));
-        $issuccess = true;
-        return view('resetpassword', compact('issuccess'));
     }
 }

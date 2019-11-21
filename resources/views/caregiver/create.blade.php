@@ -100,19 +100,6 @@
                                                         </span>
                                                     @endif
                                                 </div>
-                                                <div class="form-group col-sm-3" >
-                                                    <label>
-                                                        <span style="color:blue;cursor: pointer;" onclick="generatepassword()">Generate Password</span>
-                                                        <span style="margin-left:30px;color:blue;cursor: pointer;" onclick="setmail()">Send Mail</span>
-                                                    </label>
-                                                    <input type="hidden" value="0" name="issentmail" id="issentmail">
-                                                    <input type="password" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" placeholder="Password" value="{{ old('password') }}" readonly id="newpassword" />
-                                                    @if ($errors->has('password'))
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $errors->first('password') }}</strong>
-                                                        </span>
-                                                    @endif
-                                                </div>
                                                 <div class="col-sm-3  form-group">
                                                     <label>Mobile Number</label>
                                                     <input type="text" class="form-control {{ $errors->has('mobile_number') ? ' is-invalid' : '' }}" placeholder="Mobile Number" name="mobile_number" value="{{ old('mobile_number')}}" id="mobile_number">
@@ -130,9 +117,7 @@
                                                             <strong>{{ $errors->first('dob')}}</strong>
                                                         </span>
                                                     @endif
-                                                </div>
-                                            </div>
-                                            <div class="row">
+                                                </div>                                                
                                                  <div class="col-sm-3  form-group">
                                                     <label>Height</label>
                                                     <select name="height" class="form-control {{ $errors->has('height') ? ' is-invalid' : '' }}">
@@ -149,7 +134,8 @@
                                                          </span>
                                                     @endif
                                                 </div>
-
+                                            </div>
+                                            <div class="row">
                                                 <div class="col-sm-3 form-group">
                                                     <label>Weight</label>
                                                     <select name="weight" class="form-control {{ $errors->has('weight') ? ' is-invalid' : '' }}">
@@ -572,26 +558,6 @@
         return o.value.lastIndexOf(r.text)
       } else return o.selectionStart
     }
-
-    generatepassword();
-    function generatepassword(){
-        $("#issentmail").val('0');
-        newpassword = Math.random().toString(36).substr(2, 14);
-        $("#newpassword").val(newpassword);
-        $("#newpassword").attr("readonly", false);
-    }
-
-    function setmail(){
-        $("#newpassword").attr("readonly", true);
-        $("#issentmail").val('1');
-    }
-
-    $("#newpassword").keydown(function(e){
-        var key = event.keyCode;
-        if(key != 9){
-            e.preventDefault();
-        }
-    });
 
     $("#upload_image").click(function(){
         $("#profile_image").click();
