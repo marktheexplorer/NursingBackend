@@ -136,7 +136,7 @@ class UserController extends Controller{
                     ]);
 
                 $token = $user->createToken($user->name)->accessToken;
-                $data = Self::getAllListData();
+                $data = Self::getAllListData($user->id);
 
                 if($user->type == 'patient'){
 
@@ -447,7 +447,7 @@ class UserController extends Controller{
     public function details()
     {
         $user = Auth::user();
-        $data = Self::getAllListData();
+        $data = Self::getAllListData($user->id);
 
         if($user->type == 'patient'){
 
@@ -494,7 +494,7 @@ class UserController extends Controller{
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function getAllListData()
+    public function getAllListData($userId)
     {
         $success['county'] = Countyareas::select('id','area')->where('area', '!=' ,'0')->where('is_area_blocked', '=', '1')->orderBy('area', 'ASC')->get();
 
@@ -504,7 +504,7 @@ class UserController extends Controller{
 
         $success['relations'] = Relation::pluck('title');
 
-        $success['user_added_relations'] = UserRelation::select('user_relations.*', 'relations.title')->join('relations' , 'relation_id' , 'relations.id')->where('user_id', Auth::id())->get();
+        $success['user_added_relations'] = UserRelation::select('user_relations.*', 'relations.title')->join('relations' , 'relation_id' , 'relations.id')->where('user_id', $userId)->get();
 
         return $success;
     }
