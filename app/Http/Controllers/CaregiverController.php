@@ -12,6 +12,7 @@ use App\State;
 use App\CaregiverAttribute;
 use App\Service_requests_attributes;
 use DB;
+use Image;
 use App\Exports\CaregiverExport;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -61,7 +62,6 @@ class CaregiverController extends Controller{
     public function store(Request $request){
 
         $input = $request->input();
-        $profile_image = $request->file('profile_image');
 
         //make validation
         $validator =  Validator::make($input,[
@@ -102,55 +102,26 @@ class CaregiverController extends Controller{
         );
         $validator->setAttributeNames($attributeNames);
 
-        $upload_image ='';
-        if(!empty($request->file('profile_image'))){
-            $profile_image = $request->file('profile_image');
-            $prop['ext'] = $profile_image->getClientOriginalExtension();
+        if($request->has('profile_image') && ($request->file('profile_image') != null)) {
+            $image = $request->file('profile_image');
+            $input['profile_image'] = time().'.'.$image->getClientOriginalExtension();
 
-            //make image validation
-            if(!in_array($profile_image->getClientOriginalExtension(), array('jpeg', 'png', 'jpg'))){
-                $validator->after(function($validator){
-                    $validator->errors()->add('profile_image', 'Only jpeg, png, jpg type are valid for image');
-                });
-            }else if(2097152 < $profile_image->getSize()){
-                $validator->after(function($validator){
-                    $validator->errors()->add('profile_image', 'image size should not be greater then 2MB.');
-                });
-            }else{
-                $imageName = time().'.'.$profile_image->getClientOriginalExtension();
-                $destinationPath = public_path('/uploads/profile_images');
-                $imagePath = $destinationPath. "/".  $imageName;
-                $profile_image->move($destinationPath, $imageName);
-                $upload_image =  "/uploads/profile_images/".$imageName;
-            }
+            $destinationPath = config('image.user_image_path');
+            $img = Image::make($image->getRealPath());
+            $image->move($destinationPath, $input['profile_image']);
         }
 
         if($validator->fails()){
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        $name = $input['fname'];
-        if(!empty($input['mname'])){
-            $name .= " ".$input['mname'];
-        }
-        $name .= " ".$input['lname'];
+        $input['name'] = $input['fname'].' '.$input['mname'].' '.$input['lname'];
+        $input['role_id'] = 2;
+        $input['type'] = 'caregiver';
+        $input['dob'] = date("Y-m-d", strtotime($input['dob']));
+        $user = User::create($input);
 
-        $user = new User();
-        $user->role_id = 2;
-        $user->name = $name;
-        $user->email = $input['email'];
-        $user->email_verified = 1;
-        $user->mobile_number = $input['mobile_number'];
-        $user->country_code = '+1';
-        $user->type = 1;
-        $user->mobile_number_verified = 1;
-        $user->gender = $input['gender'];
-        $user->dob = date("Y-m-d", strtotime($input['dob']));
-        $user->profile_image = $upload_image;
-        $user->location = $input['location'];
-        $user->city = $input['city'];
-        $user->state = $input['state'];
-        if($user->save()){
+        if($user){
             //save caregiver profile info
             $caregiver = new Caregiver();
             $caregiver->user_id = $user->id;
@@ -349,60 +320,31 @@ class CaregiverController extends Controller{
         );
         $validator->setAttributeNames($attributeNames);
 
-        $upload_image ='';
-        if(!empty($request->file('profile_image'))){
-            $profile_image = $request->file('profile_image');
-            $prop['ext'] = $profile_image->getClientOriginalExtension();
-
-            //make image validation
-            if(!in_array($profile_image->getClientOriginalExtension(), array('jpeg', 'png', 'jpg'))){
-                $validator->after(function($validator){
-                    $validator->errors()->add('profile_image', 'Only jpeg, png, jpg type are valid for image');
-                });
-            }else if(2097152 < $profile_image->getSize()){
-                $validator->after(function($validator){
-                    $validator->errors()->add('profile_image', 'image size should not be greater then 2MB.');
-                });
-            }else{
-                $imageName = time().'.'.$profile_image->getClientOriginalExtension();
-                $destinationPath = public_path('/uploads/profile_images');
-                $imagePath = $destinationPath. "/".  $imageName;
-                $profile_image->move($destinationPath, $imageName);
-                $upload_image =  "/uploads/profile_images/".$imageName;
-            }
-        }
-
         if ($validator->fails()) {
-
             return redirect()->back()->withInput($request->all())->withErrors($validator);
         }
 
-        $name = $input['first_name'];
-        if(!empty($input['middle_name'])){
-            $name .= " ".$input['middle_name'];
+        if($request->has('profile_image') && ($request->file('profile_image') != null)) {
+            $image = $request->file('profile_image');
+
+            $user = User::findOrFail($id);
+            $input['profile_image'] = time().'.'.$image->getClientOriginalExtension();
+            $user->profile_image = $input['profile_image'];
+            $user->save();
+            $destinationPath = config('image.user_image_path');
+            $img = Image::make($image->getRealPath());
+            $image->move($destinationPath, $input['profile_image']);
         }
-        $name .= " ".$input['last_name'];
 
         $user = User::findOrFail($id);
-        $user->role_id = 2;
-        $user->name = $name;
+        $user->name = $input['first_name'].' '.$input['middle_name'].' '.$input['last_name'];
         $user->email = $input['email'];
-        $user->email_verified = 1;
         $user->mobile_number = $input['mobile_number'];
-        $user->country_code = '+1';
-        $user->type = 1;
-        $user->mobile_number_verified = 1;
-        $user->location = $input['location'];
         $user->city = $input['city'];
         $user->state = $input['state'];
-        $user->gender = $input['gender'];
+        $user->street = $input['location'];
         $user->dob = date("Y-m-d", strtotime($input['dob']));
-
-        //upload file
-        if(!empty($upload_image)){
-            $user->profile_image =  "$upload_image";
-        }
-
+        $user->gender = $input['gender'];
         $user->save();
 
         $caregiverid = DB::table('caregiver')->select('id')->where('user_id','=', $id)->first();
