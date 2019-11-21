@@ -508,13 +508,13 @@ class BookingController extends Controller
             if($value['weekdays'] != null){
                 $data = unserialize($value['weekdays']);
                 $bookings[$key]['weekdays'] = $data;
-            }dd($value->caregiver_id);
-            if($value->userCaregiver != null){
-                $bookings[$key]['caregivers']['name'] = $value->userCaregiver->name;
-                $bookings[$key]['caregivers']['profile_image'] = $value->userCaregiver->profile_image == null ? 'default.png' : $value->userCaregiver->profile_image ;
-                $bookings[$key]['caregivers']['language'] = $value->userCaregiver->language;
-                $bookings[$key]['caregivers']['description'] = $value->userCaregiver->description;
-                $bookings[$key]['caregivers']['discipline'] = Qualification::select('name')->join('caregiver_attributes' ,'caregiver_attributes.value' , 'qualifications.id')->where('type' , 'qualification')->where('caregiver_id', $value->userCaregiver->id)->get()->toArray();
+            }
+            if($value['caregiver_id'] != null){
+                $bookings[$key]['userCaregiver']['name'] = $value->userCaregiver->user->name;
+                $bookings[$key]['userCaregiver']['profile_image'] = $value->userCaregiver->user->profile_image == null ? 'default.png' : $value->userCaregiver->user->profile_image ;
+                $bookings[$key]['userCaregiver']['language'] = $value->userCaregiver->user->language;
+                $bookings[$key]['userCaregiver']['description'] = $value->userCaregiver->user->description;
+                $bookings[$key]['userCaregiver']['discipline'] = Qualification::select('name')->join('caregiver_attributes' ,'caregiver_attributes.value' , 'qualifications.id')->where('type' , 'qualification')->where('caregiver_id', $value->userCaregiver->user->id)->get()->toArray();
             }
         }
 

@@ -17,6 +17,15 @@
         <div class="ibox">
             <div class="ibox-head">
                 <div class="ibox-title">Bookings Data</div>
+                    <form method="get">    
+                        <select name="booking_options" class="form-control" style="float: right;width:200px;" onchange="$(this.form).submit();">
+                            <option disabled="" selected=> -- Select Booking Type --</option>
+                            @foreach($booking_type as $key => $type)
+                                <option value="{{ $type['booking_type'] }}" <?php echo ($select_booking_type == $type['booking_type'] ? 'selected' : ''); ?> >{{ ucfirst($type['booking_type']) }}</option>
+                            @endforeach
+                        </select>
+                    </form>    
+                </div>
             </div>
             <div class="ibox-body">
                 <table class="table table-striped table-bordered table-hover" id="data-table" cellspacing="0" width="100%">
@@ -42,11 +51,16 @@
 	              			<td>{{ date_format(date_create($booking->created_at), 'd M, y')}}</td>
 	              			<td>
                                 <ul>
-                                    <li class="media-list media-list-divider m-0">
+                                    <li class="media-list media-list-divider m-0" style="float: left;padding-right:5px;">
                                         <a href="{{ route('bookings.show',['id' => $booking->id]) }}">
                                             <button class="btn-sm btn-warning btn-cir" title="View"><i class="fas fa-eye"></i></button>
                                         </a>
-                                    </li>                                    
+                                    </li>
+                                    <li class="media-list media-list-divider m-0">
+                                        <a href="{{ route('bookings.edit',['id' => $booking->id]) }}">
+                                            <button class="btn-sm btn-primary btn-cir" title="Edit"><i class="fas fa-pencil-alt"></i></button>
+                                        </a>
+                                    </li>                         
                                 </ul>	              				
 	              			</td>
 	            		</tr>
