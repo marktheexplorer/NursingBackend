@@ -68,6 +68,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function()
 	Route::get('bookings/index', 'BookingsController@index')->name('bookings.index');
 	Route::get('bookings/{id}', 'BookingsController@show')->name('bookings.show');
 	Route::post('bookings/assign', 'BookingsController@assign')->name('bookings.assign');
+	Route::get('bookings/edit/{id}', 'BookingsController@edit')->name('bookings.edit');
+	Route::post('bookings/today_update', 'BookingsController@today_update')->name('bookings.today_update');
 	
 	Route::get('service_request/getzip', 'ServiceRequestController@getzip');
 	Route::get('service_request/searchcity', 'ServiceRequestController@searchcity');
