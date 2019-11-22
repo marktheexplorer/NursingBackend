@@ -495,7 +495,7 @@ class BookingController extends Controller
 
     public function upcoming_bookings(Request $request){
 
-        $bookings = Booking::select('id','relation_id', 'start_date', 'end_date', '24_hours', 'start_time', 'end_time','weekdays','caregiver_id')->where('status', 'Upcoming')->where('user_id' , Auth::id())->get();
+        $bookings = Booking::select('id','relation_id', 'start_date', 'end_date', '24_hours', 'start_time', 'end_time','weekdays','caregiver_id')->where('status', 'Upcoming')->where('caregiver_id', '!=' , 'null')->where('user_id' , Auth::id())->get();
 
         foreach ($bookings as $key => $value) {
 
