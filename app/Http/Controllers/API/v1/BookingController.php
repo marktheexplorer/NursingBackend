@@ -509,19 +509,47 @@ class BookingController extends Controller
                 $data = unserialize($value['weekdays']);
                 $bookings[$key]['weekdays'] = $data;
             }
-            if($value['caregiver_id'] != null){
-                $bookings[$key]['userCaregiver']['name'] = $value->userCaregiver->user->name;
-                $bookings[$key]['userCaregiver']['profile_image'] = $value->userCaregiver->user->profile_image == null ? 'default.png' : $value->userCaregiver->user->profile_image ;
-                $bookings[$key]['userCaregiver']['language'] = $value->userCaregiver->user->language;
-                $bookings[$key]['userCaregiver']['description'] = $value->userCaregiver->user->description;
-                $bookings[$key]['userCaregiver']['discipline'] = Qualification::select('name')->join('caregiver_attributes' ,'caregiver_attributes.value' , 'qualifications.id')->where('type' , 'qualification')->where('caregiver_id', $value->userCaregiver->user->id)->get()->toArray();
-            }
+            $bookings[$key]['userCaregiver']['name'] = $value->userCaregiver->user->name;
+            $bookings[$key]['userCaregiver']['profile_image'] = $value->userCaregiver->user->profile_image == null ? 'default.png' : $value->userCaregiver->user->profile_image ;
+            $bookings[$key]['userCaregiver']['language'] = $value->userCaregiver->user->language;
+            $bookings[$key]['userCaregiver']['description'] = $value->userCaregiver->user->description;
+            $bookings[$key]['userCaregiver']['discipline'] = Qualification::select('name')->join('caregiver_attributes' ,'caregiver_attributes.value' , 'qualifications.id')->where('type' , 'qualification')->where('caregiver_id', $value->userCaregiver->user->id)->get()->toArray();
         }
 
         if(count($bookings) > 0){
             return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $bookings]);
         }else{
-            return response()->json(['status_code' => $this->errorStatus , 'message' => '', 'data' => null]);
+            return response()->json(['status_code' => $this->errorStatus , 'message' => 'No Bookings', 'data' => null]);
+        }
+    }
+
+    public function completed_bookings(Request $request){
+
+        $bookings = Booking::select('id','relation_id', 'start_date', 'end_date', '24_hours', 'start_time', 'end_time','weekdays','caregiver_id')->where('status', 'Completed')->where('caregiver_id', '!=' , 'null')->where('user_id' , Auth::id())->get();
+
+        foreach ($bookings as $key => $value) {
+
+            if($value['relation_id'] != null){
+                $relation = Relation::where('id' , $value->relation->relation_id)->first();
+                $value['booking_for'] = $value->relation->name .' - '. $relation['title'];
+            }else{
+                $value['booking_for'] = 'Myself';
+            }
+            if($value['weekdays'] != null){
+                $data = unserialize($value['weekdays']);
+                $bookings[$key]['weekdays'] = $data;
+            }
+            $bookings[$key]['userCaregiver']['name'] = $value->userCaregiver->user->name;
+            $bookings[$key]['userCaregiver']['profile_image'] = $value->userCaregiver->user->profile_image == null ? 'default.png' : $value->userCaregiver->user->profile_image ;
+            $bookings[$key]['userCaregiver']['language'] = $value->userCaregiver->user->language;
+            $bookings[$key]['userCaregiver']['description'] = $value->userCaregiver->user->description;
+            $bookings[$key]['userCaregiver']['discipline'] = Qualification::select('name')->join('caregiver_attributes' ,'caregiver_attributes.value' , 'qualifications.id')->where('type' , 'qualification')->where('caregiver_id', $value->userCaregiver->user->id)->get()->toArray();
+        }
+
+        if(count($bookings) > 0){
+            return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $bookings]);
+        }else{
+            return response()->json(['status_code' => $this->errorStatus , 'message' => 'No Bookings', 'data' => null]);
         }
     }
 }
