@@ -35,8 +35,8 @@ Route::group(['middleware' => ['auth:api', 'blockedUser'], 'namespace' => 'API\v
 	Route::post('delete-booking', 'BookingController@delete_booking');
 	Route::post('override-booking', 'BookingController@override_booking');
 	Route::get('pending-bookings', 'BookingController@pending_bookings');
-	Route::get('completed-bookings', 'BookingController@completed_bookings');
 	Route::get('upcoming-bookings', 'BookingController@upcoming_bookings');
+	Route::get('completed-bookings', 'BookingController@completed_bookings');
 	Route::post('contact-us', 'HomeController@savecontactusData');
 	Route::post('feedback', 'HomeController@addFeedback');
 });

@@ -163,7 +163,7 @@ class UserController extends Controller{
                     $success['weight'] = PROFILE_WEIGHT;
                     $success['language'] = PROFILE_LANGUAGE;
                 }else{
-                    $userDetails =  User::where('users.id', Auth::id())->first();
+                    $userDetails =  User::where('users.id', $user->id)->first();
                     if($userDetails['profile_image'] == null)
                         $userDetails['profile_image'] = 'default.png';
                     $userDetails['service_in'] = DB::table('caregiver_attributes')
