@@ -526,7 +526,7 @@ class BookingController extends Controller
     public function completed_bookings(Request $request){
 
         $bookings = Booking::select('id','relation_id', 'start_date', 'end_date', '24_hours', 'start_time', 'end_time','weekdays','caregiver_id')->where('status', 'Completed')->where('caregiver_id', '!=' , 'null')->where('user_id' , Auth::id())->get();
-
+    
         foreach ($bookings as $key => $value) {
 
             if($value['relation_id'] != null){
