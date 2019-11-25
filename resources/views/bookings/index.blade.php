@@ -57,11 +57,25 @@
                                         </a>
                                     </li>
                                     <li class="media-list media-list-divider m-0">
-                                        <a href="{{ route('bookings.edit',['id' => $booking->id]) }}">
-                                            <button class="btn-sm btn-primary btn-cir" title="Edit"><i class="fas fa-pencil-alt"></i></button>
-                                        </a>
-                                    </li>                         
-                                </ul>	              				
+                                        @if($booking->booking_type == 'Today')
+                                            <a href="{{ route('bookings.today_form',['id' => $booking->id]) }}">
+                                                <button class="btn-sm btn-primary btn-cir" title="Edit"><i class="fas fa-pencil-alt"></i></button>
+                                            </a>
+                                        @elseif($booking->booking_type == 'Select date')
+                                            <a href="{{ route('bookings.select_date_form',['id' => $booking->id]) }}">
+                                                <button class="btn-sm btn-primary btn-cir" title="Edit"><i class="fas fa-pencil-alt"></i></button>
+                                            </a>
+                                        @elseif($booking->booking_type == 'Select from week')
+                                            <a href="{{ route('bookings.select_from_week_form',['id' => $booking->id]) }}">
+                                                <button class="btn-sm btn-primary btn-cir" title="Edit"><i class="fas fa-pencil-alt"></i></button>
+                                            </a>
+                                        @elseif($booking->booking_type == 'Daily')
+                                            <a href="{{ route('bookings.daily_form',['id' => $booking->id]) }}">
+                                                <button class="btn-sm btn-primary btn-cir" title="Edit"><i class="fas fa-pencil-alt"></i></button>
+                                            </a>
+                                        @endif
+                                    </li>
+                                </ul>
 	              			</td>
 	            		</tr>
             		@endforeach

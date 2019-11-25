@@ -38,35 +38,85 @@
                         </ul>
                         <div class="tab-content">
                             <div class="tab-pane fade show active" id="tab-1">
-                                <form action="{{ route('bookings.today_update') }}" method="post">
+                                <form action="{{ route('bookings.update_select_date_form') }}" method="post">
                                 @csrf
                                     <ul class="media-list media-list-divider m-0">
                                         <li class="media">
                                             <div class="media-img col-md-3">Client Name</div>
                                             <div class="media-body">
-                                                <div class="media-heading">{{ ucfirst($booking->user->name) }}</div>
+                                                <div class="media-heading">{{ ucfirst($booking['user']['name']) }}</div>
                                             </div>
                                         </li>
                                         <li class="media">
                                             <div class="media-img col-md-3">Booking For</div>
                                             <div class="media-body">
-                                                <div class="media-heading">{{ $booking->relation_id == '' ? 'Myself' :  $booking->relation->name .' - '. $booking->relation->relation->title }}</div>
+                                                <div class="media-heading"><?php
+                                                    if(empty($booking['relation']['title']))
+                                                        $booking['relation_id'] == '' ? 'Myself' :  $booking['relation']['name'];
+                                                    else
+                                                        $booking['relation_id'] == '' ? 'Myself' :  $booking['relation']['name'] .' - '. $booking['relation']['title'];
+                                                    ?></div>
                                             </div>
                                         </li>
                                         <li class="media">
                                             <div class="media-img col-md-3">Booking Type</div>
                                             <div class="media-body">
-                                                <div class="media-heading">{{ $booking->booking_type }}</div>
+                                                <div class="media-heading">{{ $booking['booking_type'] }}</div>
                                             </div>
                                         </li>
                                         <li class="media">
+                                            <div class="media-img col-md-3">Date</div>
+                                            <div class="media-body">
+                                                <div class="media-heading">
+                                                    <input type="hidden" value="{{ $booking['id'] }}" name="booking_id" /> 
+                                                    <input type="text" id="start_date" class="form-control floating-label" placeholder="Start Date" style="max-width: 120px;float: left; margin-right: 90px" name="start_date" value="{{ $booking['start_date'] }}" >
+                                                    <script>
+                                                        $('#start_date').bootstrapMaterialDatePicker({
+                                                            format : 'MM/DD/YYYY',
+                                                            weekStart : 0, 
+                                                            time: false ,
+                                                            minDate : new Date(),
+                                                        }).on('change', function(e, date){  });
+                                                    </script>
+                                                    @if ($errors->has('start_date'))
+                                                        <span class="invalid-feedback" role="alert" style="display:inline;">
+                                                            <strong>{{ $errors->first('start_date') }}</strong>
+                                                        </span>
+                                                    @elseif($errors->has('end_date'))
+                                                        <span class="invalid-feedback" role="alert" style="display:inline;">
+                                                            <strong>{{ $errors->first('end_date') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="media">
+                                            <div class="media-img col-md-3">Select Appointment Time</div>
+                                            <div class="media-body">
+                                                <div class="media-heading"><?php
+                                                    $booking_time_type = old('is_full_day', $booking['24_hours']); ?>
+                                                    <label style="color:#000;cursor: pointer;">
+                                                        24 Hour Service : <input type="radio" name="is_full_day" value="1" style="margin-right: 90px;display: inline;cursor: pointer;" <?php if($booking_time_type){ echo 'checked'; } ?> on>
+                                                    </label>
+                                                    <label style="color:#000;cursor: pointer;">
+                                                        Custom Input : <input type="radio" name="is_full_day" value="0" style="margin-right: 90px;display: inline;cursor: pointer;" <?php if(!$booking_time_type){ echo 'checked'; } ?> >
+                                                    </label>
+                                                    @if ($errors->has('is_full_day'))
+                                                        <span class="invalid-feedback" role="alert" style="display:inline;">
+                                                            <strong>{{ $errors->first('is_full_day') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="media" id="timingdiv" style="<?php if($booking_time_type){ echo 'display:none;';} ?>" >
                                             <div class="media-img col-md-3">Timings</div>
                                             <div class="media-body">
                                                 <div class="media-heading">
-                                                    <input type="hidden" value="{{ $booking->id }}" name="booking_id" /> 
-                                                    <input type="text" id="todaystarttime" class="form-control floating-label" placeholder="Start Time" style="max-width: 120px;float: left; margin-right: 90px" name="todaystarttime" value="{{ $booking->start_time }}">
+                                                    <input type="hidden" value="{{ $booking['id'] }}" name="booking_id" /> 
+                                                    <input type="text" id="todaystarttime" class="form-control floating-label" placeholder="Start Time" style="max-width: 120px;float: left; margin-right: 90px" name="todaystarttime" value="{{ $booking['start_time'] }}">
                                                     <span style="display: inline;float: left;margin-right: 90px;">To </span>
-                                                    <input type="text" id="todayendtime" class="form-control floating-label" placeholder="End Time" style="max-width: 120px;float: left; margin-right: 90px" name="todayendtime" value="{{ $booking->end_time }}">
+                                                    <input type="text" id="todayendtime" class="form-control floating-label" placeholder="End Time" style="max-width: 120px;float: left; margin-right: 90px" name="todayendtime" value="{{ $booking['end_time'] }}">
                                                     <script>
                                                         $('#todaystarttime').bootstrapMaterialDatePicker({ 
                                                             date: false,
@@ -84,7 +134,6 @@
                                                             //$("#today_submit").css('display', 'inline');
                                                         });
                                                     </script>
-                                                    <br/>
                                                     @if ($errors->has('todaystarttime'))
                                                         <span class="invalid-feedback" role="alert" style="display:inline;">
                                                             <strong>{{ $errors->first('todaystarttime') }}</strong>
@@ -101,7 +150,7 @@
                                             <div class="media-img col-md-3">Address</div>
                                             <div class="media-body">
                                                 <div class="media-heading">
-                                                    <input type="text" value="{{ $booking->address }}" name="address" class="form-control" style="max-width: 270px;" />
+                                                    <input type="text" value="{{ $booking['address'] }}" name="address" class="form-control" style="max-width: 270px;" />
                                                     @if ($errors->has('address'))
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $errors->first('address') }}</strong>
@@ -114,7 +163,7 @@
                                             <div class="media-img col-md-3">Service Location</div>
                                             <div class="media-body">
                                                 <div class="media-heading">
-                                                    <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" placeholder="city" value="{{ old('city', $booking->service_location->area) }}"  id="citysuggest" autocomplete="off"/ style="max-width: 270px;">
+                                                    <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" placeholder="city" value="{{ old('city', $booking['service_location']['area']) }}"  id="citysuggest" autocomplete="off"/ style="max-width: 270px;">
                                                     @if ($errors->has('city'))
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $errors->first('city') }}</strong>
@@ -130,7 +179,7 @@
                                                     <select name="state" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" readonly="true" id="state" style="max-width:270px;">
                                                         <option disabled="true" selected=""> -- Select State --</option>
                                                         @foreach($us_state as $key => $state_code)
-                                                            <option  value="{{ ucwords($state_code)}}" <?php if(ucwords($state_code) == old('state', $booking->state)){ echo 'selected'; } ?>   >{{ ucwords($state_code)}}</option>
+                                                            <option  value="{{ ucwords($state_code)}}" <?php if(ucwords($state_code) == old('state', $booking['state'])){ echo 'selected'; } ?> >{{ ucwords($state_code)}}</option>
                                                         @endforeach
                                                     </select>
                                                     @if ($errors->has('state'))
@@ -145,7 +194,7 @@
                                             <div class="media-img col-md-3">Zipcode</div>
                                             <div class="media-body">
                                                 <div class="media-heading">
-                                                    <input type="text" class="form-control {{ $errors->has('zipcode') ? ' is-invalid' : '' }}" name="zipcode" placeholder="Zip code" value="{{ old('zipcode', $booking->zipcode) }}" id="zipcode" style="max-width: 270px;" />
+                                                    <input type="text" class="form-control {{ $errors->has('zipcode') ? ' is-invalid' : '' }}" name="zipcode" placeholder="Zip code" value="{{ old('zipcode', $booking['zipcode']) }}" id="zipcode" style="max-width: 270px;" />
                                                     @if ($errors->has('zipcode'))
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $errors->first('zipcode') }}</strong>
@@ -271,5 +320,9 @@
             }
         });
     })
+
+    $('input[type=radio][name=is_full_day]').change(function() {
+        $("#timingdiv").toggle();
+    });
 </script>
 @endsection

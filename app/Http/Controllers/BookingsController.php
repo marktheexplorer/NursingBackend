@@ -6,8 +6,81 @@ use App\Caregiver;
 use App\Diagnose;
 use App\User;
 use App\AssignedCaregiver;
+use App\Countyareas;
 use Illuminate\Http\Request;
 use Validator;
+use Carbon\Carbon;
+use App\Us_location;
+
+const STATE = array(
+    'AL' => 'alabama', 
+    'AK' => 'alaska', 
+    'AZ' => 'arizona', 
+    'AR' => 'arkansas', 
+    'CA' => 'california',
+    'CO' => 'colorado',
+    'CT' => 'connecticut',
+    'DE' => 'delaware',
+    'DC' => 'district of columbia',
+    'FL' => 'florida',
+    'GA' => 'georgia',
+    'HI' => 'hawaii',
+    'ID' => 'idaho',
+    'IL' => 'illinois',
+    'IN' => 'indiana',
+    'IA' => 'iowa',
+    'KS' => 'kansas',
+    'KY' => 'kentucky',
+    'LA' => 'louisiana',
+    'ME' => 'maine',
+    'MD' => 'maryland',
+    'MA' => 'massachusetts',
+    'MI' => 'michigan',
+    'MN' => 'minnesota',
+    'MS' => 'mississippi',
+    'MO' => 'missouri',
+    'MT' => 'montana',
+    'NE' => 'nebraska',
+    'NV' => 'nevada',
+    'NH' => 'new hampshire',
+    'NJ' => 'new jersey',
+    'NM' => 'new mexico',
+    'NY' => 'new york',
+    'NC' => 'north carolina',
+    'ND' => 'north dakota',
+    'OH' => 'ohio',
+    'OK' => 'oklahoma',
+    'OR' => 'oregon',
+    'PA' => 'pennsylvania',
+    'RI' => 'rhode island',
+    'SC' => 'south carolina',
+    'SD' => 'south dakota',
+    'TN' => 'tennessee',
+    'TX' => 'texas',
+    'UT' => 'utah',
+    'VT' => 'vermont',
+    'VA' => 'virginia',
+    'WA' => 'washington',
+    'WV' => 'west virginia',
+    'WI' => 'wisconsin',
+    'WY' => 'wyoming',
+    'AS' => 'american samoa',
+    'GU' => 'guam',
+    'MP' => 'northern mariana islands',
+    'PR' => 'puerto Rico',
+    'VI' => 'u.s. birgin islands',
+    'UM' => 'u.s. minor outlying islands',
+    'FM' => 'micronesia',
+    'PW' => 'palau',
+    'AA' => 'u.s. armed forces - americas[d]',
+    'AE' => 'u.s. armed forces - europe[e]',
+    'AP' => 'u.s. armed forces - pacific[f]',
+    'CM' => 'northern mariana islands',
+    'PZ' => 'panama canal zone',
+    'NB' => 'nebraska',
+    'PH' => 'philippins island',
+    'PC' => 'trust territory of the pacific islands',
+);
 
 class BookingsController extends Controller{
     public function index(){
@@ -23,7 +96,7 @@ class BookingsController extends Controller{
                 $select_booking_type = $_GET['booking_options'];
             }    
         }
-        return view('bookings.index' , compact('bookings', 'booking_type', 'select_booking_type')); 
+        return view('bookings.index' , compact('bookings', 'booking_type', 'select_booking_type'));
     }
 
     public function show($id){
@@ -68,23 +141,11 @@ class BookingsController extends Controller{
         return redirect()->back();
     }
 
-    public function edit($id){
+    public function today_form($id){
         $booking = Booking::findOrFail($id);
-        $caregivers = User::select('users.*','caregiver.id as caregiverId')->join('caregiver','caregiver.user_id','users.id')->orderBy('users.name','asc')->get();
-
-        $assigned_caregivers = AssignedCaregiver::where('booking_id',$id)->get();
-        $assignedCaregivers = array();
-        $assignedCaregiversId = array();
-        foreach ($assigned_caregivers as $key => $value) {
-            $assignedCaregiversId[] = $value->caregiver_id;
-            $assignedCaregivers[$key]['name'] = $value->caregiver->user->name;
-            $assignedCaregivers[$key]['email'] = $value->caregiver->user->email;
-        }
-        foreach (unserialize($booking->diagnosis_id) as $key => $value) {
-            $diagnosis[] = Diagnose::select('title')->where('id', $value)->get()[0]->title;
-        }
-        $diagnosis = implode(',', $diagnosis);
-        return view('bookings.edit' , compact('booking','caregivers','diagnosis','assignedCaregivers','assignedCaregiversId'));
+        
+        $us_state = STATE;
+        return view('bookings.edit' , compact('booking','caregivers','diagnosis','assignedCaregivers','assignedCaregiversId', 'us_state'));
     }
 
     public function today_update(Request $request){
@@ -93,18 +154,223 @@ class BookingsController extends Controller{
             'todaystarttime' => 'required|string|max:40',
             'todayendtime' => 'required|string|max:40',
             'booking_id' => 'required|string|max:40',
+            'todayendtime' => 'required|string|max:40',
+            'booking_id' => 'required|string|max:40',
+            'address' => 'required',
+            'state' => 'required',
+            'city' => 'required',
+            'zipcode' => 'required',
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()->withInput($request->all())->withErrors($validator);
+            return redirect()->back()->withErrors($validator);
         }
-
+      
         $booking = Booking::findOrFail($input['booking_id']);
         $booking->start_time = $input['todaystarttime'];
         $booking->end_time = $input['todayendtime'];
+        $booking->address = $input['address'];
+        $booking->city = $input['city'];
+        $booking->state = $input['state'];
+        $booking->zipcode = $input['zipcode'];
         $booking->save();
 
         flash()->success('Booking Update Successfully');
-        return redirect()->route('bookings.edit', ['id' => $input['booking_id']]);
+        return redirect()->route('bookings.today_form', ['id' => $input['booking_id']]);
+    }
+
+    public function select_date_form($id){
+        $booking = Booking::where('id', '=', $id)->with('user')->with('relation')->with('service_location')->get()->first()->toArray();
+
+        $us_state = STATE;
+        return view('bookings.select_date_form' , compact('booking', 'us_state'));
+    }
+
+    public function update_select_date_form(Request $request){
+        $input = $request->input();
+        $validator =  Validator::make($input,
+            [
+                'city' => 'required',
+                'start_date'=>'required',
+                'is_full_day' => 'required',
+                'booking_id' => 'required|string|max:40',
+                'address' => 'required',
+                'state' => 'required',
+                'city' => 'required',
+                'zipcode' => 'required',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator);
+        }        
+        
+        $booking = array();
+        $booking['start_time'] = Carbon::parse($input['start_date'])->format('m/d/Y');
+        $booking['start_time'] = $input['todaystarttime'];
+        $booking['end_time'] = $input['todayendtime'];
+        $booking['address'] = $input['address'];
+        $booking['city'] = $input['city'];
+        $booking['state'] = $input['state'];
+        $booking['zipcode'] = $input['zipcode'];
+        $booking['24_hours ']= $input['is_full_day'];
+        if($input['is_full_day']){
+            $booking['start_time'] = '00:00:00';
+            $booking['end_time'] = '23:59:59';
+        }
+        $updatebooking = Booking::findOrFail($input['booking_id'])->update($booking);
+ 
+        flash()->success('Booking Update Successfully');
+        return redirect()->route('bookings.select_date_form', ['id' => $input['booking_id']]);
+    }
+
+    public function daily_form($id){
+        $booking = Booking::where('id', '=', $id)->with('user')->with('relation')->with('service_location')->get()->first()->toArray();
+       
+        $us_state = STATE;
+        return view('bookings.daily_form' , compact('booking','caregivers','diagnosis','assignedCaregivers','assignedCaregiversId', 'us_state'));
+    }
+
+    public function update_daily_form(Request $request){
+        $input = $request->input();
+        $validator =  Validator::make($input,
+            [
+                'city' => 'required',
+                'start_date'=>'required',
+                'end_date'=>'required',
+                '24_hours' => 'required',
+                'booking_id' => 'required|string|max:40',
+                'address' => 'required',
+                'state' => 'required',
+                'city' => 'required',
+                'zipcode' => 'required',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator);
+        }
+        
+        $booking = Booking::findOrFail($input['booking_id']);
+        $booking->start_date = Carbon::parse($input['start_date'])->format('m/d/Y');
+        $booking->end_date = Carbon::parse($input['end_date'])->format('m/d/Y');        
+        $booking->start_time = $input['todaystarttime'];
+        $booking->end_time = $input['todayendtime'];
+        $booking->address = $input['address'];
+        $booking->city = $input['city'];
+        $booking->state = $input['state'];
+        $booking->zipcode = $input['zipcode'];
+        $booking->is_full_day = $input['is_full_day'];
+        if($input['is_full_day']){
+            $booking->start_time = '00:00:00';
+            $booking->end_time = '23:59:59';
+        }
+        $booking->save();
+
+        flash()->success('Booking Update Successfully');
+        return redirect()->route('bookings.daily_form', ['id' => $input['booking_id']]);
+    }
+
+    public function select_from_week_form($id){
+        $booking = Booking::findOrFail($id);
+
+        $us_state = STATE;
+        return view('bookings.select_from_week_form' , compact('booking','caregivers','diagnosis','assignedCaregivers','assignedCaregiversId', 'us_state')); 
+    }
+
+    public function update_select_from_week_form(Request $request){
+        $input = $request->input();
+        $validator =  Validator::make($input,
+            [
+                'city' => 'required',
+                'weekdays'=>'required',
+                'no_of_weeks'=>'required',
+                'is_full_day' => 'required',
+                'booking_id' => 'required|string|max:40',
+                'address' => 'required',
+                'state' => 'required',
+                'city' => 'required',
+                'zipcode' => 'required',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator);
+        }
+        
+        $booking = Booking::findOrFail($input['booking_id']);
+        $booking->weekdays = serialize($input['weekdays']);
+        $booking->no_of_weeks = $input['no_of_weeks'];
+        $booking->start_time = $input['todaystarttime'];
+        $booking->end_time = $input['todayendtime'];
+        $booking->address = $input['address'];
+        $booking->city = $input['city'];
+        $booking->state = $input['state'];
+        $booking->zipcode = $input['zipcode'];
+        $booking->is_full_day = $input['is_full_day'];
+        if($input['is_full_day']){
+            $booking->start_time = '00:00:00';
+            $booking->end_time = '23:59:59';
+        }
+        $booking->save();
+
+        flash()->success('Booking Update Successfully');
+        return redirect()->route('bookings.select_from_week_form', ['id' => $input['booking_id']]);
+    }
+
+    public function searchcity($term){
+        $search_zipx = array();
+
+        $search_city = Us_location::select('city')->Where("city","like","{$term}%")->groupBy('city')->orderBy("city","asc")->get();
+
+        $response = array();
+        $response['error'] = false;
+        if(empty($search_city)){
+            $response['error'] = true;
+            $response['msg'] = 'Invalid City';
+        }else{
+            foreach($search_city as $row){
+                array_push($response, $row->city);
+            }
+        }
+        echo json_encode($response, true);
+    }
+
+    public function statefromcity(Request $request){
+        $fieldval = $request->input('term');
+        $search_city = Us_location::select('state_code')->Where("city","=","{$fieldval}")->orderBy("state_code","ASC")->distinct('state_code')->get();
+
+        $response = array();
+        $response['error'] = false;
+        $response['list'] = array();
+        if(empty($search_city)){
+            $response['error'] = true;
+            $response['msg'] = 'Invalid City';
+        }else{
+            foreach ($search_city as $row) {
+                array_push($response['list'], $row->state_code);
+            }
+        }
+        echo json_encode($response, true);
+    }
+
+    public function searchzip(Request $request){
+        DB::enableQueryLog();
+
+        $fieldval = $request->input('term');
+        $search_zipx = array();
+        if (strpos($fieldval, ', ') !== false) {
+            $temp = explode(', ', $fieldval);
+            $keyword = trim(substr(strrchr($fieldval, ", "), 1));
+            array_pop($temp);
+            $search_zipx = Us_location::Where("zip", "like", "{$keyword}%")->WhereNotIn("zip", $temp)->orderBy("zip", "asc")->get();
+        }else{
+            $search_zipx = Us_location::Where("zip", "like", "{$fieldval}%")->orderBy("zip", "asc")->get();
+        }
+        $temp = array();
+        foreach ($search_zipx as $row) {
+            array_push($temp, "$row->zip");
+        }
+        echo json_encode($temp, true);
     }
 }
