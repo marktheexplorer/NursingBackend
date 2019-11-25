@@ -552,4 +552,27 @@ class BookingController extends Controller
             return response()->json(['status_code' => $this->errorStatus , 'message' => 'No Bookings', 'data' => null]);
         }
     }
+
+    public function upcoming_bookings_caregiver(Request $request)
+    {
+        $bookings = Booking::select('id','user_id', 'start_date', 'end_date', '24_hours', 'start_time', 'end_time','weekdays','caregiver_id')->where('status', 'Upcoming')->where('caregiver_id' , Auth::id())->get();
+
+        foreach ($bookings as $key => $value) {
+            if($value['weekdays'] != null){
+                $data = unserialize($value['weekdays']);
+                $bookings[$key]['weekdays'] = $data;
+            }
+            $bookings[$key]['user']['name'] = $value->user->name;
+            $bookings[$key]['user']['profile_image'] = $value->user->profile_image == null ? 'default.png' : $value->user->user->profile_image ;
+            $bookings[$key]['user']['language'] = $value->user->language;
+            $bookings[$key]['user']['description'] = $value->user->description;
+            $bookings[$key]['user']['discipline'] = Qualification::select('name')->join('caregiver_attributes' ,'caregiver_attributes.value' , 'qualifications.id')->where('type' , 'qualification')->where('caregiver_id', $value->user->id)->get()->toArray();
+        }
+
+        if(count($bookings) > 0){
+            return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $bookings]);
+        }else{
+            return response()->json(['status_code' => $this->errorStatus , 'message' => 'No Bookings', 'data' => null]);
+        }
+    }
 }
