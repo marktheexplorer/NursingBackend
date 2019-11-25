@@ -16,6 +16,7 @@ use DB;
 use Carbon\Carbon;
 use App\AssignedCaregiver;
 use Log;
+use App\Caregiver;
 
 class BookingController extends Controller
 {	
@@ -554,8 +555,9 @@ class BookingController extends Controller
     }
 
     public function upcoming_bookings_caregiver (Request $request)
-    {
-        $bookings = Booking::select('id','user_id', 'start_date', 'end_date', '24_hours', 'start_time', 'end_time','weekdays','caregiver_id','service_location_id','address','city','state','country','zipcode')->where('status', 'Upcoming')->where('caregiver_id' , Auth::id())->get();
+    { 
+        $caregiver = Caregiver::select('id')->where('user_id',114)->first();
+        $bookings = Booking::select('id','user_id', 'start_date', 'end_date', '24_hours', 'start_time', 'end_time','weekdays','caregiver_id','service_location_id','address','city','state','country','zipcode')->where('status', 'Upcoming')->where('caregiver_id' , $caregiver['id'])->get();
 
         foreach ($bookings as $key => $value) {
             if($value['weekdays'] != null){
