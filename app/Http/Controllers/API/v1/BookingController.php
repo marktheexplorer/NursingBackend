@@ -16,6 +16,7 @@ use DB;
 use Carbon\Carbon;
 use App\AssignedCaregiver;
 use Log;
+use App\Caregiver;
 
 class BookingController extends Controller
 {	
@@ -495,7 +496,7 @@ class BookingController extends Controller
 
     public function upcoming_bookings(Request $request){
 
-        $bookings = Booking::select('id','relation_id', 'start_date', 'end_date', '24_hours', 'start_time', 'end_time','weekdays')->where('status', 'Upcoming')->where('user_id' , Auth::id())->get();
+        $bookings = Booking::select('id','relation_id', 'start_date', 'end_date', '24_hours', 'start_time', 'end_time','weekdays','caregiver_id')->where('status', 'Upcoming')->where('caregiver_id', '!=' , 'null')->where('user_id' , Auth::id())->get();
 
         foreach ($bookings as $key => $value) {
 
@@ -509,19 +510,109 @@ class BookingController extends Controller
                 $data = unserialize($value['weekdays']);
                 $bookings[$key]['weekdays'] = $data;
             }
-            if($value->userCaregiver != null){
-                $bookings[$key]['caregivers']['name'] = $value->userCaregiver->name;
-                $bookings[$key]['caregivers']['profile_image'] = $value->userCaregiver->profile_image == null ? 'default.png' : $value->userCaregiver->profile_image ;
-                $bookings[$key]['caregivers']['language'] = $value->userCaregiver->language;
-                $bookings[$key]['caregivers']['description'] = $value->userCaregiver->description;
-                $bookings[$key]['caregivers']['discipline'] = Qualification::select('name')->join('caregiver_attributes' ,'caregiver_attributes.value' , 'qualifications.id')->where('type' , 'qualification')->where('caregiver_id', $value->userCaregiver->id)->get()->toArray();
-            }
+            $bookings[$key]['userCaregiver']['name'] = $value->userCaregiver->user->name;
+            $bookings[$key]['userCaregiver']['profile_image'] = $value->userCaregiver->user->profile_image == null ? 'default.png' : $value->userCaregiver->user->profile_image ;
+            $bookings[$key]['userCaregiver']['language'] = $value->userCaregiver->user->language;
+            $bookings[$key]['userCaregiver']['description'] = $value->userCaregiver->user->description;
+            $bookings[$key]['userCaregiver']['discipline'] = Qualification::select('name')->join('caregiver_attributes' ,'caregiver_attributes.value' , 'qualifications.id')->where('type' , 'qualification')->where('caregiver_id', $value->userCaregiver->user->id)->get()->toArray();
         }
 
         if(count($bookings) > 0){
             return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $bookings]);
         }else{
-            return response()->json(['status_code' => $this->errorStatus , 'message' => '', 'data' => null]);
+            return response()->json(['status_code' => $this->errorStatus , 'message' => 'No Bookings', 'data' => null]);
+        }
+    }
+
+    public function completed_bookings(Request $request){
+
+        $bookings = Booking::select('id','relation_id', 'start_date', 'end_date', '24_hours', 'start_time', 'end_time','weekdays','caregiver_id')->where('status', 'Completed')->where('caregiver_id', '!=' , 'null')->where('user_id' , Auth::id())->get();
+
+        foreach ($bookings as $key => $value) {
+
+            if($value['relation_id'] != null){
+                $relation = Relation::where('id' , $value->relation->relation_id)->first();
+                $value['booking_for'] = $value->relation->name .' - '. $relation['title'];
+            }else{
+                $value['booking_for'] = 'Myself';
+            }
+            if($value['weekdays'] != null){
+                $data = unserialize($value['weekdays']);
+                $bookings[$key]['weekdays'] = $data;
+            }
+            $bookings[$key]['userCaregiver']['name'] = $value->userCaregiver->user->name;
+            $bookings[$key]['userCaregiver']['profile_image'] = $value->userCaregiver->user->profile_image == null ? 'default.png' : $value->userCaregiver->user->profile_image ;
+            $bookings[$key]['userCaregiver']['language'] = $value->userCaregiver->user->language;
+            $bookings[$key]['userCaregiver']['description'] = $value->userCaregiver->user->description;
+            $bookings[$key]['userCaregiver']['discipline'] = Qualification::select('name')->join('caregiver_attributes' ,'caregiver_attributes.value' , 'qualifications.id')->where('type' , 'qualification')->where('caregiver_id', $value->userCaregiver->user->id)->get()->toArray();
+        }
+
+        if(count($bookings) > 0){
+            return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $bookings]);
+        }else{
+            return response()->json(['status_code' => $this->errorStatus , 'message' => 'No Bookings', 'data' => null]);
+        }
+    }
+
+    public function upcoming_bookings_caregiver (Request $request)
+    { 
+        $caregiver = Caregiver::select('id')->where('user_id',Auth::id())->first();
+        $bookings = Booking::select('id','user_id','booking_type', 'start_date', 'end_date', '24_hours', 'start_time', 'end_time','weekdays','caregiver_id','service_location_id','address','city','state','country','zipcode')->where('status', 'Upcoming')->where('caregiver_id' , $caregiver['id'])->get();
+
+        foreach ($bookings as $key => $value) {
+            if($value['weekdays'] != null){
+                $data = unserialize($value['weekdays']);
+                $bookings[$key]['weekdays'] = $data;
+            }
+            $bookings[$key]['service_location_id'] = $value->service_location->area;
+            $bookings[$key]['user']['name'] = $value->user->name;
+            $bookings[$key]['user']['profile_image'] = $value->user->profile_image == null ? 'default.png' : $value->user->user->profile_image ;
+            $bookings[$key]['user']['language'] = $value->user->language;
+            $bookings[$key]['user']['description'] = $value->user->description;
+        }
+
+        if(count($bookings) > 0){
+            return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $bookings]);
+        }else{
+            return response()->json(['status_code' => $this->errorStatus , 'message' => 'No Bookings', 'data' => null]);
+        }
+    }
+
+    public function complete_booking(Request $request){
+
+        $input = $request->input();
+        $validator =  Validator::make($input,
+            [
+                'booking_id' => 'required',
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json(['status_code'=> $this->errorStatus, 'message'=> $validator->errors()->first(), 'data' => null]);
+        }
+        //Status Update
+        $completed = Booking::where('id', '=', $input['booking_id'])->update(array('status' =>  'Completed'));
+
+        if($completed){
+            return response()->json(['status_code' => $this->successStatus , 'message' => 'Booking Completed successfully.', 'data' => '']);
+        }else{
+            return response()->json(['status_code' => $this->errorStatus , 'message' => 'Booking not completed successfully.', 'data' => null]);
+        }
+    }
+
+    public function completed_bookings_caregiver (Request $request)
+    { 
+        $caregiver = Caregiver::select('id')->where('user_id',Auth::id())->first();
+        $bookings = Booking::select('id','user_id', 'start_date', 'end_date','booking_type', '24_hours','caregiver_id')->where('status', 'Completed')->where('caregiver_id' , $caregiver['id'])->get();
+
+        foreach ($bookings as $key => $value) {
+            $bookings[$key]['user']['name'] = $value->user->name;
+            $bookings[$key]['user']['profile_image'] = $value->user->profile_image == null ? 'default.png' : $value->user->user->profile_image ;
+        }
+
+        if(count($bookings) > 0){
+            return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $bookings]);
+        }else{
+            return response()->json(['status_code' => $this->errorStatus , 'message' => 'No Bookings', 'data' => null]);
         }
     }
 }

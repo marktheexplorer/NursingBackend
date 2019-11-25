@@ -22,7 +22,7 @@ class Booking extends Model
     }
 
     public function userCaregiver(){
-        return $this->hasOne('App\User' , 'id' ,'caregiver_id');
+        return $this->belongsTo('App\Caregiver' , 'caregiver_id' ,'id');
     }
 
     public function relation(){
@@ -36,4 +36,5 @@ class Booking extends Model
     public function caregivers(){
         return $this->hasMany('App\AssignedCaregiver');
     }
+
 }

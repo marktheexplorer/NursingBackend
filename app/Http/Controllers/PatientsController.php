@@ -250,15 +250,8 @@ class PatientsController extends Controller{
 
             $input['name'] = $input['f_name'].' '.$input['m_name'].' '.$input['l_name'];
             $input['role_id'] = 3;
-            $input['email'] = $input['email'];
-            $input['mobile_number'] = $input['mobile_number'];
-            $input['city'] = $input['city'];
-            $input['state'] = $input['state'];
-            $input['street'] = $input['street'];
             $input['type'] = 'patient';
-            $input['password'] = Hash::make('123456');
             $input['dob'] = date("Y-m-d", strtotime($input['dob']));
-            $input['gender'] = $input['gender'];
             $patient = User::create($input);
 
             $profile['user_id'] = $patient->id;
