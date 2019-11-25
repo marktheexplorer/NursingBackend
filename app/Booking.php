@@ -36,4 +36,5 @@ class Booking extends Model
     public function caregivers(){
         return $this->hasMany('App\AssignedCaregiver');
     }
+
 }
