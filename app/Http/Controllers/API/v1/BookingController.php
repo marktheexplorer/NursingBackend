@@ -575,4 +575,25 @@ class BookingController extends Controller
             return response()->json(['status_code' => $this->errorStatus , 'message' => 'No Bookings', 'data' => null]);
         }
     }
+
+    public function complete_booking(Request $request){
+
+        $input = $request->input();
+        $validator =  Validator::make($input,
+            [
+                'booking_id' => 'required',
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json(['status_code'=> $this->errorStatus, 'message'=> $validator->errors()->first(), 'data' => null]);
+        }
+        //Status Update
+        $completed = Booking::where('id', '=', $input['booking_id'])->update(array('status' =>  'Completed'));
+
+        if($completed){
+            return response()->json(['status_code' => $this->successStatus , 'message' => 'Booking Completed successfully.', 'data' => '']);
+        }else{
+            return response()->json(['status_code' => $this->errorStatus , 'message' => 'Booking not completed successfully.', 'data' => null]);
+        }
+    }
 }
