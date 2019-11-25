@@ -557,7 +557,7 @@ class BookingController extends Controller
     public function upcoming_bookings_caregiver (Request $request)
     { 
         $caregiver = Caregiver::select('id')->where('user_id',Auth::id())->first();
-        $bookings = Booking::select('id','booking_id','user_id','booking_type', 'start_date', 'end_date', '24_hours', 'start_time', 'end_time','weekdays','caregiver_id','service_location_id','address','city','state','country','zipcode')->where('status', 'Upcoming')->where('caregiver_id' , $caregiver['id'])->get();
+        $bookings = Booking::select('id','user_id','booking_type', 'start_date', 'end_date', '24_hours', 'start_time', 'end_time','weekdays','caregiver_id','service_location_id','address','city','state','country','zipcode')->where('status', 'Upcoming')->where('caregiver_id' , $caregiver['id'])->get();
 
         foreach ($bookings as $key => $value) {
             if($value['weekdays'] != null){
