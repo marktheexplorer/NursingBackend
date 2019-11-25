@@ -557,7 +557,7 @@ class BookingController extends Controller
     public function upcoming_bookings_caregiver (Request $request)
     { 
         $caregiver = Caregiver::select('id')->where('user_id',Auth::id())->first();
-        $bookings = Booking::select('id','user_id', 'start_date', 'end_date', '24_hours', 'start_time', 'end_time','weekdays','caregiver_id','service_location_id','address','city','state','country','zipcode')->where('status', 'Upcoming')->where('caregiver_id' , $caregiver['id'])->get();
+        $bookings = Booking::select('id','user_id','booking_type', 'start_date', 'end_date', '24_hours', 'start_time', 'end_time','weekdays','caregiver_id','service_location_id','address','city','state','country','zipcode')->where('status', 'Upcoming')->where('caregiver_id' , $caregiver['id'])->get();
 
         foreach ($bookings as $key => $value) {
             if($value['weekdays'] != null){
@@ -596,6 +596,23 @@ class BookingController extends Controller
             return response()->json(['status_code' => $this->successStatus , 'message' => 'Booking Completed successfully.', 'data' => '']);
         }else{
             return response()->json(['status_code' => $this->errorStatus , 'message' => 'Booking not completed successfully.', 'data' => null]);
+        }
+    }
+
+    public function completed_bookings_caregiver (Request $request)
+    { 
+        $caregiver = Caregiver::select('id')->where('user_id',Auth::id())->first();
+        $bookings = Booking::select('id','user_id', 'start_date', 'end_date','booking_type', '24_hours','caregiver_id')->where('status', 'Completed')->where('caregiver_id' , $caregiver['id'])->get();
+
+        foreach ($bookings as $key => $value) {
+            $bookings[$key]['user']['name'] = $value->user->name;
+            $bookings[$key]['user']['profile_image'] = $value->user->profile_image == null ? 'default.png' : $value->user->user->profile_image ;
+        }
+
+        if(count($bookings) > 0){
+            return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $bookings]);
+        }else{
+            return response()->json(['status_code' => $this->errorStatus , 'message' => 'No Bookings', 'data' => null]);
         }
     }
 }
