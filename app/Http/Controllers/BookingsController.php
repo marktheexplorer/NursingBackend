@@ -11,7 +11,7 @@ use Validator;
 
 class BookingsController extends Controller{
     public function index(){
-    	$bookings = Booking::orderBy('created_at', 'DESC')->get()->toArray();
+    	$bookings = Booking::orderBy('created_at', 'DESC')->get();
         $booking_type = Booking::select('booking_type')->distinct()->get()->toArray();
         $select_booking_type = '';
 
