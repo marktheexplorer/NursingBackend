@@ -5,12 +5,12 @@
 <!-- start library for date and time picker -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.5.10/css/bootstrap-material-design.min.css"/>
 <link rel="stylesheet" href="{{ asset('admin/assets/material_datetimepicker/css/bootstrap-material-datetimepicker.css') }}" />
-<link href='https://fonts.googleapis.com/css?family=Roboto:400,500' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Roboto:400,500' rel='stylesheet' type='text/css'>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.5.10/js/ripples.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.5.10/js/material.min.js"></script>
-<script type="text/javascript" src="https://momentjs.com/downloads/moment-with-locales.min.js"></script>
+<script type="text/javascript" src="http://momentjs.com/downloads/moment-with-locales.min.js"></script>
 <script type="text/javascript" src="{{ asset('admin/assets/material_datetimepicker/js/bootstrap-material-datetimepicker.js') }}"></script>
 <!-- end library for date and time picker -->
 
@@ -57,6 +57,12 @@
                                             <div class="media-img col-md-3">Booking Type</div>
                                             <div class="media-body">
                                                 <div class="media-heading">{{ $booking->booking_type }}</div>
+                                            </div>
+                                        </li>
+                                        <li class="media">
+                                            <div class="media-img col-md-3">Duration</div>
+                                            <div class="media-body">
+                                                <div class="media-heading">{{ $booking->start_date . ' - ' .$booking->end_date }}</div>
                                             </div>
                                         </li>
                                         <li class="media">
@@ -130,7 +136,7 @@
                                                     <select name="state" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" readonly="true" id="state" style="max-width:270px;">
                                                         <option disabled="true" selected=""> -- Select State --</option>
                                                         @foreach($us_state as $key => $state_code)
-                                                            <option  value="{{ ucwords($state_code)}}" <?php if(ucwords($state_code) == old('state', $booking->state)){ echo 'selected'; } ?>   >{{ ucwords($state_code)}}</option>
+                                                            <option  value="{{ old('state', $booking->state) }}"    >{{ ucwords($state_code)}}</option>
                                                         @endforeach
                                                     </select>
                                                     @if ($errors->has('state'))
@@ -184,56 +190,58 @@
     });
 </script>
 <script>
-    function split( val ) {
-        return val.split( /,\s*/ );
-    }
-
-    function extractLast( term ) {
-        //return split( term ).pop();
-        temp = $.trim($("#service_zipcode").val());
-        fnd = ','
-        if(temp.indexOf(fnd) != -1){
-            term =  temp+" "+term;
+    $(function(){
+        function split( val ) {
+            return val.split( /,\s*/ );
         }
-        console.log(term);
-        return term;
-    }
 
-    // don't navigate away from the field on tab when selecting an item
-    $( "#citysuggest" ).on( "keydown", function( event ) {
-        if(event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active){
-            event.preventDefault();
+        function extractLast( term ) {
+            //return split( term ).pop();
+            temp = $.trim($("#service_zipcode").val());
+            fnd = ','
+            if(temp.indexOf(fnd) != -1){
+                term =  temp+" "+term;
+            }
+            console.log(term);
+            return term;
         }
-    }).autocomplete({
-        source: function( request, response ) {
-            $.getJSON( "{{ env('APP_URL') }}admin/bookings/searchcity/"+request.term, {
-                //term: request.term
-            }, response );
-        },
 
-        search: function() {
-            // custom minLength
-            var term = this.value;
-            if ( term.length < 2){
+        // don't navigate away from the field on tab when selecting an item
+        $( "#citysuggest" ).on( "keydown", function( event ) {
+            if(event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active){
+                event.preventDefault();
+            }
+        }).autocomplete({
+            source: function( request, response ) {
+                $.getJSON( "{{ env('APP_URL') }}admin/bookings/search_service_location", {
+                    term: request.term
+                }, response );
+            },
+
+            search: function() {
+                // custom minLength
+                var term = this.value;
+                if ( term.length < 2){
+                    return false;
+                }
+            },
+
+            focus: function() {
+                // prevent value inserted on focus
+                return false;
+            },
+
+            select: function( event, ui ) {
+                $( "#citysuggest" ).val(ui.item.value)
+                $( "#citysuggest" ).autocomplete("close");
+
+                //remove all options from select box
+                $("#state").find("option:gt(0)").remove();
+                $("#state").prop("selectedIndex", 0);
+                setstateoptions();
                 return false;
             }
-        },
-
-        focus: function() {
-            // prevent value inserted on focus
-            return false;
-        },
-
-        select: function( event, ui ) {
-            $( "#citysuggest" ).val(ui.item.value)
-            $( "#citysuggest" ).autocomplete("close");
-
-            //remove all options from select box
-            $("#state").find("option:gt(0)").remove();
-            $("#state").prop("selectedIndex", 0);
-            setstateoptions();
-            return false;
-        }
+        });
     });
 
     function setstateoptions(){
@@ -249,27 +257,13 @@
                     $("#citysuggest").val('');
                     $("#citysuggest").focus();
                 }else{
-                    $.each(res['list'], function( index, value ) {
+                    /*$.each(res['list'], function( index, value ) {
                         //alert( index + ": " + value );
                         $('#state').append($("<option></option>").attr(value, value).text(value));
-                    });
+                    });*/
                 }
             }
         });
-        $("#state").attr("readonly", false);
     }
-
-    $("#state").change(function () {
-        stateoption = $("#state option:selected").val();
-        cityoption = $("#citysuggest").val();
-        $.ajax({
-            url: '{{ env('APP_URL') }}admin/caregiver/getzip',
-            type: 'GET',
-            data:{city:cityoption, state:stateoption},
-            success: function (res) {
-                $("#zipcode").val(res);
-            }
-        });
-    })
 </script>
 @endsection

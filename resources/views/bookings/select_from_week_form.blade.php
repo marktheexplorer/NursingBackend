@@ -38,7 +38,7 @@
                         </ul>
                         <div class="tab-content">
                             <div class="tab-pane fade show active" id="tab-1">
-                                <form action="{{ route('bookings.today_update') }}" method="post">
+                                <form action="{{ route('bookings.update_select_from_week_form') }}" method="post">
                                 @csrf
                                     <ul class="media-list media-list-divider m-0">
                                         <li class="media">
@@ -60,6 +60,72 @@
                                             </div>
                                         </li>
                                         <li class="media">
+                                            <div class="media-img col-md-3">Choose Week Days</div>
+                                            <div class="media-body">
+                                                <div class="media-heading"><?php
+                                                    $weekdays = unserialize(old('weekdays', $booking->weekdays)); ?>
+                                                    <label style="color:#000;cursor: pointer;">
+                                                        Monday : <input type="checkbox" name="weekdays[]" value="Mon" style="margin-right: 60px;display: inline;cursor: pointer;" <?php if(in_array('Mon', $weekdays)){ echo 'checked'; } ?> on>
+                                                    </label>
+                                                    <label style="color:#000;cursor: pointer;">
+                                                        Tuesday : <input type="checkbox" name="weekdays[]" value="Tue" style="margin-right: 60px;display: inline;cursor: pointer;" <?php if(in_array('Tue', $weekdays)){ echo 'checked'; } ?> >
+                                                    </label>
+                                                    <label style="color:#000;cursor: pointer;">
+                                                        Wednesday : <input type="checkbox" name="weekdays[]" value="Wed" style="margin-right: 60px;display: inline;cursor: pointer;" <?php if(in_array('Wed', $weekdays)){ echo 'checked'; } ?> on>
+                                                    </label>
+                                                    <label style="color:#000;cursor: pointer;">
+                                                        Thursday : <input type="checkbox" name="weekdays[]" value="Thur" style="margin-right: 60px;display: inline;cursor: pointer;" <?php if(in_array('Thur', $weekdays)){ echo 'checked'; } ?> >
+                                                    </label>
+                                                    <label style="color:#000;cursor: pointer;">
+                                                        Friday : <input type="checkbox" name="weekdays[]" value="Fri" style="margin-right: 60px;display: inline;cursor: pointer;" <?php if(in_array('Fri', $weekdays)){ echo 'checked'; } ?> on>
+                                                    </label>
+                                                    <label style="color:#000;cursor: pointer;">
+                                                        Saturday : <input type="checkbox" name="weekdays[]" value="Sat" style="margin-right: 60px;display: inline;cursor: pointer;" <?php if(in_array('Sat', $weekdays)){ echo 'checked'; } ?> >
+                                                    </label>
+                                                    <label style="color:#000;cursor: pointer;">
+                                                        Sunday : <input type="checkbox" name="weekdays[]" value="Sun" style="margin-right: 60px;display: inline;cursor: pointer;" <?php if(in_array('Sun', $weekdays)){ echo 'checked'; } ?> on>
+                                                    </label> 
+                                                    @if ($errors->has('weekdays'))
+                                                        <span class="invalid-feedback" role="alert" style="display:inline;">
+                                                            <strong>{{ $errors->first('weekdays') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="media">
+                                            <div class="media-img col-md-3">Choose Frequency</div>
+                                            <div class="media-body">
+                                                <div class="media-heading">
+                                                    <input type="number" value="{{ old('no_of_weeks', $booking->no_of_weeks) }}" name="no_of_weeks" class="form-control" style="max-width: 270px;" min="1" />
+                                                    @if ($errors->has('no_of_weeks'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('no_of_weeks') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="media">
+                                            <div class="media-img col-md-3">Select Appointment Time</div>
+                                            <div class="media-body">
+                                                <div class="media-heading"><?php
+                                                    $booking_time_type = old('is_full_day', $booking->is_full_day); ?>
+                                                    <label style="color:#000;cursor: pointer;">
+                                                        24 Hour Service : <input type="radio" name="is_full_day" value="1" style="margin-right: 90px;display: inline;cursor: pointer;" <?php if($booking_time_type){ echo 'checked'; } ?> on>
+                                                    </label>
+                                                    <label style="color:#000;cursor: pointer;">
+                                                        Custom Input : <input type="radio" name="is_full_day" value="0" style="margin-right: 90px;display: inline;cursor: pointer;" <?php if(!$booking_time_type){ echo 'checked'; } ?> >
+                                                    </label>
+                                                    @if ($errors->has('is_full_day'))
+                                                        <span class="invalid-feedback" role="alert" style="display:inline;">
+                                                            <strong>{{ $errors->first('is_full_day') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="media" id="timingdiv" style="<?php if($booking_time_type){ echo 'display:none;';} ?>" >
                                             <div class="media-img col-md-3">Timings</div>
                                             <div class="media-body">
                                                 <div class="media-heading">
@@ -67,14 +133,13 @@
                                                     <input type="text" id="todaystarttime" class="form-control floating-label" placeholder="Start Time" style="max-width: 120px;float: left; margin-right: 90px" name="todaystarttime" value="{{ $booking->start_time }}">
                                                     <span style="display: inline;float: left;margin-right: 90px;">To </span>
                                                     <input type="text" id="todayendtime" class="form-control floating-label" placeholder="End Time" style="max-width: 120px;float: left; margin-right: 90px" name="todayendtime" value="{{ $booking->end_time }}">
+
                                                     <script>
                                                         $('#todaystarttime').bootstrapMaterialDatePicker({ 
                                                             date: false,
-                                                            format : 'HH:mm:ss'
+                                                            format : 'HH:mm:ss',
                                                         }).on('change', function(e, date){
                                                             $('#todayendtime').bootstrapMaterialDatePicker('setMinDate', date);
-                                                            $("#todayendtime").removeAttr("disabled");
-                                                            //$("#today_submit").css('display', 'none');
                                                         });
 
                                                         $('#todayendtime').bootstrapMaterialDatePicker({ 
@@ -84,7 +149,7 @@
                                                             //$("#today_submit").css('display', 'inline');
                                                         });
                                                     </script>
-                                                    <br/>
+                                                    
                                                     @if ($errors->has('todaystarttime'))
                                                         <span class="invalid-feedback" role="alert" style="display:inline;">
                                                             <strong>{{ $errors->first('todaystarttime') }}</strong>
@@ -130,7 +195,7 @@
                                                     <select name="state" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" readonly="true" id="state" style="max-width:270px;">
                                                         <option disabled="true" selected=""> -- Select State --</option>
                                                         @foreach($us_state as $key => $state_code)
-                                                            <option  value="{{ ucwords($state_code)}}" <?php if(ucwords($state_code) == old('state', $booking->state)){ echo 'selected'; } ?>   >{{ ucwords($state_code)}}</option>
+                                                            <option  value="{{ ucwords($state_code)}}" <?php if(ucwords($state_code) == old('state', $booking->state)){ echo 'selected'; } ?> >{{ ucwords($state_code)}}</option>
                                                         @endforeach
                                                     </select>
                                                     @if ($errors->has('state'))
@@ -184,56 +249,58 @@
     });
 </script>
 <script>
-    function split( val ) {
-        return val.split( /,\s*/ );
-    }
-
-    function extractLast( term ) {
-        //return split( term ).pop();
-        temp = $.trim($("#service_zipcode").val());
-        fnd = ','
-        if(temp.indexOf(fnd) != -1){
-            term =  temp+" "+term;
+    $(function(){
+        function split( val ) {
+            return val.split( /,\s*/ );
         }
-        console.log(term);
-        return term;
-    }
 
-    // don't navigate away from the field on tab when selecting an item
-    $( "#citysuggest" ).on( "keydown", function( event ) {
-        if(event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active){
-            event.preventDefault();
+        function extractLast( term ) {
+            //return split( term ).pop();
+            temp = $.trim($("#service_zipcode").val());
+            fnd = ','
+            if(temp.indexOf(fnd) != -1){
+                term =  temp+" "+term;
+            }
+            console.log(term);
+            return term;
         }
-    }).autocomplete({
-        source: function( request, response ) {
-            $.getJSON( "{{ env('APP_URL') }}admin/bookings/searchcity/"+request.term, {
-                //term: request.term
-            }, response );
-        },
 
-        search: function() {
-            // custom minLength
-            var term = this.value;
-            if ( term.length < 2){
+        // don't navigate away from the field on tab when selecting an item
+        $( "#citysuggest" ).on( "keydown", function( event ) {
+            if(event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active){
+                event.preventDefault();
+            }
+        }).autocomplete({
+            source: function( request, response ) {
+                $.getJSON( "{{ env('APP_URL') }}admin/bookings/search_service_location", {
+                    term: request.term
+                }, response );
+            },
+
+            search: function() {
+                // custom minLength
+                var term = this.value;
+                if ( term.length < 2){
+                    return false;
+                }
+            },
+
+            focus: function() {
+                // prevent value inserted on focus
+                return false;
+            },
+
+            select: function( event, ui ) {
+                $( "#citysuggest" ).val(ui.item.value)
+                $( "#citysuggest" ).autocomplete("close");
+
+                //remove all options from select box
+                $("#state").find("option:gt(0)").remove();
+                $("#state").prop("selectedIndex", 0);
+                setstateoptions();
                 return false;
             }
-        },
-
-        focus: function() {
-            // prevent value inserted on focus
-            return false;
-        },
-
-        select: function( event, ui ) {
-            $( "#citysuggest" ).val(ui.item.value)
-            $( "#citysuggest" ).autocomplete("close");
-
-            //remove all options from select box
-            $("#state").find("option:gt(0)").remove();
-            $("#state").prop("selectedIndex", 0);
-            setstateoptions();
-            return false;
-        }
+        });
     });
 
     function setstateoptions(){
@@ -249,27 +316,17 @@
                     $("#citysuggest").val('');
                     $("#citysuggest").focus();
                 }else{
-                    $.each(res['list'], function( index, value ) {
+                    /*$.each(res['list'], function( index, value ) {
                         //alert( index + ": " + value );
                         $('#state').append($("<option></option>").attr(value, value).text(value));
-                    });
+                    });*/
                 }
             }
         });
-        $("#state").attr("readonly", false);
     }
 
-    $("#state").change(function () {
-        stateoption = $("#state option:selected").val();
-        cityoption = $("#citysuggest").val();
-        $.ajax({
-            url: '{{ env('APP_URL') }}admin/caregiver/getzip',
-            type: 'GET',
-            data:{city:cityoption, state:stateoption},
-            success: function (res) {
-                $("#zipcode").val(res);
-            }
-        });
-    })
+    $('input[type=radio][name=is_full_day]').change(function() {
+        $("#timingdiv").toggle();
+    });
 </script>
 @endsection
