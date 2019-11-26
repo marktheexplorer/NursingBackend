@@ -75,6 +75,12 @@
                                             </a>
                                         @endif
                                     </li>
+                                    <li class="media-list media-list-divider m-0">
+                                        <form action="{{ route('bookings.delete',['id' => $booking->id]) }}" method="POST" onsubmit="deleteBooking('{{ $booking->id }}', '{{ $booking->name }}', event,this)">
+                                        @csrf
+                                            <button class="btn-sm btn-danger btn-cir" title="Delete"><i class="fas fa-trash-alt"></i></button>
+                                        </form>
+                                    </li>
                                 </ul>
 	              			</td>
 	            		</tr>
@@ -92,12 +98,12 @@
         $('#data-table').DataTable();
     });
 
-    function deletePatient(id, title, event,form)
+    function deleteBooking(id, title, event,form)
     {
         event.preventDefault();
         swal({
             title: "Are you sure?",
-            text: "You want to delete "+title+" user",
+            text: "You want to delete "+title+" booking",
             icon: "warning",
             buttons: {
                 cancel: true,
@@ -138,7 +144,7 @@
                     }
                 });
             } else {
-                swal("Cancelled", title+" user will not be deleted.", "error");
+                swal("Cancelled", title+" booking will not be deleted.", "error");
             }
         });
     }

@@ -373,4 +373,28 @@ class BookingsController extends Controller{
         }
         echo json_encode($temp, true);
     }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id){
+        $booking = Booking::findOrFail($id);
+        $assignedCaregivers = AssignedCaregiver::where('booking_id',$booking->id)->delete();
+
+        if ($booking->delete()) {
+            $response = array(
+                'status' => 'success',
+                'message' => 'Booking deleted successfully',
+            );
+        } else {
+            $response = array(
+                'status' => 'error',
+                'message' => 'Booking can not be deleted.Please try again',
+            );
+        }
+        return json_encode($response);
+    }
 }

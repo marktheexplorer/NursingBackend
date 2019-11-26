@@ -67,6 +67,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function()
 
 	Route::get('bookings/index', 'BookingsController@index')->name('bookings.index');
 	Route::get('bookings/{id}', 'BookingsController@show')->name('bookings.show');
+	Route::delete('booking/destroy/{id}', 'BookingsController@destroy')->name('bookings.delete');
 	Route::post('bookings/assign', 'BookingsController@assign')->name('bookings.assign');	
 	Route::get('bookings/today_form/{id}', 'BookingsController@today_form')->name('bookings.today_form');
 	Route::post('bookings/today_update', 'BookingsController@today_update')->name('bookings.today_update');	

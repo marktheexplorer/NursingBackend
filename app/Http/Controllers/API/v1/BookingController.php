@@ -561,7 +561,7 @@ class BookingController extends Controller
         
         foreach ($jobs as $key => $value) {
             
-            if($request->input('start_date') && $request->input('end_date')){
+            if(($request->input('start_date') != null) && ($request->input('end_date')!= null)){
             $bookingStart = Carbon::parse($value->start_date);
             $bookingEnd = Carbon::parse($value->end_date);
             $endDate = Carbon::parse($request->input('end_date'));
