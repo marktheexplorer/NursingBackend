@@ -74,6 +74,12 @@
                                             </a>
                                         @endif
                                     </li>
+                                    <li class="media-list media-list-divider m-0">
+                                        <form action="{{ route('bookings.delete',['id' => $booking->id]) }}" method="DELETE" onsubmit="deleteBooking('{{ $booking->id }}', '{{ $booking->name }}', event,this)">
+                                        @csrf
+                                            <button class="btn-sm btn-danger btn-cir" title="Delete"><i class="fas fa-trash-alt"></i></button>
+                                        </form>
+                                    </li>
                                 </ul>
 	              			</td>
 	            		</tr>
@@ -91,7 +97,7 @@
         $('#data-table').DataTable();
     });
 
-    function deletePatient(id, title, event,form)
+    function deleteBooking(id, title, event,form)
     {
         event.preventDefault();
         swal({

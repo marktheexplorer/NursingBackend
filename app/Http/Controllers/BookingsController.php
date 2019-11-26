@@ -11,76 +11,7 @@ use Illuminate\Http\Request;
 use Validator;
 use Carbon\Carbon;
 use App\Us_location;
-
-const STATE = array(
-    'AL' => 'alabama', 
-    'AK' => 'alaska', 
-    'AZ' => 'arizona', 
-    'AR' => 'arkansas', 
-    'CA' => 'california',
-    'CO' => 'colorado',
-    'CT' => 'connecticut',
-    'DE' => 'delaware',
-    'DC' => 'district of columbia',
-    'FL' => 'florida',
-    'GA' => 'georgia',
-    'HI' => 'hawaii',
-    'ID' => 'idaho',
-    'IL' => 'illinois',
-    'IN' => 'indiana',
-    'IA' => 'iowa',
-    'KS' => 'kansas',
-    'KY' => 'kentucky',
-    'LA' => 'louisiana',
-    'ME' => 'maine',
-    'MD' => 'maryland',
-    'MA' => 'massachusetts',
-    'MI' => 'michigan',
-    'MN' => 'minnesota',
-    'MS' => 'mississippi',
-    'MO' => 'missouri',
-    'MT' => 'montana',
-    'NE' => 'nebraska',
-    'NV' => 'nevada',
-    'NH' => 'new hampshire',
-    'NJ' => 'new jersey',
-    'NM' => 'new mexico',
-    'NY' => 'new york',
-    'NC' => 'north carolina',
-    'ND' => 'north dakota',
-    'OH' => 'ohio',
-    'OK' => 'oklahoma',
-    'OR' => 'oregon',
-    'PA' => 'pennsylvania',
-    'RI' => 'rhode island',
-    'SC' => 'south carolina',
-    'SD' => 'south dakota',
-    'TN' => 'tennessee',
-    'TX' => 'texas',
-    'UT' => 'utah',
-    'VT' => 'vermont',
-    'VA' => 'virginia',
-    'WA' => 'washington',
-    'WV' => 'west virginia',
-    'WI' => 'wisconsin',
-    'WY' => 'wyoming',
-    'AS' => 'american samoa',
-    'GU' => 'guam',
-    'MP' => 'northern mariana islands',
-    'PR' => 'puerto Rico',
-    'VI' => 'u.s. birgin islands',
-    'UM' => 'u.s. minor outlying islands',
-    'FM' => 'micronesia',
-    'PW' => 'palau',
-    'AA' => 'u.s. armed forces - americas[d]',
-    'AE' => 'u.s. armed forces - europe[e]',
-    'AP' => 'u.s. armed forces - pacific[f]',
-    'CM' => 'northern mariana islands',
-    'PZ' => 'panama canal zone',
-    'NB' => 'nebraska',
-    'PH' => 'philippins island',
-    'PC' => 'trust territory of the pacific islands',
-);
+use App\Relation;
 
 class BookingsController extends Controller{
     public function index(){
@@ -143,9 +74,8 @@ class BookingsController extends Controller{
 
     public function today_form($id){
         $booking = Booking::findOrFail($id);
-        
-        $us_state = STATE;
-        return view('bookings.edit' , compact('booking','caregivers','diagnosis','assignedCaregivers','assignedCaregiversId', 'us_state'));
+        $serviceLocation = Countyareas::select('id','area')->where('area' , '!=' ,'0')->get()->toArray();
+        return view('bookings.edit' , compact('booking','serviceLocation'));
     }
 
     public function today_update(Request $request){
@@ -154,36 +84,40 @@ class BookingsController extends Controller{
             'todaystarttime' => 'required|string|max:40',
             'todayendtime' => 'required|string|max:40',
             'booking_id' => 'required|string|max:40',
-            'todayendtime' => 'required|string|max:40',
-            'booking_id' => 'required|string|max:40',
             'address' => 'required',
             'state' => 'required',
+            'country' => 'required',
             'city' => 'required',
             'zipcode' => 'required',
+            'serviceLocation' => 'required',
         ]);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator);
         }
-      
         $booking = Booking::findOrFail($input['booking_id']);
         $booking->start_time = $input['todaystarttime'];
         $booking->end_time = $input['todayendtime'];
         $booking->address = $input['address'];
         $booking->city = $input['city'];
         $booking->state = $input['state'];
+        $booking->country = $input['country'];
         $booking->zipcode = $input['zipcode'];
+        $booking->service_location_id = $input['serviceLocation'];
         $booking->save();
 
         flash()->success('Booking Update Successfully');
         return redirect()->route('bookings.today_form', ['id' => $input['booking_id']]);
     }
 
-    public function select_date_form($id){
+    public function select_date_form($id)
+    {
         $booking = Booking::where('id', '=', $id)->with('user')->with('relation')->with('service_location')->get()->first()->toArray();
+        $relation = Relation::where('id' , $booking['relation']['relation_id'])->first();
+        $relationname = $booking['relation_id'] == '' ? 'Myself' :  $booking['relation']['name'].'-'.$relation['title'] ;
+        $serviceLocation = Countyareas::select('id','area')->where('area' , '!=' ,'0')->get()->toArray();
 
-        $us_state = STATE;
-        return view('bookings.select_date_form' , compact('booking', 'us_state'));
+        return view('bookings.select_date_form' , compact('booking','relationname','serviceLocation'));
     }
 
     public function update_select_date_form(Request $request){
@@ -193,20 +127,20 @@ class BookingsController extends Controller{
                 'city' => 'required',
                 'start_date'=>'required',
                 'is_full_day' => 'required',
-                'booking_id' => 'required|string|max:40',
+                'booking_id' => 'required|max:40',
                 'address' => 'required',
                 'state' => 'required',
-                'city' => 'required',
                 'zipcode' => 'required',
+                'serviceLocation' =>'required'
             ]
         );
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator);
         }        
-        
         $booking = array();
-        $booking['start_time'] = Carbon::parse($input['start_date'])->format('m/d/Y');
+        $booking['start_date'] = Carbon::parse($input['start_date'])->format('m/d/Y');
+        $booking['end_date'] = Carbon::parse($input['start_date'])->format('m/d/Y');
         $booking['start_time'] = $input['todaystarttime'];
         $booking['end_time'] = $input['todayendtime'];
         $booking['address'] = $input['address'];
@@ -214,6 +148,7 @@ class BookingsController extends Controller{
         $booking['state'] = $input['state'];
         $booking['zipcode'] = $input['zipcode'];
         $booking['24_hours ']= $input['is_full_day'];
+        $booking['service_location_id']= $input['serviceLocation'];
         if($input['is_full_day']){
             $booking['start_time'] = '00:00:00';
             $booking['end_time'] = '23:59:59';
@@ -227,8 +162,7 @@ class BookingsController extends Controller{
     public function daily_form($id){
         $booking = Booking::where('id', '=', $id)->with('user')->with('relation')->with('service_location')->get()->first()->toArray();
        
-        $us_state = STATE;
-        return view('bookings.daily_form' , compact('booking','caregivers','diagnosis','assignedCaregivers','assignedCaregiversId', 'us_state'));
+        return view('bookings.daily_form' , compact('booking','caregivers','diagnosis','assignedCaregivers','assignedCaregiversId'));
     }
 
     public function update_daily_form(Request $request){
@@ -274,8 +208,7 @@ class BookingsController extends Controller{
     public function select_from_week_form($id){
         $booking = Booking::findOrFail($id);
 
-        $us_state = STATE;
-        return view('bookings.select_from_week_form' , compact('booking','caregivers','diagnosis','assignedCaregivers','assignedCaregiversId', 'us_state')); 
+        return view('bookings.select_from_week_form' , compact('booking','caregivers','diagnosis','assignedCaregivers','assignedCaregiversId')); 
     }
 
     public function update_select_from_week_form(Request $request){

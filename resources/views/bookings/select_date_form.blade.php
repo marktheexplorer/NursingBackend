@@ -50,12 +50,7 @@
                                         <li class="media">
                                             <div class="media-img col-md-3">Booking For</div>
                                             <div class="media-body">
-                                                <div class="media-heading"><?php
-                                                    if(empty($booking['relation']['title']))
-                                                        $booking['relation_id'] == '' ? 'Myself' :  $booking['relation']['name'];
-                                                    else
-                                                        $booking['relation_id'] == '' ? 'Myself' :  $booking['relation']['name'] .' - '. $booking['relation']['title'];
-                                                    ?></div>
+                                                <div class="media-heading">{{ $relationname }}</div>
                                             </div>
                                         </li>
                                         <li class="media">
@@ -79,13 +74,9 @@
                                                         }).on('change', function(e, date){  });
                                                     </script>
                                                     @if ($errors->has('start_date'))
-                                                        <span class="invalid-feedback" role="alert" style="display:inline;">
-                                                            <strong>{{ $errors->first('start_date') }}</strong>
-                                                        </span>
-                                                    @elseif($errors->has('end_date'))
-                                                        <span class="invalid-feedback" role="alert" style="display:inline;">
-                                                            <strong>{{ $errors->first('end_date') }}</strong>
-                                                        </span>
+                                                    <span class="invalid-feedback" role="alert" style="display:inline;">
+                                                        <strong>{{ $errors->first('start_date') }}</strong>
+                                                    </span>
                                                     @endif
                                                 </div>
                                             </div>
@@ -163,7 +154,24 @@
                                             <div class="media-img col-md-3">Service Location</div>
                                             <div class="media-body">
                                                 <div class="media-heading">
-                                                    <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" placeholder="city" value="{{ old('city', $booking['service_location']['area']) }}"  id="citysuggest" autocomplete="off"/ style="max-width: 270px;">
+                                                    <select name="serviceLocation" class="form-control {{ $errors->has('serviceLocation') ? ' is-invalid' : '' }}" readonly="true" id="serviceLocation" style="max-width:270px;">
+                                                        @foreach($serviceLocation as $key => $value)
+                                                            <option  value="{{ $value['id'] }}" <?php if($value['id'] ==  $booking['service_location_id']){ echo 'selected'; } ?> >{{ $value['area']}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    @if ($errors->has('serviceLocation'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('serviceLocation') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="media">
+                                            <div class="media-img col-md-3">County</div>
+                                            <div class="media-body">
+                                                <div class="media-heading">
+                                                    <input type="text" value="{{ $booking['city'] }}" name="city" class="form-control" style="max-width: 270px;" />
                                                     @if ($errors->has('city'))
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $errors->first('city') }}</strong>
@@ -176,12 +184,7 @@
                                             <div class="media-img col-md-3">State</div>
                                             <div class="media-body">
                                                 <div class="media-heading">
-                                                    <select name="state" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" readonly="true" id="state" style="max-width:270px;">
-                                                        <option disabled="true" selected=""> -- Select State --</option>
-                                                        @foreach($us_state as $key => $state_code)
-                                                            <option  value="{{ ucwords($state_code)}}" <?php if(ucwords($state_code) == old('state', $booking['state'])){ echo 'selected'; } ?> >{{ ucwords($state_code)}}</option>
-                                                        @endforeach
-                                                    </select>
+                                                    <input type="text" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" placeholder="State" value="{{ old('state', $booking['state']) }}" id="state" style="max-width: 270px;" />
                                                     @if ($errors->has('state'))
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $errors->first('state') }}</strong>
@@ -189,7 +192,7 @@
                                                     @endif
                                                 </div>
                                             </div>
-                                        </li>
+                                        </li>  
                                         <li class="media">
                                             <div class="media-img col-md-3">Zipcode</div>
                                             <div class="media-body">
@@ -205,8 +208,7 @@
                                         </li>        
                                         <li>
                                             <div class="media-img col-md-12" style="text-align: center;">
-                                                <input class="form-control btn-sm btn-primary" style="display:inline; max-width: 70px; padding:0px;background-color: #3498db; background-image: none; " type="submit" value="Submit" id="today_submit"/>&nbsp;&nbsp;&nbsp;&nbsp;<!--
-                                                <button onclick="$('#today_div').toggle();$('#editbtn').css('display', 'inline');" class="form-control btn-sm btn-primary" style="max-width: 70px;padding:0px;display: inline;background-color: #3498db;background-image: none;" type="button">Cancel</button> -->
+                                                <input class="form-control btn-sm btn-primary" style="display:inline; max-width: 70px; padding:0px;background-color: #3498db; background-image: none; " type="submit" value="Submit" id="today_submit"/>&nbsp;&nbsp;&nbsp;&nbsp;
                                             </div>    
                                         </li>
                                     </ul>
