@@ -161,8 +161,11 @@ class BookingsController extends Controller{
 
     public function daily_form($id){
         $booking = Booking::where('id', '=', $id)->with('user')->with('relation')->with('service_location')->get()->first()->toArray();
-       
-        return view('bookings.daily_form' , compact('booking','caregivers','diagnosis','assignedCaregivers','assignedCaregiversId'));
+        $relation = Relation::where('id' , $booking['relation']['relation_id'])->first();
+        $relationname = $booking['relation_id'] == '' ? 'Myself' :  $booking['relation']['name'].'-'.$relation['title'] ;
+        $serviceLocation = Countyareas::select('id','area')->where('area' , '!=' ,'0')->get()->toArray();
+
+        return view('bookings.daily_form' , compact('booking','relationname','serviceLocation'));
     }
 
     public function update_daily_form(Request $request){
@@ -172,12 +175,12 @@ class BookingsController extends Controller{
                 'city' => 'required',
                 'start_date'=>'required',
                 'end_date'=>'required',
-                '24_hours' => 'required',
+                'is_full_day' => 'required',
                 'booking_id' => 'required|string|max:40',
                 'address' => 'required',
                 'state' => 'required',
-                'city' => 'required',
                 'zipcode' => 'required',
+                'serviceLocation' => 'required'
             ]
         );
 
@@ -186,15 +189,16 @@ class BookingsController extends Controller{
         }
         
         $booking = Booking::findOrFail($input['booking_id']);
-        $booking->start_date = Carbon::parse($input['start_date'])->format('m/d/Y');
-        $booking->end_date = Carbon::parse($input['end_date'])->format('m/d/Y');        
-        $booking->start_time = $input['todaystarttime'];
-        $booking->end_time = $input['todayendtime'];
-        $booking->address = $input['address'];
-        $booking->city = $input['city'];
-        $booking->state = $input['state'];
-        $booking->zipcode = $input['zipcode'];
-        $booking->is_full_day = $input['is_full_day'];
+        $booking['start_date'] = Carbon::parse($input['start_date'])->format('m/d/Y');
+        $booking['end_date'] = Carbon::parse($input['end_date'])->format('m/d/Y');        
+        $booking['start_time'] = $input['todaystarttime'];
+        $booking['end_time'] = $input['todayendtime'];
+        $booking['address'] = $input['address'];
+        $booking['city'] = $input['city'];
+        $booking['state'] = $input['state'];
+        $booking['zipcode'] = $input['zipcode'];
+        $booking['service_location_id'] = $input['serviceLocation'];
+        $booking['24_hours'] = $input['is_full_day'];
         if($input['is_full_day']){
             $booking->start_time = '00:00:00';
             $booking->end_time = '23:59:59';
