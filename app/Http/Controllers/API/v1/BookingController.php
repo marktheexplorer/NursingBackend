@@ -570,6 +570,8 @@ class BookingController extends Controller
                 if(($bookingStart->gte($startDate) && $bookingStart->lte($endDate)) || ($bookingStart->lte($startDate)&&($bookingEnd->gte($startDate) && $bookingEnd->lte($endDate))) || ($bookingEnd->gte($endDate)&&($bookingStart->gte($startDate) && $bookingStart->lte($endDate))))
                 {
                     $bookings[] = $value;
+                }else{
+                    return response()->json(['status_code' => $this->errorStatus , 'message' => 'No Bookings', 'data' => null]);
                 }
             }else{
                 $bookings[] = $value;
