@@ -569,7 +569,7 @@ class BookingController extends Controller
 
                 if(($bookingStart->gte($startDate) && $bookingStart->lte($endDate)) || ($bookingStart->lte($startDate)&&($bookingEnd->gte($startDate) && $bookingEnd->lte($endDate))) || ($bookingEnd->gte($endDate)&&($bookingStart->gte($startDate) && $bookingStart->lte($endDate))))
                 {
-                     $bookings[] = $value;
+                    $bookings[] = $value;
                 }
             }else{
                 $bookings[] = $value;
@@ -586,7 +586,7 @@ class BookingController extends Controller
                 $bookings[$key]['user']['description'] = $value->user->description;
         }
 
-        if(count($bookings) > 0){
+        if(count($jobs) > 0){
             return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $bookings]);
         }else{
             return response()->json(['status_code' => $this->errorStatus , 'message' => 'No Bookings', 'data' => null]);
