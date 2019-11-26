@@ -17,15 +17,14 @@
         <div class="ibox">
             <div class="ibox-head">
                 <div class="ibox-title">Bookings Data</div>
-                    <form method="get">    
-                        <select name="booking_options" class="form-control" style="float: right;width:200px;" onchange="$(this.form).submit();">
-                            <option disabled="" selected=> -- Select Booking Type --</option>
-                            @foreach($booking_type as $key => $type)
-                                <option value="{{ $type['booking_type'] }}" <?php echo ($select_booking_type == $type['booking_type'] ? 'selected' : ''); ?> >{{ ucfirst($type['booking_type']) }}</option>
-                            @endforeach
-                        </select>
-                    </form>    
-                </div>
+                <form method="get">    
+                    <select name="booking_options" class="form-control" style="float: right;width:200px;" onchange="$(this.form).submit();">
+                        <option disabled="" selected=> -- Select Booking Type --</option>
+                        @foreach($booking_type as $key => $type)
+                            <option value="{{ $type['booking_type'] }}" <?php echo ($select_booking_type == $type['booking_type'] ? 'selected' : ''); ?> >{{ ucfirst($type['booking_type']) }}</option>
+                        @endforeach
+                    </select>
+                </form>    
             </div>
             <div class="ibox-body">
                 <table class="table table-striped table-bordered table-hover" id="data-table" cellspacing="0" width="100%">
@@ -75,12 +74,6 @@
                                             </a>
                                         @endif
                                     </li>
-                                    <li class="media-list media-list-divider m-0">
-                                        <form action="{{ route('bookings.delete',['id' => $booking->id]) }}" method="POST" onsubmit="deleteBooking('{{ $booking->id }}', '{{ $booking->name }}', event,this)">
-                                        @csrf
-                                            <button class="btn-sm btn-danger btn-cir" title="Delete"><i class="fas fa-trash-alt"></i></button>
-                                        </form>
-                                    </li>
                                 </ul>
 	              			</td>
 	            		</tr>
@@ -98,12 +91,12 @@
         $('#data-table').DataTable();
     });
 
-    function deleteBooking(id, title, event,form)
+    function deletePatient(id, title, event,form)
     {
         event.preventDefault();
         swal({
             title: "Are you sure?",
-            text: "You want to delete "+title+" booking",
+            text: "You want to delete "+title+" user",
             icon: "warning",
             buttons: {
                 cancel: true,
@@ -144,7 +137,7 @@
                     }
                 });
             } else {
-                swal("Cancelled", title+" booking will not be deleted.", "error");
+                swal("Cancelled", title+" user will not be deleted.", "error");
             }
         });
     }
