@@ -138,6 +138,7 @@
                     </div>
                 </div>
             </div>
+            @if($booking->status == 'Pending' || $booking->status == 'Caregiver Request')
             <div class="col-md-12 col-lg-12" >
                 <div class="ibox">
                     <div class="ibox-body">
@@ -180,6 +181,7 @@
                     </div>
                 </div>
             </div>
+            @endif
         </div>
     </div>
 </div>
