@@ -554,21 +554,33 @@ class BookingController extends Controller
         }
     }
 
-    public function upcoming_bookings_caregiver (Request $request)
+    public function upcoming_bookings_caregiver (Request $request , $start_date = null, $end_date = null)
     { 
         $caregiver = Caregiver::select('id')->where('user_id',Auth::id())->first();
         $bookings = Booking::select('id','user_id','booking_type', 'start_date', 'end_date', '24_hours', 'start_time', 'end_time','weekdays','caregiver_id','service_location_id','address','city','state','country','zipcode')->where('status', 'Upcoming')->where('caregiver_id' , $caregiver['id'])->get();
-
+        
         foreach ($bookings as $key => $value) {
-            if($value['weekdays'] != null){
-                $data = unserialize($value['weekdays']);
-                $bookings[$key]['weekdays'] = $data;
+
+            if(isset($request->input('start_date')) && isset($request->input('end_date'))){
+            $bookingStart = Carbon::parse($value->start_date);
+            $bookingEnd = Carbon::parse($value->end_date);
+            $endDate = Carbon::parse($request->input('end_date'));
+            $startDate = Carbon::parse($request->input('start_date'));
+
+                if(($bookingStart->gte($startDate) && $bookingStart->lte($endDate)) || ($bookingStart->lte($startDate)&&($bookingEnd->gte($startDate) && $bookingEnd->lte($endDate))) || ($bookingEnd->gte($endDate)&&($bookingStart->gte($startDate) && $bookingStart->lte($endDate))))
+                {
+
+                    if($value['weekdays'] != null){
+                        $data = unserialize($value['weekdays']);
+                        $bookings[$key]['weekdays'] = $data;
+                    }
+                    $bookings[$key]['service_location_id'] = $value->service_location->area;
+                    $bookings[$key]['user']['name'] = $value->user->name;
+                    $bookings[$key]['user']['profile_image'] = $value->user->profile_image == null ? 'default.png' : $value->user->user->profile_image ;
+                    $bookings[$key]['user']['language'] = $value->user->language;
+                    $bookings[$key]['user']['description'] = $value->user->description;
+                }
             }
-            $bookings[$key]['service_location_id'] = $value->service_location->area;
-            $bookings[$key]['user']['name'] = $value->user->name;
-            $bookings[$key]['user']['profile_image'] = $value->user->profile_image == null ? 'default.png' : $value->user->user->profile_image ;
-            $bookings[$key]['user']['language'] = $value->user->language;
-            $bookings[$key]['user']['description'] = $value->user->description;
         }
 
         if(count($bookings) > 0){
@@ -602,7 +614,7 @@ class BookingController extends Controller
     public function completed_bookings_caregiver (Request $request)
     { 
         $caregiver = Caregiver::select('id')->where('user_id',Auth::id())->first();
-        $bookings = Booking::select('id','user_id', 'start_date', 'end_date','booking_type', '24_hours','caregiver_id')->where('status', 'Completed')->where('caregiver_id' , $caregiver['id'])->get();
+        $bookings = Booking::select('id','user_id', 'start_date', 'end_date','start_time','end_time', 'booking_type', '24_hours','caregiver_id')->where('status', 'Completed')->where('caregiver_id' , $caregiver['id'])->get();
 
         foreach ($bookings as $key => $value) {
             $bookings[$key]['user']['name'] = $value->user->name;
