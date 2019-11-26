@@ -581,7 +581,7 @@ class BookingController extends Controller
                 }
                 $bookings[$key]['service_location_id'] = $value->service_location->area;
                 $bookings[$key]['user']['name'] = $value->user->name;
-                $bookings[$key]['user']['profile_image'] = $value->user->profile_image == null ? 'default.png' : $value->user->user->profile_image ;
+                $bookings[$key]['user']['profile_image'] = $value->user->profile_image == null ? 'default.png' : $value->user->profile_image ;
                 $bookings[$key]['user']['language'] = $value->user->language;
                 $bookings[$key]['user']['description'] = $value->user->description;
         }
