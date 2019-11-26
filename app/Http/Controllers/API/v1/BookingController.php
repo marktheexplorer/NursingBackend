@@ -621,7 +621,7 @@ class BookingController extends Controller
 
         foreach ($bookings as $key => $value) {
             $bookings[$key]['user']['name'] = $value->user->name;
-            $bookings[$key]['user']['profile_image'] = $value->user->profile_image == null ? 'default.png' : $value->user->user->profile_image ;
+            $bookings[$key]['user']['profile_image'] = $value->user->profile_image == null ? 'default.png' : $value->user->profile_image ;
         }
 
         if(count($bookings) > 0){
