@@ -4,13 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
-use App\Enquiry;
 use Charts;
 use DB;
 use App\Faq;
 use App\Service;
 use App\Diagnose;
 use App\Booking;
+use App\ContactUs;
 
 class DashboardController extends Controller{
 
@@ -37,7 +37,7 @@ class DashboardController extends Controller{
         $diagnosis = Diagnose::count();
         $bookings = Booking::count();
 
-        $enquiries = Enquiry::count();
+        $contactUs = ContactUs::count();
         $faqs = Faq::count();
 
         $today_users = User::whereDate('created_at', today())->count();
@@ -69,6 +69,6 @@ class DashboardController extends Controller{
         $chart->labels(['2 days ago', 'Yesterday', 'Today']);
         $chart->dataset('Dataset', 'line', [$users_2_days_ago, $yesterday_users, $today_users]);*/
 
-        return view('dashboard', compact('users', 'enquiries', 'chart', 'faqs' ,'services','diagnosis','bookings'));
+        return view('dashboard', compact('users', 'contactUs', 'chart', 'faqs' ,'services','diagnosis','bookings'));
     }
 }

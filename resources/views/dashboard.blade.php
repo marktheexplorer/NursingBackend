@@ -67,11 +67,11 @@
                 </a>
             </div>
             <div class="col-lg-3 col-md-6">
-                <a href="{{ route('enquiries.index') }}">
+                <a href="{{ route('contactUs.index') }}">
                     <div class="ibox bg-danger color-white widget-stat">
                         <div class="ibox-body">
-                            <h2 class="m-b-5 font-strong">{{ $enquiries }}</h2>
-                            <div class="m-b-5">Total Enquiries</div><i class="fas fa-clipboard-list widget-stat-icon"></i>
+                            <h2 class="m-b-5 font-strong">{{ $contactUs }}</h2>
+                            <div class="m-b-5">Total Contact Us</div><i class="fas fa-clipboard-list widget-stat-icon"></i>
                         </div>
                     </div>
                 </a>

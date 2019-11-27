@@ -38,10 +38,6 @@
                 <a href="{{ route('patients.index') }}" style="{{ (request()->is('admin/patients*')) ? 'background-color:#3498db;color:#fff;' : '' }}"><i class="sidebar-item-icon fas fa fa-wheelchair"></i>
                     <span class="nav-label">Client</span></a>
             </li>
-           <!--  <li>
-                <a href="{{ route('service_request.index') }}" style="{{ (request()->is('admin/service_request*')) ? 'background-color:#3498db;color:#fff;' : '' }}"><i class="sidebar-item-icon fas fa-book-medical"></i>
-                    <span class="nav-label">Requests</span></a>
-            </li> -->
             <li>
                 <a href="{{ route('bookings.index') }}" style="{{ (request()->is('admin/bookings*')) ? 'background-color:#3498db;color:#fff;' : '' }}"><i class="sidebar-item-icon fas fa-book-medical"></i>
                     <span class="nav-label">Bookings</span></a>
@@ -99,8 +95,8 @@
                 </ul>
             </li>
             <li>
-                <a href="{{ route('enquiries.index') }}" style="{{ (request()->is('admin/enquiries*')) ? 'background-color:#3498db;color:#fff;' : '' }}"><i class="sidebar-item-icon fas fa-mail-bulk"></i>
-                    <span class="nav-label">Inquiry</span>
+                <a href="{{ route('contactUs.index') }}" style="{{ (request()->is('admin/contactUs*')) ? 'background-color:#3498db;color:#fff;' : '' }}"><i class="sidebar-item-icon fas fa-mail-bulk"></i>
+                    <span class="nav-label">ContactUs Details</span>
                 </a>
             </li>
         </ul>

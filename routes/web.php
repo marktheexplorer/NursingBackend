@@ -54,6 +54,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function()
 	Route::resource('cms', 'CmsPageController');
 	Route::resource('enquiries', 'EnquiryController');
 	Route::resource('relations', 'RelationController');
+	Route::resource('contactUs', 'ContactUsController');
 
 	//caregiver controller it automatically route the default route	
 	Route::get('caregiver/getzip', 'CaregiverController@getzip');
@@ -82,20 +83,20 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function()
 	Route::get('bookings/statefromcity', 'BookingsController@statefromcity');
 	Route::get('bookings/complete_booking/{id}', 'BookingsController@complete_booking')->name('bookings.complete_booking');
 	
-	Route::get('service_request/getzip', 'ServiceRequestController@getzip');
-	Route::get('service_request/searchcity', 'ServiceRequestController@searchcity');
-	Route::get('service_request/statefromcity', 'ServiceRequestController@statefromcity');	
-	Route::get('service_request/download_excel', 'ServiceRequestController@download_excel')->name('service_request.download_excel');
-	Route::get('service_request/resendmail/{id}', 'ServiceRequestController@resendmail')->name('service_request.resendmail');
-	Route::get('service_request/confirm_doc/{id}', 'ServiceRequestController@confirm_doc')->name('service_request.confirm_doc');
-	Route::get('service_request/reschedule/{id}', 'ServiceRequestController@reschedule')->name('service_request.reschedule');
-	Route::post('service_request/confirm_caregiver', 'ServiceRequestController@confirm_caregiver')->name('service_request.confirm_caregiver');
-	Route::post('service_request/picked_caregiver', 'ServiceRequestController@picked_caregiver')->name('service_request.picked_caregiver');
-	Route::post('service_request/save_request_caregivers', 'ServiceRequestController@save_request_caregivers')->name('service_request.save_request_caregivers');
-	Route::post('service_request/assign', 'ServiceRequestController@assign')->name('service_request.assign');
-	Route::get('service_request/caregiver_list/{userId}', 'ServiceRequestController@caregiver_list')->name('service_request.caregiver_list');
-	Route::get('service_request/blocked/{userId}', 'ServiceRequestController@blocked');
-	Route::resource('service_request', 'ServiceRequestController');
+	// Route::get('service_request/getzip', 'ServiceRequestController@getzip');
+	// Route::get('service_request/searchcity', 'ServiceRequestController@searchcity');
+	// Route::get('service_request/statefromcity', 'ServiceRequestController@statefromcity');	
+	// Route::get('service_request/download_excel', 'ServiceRequestController@download_excel')->name('service_request.download_excel');
+	// Route::get('service_request/resendmail/{id}', 'ServiceRequestController@resendmail')->name('service_request.resendmail');
+	// Route::get('service_request/confirm_doc/{id}', 'ServiceRequestController@confirm_doc')->name('service_request.confirm_doc');
+	// Route::get('service_request/reschedule/{id}', 'ServiceRequestController@reschedule')->name('service_request.reschedule');
+	// Route::post('service_request/confirm_caregiver', 'ServiceRequestController@confirm_caregiver')->name('service_request.confirm_caregiver');
+	// Route::post('service_request/picked_caregiver', 'ServiceRequestController@picked_caregiver')->name('service_request.picked_caregiver');
+	// Route::post('service_request/save_request_caregivers', 'ServiceRequestController@save_request_caregivers')->name('service_request.save_request_caregivers');
+	// Route::post('service_request/assign', 'ServiceRequestController@assign')->name('service_request.assign');
+	// Route::get('service_request/caregiver_list/{userId}', 'ServiceRequestController@caregiver_list')->name('service_request.caregiver_list');
+	// Route::get('service_request/blocked/{userId}', 'ServiceRequestController@blocked');
+	// Route::resource('service_request', 'ServiceRequestController');
 });
 
 
