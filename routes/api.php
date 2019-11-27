@@ -18,6 +18,7 @@ Route::group(['namespace' => 'API\v1'], function(){
 	Route::post('login', 'UserController@login');
 	Route::post('verify-otp', 'UserController@verifyOtp');
 	Route::post('resend-otp', 'UserController@resendOtp');
+	Route::get('faq-listing', 'HomeController@faqListing');
 });
 
 Route::group(['middleware' => ['auth:api', 'blockedUser'], 'namespace' => 'API\v1'], function(){

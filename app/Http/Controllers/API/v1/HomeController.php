@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\ContactUs;
+use App\Faq;
 use Validator;
 
 class HomeController extends Controller
@@ -43,6 +44,16 @@ class HomeController extends Controller
             return response()->json(['status_code'=> 200, 'message'=> 'Thanks for contacting us.', 'data' => null]);
         else
             return response()->json(['status_code'=> 400, 'message'=> "Can't contact. Please try again." ,'data' => null]);
+    }
+
+    public function faqListing()
+    {
+        $faqs = Faq::select('question',htmlspecialchars_decode('answer'))->orderBy('faq_order', 'ASC')->get();
+
+        if (count($faqs) > 0)
+            return response()->json(['status_code'=> 200, 'message'=> '', 'data' => $faqs]);
+        else
+            return response()->json(['status_code'=> 400, 'message'=> "No FAQs" ,'data' => null]);
     }
    
 }

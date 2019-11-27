@@ -9,7 +9,6 @@ use Validator;
 class CmsPageController extends Controller{
     public function __construct(){ 
         $this->middleware('preventBackHistory');
-        $this->middleware('auth'); 
     }
 
     /**
