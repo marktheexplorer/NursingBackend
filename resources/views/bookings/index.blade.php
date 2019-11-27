@@ -55,7 +55,7 @@
                                             <button class="btn-sm btn-warning btn-cir" title="View"><i class="fas fa-eye"></i></button>
                                         </a>
                                     </li>
-                                    <li class="media-list media-list-divider m-0">
+                                    <li class="media-list media-list-divider m-0" style="float: left;padding-right:5px;">
                                         @if($booking->booking_type == 'Today')
                                             <a href="{{ route('bookings.today_form',['id' => $booking->id]) }}">
                                                 <button class="btn-sm btn-primary btn-cir" title="Edit"><i class="fas fa-pencil-alt"></i></button>
@@ -74,12 +74,19 @@
                                             </a>
                                         @endif
                                     </li>
-                                    <li class="media-list media-list-divider m-0">
+                                    <li class="media-list media-list-divider m-0" style="float: left;padding-right:5px;">
                                         <form action="{{ route('bookings.delete',['id' => $booking->id]) }}" method="DELETE" onsubmit="deleteBooking('{{ $booking->id }}', '{{ $booking->name }}', event,this)">
                                         @csrf
                                             <button class="btn-sm btn-danger btn-cir" title="Delete"><i class="fas fa-trash-alt"></i></button>
                                         </form>
                                     </li>
+                                    @if(($booking->booking_type == 'Select from week' || $booking->booking_type == 'Daily') && $booking->status != "Completed") 
+                                        <li class="media-list media-list-divider m-0" style="float: left;padding-right:5px;">
+                                            <a href="{{ route('bookings.complete_booking',['id' => $booking->id]) }}">
+                                                <button class="btn-sm btn-info btn-cir" title="Edit"><i class="fas fa-check"></i></button>
+                                            </a>
+                                        </li>
+                                    @endif
                                 </ul>
 	              			</td>
 	            		</tr>

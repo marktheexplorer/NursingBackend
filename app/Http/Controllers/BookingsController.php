@@ -341,12 +341,30 @@ class BookingsController extends Controller{
         } else {
             $response = array(
                 'status' => 'error',
-                'message' => 'Booking can not be deleted.Please try again',
+                'message' => 'Booking can not be deleted, Please try again',
             );
         }
         return json_encode($response);
     }
 
+<<<<<<< HEAD
+    public function complete_booking($id){
+        $booking = Booking::findOrFail($id);
+        $flash_msg = 'Booking mark as completed successfully';
+        if(empty($booking)){
+            $flash_msg = 'Invalid Booking, Please try again';
+        }
+
+        $booking->status = 'Completed';
+        if ($booking->save()) {
+            $flash_msg = 'Booking mark as completed successfully';
+        } else {
+            $flash_msg = 'Booking can not be mark as completed, Please try again';
+        }
+
+        flash()->success('Booking Update Successfully');
+        return redirect()->route('bookings.index');
+=======
     public function getDates($startDate , $endDate ,$weekDays)
     {
         $startDate = Carbon::parse($startDate);
@@ -365,5 +383,6 @@ class BookingsController extends Controller{
             $startDate = $startDate->addDay(1);
         }
         return $data;
+>>>>>>> 5b9560afc4a7b0a866fcdcf28cdb5e20ea874064
     }
 }

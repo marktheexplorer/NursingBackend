@@ -80,6 +80,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function()
 	Route::get('bookings/getzip', 'BookingsController@getzip');
 	Route::get('bookings/searchcity/{term}', 'BookingsController@searchcity');
 	Route::get('bookings/statefromcity', 'BookingsController@statefromcity');
+	Route::get('bookings/complete_booking/{id}', 'BookingsController@complete_booking')->name('bookings.complete_booking');
 	
 	Route::get('service_request/getzip', 'ServiceRequestController@getzip');
 	Route::get('service_request/searchcity', 'ServiceRequestController@searchcity');
