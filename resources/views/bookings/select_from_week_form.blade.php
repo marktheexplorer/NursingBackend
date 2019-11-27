@@ -110,7 +110,7 @@
                                             <div class="media-img col-md-3">Select Appointment Time</div>
                                             <div class="media-body">
                                                 <div class="media-heading"><?php
-                                                    $booking_time_type = old('is_full_day', $booking->is_full_day); ?>
+                                                    $booking_time_type = old('is_full_day', $booking['24_hours']); ?>
                                                     <label style="color:#000;cursor: pointer;">
                                                         24 Hour Service : <input type="radio" name="is_full_day" value="1" style="margin-right: 90px;display: inline;cursor: pointer;" <?php if($booking_time_type){ echo 'checked'; } ?> on>
                                                     </label>
@@ -179,7 +179,24 @@
                                             <div class="media-img col-md-3">Service Location</div>
                                             <div class="media-body">
                                                 <div class="media-heading">
-                                                    <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" placeholder="city" value="{{ old('city', $booking->service_location->area) }}"  id="citysuggest" autocomplete="off"/ style="max-width: 270px;">
+                                                    <select name="serviceLocation" class="form-control {{ $errors->has('serviceLocation') ? ' is-invalid' : '' }}" readonly="true" id="serviceLocation" style="max-width:270px;">
+                                                        @foreach($serviceLocation as $key => $value)
+                                                            <option  value="{{ $value['id'] }}" <?php if($value['id'] ==  $booking['service_location_id']){ echo 'selected'; } ?> >{{ $value['area']}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    @if ($errors->has('serviceLocation'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('serviceLocation') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="media">
+                                            <div class="media-img col-md-3">County</div>
+                                            <div class="media-body">
+                                                <div class="media-heading">
+                                                    <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" placeholder="city" value="{{ old('city', $booking['city']) }}"  id="citysuggest" autocomplete="off"/ style="max-width: 270px;">
                                                     @if ($errors->has('city'))
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $errors->first('city') }}</strong>
@@ -192,15 +209,23 @@
                                             <div class="media-img col-md-3">State</div>
                                             <div class="media-body">
                                                 <div class="media-heading">
-                                                    <select name="state" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" readonly="true" id="state" style="max-width:270px;">
-                                                        <option disabled="true" selected=""> -- Select State --</option>
-                                                        @foreach($us_state as $key => $state_code)
-                                                            <option  value="{{ ucwords($state_code)}}" <?php if(ucwords($state_code) == old('state', $booking->state)){ echo 'selected'; } ?> >{{ ucwords($state_code)}}</option>
-                                                        @endforeach
-                                                    </select>
+                                                    <input type="text" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" placeholder="State" value="{{ old('state', $booking['state']) }}" id="state" style="max-width: 270px;" />
                                                     @if ($errors->has('state'))
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $errors->first('state') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </li> 
+                                        <li class="media">
+                                            <div class="media-img col-md-3">Country</div>
+                                            <div class="media-body">
+                                                <div class="media-heading">
+                                                    <input type="text" value="{{ $booking['country'] }}" name="country" class="form-control" style="max-width: 270px;" />
+                                                    @if ($errors->has('country'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('country') }}</strong>
                                                         </span>
                                                     @endif
                                                 </div>

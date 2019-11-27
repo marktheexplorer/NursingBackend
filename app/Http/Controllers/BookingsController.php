@@ -146,6 +146,7 @@ class BookingsController extends Controller{
         $booking['address'] = $input['address'];
         $booking['city'] = $input['city'];
         $booking['state'] = $input['state'];
+        $booking['country'] = $input['country'];
         $booking['zipcode'] = $input['zipcode'];
         $booking['24_hours ']= $input['is_full_day'];
         $booking['service_location_id']= $input['serviceLocation'];
@@ -196,6 +197,7 @@ class BookingsController extends Controller{
         $booking['address'] = $input['address'];
         $booking['city'] = $input['city'];
         $booking['state'] = $input['state'];
+        $booking['country'] = $input['country'];
         $booking['zipcode'] = $input['zipcode'];
         $booking['service_location_id'] = $input['serviceLocation'];
         $booking['24_hours'] = $input['is_full_day'];
@@ -211,8 +213,9 @@ class BookingsController extends Controller{
 
     public function select_from_week_form($id){
         $booking = Booking::findOrFail($id);
+        $serviceLocation = Countyareas::select('id','area')->where('area' , '!=' ,'0')->get()->toArray();
 
-        return view('bookings.select_from_week_form' , compact('booking','caregivers','diagnosis','assignedCaregivers','assignedCaregiversId')); 
+        return view('bookings.select_from_week_form' , compact('booking','serviceLocation')); 
     }
 
     public function update_select_from_week_form(Request $request){
@@ -226,7 +229,7 @@ class BookingsController extends Controller{
                 'booking_id' => 'required|string|max:40',
                 'address' => 'required',
                 'state' => 'required',
-                'city' => 'required',
+                'country' => 'required',
                 'zipcode' => 'required',
             ]
         );
@@ -234,21 +237,30 @@ class BookingsController extends Controller{
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator);
         }
+
+        $startDate = Carbon::now()->format('m/d/Y');
+        $endDate = Carbon::now()->addweek($input['no_of_weeks'])->format('m/d/Y');
+
+        $dates = Self::getDates($startDate , $endDate , $input['weekdays']);
         
         $booking = Booking::findOrFail($input['booking_id']);
-        $booking->weekdays = serialize($input['weekdays']);
-        $booking->no_of_weeks = $input['no_of_weeks'];
-        $booking->start_time = $input['todaystarttime'];
-        $booking->end_time = $input['todayendtime'];
-        $booking->address = $input['address'];
-        $booking->city = $input['city'];
-        $booking->state = $input['state'];
-        $booking->zipcode = $input['zipcode'];
-        $booking->is_full_day = $input['is_full_day'];
+        $booking['start_date'] = Carbon::parse($dates[0])->format('m/d/Y');
+        $booking['end_date'] = Carbon::parse(end($dates))->format('m/d/Y');  
+        $booking['start_time'] = $input['todaystarttime'];
+        $booking['end_time'] = $input['todayendtime'];
+        $booking['address'] = $input['address'];
+        $booking['city'] = $input['city'];
+        $booking['state'] = $input['state'];
+        $booking['country'] = $input['country'];
+        $booking['zipcode'] = $input['zipcode'];
+        $booking['service_location_id'] = $input['serviceLocation'];
+        $booking['24_hours'] = $input['is_full_day'];
         if($input['is_full_day']){
             $booking->start_time = '00:00:00';
             $booking->end_time = '23:59:59';
         }
+        $booking['weekdays'] = serialize($input['weekdays']);
+        $booking['no_of_weeks'] = $input['no_of_weeks'];
         $booking->save();
 
         flash()->success('Booking Update Successfully');
@@ -335,6 +347,7 @@ class BookingsController extends Controller{
         return json_encode($response);
     }
 
+<<<<<<< HEAD
     public function complete_booking($id){
         $booking = Booking::findOrFail($id);
         $flash_msg = 'Booking mark as completed successfully';
@@ -351,5 +364,25 @@ class BookingsController extends Controller{
 
         flash()->success('Booking Update Successfully');
         return redirect()->route('bookings.index');
+=======
+    public function getDates($startDate , $endDate ,$weekDays)
+    {
+        $startDate = Carbon::parse($startDate);
+        $endDate = Carbon::parse($endDate);
+        
+        $data = array();
+
+        while($endDate->gte($startDate))
+        {  
+            if($weekDays == null){
+                $data[]= $startDate->format('Y-m-d');
+            }else if(in_array($startDate->format('D'), $weekDays)) {
+                $data[]= $startDate->format('Y-m-d');
+            }
+
+            $startDate = $startDate->addDay(1);
+        }
+        return $data;
+>>>>>>> 5b9560afc4a7b0a866fcdcf28cdb5e20ea874064
     }
 }
