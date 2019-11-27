@@ -192,7 +192,20 @@
                                                     @endif
                                                 </div>
                                             </div>
-                                        </li>  
+                                        </li> 
+                                        <li class="media">
+                                            <div class="media-img col-md-3">Country</div>
+                                            <div class="media-body">
+                                                <div class="media-heading">
+                                                    <input type="text" value="{{ $booking['country'] }}" name="country" class="form-control" style="max-width: 270px;" />
+                                                    @if ($errors->has('country'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('country') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </li> 
                                         <li class="media">
                                             <div class="media-img col-md-3">Zipcode</div>
                                             <div class="media-body">
