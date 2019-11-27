@@ -347,7 +347,6 @@ class BookingsController extends Controller{
         return json_encode($response);
     }
 
-<<<<<<< HEAD
     public function complete_booking($id){
         $booking = Booking::findOrFail($id);
         $flash_msg = 'Booking mark as completed successfully';
@@ -364,7 +363,9 @@ class BookingsController extends Controller{
 
         flash()->success('Booking Update Successfully');
         return redirect()->route('bookings.index');
-=======
+    }
+
+
     public function getDates($startDate , $endDate ,$weekDays)
     {
         $startDate = Carbon::parse($startDate);
@@ -383,6 +384,5 @@ class BookingsController extends Controller{
             $startDate = $startDate->addDay(1);
         }
         return $data;
->>>>>>> 5b9560afc4a7b0a866fcdcf28cdb5e20ea874064
     }
 }
