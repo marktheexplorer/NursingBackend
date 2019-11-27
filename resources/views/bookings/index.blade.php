@@ -36,7 +36,7 @@
 	                  		<th>Status</th>
 	                  		<th>Booking Type</th>
 	                  		<th>Created At</th>
-	                  		<th>Actions</th>
+	                  		<th style="width: 150px;">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -49,7 +49,7 @@
 	              			<td>{{ $booking->booking_type }}</td>
 	              			<td>{{ date_format(date_create($booking->created_at), 'd M, y')}}</td>
 	              			<td>
-                                <ul>
+                                <ul style="display: inline;">
                                     <li class="media-list media-list-divider m-0" style="float: left;padding-right:5px;">
                                         <a href="{{ route('bookings.show',['id' => $booking->id]) }}">
                                             <button class="btn-sm btn-warning btn-cir" title="View"><i class="fas fa-eye"></i></button>
