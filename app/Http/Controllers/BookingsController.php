@@ -374,9 +374,7 @@ class BookingsController extends Controller{
         return json_encode($response);
     }
 
-<<<<<<< HEAD
     public function getDates($startDate , $endDate ,$weekDays){
-=======
         flash()->success('Booking Update Successfully');
         return redirect()->route('bookings.index');
     }
@@ -384,7 +382,6 @@ class BookingsController extends Controller{
 
     public function getDates($startDate , $endDate ,$weekDays)
     {
->>>>>>> 93fa597f72a5cb935328151450cde66fa4491f66
         $startDate = Carbon::parse($startDate);
         $endDate = Carbon::parse($endDate);
         
@@ -401,7 +398,6 @@ class BookingsController extends Controller{
             $startDate = $startDate->addDay(1);
         }
         return $data;
-<<<<<<< HEAD
    }
 
    public function confirmation_mail($patient_id){
@@ -498,7 +494,5 @@ class BookingsController extends Controller{
         //redirect back to list page
         flash()->success("Uploaded Document approved.");
         return redirect()->route('bookings.show',['id' => $id]);
-=======
->>>>>>> 93fa597f72a5cb935328151450cde66fa4491f66
     }
 }
