@@ -74,19 +74,19 @@
                                             </a>
                                         @endif
                                     </li>
+                                    @if(($booking->booking_type == 'Select from week' || $booking->booking_type == 'Daily') && $booking->status == "Upcoming") 
+                                        <li class="media-list media-list-divider m-0" style="float: left;padding-right:5px;">
+                                            <form action="{{ route('bookings.complete_booking',['id' => $booking->id]) }}" method="GET"  onsubmit="markascomplete('{{ $booking->id }}', '{{ $booking->name }}', event,this)">
+                                                <button class="btn-sm btn-info btn-cir" title="Mark as Completed"><i class="fas fa-check"></i></button>
+                                            </a>
+                                        </li>
+                                    @endif
                                     <li class="media-list media-list-divider m-0" style="float: left;padding-right:5px;">
                                         <form action="{{ route('bookings.delete',['id' => $booking->id]) }}" method="DELETE" onsubmit="deleteBooking('{{ $booking->id }}', '{{ $booking->name }}', event,this)">
                                         @csrf
                                             <button class="btn-sm btn-danger btn-cir" title="Delete"><i class="fas fa-trash-alt"></i></button>
                                         </form>
                                     </li>
-                                    @if(($booking->booking_type == 'Select from week' || $booking->booking_type == 'Daily') && $booking->status != "Completed") 
-                                        <li class="media-list media-list-divider m-0" style="float: left;padding-right:5px;">
-                                            <a href="{{ route('bookings.complete_booking',['id' => $booking->id]) }}">
-                                                <button class="btn-sm btn-info btn-cir" title="Edit"><i class="fas fa-check"></i></button>
-                                            </a>
-                                        </li>
-                                    @endif
                                 </ul>
 	              			</td>
 	            		</tr>
@@ -104,8 +104,57 @@
         $('#data-table').DataTable();
     });
 
-    function deleteBooking(id, title, event,form)
-    {
+    function markascomplete(id, title, event,form){
+        event.preventDefault();
+        swal({
+            title: "Are you sure?",
+            text: "You want to mark as completed this booking",
+            icon: "warning",
+            buttons: {
+                cancel: true,
+                confirm: true,
+            },
+            closeModal: false,
+            closeModal: false,
+            closeOnEsc: false,
+        })
+       .then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                url: $(form).attr('action'),
+                data: $(form).serialize(),
+                type: 'GET',
+                success: function(data) {
+                    data = JSON.parse(data);
+                    if(data['status']) {
+                        swal({
+                            title: data['message'],
+                            text: "Press ok to continue",
+                            icon: "success",
+                            buttons: {
+                                cancel: true,
+                                confirm: true,
+                            },
+                            closeOnConfirm: false,
+                            closeOnEsc: false,
+                        })
+                        .then((willDelete) => {
+                            if (willDelete) {
+                                window.location.reload();
+                            }
+                            });
+                        } else {
+                             swal("Error", data['message'], "error");
+                        }
+                    }
+                });
+            } else {
+                swal("Cancelled", "Booking will not be mark as completed.", "error");
+            }
+        });
+    }
+
+    function deleteBooking(id, title, event,form){
         event.preventDefault();
         swal({
             title: "Are you sure?",

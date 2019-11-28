@@ -81,6 +81,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function()
 	Route::get('bookings/searchcity/{term}', 'BookingsController@searchcity');
 	Route::get('bookings/statefromcity', 'BookingsController@statefromcity');
 	Route::get('bookings/complete_booking/{id}', 'BookingsController@complete_booking')->name('bookings.complete_booking');
+	Route::get('bookings/confirmation_mail/{patient_id}', 'BookingsController@confirmation_mail')->name('bokkings.confirmation_mail');
 	
 	Route::get('service_request/getzip', 'ServiceRequestController@getzip');
 	Route::get('service_request/searchcity', 'ServiceRequestController@searchcity');
@@ -100,7 +101,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function()
 
 
 Route::get('cms/{token}', 'CmsPageController@view_cms');
-Route::get('confirm_careservice/{token}', 'ServiceRequestController@confirm_careservice');
-Route::post('upload_carepack_docs', 'ServiceRequestController@upload_carepack_docs');
+Route::get('confirm_careservice/{token}', 'BookingsController@confirm_careservice');
+Route::post('upload_carepack_docs', 'BookingsController@upload_carepack_docs');
+
 Route::get('set_password/{token}', 'CaregiverController@set_password');
 Route::post('caregiver/savepassword', 'CaregiverController@savepassword');

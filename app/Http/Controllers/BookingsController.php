@@ -12,6 +12,9 @@ use Validator;
 use Carbon\Carbon;
 use App\Us_location;
 use App\Relation;
+use App\Mail\MailHelper;
+use Illuminate\Support\Facades\Mail;
+use DB;
 
 class BookingsController extends Controller{
     public function index(){
@@ -25,7 +28,7 @@ class BookingsController extends Controller{
             if($if_in_array) {
                 $bookings = Booking::where('booking_type', '=', $_GET['booking_options'])->orderBy('created_at', 'DESC')->get();
                 $select_booking_type = $_GET['booking_options'];
-            }    
+            } 
         }
         return view('bookings.index' , compact('bookings', 'booking_type', 'select_booking_type'));
     }
@@ -349,24 +352,29 @@ class BookingsController extends Controller{
 
     public function complete_booking($id){
         $booking = Booking::findOrFail($id);
-        $flash_msg = 'Booking mark as completed successfully';
         if(empty($booking)){
-            $flash_msg = 'Invalid Booking, Please try again';
+            $response = array(
+                'status' => 'success',
+                'message' => 'Invalid Booking, Please try again',
+            );    
         }
 
         $booking->status = 'Completed';
         if ($booking->save()) {
-            $flash_msg = 'Booking mark as completed successfully';
+            $response = array(
+                'status' => 'error',
+                'message' => 'Booking mark as completed successfully',
+            );    
         } else {
-            $flash_msg = 'Booking can not be mark as completed, Please try again';
+            $response = array(
+                'status' => 'error',
+                'message' => 'Booking can not be mark as completed, Please try again',
+            );    
         }
-
-        flash()->success('Booking Update Successfully');
-        return redirect()->route('bookings.index');
+        return json_encode($response);
     }
-    
-    public function getDates($startDate , $endDate ,$weekDays)
-    {
+
+    public function getDates($startDate , $endDate ,$weekDays){
         $startDate = Carbon::parse($startDate);
         $endDate = Carbon::parse($endDate);
         
@@ -384,4 +392,100 @@ class BookingsController extends Controller{
         }
         return $data;
    }
+
+   public function confirmation_mail($patient_id){
+        $patient = User::find($patient_id);
+        if(empty($patient)){
+            flash()->success("Invalid Client.");
+            return false;
+        }
+
+        $token = md5(uniqid(rand(), true));
+        $objDemo = new \stdClass();
+        $objDemo->sender = env('APP_NAME');
+        $objDemo->receiver = ucfirst($patient->name);
+        $objDemo->type = 'basic_carepack_confirm';
+        $objDemo->format = 'basic';
+        $objDemo->subject = 'Basic Care Service Pack Mail';
+        $objDemo->mail_from = env('MAIL_FROM_EMAIL');
+        $objDemo->mail_from_name = env('MAIL_FROM_NAME');
+        $objDemo->weburl = env('APP_URL')."confirm_careservice/".$token;
+        $patient->email = "sonu.shokeen@saffrontech.net";
+        $issend = Mail::to($patient->email)->send(new MailHelper($objDemo));
+
+        if($issend){
+            $service_request=DB::table('service_requests')->where('id','=', $patient_id)->update(array('token'=>$token));
+        }
+        return true;
+   }
+
+   public function confirm_careservice($token){
+        //need to start work on this...
+        $isexist = DB::table('bookings')->where('token', '=', $token)->first();
+        $data = array();
+
+        if($isexist){
+            //show upload form
+            $data['token'] = $isexist->token;
+        }else{
+            //show page with error message
+            $data['error'] = 'Oops, look like link is expire or invalid, please contact to 24*7 Nursing Care Admin';
+        }
+        return view('bookings.upload_carepack_docs', compact('data'));
+    }
+
+    public function upload_carepack_docs(Request $request){
+        if($request->has('care_pack') && ($request->file('care_pack') != null)) {
+            $input = $request->input();
+            $isrequest = DB::table('bookings')->where('token', '=', $input['token'])->first();
+            if(empty($isrequest)){
+                flash()->success("'Oops, look like link is expire or invalid, please contact to 24*7 Nursing Care Admin'");
+                return view('bookings.upload_carepack_docs', compact('data'));
+            }
+
+            $docs = $request->file('care_pack');
+            $token = md5(uniqid(rand(), true));
+            $doc_name = $token.time().'.'.$docs->getClientOriginalExtension();
+
+            $destinationPath = public_path('/request_docs');
+            $docs->move($destinationPath, $doc_name);
+
+            $request = array(
+                'service_request_id' => $isrequest->id,
+                'value' => $doc_name,
+                'type' => 'carepack_docs'
+            );
+            DB::table('service_requests_attributes')->insert($request);
+            $service_request = DB::table('service_requests')->where('token', '=', $input['token'])->update(array('status' => 6));
+            $data = array('upload' => 'success', 'message' => 'Thanks for aupload Document, Admin will contact you soon.');
+
+            return view('bookings.upload_carepack_docs', compact('data'));
+        }else{
+            flash()->success("Please upload basic care pack document");
+            return view('bookings.upload_carepack_docs', compact('data'));
+        }
+    }
+
+    public function confirm_doc($id){
+        $isrequest = DB::table('bookings')->where('id', '=', $id)->first();
+        if(empty($isrequest)){
+            flash()->success("Un-authorized Request");
+            return redirect()->route('bookings.index');
+        }
+
+        //get final confirmed caregiver
+        $caregiver = DB::table('service_requests_attributes')->where('service_request_id', '=', $id)->where('type', '=', 'final_caregiver')->first();
+
+        //save request booking
+        $requestbooking = new \App\RequestBooking;
+        $requestbooking->request_id = $id;
+        $requestbooking->caregiver_id = $caregiver->value;
+        $requestbooking->start_date = date('Y-m-d', strtotime($isrequest->start_date));
+        $requestbooking->end_date = date('Y-m-d', strtotime($isrequest->end_date));
+        $requestbooking->save();
+
+        //redirect back to list page
+        flash()->success("Uploaded Document approved.");
+        return redirect()->route('bookings.show',['id' => $id]);
+    }
 }

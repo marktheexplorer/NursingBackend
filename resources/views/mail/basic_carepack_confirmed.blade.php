@@ -7,7 +7,7 @@
             <h3> Dear {{ $objDemo->receiver }},</h3><br/>
         </td>
     </tr><?php
-    if($objDemo->type == 'resend_basic_carepack_confirm'){ ?>}
+    if($objDemo->type == 'basic_carepack_confirmed'){ ?>}
         <tr>
             <td>
                 <p style="color: #555;line-height: 25px;margin: 0;"> Congratulations! Your request for caregiver service has been accepted, Now you have to click below button and upload your required documents.</p><br/><br/>
