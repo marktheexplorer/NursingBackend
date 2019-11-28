@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use App\AssignedCaregiver;
 use Log;
 use App\Caregiver;
+use App\Notification;
 
 class BookingController extends Controller
 {	
@@ -99,6 +100,9 @@ class BookingController extends Controller
         $input['diagnosis_id'] = serialize($input['diagnosis']);
         $input['status'] = 'Pending';
         $booking = Booking::create($input);
+
+        Self::sendNotifications('1', $booking->id, 'New Booking Request', 'New Booking Request');
+        Self::sendNotifications(Auth::id(), $booking->id, 'Booking Requested', 'Your booking request has been generated.');
 
         if($booking){
             return response()->json(['status_code' => $this->successStatus , 'message' => 'Booking created successfully.', 'data' => null]);
@@ -630,6 +634,41 @@ class BookingController extends Controller
             return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $bookings]);
         }else{
             return response()->json(['status_code' => $this->errorStatus , 'message' => 'No Bookings', 'data' => null]);
+        }
+    }
+
+    public function sendNotifications($userId, $bookingId, $title, $message)
+    { 
+       $input['user_id'] = $userId;
+       $input['booking_id'] = $bookingId;
+       $input['title'] = $title;
+       $input['message'] = $message;
+       $input['is_read'] = 0;
+
+       if(Notification::create($input)){
+            return true;
+       }else{
+            return false;
+       }
+    }
+
+    public function getNotifications(Request $request)
+    {   
+        $notifications = Notification::where('user_id', Auth::id())->get();
+
+        if(count($notifications) > 0){
+            foreach ($notifications as $key => $notification) {
+                $notification['start_date'] = $notification->booking->start_date;
+                $notification['end_date'] = $notification->booking->end_date;
+                $notification['start_time'] = $notification->booking->start_time;
+                $notification['end_time'] = $notification->booking->end_time;
+            }
+        }
+
+        if(count($notifications) > 0){
+            return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $notifications]);
+        }else{
+            return response()->json(['status_code' => $this->errorStatus , 'message' => 'No Notifications', 'data' => null]);
         }
     }
 }

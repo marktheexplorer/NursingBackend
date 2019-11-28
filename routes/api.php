@@ -43,4 +43,5 @@ Route::group(['middleware' => ['auth:api', 'blockedUser'], 'namespace' => 'API\v
 	Route::post('complete-booking', 'BookingController@complete_booking');
 	Route::post('contact-us', 'HomeController@savecontactusData');
 	Route::post('setNotification', 'UserController@setNotification');
+	Route::get('getNotifications', 'BookingController@getNotifications');
 });
