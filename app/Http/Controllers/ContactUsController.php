@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\ContactUs;
 
-class ContactUsCOntroller extends Controller{
+class ContactUsController extends Controller{
     public function __construct(){ 
         $this->middleware('preventBackHistory');
         $this->middleware('auth'); 
@@ -17,7 +18,8 @@ class ContactUsCOntroller extends Controller{
      */
     public function index()
     {
-        //
+        $contactUs = ContactUs::orderBy('created_at', 'desc')->get();
+        return view('contactUs.index', compact('contactUs'));
     }
 
     /**
@@ -49,7 +51,8 @@ class ContactUsCOntroller extends Controller{
      */
     public function show($id)
     {
-        //
+       $contact = ContactUs::findOrFail($id);
+        return view('contactUs.view', compact('contact'));
     }
 
     /**
@@ -83,6 +86,18 @@ class ContactUsCOntroller extends Controller{
      */
     public function destroy($id)
     {
-        //
+        $contact = ContactUs::findOrFail($id);
+        if ($contact->delete()) {
+            $response = array(
+                'status' => 'success',
+                'message' => 'Contact Us Details deleted successfully',
+            );
+        } else {
+            $response = array(
+                'status' => 'error',
+                'message' => 'Contact Us Details can not be deleted, Please try again',
+            );
+        }
+        return json_encode($response);
     }
 }

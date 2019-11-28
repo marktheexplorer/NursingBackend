@@ -9,7 +9,6 @@ use Validator;
 class CmsPageController extends Controller{
     public function __construct(){ 
         $this->middleware('preventBackHistory');
-        $this->middleware('auth'); 
     }
 
     /**
@@ -41,7 +40,7 @@ class CmsPageController extends Controller{
         $input = $request->input(); 
         $validator =  Validator::make($input,[
             'title' => 'required|string|max:200',
-            'content' => 'required|string|max:500',
+            'content' => 'required|string',
         ]);
 
         if ($validator->fails()) {
@@ -92,7 +91,7 @@ class CmsPageController extends Controller{
         $input = $request->input();
         $validator =  Validator::make($input,[
             'title' => 'required|string|max:200',
-            'content' => 'required|string|max:500',
+            'content' => 'required|string',
         ]);
 
         if ($validator->fails()) {

@@ -5,18 +5,18 @@
 <div class="content-wrapper">
     <!-- START PAGE CONTENT-->
     <div class="page-heading">
-        <h1 class="page-title">Inquiries</h1>
+        <h1 class="page-title">Contact Us Details</h1>
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
                 <a href="{{ route('dashboard') }}"><i class="fas fa-home"></i></a>
             </li>
-            <li class="breadcrumb-item">Inquiries</li>
+            <li class="breadcrumb-item">Contact Us</li>
         </ol>
     </div>
     <div class="page-content fade-in-up">
         <div class="ibox">
             <div class="ibox-head">
-                <div class="ibox-title">Inquiries Data</div>
+                <div class="ibox-title">Contact Us</div>
             </div>
             <div class="ibox-body">
                 <table class="table table-striped table-bordered table-hover" id="data-table" cellspacing="0" width="100%">
@@ -31,22 +31,22 @@
                         </tr>
                     </thead>
                     <tbody>
-                 	@foreach($enquiries as $key => $enquiry)
+                 	@foreach($contactUs as $key => $contact)
 	            		<tr>
 	            			<td>{{ ++$key }}</td>
-	              			<td>{{ ucfirst($enquiry->name) }}</td>
-	              			<td>{{ $enquiry->email }}</td>
-	              			<td>{{ $enquiry->phone_number }}</td>
-                            <td>{{ date_format(date_create($enquiry->created_at) , 'd M ,y') }}
+	              			<td>{{ ucfirst($contact->user->name) }}</td>
+	              			<td>{{ $contact->user->email }}</td>
+	              			<td>{{ $contact->user->mobile_number }}</td>
+                            <td>{{ date_format(date_create($contact->created_at) , 'd M ,y') }}
 	              			<td>
 	              				<ul class="actions-menu">
 	              					<li>
-	              						<a href="{{ route('enquiries.show',['id' => $enquiry->id]) }}">
+	              						<a href="{{ route('contactUs.show',['id' => $contact->id]) }}">
 	              							<button class="btn-sm btn-warning btn-cir" title="View"><i class="fas fa-eye"></i></button>
 	              						</a>
 	              					</li>
 	              					<li>
-	              						<form action="{{ url('/admin/enquiries/'.$enquiry->id) }}" method="POST" onsubmit="deleteEnquiry('{{ $enquiry->id }}', '{{ $enquiry->name }}', event,this)">
+	              						<form action="{{ url('/admin/contactUs/'.$contact->id) }}" method="POST" onsubmit="deleteContact('{{ $contact->id }}', '{{ $contact->name }}', event,this)">
 	                    				@csrf
 	              							<button class="btn-sm btn-danger btn-cir" title="Delete"><i class="fas fa-trash-alt"></i></button>
 	              						</form>
@@ -69,12 +69,12 @@
     	$('#data-table').DataTable();
 	});
 
-	function deleteEnquiry(id, name, event,form)
+	function deleteContact(id, name, event,form)
     {
         event.preventDefault();
         swal({
             title: "Are you sure?",
-            text: "You want to delete "+name+" enquiry",
+            text: "You want to delete "+name+" contact us details",
             icon: "warning",
             buttons: {
 				cancel: true,
@@ -115,7 +115,7 @@
                     }
                 });
             } else {
-                swal("Cancelled", name+"'s enquiry will not be deleted.", "error");
+                swal("Cancelled", name+"'s contact us details will not be deleted.", "error");
             }
         });
     }

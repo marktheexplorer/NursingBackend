@@ -15,6 +15,8 @@ use DB;
 use Image;
 use App\Exports\CaregiverExport;
 use Maatwebsite\Excel\Facades\Excel;
+use App\AssignedCaregiver;
+use App\Booking;
 
 class CaregiverController extends Controller{
     public function __construct(){ 
@@ -421,10 +423,13 @@ class CaregiverController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function destroy($id){
-
+        // dd($id);
         $user = User::findOrFail($id);
-        $caregiver = Caregiver::where('user_id' , $id)->delete();
-        $attributes = CaregiverAttribute::where('caregiver_id' , $id)->delete();
+        $caregiver = Caregiver::where('user_id' , $id)->first();
+        CaregiverAttribute::where('caregiver_id' , $id)->delete();
+        AssignedCaregiver::where('caregiver_id' , $caregiver['id'])->delete();
+        Booking::where('caregiver_id' , $caregiver['id'])->update(array('caregiver_id' => ''));
+        $caregiver->delete();
 
         if ($user->delete()) {
             $response = array(

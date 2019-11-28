@@ -6,8 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\ContactUs;
-use App\AppFeedback;
-use App\Teck;
+use App\Faq;
 use Validator;
 
 class HomeController extends Controller
@@ -47,31 +46,14 @@ class HomeController extends Controller
             return response()->json(['status_code'=> 400, 'message'=> "Can't contact. Please try again." ,'data' => null]);
     }
 
-    /**
-     * App feedback api
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function addFeedback(Request $request)
+    public function faqListing()
     {
-        $validator = Validator::make($request->all(), [
-            'rating' => 'required|numeric',
-            'text' => 'nullable|string|max:300', 
-        ]);
+        $faqs = Faq::select('question',htmlspecialchars_decode('answer'))->orderBy('faq_order', 'ASC')->get();
 
-        if ($validator->fails()) 
-            return response()->json(['status_code'=> 400, 'message'=> $validator->errors()->first(), 'data' => null]);
-
-        $input  = $request->input();
-        $input['user_id'] = Auth::id();
-        $addfeedback = new AppFeedback();
-        $addfeedback->fill($input);
-
-        if ($addfeedback->save())
-            return response()->json(['status_code'=> 200, 'message'=> 'Thanks for the feedback!', 'data' => null]);
+        if (count($faqs) > 0)
+            return response()->json(['status_code'=> 200, 'message'=> '', 'data' => $faqs]);
         else
-            return response()->json(['status_code'=> 400, 'message'=> 'Feedback cannot be added. Please try again!' ,'data' => null]);
+            return response()->json(['status_code'=> 400, 'message'=> "No FAQs" ,'data' => null]);
     }
    
 }

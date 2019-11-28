@@ -13,9 +13,8 @@ use App\Booking;
 use Carbon\Carbon;
 use Image;
 use DB;
-
+use App\UserRelation;
 use Illuminate\Http\Request;
-
 use App\Exports\PatientExport;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -310,6 +309,7 @@ class PatientsController extends Controller{
         $user = User::findOrFail($id);
         $patient = PatientProfile::where('user_id' , $id)->delete();
         $booking = Booking::where('user_id' , $id)->delete();
+        $user_relation = UserRelation::where('user_id' , $id)->delete();
 
         if ($user->delete()) {
             $response = array(
