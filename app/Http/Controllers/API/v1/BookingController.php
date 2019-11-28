@@ -18,6 +18,7 @@ use App\AssignedCaregiver;
 use Log;
 use App\Caregiver;
 use App\Notification;
+use App\Helper;
 
 class BookingController extends Controller
 {	
@@ -101,8 +102,10 @@ class BookingController extends Controller
         $input['status'] = 'Pending';
         $booking = Booking::create($input);
 
-        Self::sendNotifications('1', $booking->id, 'New Booking Request', 'New Booking Request');
-        Self::sendNotifications(Auth::id(), $booking->id, 'Booking Requested', 'Your booking request has been generated.');
+        Helper::sendNotifications('1', $booking->id, 'New Booking Request', 'New Booking Request');
+        
+        if($user->is_notify == 1)
+            Helper::sendNotifications(Auth::id(), $booking->id, 'Booking Requested', 'Your booking request has been generated.');
 
         if($booking){
             return response()->json(['status_code' => $this->successStatus , 'message' => 'Booking created successfully.', 'data' => null]);
@@ -635,21 +638,6 @@ class BookingController extends Controller
         }else{
             return response()->json(['status_code' => $this->errorStatus , 'message' => 'No Bookings', 'data' => null]);
         }
-    }
-
-    public function sendNotifications($userId, $bookingId, $title, $message)
-    { 
-       $input['user_id'] = $userId;
-       $input['booking_id'] = $bookingId;
-       $input['title'] = $title;
-       $input['message'] = $message;
-       $input['is_read'] = 0;
-
-       if(Notification::create($input)){
-            return true;
-       }else{
-            return false;
-       }
     }
 
     public function getNotifications(Request $request)

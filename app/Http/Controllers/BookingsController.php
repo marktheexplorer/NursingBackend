@@ -14,6 +14,7 @@ use App\Us_location;
 use App\Relation;
 use App\Mail\MailHelper;
 use Illuminate\Support\Facades\Mail;
+use App\Helper;
 use DB;
 
 class BookingsController extends Controller{
@@ -60,8 +61,12 @@ class BookingsController extends Controller{
         if(count($exists) < 1){
             AssignedCaregiver::insert(['booking_id'=>$input['booking_id'],'caregiver_id'=> $input['caregiver_id']]);
             //Status Update
-            Booking::where('id', '=', $input['booking_id'])->update(array('status' =>  'Caregiver Request'));
+            $booking = Booking::where('id', '=', $input['booking_id'])->update(array('status' =>  'Caregiver Request'));
+            dd($booking);
             flash()->success("Caregiver assigned.");
+
+            if($user->is_notify == 1)
+                Helper::sendNotifications(Auth::id(), $booking->id, 'Booking Requested', 'Your booking request has been generated.');
         }else{            
             AssignedCaregiver::where('booking_id',$input['booking_id'])->where('caregiver_id', $input['caregiver_id'])->delete();
             flash()->success("Caregiver removed.");
@@ -373,12 +378,6 @@ class BookingsController extends Controller{
         }
         return json_encode($response);
     }
-
-    public function getDates($startDate , $endDate ,$weekDays){
-        flash()->success('Booking Update Successfully');
-        return redirect()->route('bookings.index');
-    }
-
 
     public function getDates($startDate , $endDate ,$weekDays)
     {
