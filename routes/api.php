@@ -42,5 +42,5 @@ Route::group(['middleware' => ['auth:api', 'blockedUser'], 'namespace' => 'API\v
 	Route::get('completed-bookings/caregiver', 'BookingController@completed_bookings_caregiver');
 	Route::post('complete-booking', 'BookingController@complete_booking');
 	Route::post('contact-us', 'HomeController@savecontactusData');
-	Route::post('feedback', 'HomeController@addFeedback');
+	Route::post('setNotification', 'UserController@setNotification');
 });

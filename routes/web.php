@@ -100,16 +100,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function()
 	// Route::resource('service_request', 'ServiceRequestController');
 });
 
-
-<<<<<<< HEAD
 Route::get('cms/{token}', 'CmsPageController@view_cms');
 Route::get('confirm_careservice/{token}', 'BookingsController@confirm_careservice');
 Route::post('upload_carepack_docs', 'BookingsController@upload_carepack_docs');
-
-=======
 Route::get('cms/{slug}', 'CmsPageController@view_cms');
 Route::get('confirm_careservice/{token}', 'ServiceRequestController@confirm_careservice');
 Route::post('upload_carepack_docs', 'ServiceRequestController@upload_carepack_docs');
->>>>>>> 93fa597f72a5cb935328151450cde66fa4491f66
 Route::get('set_password/{token}', 'CaregiverController@set_password');
 Route::post('caregiver/savepassword', 'CaregiverController@savepassword');
