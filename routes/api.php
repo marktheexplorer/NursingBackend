@@ -45,5 +45,5 @@ Route::group(['middleware' => ['auth:api', 'blockedUser'], 'namespace' => 'API\v
 	Route::post('setNotification', 'UserController@setNotification');
 	Route::get('getNotifications', 'BookingController@getNotifications');
 	Route::post('read-notification', 'BookingController@read_notification');
-	Route::post('unreadCount', 'BookingController@unreadCount');
+	Route::get('unreadCount', 'BookingController@unreadCount');
 });
