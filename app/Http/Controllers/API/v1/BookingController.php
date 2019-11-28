@@ -669,4 +669,35 @@ class BookingController extends Controller
             return response()->json(['status_code' => $this->errorStatus , 'message' => 'No Notifications', 'data' => null]);
         }
     }
+
+    public function read_notification(Request $request){
+
+        $input = $request->input();
+        $validator =  Validator::make($input,
+            [
+                'notification_id' => 'required',
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json(['status_code'=> $this->errorStatus, 'message'=> $validator->errors()->first(), 'data' => null]);
+        }
+        //Status Update
+        $notification = Notification::where('id', '=', $input['notification_id'])->update(array('is_read' =>  '1'));
+        $unreadNotifcatons = Notification::where('is_read','0')->where('user_id' , Auth::id())->get();
+        if($notification){
+            return response()->json(['status_code' => $this->successStatus , 'message' => 'Notification read successfully','data' => ['unreadNotifications' => count($unreadNotifcatons)]]);
+        }else{
+            return response()->json(['status_code' => $this->errorStatus , 'message' => 'Notification not read successfully.', 'data' => null]);
+        }
+    }
+
+    public function unreadCount(Request $request){
+
+        $unreadNotifcatons = Notification::where('is_read','0')->where('user_id' , Auth::id())->get();
+        if($unreadNotifcatons){
+            return response()->json(['status_code' => $this->successStatus , 'message' => '','data' => ['unreadNotifications' => count($unreadNotifcatons)]]);
+        }else{
+            return response()->json(['status_code' => $this->errorStatus , 'message' => '', 'data' => null]);
+        }
+    }
 }
