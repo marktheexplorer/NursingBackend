@@ -103,7 +103,7 @@ class BookingController extends Controller
         $booking = Booking::create($input);
 
         Helper::sendNotifications('1', $booking->id, 'New Booking Request', 'New Booking Request');
-        
+
         if($user->is_notify == 1)
             Helper::sendNotifications(Auth::id(), $booking->id, 'Booking Requested', 'Your booking request has been generated.');
 
@@ -462,14 +462,21 @@ class BookingController extends Controller
         }
     }
 
-    public function request_for_booking(Request $request){
-
+    public function request_for_booking(Request $request)
+    {
+        $user = Auth::user();
         $input = $request->input();
+        $caregiver = Caregiver::where('id', $input['caregiver_id'])->first();
         $assign = AssignedCaregiver::where('booking_id' , $input['booking_id'])->where('caregiver_id', $input['caregiver_id'])->update(array('status' => 'Final'));
         //Status Update
         Booking::where('id', '=', $input['booking_id'])->update(array('status' =>  'Upcoming', 'caregiver_id' => $input['caregiver_id']));
 
         if($assign){
+            if($user->is_notify == 1)
+                Helper::sendNotifications($user->id, $input['booking_id'], 'Booking Confirmed', $caregiver['user']['name'].' has been assigned for booking.');
+            if($caregiver['user']['is_notify'] == 1)
+                Helper::sendNotifications($caregiver['user']['id'], $input['booking_id'], 'Booking Scheduled', 'A new booking has been scheduled for '.$user->name.'.');
+
             return response()->json(['status_code' => $this->successStatus , 'message' => 'Request sent successfully.', 'data' => '']);
         }else{
             return response()->json(['status_code' => $this->errorStatus , 'message' => 'Request not sent successfully.', 'data' => null]);
@@ -615,8 +622,11 @@ class BookingController extends Controller
         }
         //Status Update
         $completed = Booking::where('id', '=', $input['booking_id'])->update(array('status' =>  'Completed'));
+        $booking = Booking::where('id', '=', $input['booking_id'])->first();
 
         if($completed){
+            if($booking['user']['is_notify'] == 1)
+                Helper::sendNotifications($booking['user']['id'], $booking->id, 'Booking Completed', 'Your booking has been completed.');
             return response()->json(['status_code' => $this->successStatus , 'message' => 'Booking Completed successfully.', 'data' => '']);
         }else{
             return response()->json(['status_code' => $this->errorStatus , 'message' => 'Booking not completed successfully.', 'data' => null]);
@@ -642,7 +652,7 @@ class BookingController extends Controller
 
     public function getNotifications(Request $request)
     {   
-        $notifications = Notification::where('user_id', Auth::id())->get();
+        $notifications = Notification::where('user_id', Auth::id())->orderBy('created_at', 'DESC')->get();
 
         if(count($notifications) > 0){
             foreach ($notifications as $key => $notification) {

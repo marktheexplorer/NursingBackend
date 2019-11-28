@@ -61,12 +61,12 @@ class BookingsController extends Controller{
         if(count($exists) < 1){
             AssignedCaregiver::insert(['booking_id'=>$input['booking_id'],'caregiver_id'=> $input['caregiver_id']]);
             //Status Update
-            $booking = Booking::where('id', '=', $input['booking_id'])->update(array('status' =>  'Caregiver Request'));
-            dd($booking);
+            Booking::where('id', '=', $input['booking_id'])->update(array('status' =>  'Caregiver Request'));
             flash()->success("Caregiver assigned.");
 
-            if($user->is_notify == 1)
-                Helper::sendNotifications(Auth::id(), $booking->id, 'Booking Requested', 'Your booking request has been generated.');
+            $booking = Booking::where('id', '=', $input['booking_id'])->with('user')->first();
+            if($booking['user']['is_notify'] == 1)
+                Helper::sendNotifications($booking['user']['id'], $booking->id, 'Caregiver Assigned', 'Caregivers has been assigned for booking. Please select a caregiver from caregiver request section.');
         }else{            
             AssignedCaregiver::where('booking_id',$input['booking_id'])->where('caregiver_id', $input['caregiver_id'])->delete();
             flash()->success("Caregiver removed.");
