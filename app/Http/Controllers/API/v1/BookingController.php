@@ -682,14 +682,14 @@ class BookingController extends Controller
     {   
         $notifications = Notification::where('user_id', Auth::id())->orderBy('created_at', 'DESC')->get();
 
-        if(count($notifications) > 0){
+        /*if(count($notifications) > 0){
             foreach ($notifications as $key => $notification) {
                 $notification['start_date'] = $notification->booking->start_date;
                 $notification['end_date'] = $notification->booking->end_date;
                 $notification['start_time'] = $notification->booking->start_time;
                 $notification['end_time'] = $notification->booking->end_time;
             }
-        }
+        }*/
 
         if(count($notifications) > 0){
             return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $notifications]);
