@@ -41,7 +41,7 @@
                       <td>{{ $count }} <?php  $count++; ?></td>
 	              			<td>{{ ucfirst($user->name) }}</td>
 	              			<td>{{ $user->email }}</td>
-	              			<td>{{ $user->mobile_number }}</td>
+	              			<td>{{ $user->mobile_number != '' ? substr_replace(substr_replace($user->mobile_number, '-', '3','0'), '-', '7','0') : '' }}</td>
                       <td><?php echo "$".$user->min_price."-$".$user->max_price; ?></td>
                       <td><?php echo implode(' , ',$user->qualification); ?></td>
                       <td>{{ $user->language }}</td>

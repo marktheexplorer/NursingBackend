@@ -44,7 +44,7 @@
 	            		<tr>
 	            			<td>{{ ++$key }}</td>
 	            			<td>{{ ucfirst($booking->user->name) }}</td>
-	              			<td>{{ $booking->user->mobile_number }}</td>
+	              			<td>{{ $booking->user->mobile_number != '' ? substr_replace(substr_replace($booking->user->mobile_number, '-', '3','0'), '-', '7','0') : '' }}</td>
 	              			<td>{{ $booking->status }}</td>
 	              			<td>{{ $booking->booking_type }}</td>
 	              			<td>{{ date_format(date_create($booking->created_at), 'd M, y')}}</td>

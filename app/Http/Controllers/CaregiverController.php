@@ -121,6 +121,7 @@ class CaregiverController extends Controller{
         $input['role_id'] = 2;
         $input['type'] = 'caregiver';
         $input['dob'] = date("Y-m-d", strtotime($input['dob']));
+        $input['mobile_number'] = preg_replace('`-`', '', $input['mobile_number']);
         $user = User::create($input);
 
         if($user){
@@ -341,7 +342,7 @@ class CaregiverController extends Controller{
         $user = User::findOrFail($id);
         $user->name = $input['first_name'].' '.$input['middle_name'].' '.$input['last_name'];
         $user->email = $input['email'];
-        $user->mobile_number = $input['mobile_number'];
+        $user->mobile_number = preg_replace('`-`', '', $input['mobile_number']);
         $user->city = $input['city'];
         $user->state = $input['state'];
         $user->street = $input['location'];
@@ -423,7 +424,6 @@ class CaregiverController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function destroy($id){
-        // dd($id);
         $user = User::findOrFail($id);
         $caregiver = Caregiver::where('user_id' , $id)->first();
         CaregiverAttribute::where('caregiver_id' , $id)->delete();

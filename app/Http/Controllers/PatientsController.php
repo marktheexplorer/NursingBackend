@@ -122,7 +122,7 @@ class PatientsController extends Controller{
                 $user = User::findOrFail($id);
                 $user->name = $input['f_name'].' '.$input['m_name'].' '.$input['l_name'];
                 $user->email = $input['email'];
-                $user->mobile_number = $input['mobile_number'];
+                $user->mobile_number = preg_replace('`-`', '', $input['mobile_number']);
                 $user->city = $input['city'];
                 $user->state = $input['state'];
                 $user->street = $input['street'];
@@ -130,41 +130,22 @@ class PatientsController extends Controller{
                 $user->gender = $input['gender'];
                 $user->save();
 
-                $userProfile = PatientProfile::where('user_id',$id)->first();
-                if($userProfile){
-                    $userProfile['f_name'] = $input['f_name'];
-                    $userProfile['m_name'] = $input['m_name'];
-                    $userProfile['l_name'] = $input['l_name'];
-                    $userProfile['pin_code'] = $input['pin_code'];
-                    $userProfile['diagnose_id'] = $input['diagnose_id'];
-                    $userProfile['availability'] = $input['availability'];
-                    $userProfile['height'] = $input['height'];
-                    $userProfile['weight'] = $input['weight'];
-                    $userProfile['language'] = $input['language'];
-                    $userProfile['disciplines'] = implode(',', $input['qualification']) ;
-                    $userProfile['long_term'] = $input['long_term'] == 'yes'? 1 : 0;
-                    $userProfile['pets'] = $input['pets'] == 'yes'? 1 : 0;
-                    $userProfile['pets_description'] = $input['pets'] == 'yes'? $input['pets_description'] : '';
-                    $userProfile['additional_info'] = $input['additional_info'];
-                    $userProfile->save();
-                }else{
-                    $profile['user_id'] = $user->id;
-                    $profile['f_name'] = $input['f_name'];
-                    $profile['m_name'] = $input['m_name'];
-                    $profile['l_name'] = $input['l_name'];
-                    $profile['pin_code'] = $input['pin_code'];
-                    $profile['diagnose_id'] = $input['diagnose_id'];
-                    $profile['availability'] = $input['availability'];
-                    $profile['height'] = $input['height'];
-                    $profile['weight'] = $input['weight'];
-                    $profile['language'] = $input['language'];
-                    $profile['disciplines'] = implode(',', $input['qualification']) ;
-                    $profile['long_term'] = $input['long_term'] == 'yes'? 1 : 0;
-                    $profile['pets'] = $input['pets'] == 'yes'? 1 : 0;
-                    $profile['pets_description'] = $input['pets_description'];
-                    $profile['additional_info'] = $input['additional_info'];
-                    $profile = PatientProfile::create($profile);
-                }
+                $patient = PatientProfile::where('user_id',$id)->first();
+                $patient['f_name'] = $input['f_name'];
+                $patient['m_name'] = $input['m_name'];
+                $patient['l_name'] = $input['l_name'];
+                $patient['pin_code'] = $input['pin_code'];
+                $patient['diagnose_id'] = $input['diagnose_id'];
+                $patient['availability'] = $input['availability'];
+                $patient['height'] = $input['height'];
+                $patient['weight'] = $input['weight'];
+                $patient['language'] = $input['language'];
+                $patient['disciplines'] = implode(',', $input['qualification']) ;
+                $patient['long_term'] = $input['long_term'] == 'yes'? 1 : 0;
+                $patient['pets'] = $input['pets'] == 'yes'? 1 : 0;
+                $patient['pets_description'] = $input['pets'] == 'yes'? $input['pets_description'] : '';
+                $patient['additional_info'] = $input['additional_info'];
+                $patient->save();
 
                 flash()->success('Client updated successfully');
                 return redirect()->route('patients.index');
@@ -250,6 +231,7 @@ class PatientsController extends Controller{
             $input['name'] = $input['f_name'].' '.$input['m_name'].' '.$input['l_name'];
             $input['role_id'] = 3;
             $input['type'] = 'patient';
+            $input['mobile_number'] = preg_replace('`-`', '', $input['mobile_number']);
             $input['dob'] = date("Y-m-d", strtotime($input['dob']));
             $patient = User::create($input);
 
