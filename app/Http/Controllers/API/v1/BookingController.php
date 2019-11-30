@@ -680,7 +680,7 @@ class BookingController extends Controller
 
     public function getNotifications(Request $request)
     {   
-        $notifications = Notification::where('user_id', Auth::id())->orderBy('created_at', 'DESC')->get();
+        $notifications = Notification::where('user_id', Auth::id())->whereDate('created_at', '>', Carbon::now()->subDays(30))->orderBy('created_at', 'DESC')->get();
 
         if(count($notifications) > 0){
             return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $notifications]);
