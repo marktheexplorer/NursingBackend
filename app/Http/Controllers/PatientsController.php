@@ -10,6 +10,7 @@ use App\PatientProfile;
 use App\Qualification;
 use App\Us_location;
 use App\Booking;
+use App\ContactUs;
 use Carbon\Carbon;
 use Image;
 use DB;
@@ -292,6 +293,7 @@ class PatientsController extends Controller{
         $patient = PatientProfile::where('user_id' , $id)->delete();
         $booking = Booking::where('user_id' , $id)->delete();
         $user_relation = UserRelation::where('user_id' , $id)->delete();
+        $contact = ContactUs::where('user_id')->delete();
 
         if ($user->delete()) {
             $response = array(
