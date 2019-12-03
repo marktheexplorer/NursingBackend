@@ -109,6 +109,9 @@ class BookingController extends Controller
 
         if($user->is_notify == 1)
             Helper::sendNotifications(Auth::id(), $booking->id, 'Booking Requested', 'Your booking request has been generated.');
+
+        $data = Self::sendTwilioMessage(Auth::user()->mobile_number, Auth::user()->country_code, 'A new booking request has been confirmed for '.$booking->start_date.' at '.$booking->start_time); 
+
         if($booking->relation_id != null){
             $data = Self::sendTwilioMessage($booking->relation->mobile_number, Auth::user()->country_code, 'A new booking request has been generated for you by '.Auth::user()->name.' for '.$booking->start_date.' at '.$booking->start_time); 
         }
