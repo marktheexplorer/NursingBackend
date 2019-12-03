@@ -105,20 +105,22 @@ class BookingController extends Controller
         $input['status'] = 'Pending';
         $booking = Booking::create($input);
 
-        Helper::sendNotifications('1', $booking->id, 'New Booking Request', 'New Booking Request');
+        if($booking){
 
-        if($user->is_notify == 1)
+            Helper::sendNotifications('1', $booking->id, 'New Booking Request', 'New Booking Request');
+
+            if($user->is_notify == 1)
             Helper::sendNotifications(Auth::id(), $booking->id, 'Booking Requested', 'Your booking request has been generated.');
 
-        $data = Self::sendTwilioMessage(Auth::user()->mobile_number, Auth::user()->country_code, 'A new booking request has been confirmed for '.$booking->start_date.' at '.$booking->start_time); 
+            $data = Self::sendTwilioMessage(Auth::user()->mobile_number, Auth::user()->country_code, 'A new booking request has been confirmed for '.$booking->start_date.' at '.$booking->start_time); 
 
-        if($booking->relation_id != null){
-            $data = Self::sendTwilioMessage($booking->relation->mobile_number, Auth::user()->country_code, 'A new booking request has been generated for you by '.Auth::user()->name.' for '.$booking->start_date.' at '.$booking->start_time); 
-        }
+            if($booking->relation_id != null){
+                $data = Self::sendTwilioMessage($booking->relation->mobile_number, Auth::user()->country_code, 'A new booking request has been generated for you by '.Auth::user()->name.' for '.$booking->start_date.' at '.$booking->start_time); 
+            }
 
-        if($booking){
             Self::sendConfirmationMail($user->id);
             return response()->json(['status_code' => $this->successStatus , 'message' => 'Booking created successfully.', 'data' => null]);
+
         }else{
             return response()->json(['status_code' => $this->errorStatus , 'message' => 'Booking not created successfully.', 'data' => null]);
         }
