@@ -398,41 +398,15 @@ class BookingsController extends Controller{
         }
         return $data;
    }
-
-   public function confirmation_mail($patient_id){
-        $patient = User::find($patient_id);
-        if(empty($patient)){
-            flash()->success("Invalid Client.");
-            return false;
-        }
-
-        $token = md5(uniqid(rand(), true));
-        $objDemo = new \stdClass();
-        $objDemo->sender = env('APP_NAME');
-        $objDemo->receiver = ucfirst($patient->name);
-        $objDemo->type = 'basic_carepack_confirm';
-        $objDemo->format = 'basic';
-        $objDemo->subject = 'Basic Care Service Pack Mail';
-        $objDemo->mail_from = env('MAIL_FROM_EMAIL');
-        $objDemo->mail_from_name = env('MAIL_FROM_NAME');
-        $objDemo->weburl = env('APP_URL')."confirm_careservice/".$token;
-        $patient->email = "sonu.shokeen@saffrontech.net";
-        $issend = Mail::to($patient->email)->send(new MailHelper($objDemo));
-
-        if($issend){
-            $service_request=DB::table('service_requests')->where('id','=', $patient_id)->update(array('token'=>$token));
-        }
-        return true;
-   }
-
+   
    public function confirm_careservice($token){
         //need to start work on this...
-        $isexist = DB::table('bookings')->where('token', '=', $token)->first();
+        $isexist = DB::table('users')->where('carepack_mail_token', '=', $token)->first();
         $data = array();
 
         if($isexist){
             //show upload form
-            $data['token'] = $isexist->token;
+            $data['token'] = $isexist->carepack_mail_token;
         }else{
             //show page with error message
             $data['error'] = 'Oops, look like link is expire or invalid, please contact to 24*7 Nursing Care Admin';
@@ -443,7 +417,7 @@ class BookingsController extends Controller{
     public function upload_carepack_docs(Request $request){
         if($request->has('care_pack') && ($request->file('care_pack') != null)) {
             $input = $request->input();
-            $isrequest = DB::table('bookings')->where('token', '=', $input['token'])->first();
+            $isrequest = DB::table('users')->where('carepack_mail_token', '=', $input['token'])->first();
             if(empty($isrequest)){
                 flash()->success("'Oops, look like link is expire or invalid, please contact to 24*7 Nursing Care Admin'");
                 return view('bookings.upload_carepack_docs', compact('data'));
@@ -463,7 +437,7 @@ class BookingsController extends Controller{
             );
             DB::table('service_requests_attributes')->insert($request);
             $service_request = DB::table('service_requests')->where('token', '=', $input['token'])->update(array('status' => 6));
-            $data = array('upload' => 'success', 'message' => 'Thanks for aupload Document, Admin will contact you soon.');
+            $data = array('upload' => 'success', 'message' => 'Thanks for upload Document, Admin will contact you soon.');
 
             return view('bookings.upload_carepack_docs', compact('data'));
         }else{

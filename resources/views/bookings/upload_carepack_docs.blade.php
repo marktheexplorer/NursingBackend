@@ -6,18 +6,12 @@
 			<img src="{{ asset('mail/email-logo.png') }}" style="width: 590px;"><br/><br/><br/>
 		  	<h1>{{ $data['error'] }}</h1>
 		  	<hr>
-		  	<h3> <br/>
-		  		<a href="{{ env('APP_URL') }}" style="padding: 10px;border: 1px solid;background-color: #64b1e7;color: #fff;border-radius: 5px;text-decoration: none;" title="click here">Back to home page</a>
-		  	</h3>
 		</div>
 		<div class="container"></div>
 	@elseif(isset($data['upload']))	
 		<div class="jumbotron text-center pb-1">
 			<img src="{{ asset('mail/email-logo.png') }}" style="width: 590px;"><br/><br/><br/>
 		  	<h1>{{ $data['message'] }}</h1><hr>
-		  	<h3> <br/>
-		  		<a href="{{ env('APP_URL') }}" style="padding: 10px;border: 1px solid;background-color: #64b1e7;color: #fff;border-radius: 5px;text-decoration: none;" title="click here">Back to home page</a>
-		  	</h3>
 		</div>
 		<div class="container"></div>
 	@else

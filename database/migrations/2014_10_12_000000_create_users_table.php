@@ -36,6 +36,7 @@ class CreateUsersTable extends Migration
             $table->string('street')->nullable();
             $table->string('profile_image')->nullable();
             $table->string('password')->nullable();
+            $table->string('carepack_mail_token')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

@@ -20,6 +20,8 @@ use App\Caregiver;
 use App\Notification;
 use App\Helper;
 use Twilio\Rest\Client;
+use App\Mail\MailHelper;
+use Illuminate\Support\Facades\Mail;
 
 class BookingController extends Controller
 {	
@@ -112,6 +114,7 @@ class BookingController extends Controller
         }
 
         if($booking){
+            Self::sendConfirmationMail($user->id);
             return response()->json(['status_code' => $this->successStatus , 'message' => 'Booking created successfully.', 'data' => null]);
         }else{
             return response()->json(['status_code' => $this->errorStatus , 'message' => 'Booking not created successfully.', 'data' => null]);
@@ -719,4 +722,29 @@ class BookingController extends Controller
             return response()->json(['status_code' => $this->errorStatus , 'message' => '', 'data' => null]);
         }
     }
+
+    public function sendConfirmationMail($id){
+        $patient = User::find($id);
+        if(empty($patient)){
+            flash()->success("Invalid Client.");
+            return false;
+        }
+
+        $token = md5(uniqid(rand(), true));
+        $objDemo = new \stdClass();
+        $objDemo->sender = env('APP_NAME');
+        $objDemo->receiver = ucfirst($patient->name);
+        $objDemo->type = 'basic_carepack_confirm';
+        $objDemo->format = 'basic';
+        $objDemo->subject = 'Basic Care Service Pack Mail';
+        $objDemo->mail_from = env('MAIL_FROM_EMAIL');
+        $objDemo->mail_from_name = env('MAIL_FROM_NAME');
+        $objDemo->weburl = env('APP_URL')."confirm_careservice/".$token;
+        $patient->email = "kajal.garg@saffrontech.net";
+        $issend = Mail::to($patient->email)->send(new MailHelper($objDemo));
+        if($issend == null){
+            $user=User::where('id','=', $id)->update(array('carepack_mail_token'=>$token));
+        }
+        return true;
+   }
 }
