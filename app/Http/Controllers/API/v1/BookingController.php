@@ -749,7 +749,7 @@ class BookingController extends Controller
         $objDemo->weburl = env('APP_URL')."confirm_careservice/".$token;
         $issend = Mail::to($patient->email)->send(new MailHelper($objDemo));
         if($issend == null){
-            $user=User::where('id','=', $id)->update(array('carepack_mail_token'=>$token));
+            $user=User::where('id','=', $id)->update(['carepack_mail_token'=>$token]);
         }
         return true;
    }
