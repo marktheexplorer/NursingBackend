@@ -167,9 +167,15 @@ class BookingController extends Controller
             $booking_startDate = Carbon::parse($booking->start_date);
             $booking_endDate = Carbon::parse($booking->end_date);
 
-                if(($startDate->gte($booking_startDate) && $startDate->lte($booking_endDate))||($endDate->gte($booking_startDate) && $endDate->lte($booking_endDate))){
+                if(($startDate->gte($booking_startDate) && $startDate->lte($booking_endDate))||($endDate->gte($booking_startDate) && $endDate->lte($booking_endDate))) {
 
                     if (($startTime >= $booking->start_time && $startTime <= $booking->end_time)||($endTime >= $booking->start_time && $endTime <= $booking->end_time)) 
+                    {
+                        $result['id'] = $booking->id;
+                        $result['status'] = true;
+                    }
+
+                    if($booking->24_hours == 1)
                     {
                         $result['id'] = $booking->id;
                         $result['status'] = true;
@@ -188,13 +194,25 @@ class BookingController extends Controller
                         $result['id'] = $booking->id;
                         $result['status'] = true;
                     }
+
+                    if($booking->24_hours == 1)
+                    {
+                        $result['id'] = $booking->id;
+                        $result['status'] = true;
+                    }
                 }else if(($booking_startDate->gte($startDate) && $booking_startDate->lte($endDate))||($booking_endDate->gte($startDate) && $booking_endDate->lte($endDate))){
 
                     if (($startTime >= $booking->start_time && $startTime <= $booking->end_time)||($endTime >= $booking->start_time && $endTime <= $booking->end_time)) 
                     {
                         $result['id'] = $booking->id;
                         $result['status'] = true;
-                    }                     
+                    }  
+
+                    if($booking->24_hours == 1)
+                    {
+                        $result['id'] = $booking->id;
+                        $result['status'] = true;
+                    }                   
                 }
             }
         }else if($bookingType == 'Select from week'){
