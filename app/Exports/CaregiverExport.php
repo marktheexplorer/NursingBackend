@@ -32,7 +32,7 @@ class CaregiverExport implements FromCollection, WithHeadings, ShouldAutoSize{
                     $count.".",
                     ucfirst(str_replace(",", " ", $row->name)),
                     $row->email,
-                    $row->mobile_number,
+                    $row->mobile_number != '' ? substr_replace(substr_replace($row->mobile_number, '-', '3','0'), '-', '7','0') : '' ,
                     $row->gender,
                     date("d-m-Y", strtotime($row->dob)),
                     $row->language,

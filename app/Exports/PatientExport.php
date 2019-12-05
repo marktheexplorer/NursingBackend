@@ -31,7 +31,7 @@ class PatientExport implements FromCollection, WithHeadings, ShouldAutoSize{
                    $count.".",
                     ucfirst(str_replace(",", " ", $row->name)),
                     $row->email,
-                    $row->mobile_number,
+                    $row->mobile_number != '' ? substr_replace(substr_replace($row->mobile_number, '-', '3','0'), '-', '7','0') : '' ,
                     $row->gender,
                     date("d-m-Y", strtotime($row->dob)),
                     $row->language,
@@ -39,7 +39,7 @@ class PatientExport implements FromCollection, WithHeadings, ShouldAutoSize{
                     $row->city,
                     $row->state,
                     $row->pin_code,
-                    $row->diagnosis->title,
+                    $row->diagnosis ? $row->diagnosis->title : '',
                     implode(', ', $row->disciplines_name) ,
                     date("d-m-Y", strtotime($row->created_at))
                 );

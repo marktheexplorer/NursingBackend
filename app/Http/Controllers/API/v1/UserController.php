@@ -70,7 +70,7 @@ class UserController extends Controller{
 
         if ($user) {
             
-            return response()->json(['status_code' => 300, 'message' => 'Please verify the mobile number to proceed. Otp, send it to your registered mobile number.', 'data' => null]);
+            return response()->json(['status_code' => 300, 'message' => 'Please verify the mobile number to proceed. An OTP has been sent to your registered mobile number.', 'data' => null]);
         } else {
             return response()->json(['status_code' => $this->errorStatus, 'message' => 'Unable to register. Please try again.', 'data'=> null]);
         }
@@ -219,7 +219,7 @@ class UserController extends Controller{
                     $user->save();
                
                     $data = Self::sendTwilioOTP($input['mobile_number'], $input['country_code'], $input['otp']); 
-                return response()->json(['status_code' => $this->successStatus, 'message' => 'Please verify the mobile number to proceed. Otp, send it to your registered mobile number.', 'data' => '']);
+                return response()->json(['status_code' => $this->successStatus, 'message' => 'Please verify the mobile number to proceed. An OTP has been sent to your registered mobile number.', 'data' => '']);
             } 
         } else {
             return response()->json(['status_code' => $this->errorStatus, 'message' => 'You have entered invalid credentials.', 'data' => null]);
@@ -253,7 +253,7 @@ class UserController extends Controller{
        
             $data = Self::sendTwilioOTP($input['mobile_number'], $input['country_code'], $input['otp']); 
 
-            return response()->json(['status_code' => 200, 'message' => 'Please verify the mobile number to proceed. Otp, send it to your registered mobile number.', 'data'=> null]);
+            return response()->json(['status_code' => 200, 'message' => 'Please verify the mobile number to proceed. An OTP has been sent to your registered mobile number.', 'data'=> null]);
             
         } else {
             return response()->json(['status_code' => 400, 'message' => 'Please enter registered mobile number.', 'data'=> null]);
