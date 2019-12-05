@@ -3,7 +3,7 @@
 @section('content')
 <div class="content">
     <div class="brand">
-        <a class="link" onclick="return void(0);"><img src="{{ asset('images/logo2.png') }}" alt="CareService Logo" title=" CareService"></a>
+        <a class="link" href="{{ route('admin') }}"><img src="{{ asset('images/logo2.png') }}" alt="CareService Logo" title=" CareService"></a>
     </div>
     @if (session('status'))
         <div class="alert alert-success" role="alert">

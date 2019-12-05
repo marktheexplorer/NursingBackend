@@ -3,7 +3,7 @@
 @section('content')
 <div class="content">
     <div class="brand">
-        <a class="link" onclick="return void(0);"><img src="{{ asset('images/logo2.png') }}" alt="CareService Logo" title=" CareService"></a>
+        <a class="link" href="{{ route('admin') }}"><img src="{{ asset('images/logo2.png') }}" alt="CareService Logo" title=" CareService"></a>
     </div>
     @include('flash::message')
     <form id="login-form" class="form-vertical" method="POST" action="{{ route('login') }}">
@@ -31,12 +31,12 @@
                     </span>
                 @endif
             </div>
-        </div><!--
+        </div>
         <div class="form-group d-flex justify-content-between">
              @if (Route::has('password.request'))
                 <a href="{{ route('password.request') }}" id="to-recover">Forget password?</a>
             @endif
-        </div>-->
+        </div>
         <div class="form-group">
             <button class="btn btn-info btn-block" type="submit">Login</button>
         </div>
