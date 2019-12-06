@@ -437,7 +437,7 @@ class BookingsController extends Controller{
             );
             DB::table('service_requests_attributes')->insert($request);
             $service_request = DB::table('service_requests')->where('token', '=', $input['token'])->update(array('status' => 6));
-            $data = array('upload' => 'success', 'message' => 'Thanks for upload Document, Admin will contact you soon.');
+            $data = array('upload' => 'success', 'message' => 'Thanks for uploading the documents, Admin will contact you soon.');
 
             return view('bookings.upload_carepack_docs', compact('data'));
         }else{
