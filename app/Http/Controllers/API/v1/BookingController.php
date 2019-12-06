@@ -35,6 +35,8 @@ class BookingController extends Controller
      */
     public function booking(Request $request){
         $input = $request->input();
+        $input['start_time'] = Carbon::parse($input['start_time'])->format('H:i') ;
+        $input['end_time'] = Carbon::parse($input['end_time'])->format('H:i') ;
         $user = Auth::user();
         $validator =  Validator::make($input,
             [

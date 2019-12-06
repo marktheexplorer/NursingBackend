@@ -158,7 +158,7 @@
         event.preventDefault();
         swal({
             title: "Are you sure?",
-            text: "You want to delete "+title+" user",
+            text: "You want to delete "+title+" booking",
             icon: "warning",
             buttons: {
                 cancel: true,
