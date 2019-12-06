@@ -428,8 +428,9 @@ class UserController extends Controller{
             return response()->json(['status_code'=> 400, 'message'=> $validator->errors()->first(), 'data' => null]);
 
         $user = Auth::User();
-         
+
         $relationdelete = UserRelation::where('id' , $request->input('id'))->where('user_id' , $user->id)->delete();
+        Booking::where('relation_id', '=', $request->input('id'))->update(['relation_id' =>  NULL]);
         $relation = UserRelation::select('user_relations.*', 'relations.title')->join('relations' , 'relation_id' , 'relations.id')->where('user_id', $user->id)->get();     
 
         if($relationdelete)
