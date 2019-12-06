@@ -35,6 +35,7 @@ class CreateBookingsTable extends Migration
             $table->string('end_time')->nullable();
             $table->boolean('24_hours')->default(0);
             $table->integer('no_of_weeks')->nullable();
+            $table->unsignedBigInteger('caregiver_id')->nullable();
             $table->string('status')->nullable();
             $table->string('timezone')->nullable();
             $table->timestamps();
@@ -43,6 +44,7 @@ class CreateBookingsTable extends Migration
         Schema::table('bookings', function (Blueprint $table) {
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('relation_id')->references('id')->on('relations')->onDelete('cascade');
+            $table->foreign('caregiver_id')->references('id')->on('caregiver')->onDelete('cascade');
         });
     }
 
@@ -54,10 +56,12 @@ class CreateBookingsTable extends Migration
     public function down()
     {   
         Schema::table('bookings', function(Blueprint $table){
-            $table->dropForeign('bookings_user_id_foreign');
-            $table->dropForeign('bookings_relation_id_foreign');
+            $table->dropForeign(['user_id']);
+            $table->dropForeign(['relation_id']);
+            $table->dropForeign(['caregiver_id']);
             $table->dropColumn('user_id');
             $table->dropColumn('relation_id');
+            $table->dropColumn('caregiver_id');
          });
         Schema::dropIfExists('bookings');
     }

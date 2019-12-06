@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Hash;
 use App\User;
 use App\Diagnose;
-use App\Service_requests;
 use Validator;
 use App\PatientProfile;
 use App\Qualification;
@@ -259,13 +258,7 @@ class PatientsController extends Controller{
 
     public function show($id){
         $user = User::findOrFail($id);
-        $services = DB::table('service_requests')
-                    ->join('services' ,'services.id','service_requests.service')
-                    ->join('service_requests_attributes AS ser_att' , 'ser_att.service_request_id' , 'service_requests.id')
-                    ->join('users' , 'users.id' , 'ser_att.value')
-                    ->select('service_requests.*' ,'services.title' , 'users.name' ,'ser_att.type')
-                    ->where('user_id',$user->id)
-                    ->where('ser_att.type','final_caregiver')->get();
+        $services = Booking::get();
 
         if($user->patient){
             $diagnosis = Diagnose::where('id',$user->patient->diagnose_id)->first();
