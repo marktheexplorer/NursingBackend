@@ -430,7 +430,7 @@ class CaregiverController extends Controller{
         CaregiverAttribute::where('caregiver_id' , $id)->delete();
         AssignedCaregiver::where('caregiver_id' , $caregiver->id)->delete();
         ContactUs::where('user_id')->delete();
-        Booking::where('caregiver_id' , $caregiver->id)->update(array('caregiver_id' => ''));
+        Booking::where('caregiver_id' , $caregiver->id)->update(array('caregiver_id' => null));
         $caregiver->delete();
 
         if ($user->delete()) {
