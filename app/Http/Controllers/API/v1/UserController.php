@@ -18,6 +18,7 @@ use Validator;
 use DB;
 use Carbon\Carbon;
 use Twilio\Rest\Client;
+use App\Booking;
 
 class UserController extends Controller{
     public $successStatus = 200;
