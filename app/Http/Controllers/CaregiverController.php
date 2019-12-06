@@ -17,6 +17,7 @@ use App\Exports\CaregiverExport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\AssignedCaregiver;
 use App\Booking;
+use App\ContactUs;
 
 class CaregiverController extends Controller{
     public function __construct(){ 
