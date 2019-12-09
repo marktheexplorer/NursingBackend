@@ -9,7 +9,7 @@
             <li class="breadcrumb-item">
                 <a href="{{ route('dashboard') }}"><i class="fas fa-home"></i></a>
             </li>
-            <li class="breadcrumb-item"><a href="{{ route('bookings.index')}}" >Schedule</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('bookings.index')}}" >All Schedule</a></li>
         </ol>
     </div>
     @include('flash::message')

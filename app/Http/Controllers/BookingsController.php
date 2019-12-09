@@ -31,6 +31,10 @@ class BookingsController extends Controller{
                 $select_booking_type = $_GET['booking_options'];
             } 
         }
+
+        if(!empty($_GET['status'])){
+            $bookings = Booking::where('status', '=', $_GET['status'])->orderBy('created_at', 'DESC')->get();
+        }
         return view('bookings.index' , compact('bookings', 'booking_type', 'select_booking_type'));
     }
 

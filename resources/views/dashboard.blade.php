@@ -25,11 +25,21 @@
                 </a>
             </div>
             <div class="col-lg-3 col-md-6">
-                <a href="{{ route('bookings.index') }}">
+                <a href="{{ route('bookings.index', 'status=Pending') }}">
                     <div class="ibox bg-danger color-white widget-stat">
                         <div class="ibox-body">
+                            <h2 class="m-b-5 font-strong">{{ $pendingBookings }}</h2>
+                            <div class="m-b-5">Total Pending Schedule</div><i class="fas fa-clipboard-list widget-stat-icon"></i>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <a href="{{ route('bookings.index') }}">
+                    <div class="ibox bg-warning color-white widget-stat">
+                        <div class="ibox-body">
                             <h2 class="m-b-5 font-strong">{{ $bookings }}</h2>
-                            <div class="m-b-5">Total Bookings</div><i class="fas fa-calendar-week widget-stat-icon"></i>
+                            <div class="m-b-5">Total Schedule</div><i class="fas fa-calendar-week widget-stat-icon"></i>
                         </div>
                     </div>
                 </a>
@@ -44,8 +54,6 @@
                     </div>
                 </a>
             </div>
-        </div>
-        <div class="row">
             <div class="col-lg-3 col-md-6">
                 <a href="{{ route('diagnosis.index') }}">
                     <div class="ibox bg-info color-white widget-stat">
