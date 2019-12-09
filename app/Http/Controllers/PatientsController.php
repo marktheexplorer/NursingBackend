@@ -258,19 +258,14 @@ class PatientsController extends Controller{
 
     public function show($id){
         $user = User::findOrFail($id);
-        $services = Booking::get();
+        $services = Booking::where('user_id', $id)->get();
+        $diagnosis = Diagnose::where('id',$user->patient->diagnose_id)->first();
+        $disciplines = explode(',', $user->patient->disciplines) ;
 
-        if($user->patient){
-            $diagnosis = Diagnose::where('id',$user->patient->diagnose_id)->first();
-            $disciplines = explode(',', $user->patient->disciplines) ;
-            foreach ($disciplines as $key => $value) {
-                $disciplines_name[] = Qualification::where('id',$value)->first();
-            }
-        }else{
-            $diagnosis = '';
-            $disciplines = '';
-            $disciplines_name ='';
+        foreach ($disciplines as $key => $value) {
+            $disciplines_name[] = Qualification::where('id',$value)->first();
         }
+         
         return view('patients.view', compact('user','diagnosis','services','disciplines_name'));
     }
 

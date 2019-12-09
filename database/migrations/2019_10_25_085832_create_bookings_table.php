@@ -23,7 +23,7 @@ class CreateBookingsTable extends Migration
             $table->string('diagnosis_id')->nullable();
             $table->unsignedBigInteger('service_location_id')->nullable();
             $table->string('address');
-            $table->string('county')->nullable();
+            $table->string('city')->nullable();
             $table->string('state');
             $table->string('country');
             $table->string('zipcode')->nullable();

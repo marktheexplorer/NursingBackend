@@ -20,19 +20,8 @@
             </li>
             <li class="heading">FEATURES</li>
             <li>
-                <a href="{{ route('caregiver.index') }}" style="{{ (request()->is('admin/caregiver*')) ? 'background-color:#3498db;color:#fff;' : '' }}">
-                    <i class="sidebar-item-icon fas fa-user-nurse"></i>
-                    <span class="nav-label">Caregiver</span>
-                    <i class="fa fa-angle-left arrow"></i>
-                </a>
-                <ul class="nav-2-level collapse" aria-expanded="false">
-                    <li>
-                        <a href="{{ route('caregiver.create') }}"><i class="sidebar-item-icon fas fa-plus"></i>Add Caregiver</a>
-                    </li>
-                    <li>
-                        <a href="{{ route('caregiver.index') }}"><i class="sidebar-item-icon fas fa-list-ul"></i>Caregiver List</a>
-                    </li>
-                </ul>
+                <a href="{{ route('caregiver.index') }}" style="{{ (request()->is('admin/caregiver*')) ? 'background-color:#3498db;color:#fff;' : '' }}"><i class="sidebar-item-icon fas fa fa-user-nurse"></i>
+                    <span class="nav-label">Caregiver</span></a>
             </li>
             <li>
                 <a href="{{ route('patients.index') }}" style="{{ (request()->is('admin/patients*')) ? 'background-color:#3498db;color:#fff;' : '' }}"><i class="sidebar-item-icon fas fa fa-wheelchair"></i>
@@ -40,7 +29,7 @@
             </li>
             <li>
                 <a href="{{ route('bookings.index') }}" style="{{ (request()->is('admin/bookings*')) ? 'background-color:#3498db;color:#fff;' : '' }}"><i class="sidebar-item-icon fas fa-book-medical"></i>
-                    <span class="nav-label">Bookings</span></a>
+                    <span class="nav-label">Schedule</span></a>
             </li>
             <li>
                 @if((request()->is('admin/county*')) || (request()->is('admin/services*')) || (request()->is('admin/qualifications*')) || (request()->is('admin/diagnosis*')))

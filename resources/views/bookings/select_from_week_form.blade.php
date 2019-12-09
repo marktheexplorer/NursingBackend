@@ -17,12 +17,12 @@
 <div class="content-wrapper">
     <!-- START PAGE CONTENT-->
     <div class="page-heading">
-        <h1 class="page-title">Booking Edit</h1>
+        <h1 class="page-title">Schedule Edit</h1>
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
                 <a href="{{ route('dashboard') }}"><i class="fas fa-home"></i></a>
             </li>
-            <li class="breadcrumb-item"><a href="{{ route('bookings.index') }}">Bookings</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('bookings.index') }}">Schedule</a></li>
         </ol>
     </div>
     <div class="page-content fade-in-up">
@@ -48,13 +48,13 @@
                                             </div>
                                         </li>
                                         <li class="media">
-                                            <div class="media-img col-md-3">Booking For</div>
+                                            <div class="media-img col-md-3">Schedule For</div>
                                             <div class="media-body">
                                                 <div class="media-heading">{{ $booking->relation_id == '' ? 'Myself' :  $booking->relation->name .' - '. $booking->relation->relation->title }}</div>
                                             </div>
                                         </li>
                                         <li class="media">
-                                            <div class="media-img col-md-3">Booking Type</div>
+                                            <div class="media-img col-md-3">Schedule Type</div>
                                             <div class="media-body">
                                                 <div class="media-heading">{{ $booking->booking_type }}</div>
                                             </div>
@@ -246,8 +246,7 @@
                                         </li>        
                                         <li>
                                             <div class="media-img col-md-12" style="text-align: center;">
-                                                <input class="form-control btn-sm btn-primary" style="display:inline; max-width: 70px; padding:0px;background-color: #3498db; background-image: none; " type="submit" value="Submit" id="today_submit"/>&nbsp;&nbsp;&nbsp;&nbsp;<!--
-                                                <button onclick="$('#today_div').toggle();$('#editbtn').css('display', 'inline');" class="form-control btn-sm btn-primary" style="max-width: 70px;padding:0px;display: inline;background-color: #3498db;background-image: none;" type="button">Cancel</button> -->
+                                                <input class="form-control btn-sm btn-primary" style="display:inline; max-width: 70px; padding:0px;background-color: #3498db; background-image: none; " type="submit" value="Submit" id="today_submit"/>&nbsp;&nbsp;&nbsp;&nbsp;
                                             </div>    
                                         </li>
                                     </ul>

@@ -17,12 +17,12 @@
 <div class="content-wrapper">
     <!-- START PAGE CONTENT-->
     <div class="page-heading">
-        <h1 class="page-title">Booking Edit</h1>
+        <h1 class="page-title">Schedule Edit</h1>
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
                 <a href="{{ route('dashboard') }}"><i class="fas fa-home"></i></a>
             </li>
-            <li class="breadcrumb-item"><a href="{{ route('bookings.index') }}">Bookings</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('bookings.index') }}">Schedule</a></li>
         </ol>
     </div>
     <div class="page-content fade-in-up">
@@ -48,13 +48,13 @@
                                             </div>
                                         </li>
                                         <li class="media">
-                                            <div class="media-img col-md-3">Booking For</div>
+                                            <div class="media-img col-md-3">Schedule For</div>
                                             <div class="media-body">
                                                 <div class="media-heading">{{ $relationname }}</div>
                                             </div>
                                         </li>
                                         <li class="media">
-                                            <div class="media-img col-md-3">Booking Type</div>
+                                            <div class="media-img col-md-3">Schedule Type</div>
                                             <div class="media-body">
                                                 <div class="media-heading">{{ $booking['booking_type'] }}</div>
                                             </div>

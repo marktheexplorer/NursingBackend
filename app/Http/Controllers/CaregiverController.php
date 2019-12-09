@@ -216,7 +216,8 @@ class CaregiverController extends Controller{
 
         $user->non_service_area = DB::table('caregiver_attributes')->select('county_areas.area')->Join('county_areas', 'county_areas.id', '=', 'caregiver_attributes.value')->where('caregiver_attributes.type', '=', 'non_service_area')->where('caregiver_attributes.caregiver_id', '=', $id)->orderBy('county_areas.area', 'asc')->get();
 
-        $services = Booking::get();
+        $caregiver_id = Caregiver::where('user_id' , $id)->first();
+        $services = Booking::where('status' , 'Upcoming')->where('caregiver_id' , $caregiver_id->id)->get();
 
         return view('caregiver.view', compact('user' , 'services'));
     }

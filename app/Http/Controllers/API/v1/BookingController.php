@@ -75,7 +75,7 @@ class BookingController extends Controller
         $result = Self::validateBooking($input['start_date'], $input['end_date'], $input['start_time'], $input['end_time'], $input['booking_type'], $input['relation_id'], Auth::id(), $input['weekdays'], 'add', null);
 
         if($result['status'] == 'true'){
-            return response()->json(['status_code' => 201 , 'message' => 'You already have a booking at the specified time. Do you want to override it?', 'data' => ["override_id" => $result['id']]]);
+            return response()->json(['status_code' => 201 , 'message' => 'You already have a schedule at the specified time. Do you want to override it?', 'data' => ["override_id" => $result['id']]]);
         }
 
         if(($input['booking_type'] == 'Daily') || ($input['booking_type'] == 'Select date') || ($input['booking_type'] == 'Select from week')){
@@ -109,22 +109,22 @@ class BookingController extends Controller
 
         if($booking){
 
-            Helper::sendNotifications('1', $booking->id, 'New Booking Request', 'New Booking Request');
+            Helper::sendNotifications('1', $booking->id, 'New Schedule Request', 'New Schedule Request');
 
             if($user->is_notify == 1)
-            Helper::sendNotifications(Auth::id(), $booking->id, 'Booking Requested', 'Your booking request has been generated.');
+            Helper::sendNotifications(Auth::id(), $booking->id, 'Schedule Requested', 'Your schedule request has been generated.');
 
-            $data = Self::sendTwilioMessage(Auth::user()->mobile_number, Auth::user()->country_code, 'A new booking request has been confirmed for '.$booking->start_date.' at '.$booking->start_time); 
+            $data = Self::sendTwilioMessage(Auth::user()->mobile_number, Auth::user()->country_code, 'A new schedule request has been confirmed for '.$booking->start_date.' at '.$booking->start_time); 
 
             if($booking->relation_id != null){
-                $data = Self::sendTwilioMessage($booking->relation->mobile_number, Auth::user()->country_code, 'A new booking request has been generated for you by '.Auth::user()->name.' for '.$booking->start_date.' at '.$booking->start_time); 
+                $data = Self::sendTwilioMessage($booking->relation->mobile_number, Auth::user()->country_code, 'A new schedule request has been generated for you by '.Auth::user()->name.' for '.$booking->start_date.' at '.$booking->start_time); 
             }
 
             Self::sendConfirmationMail($user->id);
-            return response()->json(['status_code' => $this->successStatus , 'message' => 'Booking created successfully.', 'data' => null]);
+            return response()->json(['status_code' => $this->successStatus , 'message' => 'Schedule created successfully.', 'data' => null]);
 
         }else{
-            return response()->json(['status_code' => $this->errorStatus , 'message' => 'Booking not created successfully.', 'data' => null]);
+            return response()->json(['status_code' => $this->errorStatus , 'message' => 'Schedule not created successfully.', 'data' => null]);
         }
     }
 
@@ -276,7 +276,7 @@ class BookingController extends Controller
         $result = Self::validateBooking($input['start_date'], $input['end_date'], $input['start_time'], $input['end_time'], $booking->booking_type, $booking->relation_id, Auth::id(), $input['weekdays'], 'edit', $booking->id);
 
         if($result['status'] == 'true'){
-            return response()->json(['status_code' => 201 , 'message' => 'You already have a booking at the specified time. Do you want to override it?', 'data' => ["override_id" => $result['id']]]);
+            return response()->json(['status_code' => 201 , 'message' => 'You already have a schedule at the specified time. Do you want to override it?', 'data' => ["override_id" => $result['id']]]);
         }
 
         if(($booking->booking_type == 'Daily') || ($booking->booking_type == 'Select date') || ($booking->booking_type == 'Select from week')){
@@ -302,9 +302,9 @@ class BookingController extends Controller
         $booking->fill($input);
 
         if($booking->save()){
-            return response()->json(['status_code' => $this->successStatus , 'message' => 'Booking updated successfully.', 'data' => null]);
+            return response()->json(['status_code' => $this->successStatus , 'message' => 'Schedule updated successfully.', 'data' => null]);
         }else{
-            return response()->json(['status_code' => $this->errorStatus , 'message' => 'Booking not updated successfully.', 'data' => null]);
+            return response()->json(['status_code' => $this->errorStatus , 'message' => 'Schedule not updated successfully.', 'data' => null]);
         }
     }
 
@@ -388,9 +388,9 @@ class BookingController extends Controller
              Booking::where('id', $input['booking_id'])->delete();
 
         if($booking->save()){
-            return response()->json(['status_code' => $this->successStatus , 'message' => 'Booking updated successfully.', 'data' => null]);
+            return response()->json(['status_code' => $this->successStatus , 'message' => 'Schedule updated successfully.', 'data' => null]);
         }else{
-            return response()->json(['status_code' => $this->errorStatus , 'message' => 'Booking not updated successfully.', 'data' => null]);
+            return response()->json(['status_code' => $this->errorStatus , 'message' => 'Schedule not updated successfully.', 'data' => null]);
         }
     }
 
@@ -407,9 +407,9 @@ class BookingController extends Controller
         $assignedCaregivers = AssignedCaregiver::where('booking_id',$input['booking_id'])->delete();
 
         if($booking){
-            return response()->json(['status_code' => $this->successStatus , 'message' => 'Booking deleted successfully.', 'data' => null]);
+            return response()->json(['status_code' => $this->successStatus , 'message' => 'Schedule deleted successfully.', 'data' => null]);
         }else{
-            return response()->json(['status_code' => $this->errorStatus , 'message' => 'Booking not deleted successfully.', 'data' => null]);
+            return response()->json(['status_code' => $this->errorStatus , 'message' => 'Schedule not deleted successfully.', 'data' => null]);
         }
     }
 
@@ -560,7 +560,7 @@ class BookingController extends Controller
         if(count($bookings) > 0){
             return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $bookings]);
         }else{
-            return response()->json(['status_code' => $this->errorStatus , 'message' => 'No Bookings', 'data' => null]);
+            return response()->json(['status_code' => $this->errorStatus , 'message' => 'No Schedule', 'data' => null]);
         }
     }
 
@@ -590,7 +590,7 @@ class BookingController extends Controller
         if(count($bookings) > 0){
             return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $bookings]);
         }else{
-            return response()->json(['status_code' => $this->errorStatus , 'message' => 'No Bookings', 'data' => null]);
+            return response()->json(['status_code' => $this->errorStatus , 'message' => 'No Schedule', 'data' => null]);
         }
     }
 
@@ -620,7 +620,7 @@ class BookingController extends Controller
         if(count($bookings) > 0){
             return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $bookings]);
         }else{
-            return response()->json(['status_code' => $this->errorStatus , 'message' => 'No Bookings', 'data' => null]);
+            return response()->json(['status_code' => $this->errorStatus , 'message' => 'No Schedule', 'data' => null]);
         }
     }
 
@@ -641,7 +641,7 @@ class BookingController extends Controller
                 {
                     $bookings[] = $value;
                 }else{
-                    return response()->json(['status_code' => $this->errorStatus , 'message' => 'No Bookings', 'data' => null]);
+                    return response()->json(['status_code' => $this->errorStatus , 'message' => 'No Schedule', 'data' => null]);
                 }
             }else{
                 $bookings[] = $value;
@@ -661,7 +661,7 @@ class BookingController extends Controller
         if(count($jobs) > 0){
             return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $bookings]);
         }else{
-            return response()->json(['status_code' => $this->errorStatus , 'message' => 'No Bookings', 'data' => null]);
+            return response()->json(['status_code' => $this->errorStatus , 'message' => 'No Schedule', 'data' => null]);
         }
     }
 
@@ -682,10 +682,10 @@ class BookingController extends Controller
 
         if($completed){
             if($booking['user']['is_notify'] == 1)
-                Helper::sendNotifications($booking['user']['id'], $booking->id, 'Booking Completed', 'Your booking has been completed.');
-            return response()->json(['status_code' => $this->successStatus , 'message' => 'Booking Completed successfully.', 'data' => '']);
+                Helper::sendNotifications($booking['user']['id'], $booking->id, 'Booking Completed', 'Your schedule has been completed.');
+            return response()->json(['status_code' => $this->successStatus , 'message' => 'Schedule Completed successfully.', 'data' => '']);
         }else{
-            return response()->json(['status_code' => $this->errorStatus , 'message' => 'Booking not completed successfully.', 'data' => null]);
+            return response()->json(['status_code' => $this->errorStatus , 'message' => 'Schedule not completed successfully.', 'data' => null]);
         }
     }
 
@@ -702,7 +702,7 @@ class BookingController extends Controller
         if(count($bookings) > 0){
             return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $bookings]);
         }else{
-            return response()->json(['status_code' => $this->errorStatus , 'message' => 'No Bookings', 'data' => null]);
+            return response()->json(['status_code' => $this->errorStatus , 'message' => 'No Schedule', 'data' => null]);
         }
     }
 

@@ -200,17 +200,16 @@
                 <div class="ibox">
                     <div class="ibox-body">
                         <div class="tab-content">
-                            <p><h3 style="text-align: center;">Requests Assigned</h3></p>
+                            <p><h3 style="text-align: center;">Schedule</h3></p>
                             <table class="table table-striped table-bordered table-hover" id="data-table" cellspacing="0" width="100%">
                                 <thead>
                                     <tr>
                                         <th>Id</th>
-                                        <th>Service</th>
                                         <th>Client</th>
-                                        <th>Price Range</th>
                                         <th>Location</th>
-                                        <th>Shift</th>
-                                        <th>Created At</th>
+                                        <th>Service Type</th>
+                                        <th>Schedule On</th>
+                                        <th>Schedule Time</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -218,12 +217,11 @@
                                     @foreach($services as $key => $service)
                                         <tr>
                                             <td>{{ ++$key }}</td>
-                                            <td>{{ ucfirst($service->title) }}</td>
-                                            <td>{{ ucfirst($service->name) }}</td>
-                                            <td>{{ "$".$service->min_expected_bill ."- $". $service->max_expected_bill }}</td>
-                                            <td>{{ $service->location.", ".$service->city.", ".$service->state.", ".$service->country.", ".$service->zip  }} </td>
-                                            <td>{{ substr_replace( $service->start_time, ":", 2, 0)." - ".substr_replace( $service->end_time, ":", 2, 0) }}</td>
-                                            <td>{{ date_format(date_create($service->created_at), 'd M, y')}}</td>
+                                            <td>{{ ucfirst($service->user->name) }}</td>
+                                            <td>{{ $service->address }} </td>
+                                            <td>{{ $service->booking_type }}</td>
+                                            <td>{{ $service->start_date . ' - ' . $service->end_date }}</td>
+                                            <td>{{ $service->start_time . ' - ' . $service->end_time }}</td>
                                         </tr>
                                     @endforeach
                                 @else

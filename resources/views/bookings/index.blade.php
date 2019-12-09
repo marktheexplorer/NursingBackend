@@ -4,22 +4,22 @@
 <div class="content-wrapper">
     <!-- START PAGE CONTENT-->
     <div class="page-heading">
-        <h1 class="page-title">Bookings</h1>
+        <h1 class="page-title">Schedule</h1>
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
                 <a href="{{ route('dashboard') }}"><i class="fas fa-home"></i></a>
             </li>
-            <li class="breadcrumb-item"><a href="{{ route('bookings.index')}}" >Bookings</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('bookings.index')}}" >Schedule</a></li>
         </ol>
     </div>
     @include('flash::message')
     <div class="page-content fade-in-up">
         <div class="ibox">
             <div class="ibox-head">
-                <div class="ibox-title">Bookings Data</div>
+                <div class="ibox-title">Schedule Data</div>
                 <form method="get">    
                     <select name="booking_options" class="form-control" style="float: right;width:200px;" onchange="$(this.form).submit();">
-                        <option disabled="" selected=> -- Select Booking Type --</option>
+                        <option disabled="" selected=> -- Select Schedule Type --</option>
                         @foreach($booking_type as $key => $type)
                             <option value="{{ $type['booking_type'] }}" <?php echo ($select_booking_type == $type['booking_type'] ? 'selected' : ''); ?> >{{ ucfirst($type['booking_type']) }}</option>
                         @endforeach
@@ -34,7 +34,7 @@
               				<th>Client</th>
 	                  		<th>Mobile Number</th>
 	                  		<th>Status</th>
-	                  		<th>Booking Type</th>
+	                  		<th>Schedule Type</th>
 	                  		<th>Created At</th>
 	                  		<th style="width: 150px;">Actions</th>
                         </tr>
@@ -108,7 +108,7 @@
         event.preventDefault();
         swal({
             title: "Are you sure?",
-            text: "You want to mark as completed this booking",
+            text: "You want to mark as completed this Schedule",
             icon: "warning",
             buttons: {
                 cancel: true,
@@ -149,7 +149,7 @@
                     }
                 });
             } else {
-                swal("Cancelled", "Booking will not be mark as completed.", "error");
+                swal("Cancelled", "Schedule will not be mark as completed.", "error");
             }
         });
     }
