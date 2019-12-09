@@ -36,6 +36,8 @@ class BookingsController extends Controller{
 
     public function show($id){
     	$booking = Booking::findOrFail($id);
+        $booking->start_time = Carbon::parse($booking->start_time)->format('g:i A') ;
+        $booking->end_time = Carbon::parse($booking->end_time)->format('g:i A') ;
     	$caregivers = User::select('users.*','caregiver.id as caregiverId')->join('caregiver','caregiver.user_id','users.id')->orderBy('users.name','asc')->get();
 
         $assigned_caregivers = AssignedCaregiver::where('booking_id',$id)->get();
@@ -82,6 +84,8 @@ class BookingsController extends Controller{
 
     public function today_form($id){
         $booking = Booking::findOrFail($id);
+        $booking->start_time = Carbon::parse($booking->start_time)->format('g:i A') ;
+        $booking->end_time = Carbon::parse($booking->end_time)->format('g:i A') ;
         $serviceLocation = Countyareas::select('id','area')->where('area' , '!=' ,'0')->get()->toArray();
         return view('bookings.edit' , compact('booking','serviceLocation'));
     }
@@ -104,8 +108,8 @@ class BookingsController extends Controller{
             return redirect()->back()->withErrors($validator);
         }
         $booking = Booking::findOrFail($input['booking_id']);
-        $booking->start_time = $input['todaystarttime'];
-        $booking->end_time = $input['todayendtime'];
+        $booking->start_time = Carbon::parse($input['todaystarttime'])->format('H:i') ;
+        $booking->end_time = Carbon::parse($input['todayendtime'])->format('H:i') ;
         $booking->address = $input['address'];
         $booking->city = $input['city'];
         $booking->state = $input['state'];
@@ -121,6 +125,8 @@ class BookingsController extends Controller{
     public function select_date_form($id)
     {
         $booking = Booking::where('id', '=', $id)->with('user')->with('relation')->with('service_location')->get()->first()->toArray();
+        $booking['start_time'] = Carbon::parse($booking['start_time'])->format('g:i A') ;
+        $booking['end_time'] = Carbon::parse($booking['end_time'])->format('g:i A') ;
         $relation = Relation::where('id' , $booking['relation']['relation_id'])->first();
         $relationname = $booking['relation_id'] == '' ? 'Myself' :  $booking['relation']['name'].'-'.$relation['title'] ;
         $serviceLocation = Countyareas::select('id','area')->where('area' , '!=' ,'0')->get()->toArray();
@@ -149,8 +155,8 @@ class BookingsController extends Controller{
         $booking = array();
         $booking['start_date'] = Carbon::parse($input['start_date'])->format('m/d/Y');
         $booking['end_date'] = Carbon::parse($input['start_date'])->format('m/d/Y');
-        $booking['start_time'] = $input['todaystarttime'];
-        $booking['end_time'] = $input['todayendtime'];
+        $booking['start_time'] = Carbon::parse($input['todaystarttime'])->format('H:i') ;
+        $booking['end_time'] = Carbon::parse($input['todayendtime'])->format('H:i') ;
         $booking['address'] = $input['address'];
         $booking['city'] = $input['city'];
         $booking['state'] = $input['state'];
@@ -170,6 +176,8 @@ class BookingsController extends Controller{
 
     public function daily_form($id){
         $booking = Booking::where('id', '=', $id)->with('user')->with('relation')->with('service_location')->get()->first()->toArray();
+        $booking['start_time'] = Carbon::parse($booking['start_time'])->format('g:i A') ;
+        $booking['end_time'] = Carbon::parse($booking['end_time'])->format('g:i A') ;
         $relation = Relation::where('id' , $booking['relation']['relation_id'])->first();
         $relationname = $booking['relation_id'] == '' ? 'Myself' :  $booking['relation']['name'].'-'.$relation['title'] ;
         $serviceLocation = Countyareas::select('id','area')->where('area' , '!=' ,'0')->get()->toArray();
@@ -199,9 +207,9 @@ class BookingsController extends Controller{
         
         $booking = Booking::findOrFail($input['booking_id']);
         $booking['start_date'] = Carbon::parse($input['start_date'])->format('m/d/Y');
-        $booking['end_date'] = Carbon::parse($input['end_date'])->format('m/d/Y');        
-        $booking['start_time'] = $input['todaystarttime'];
-        $booking['end_time'] = $input['todayendtime'];
+        $booking['end_date'] = Carbon::parse($input['end_date'])->format('m/d/Y');
+        $booking['start_time'] = Carbon::parse($input['todaystarttime'])->format('H:i') ;
+        $booking['end_time'] = Carbon::parse($input['todayendtime'])->format('H:i') ;
         $booking['address'] = $input['address'];
         $booking['city'] = $input['city'];
         $booking['state'] = $input['state'];
@@ -221,6 +229,8 @@ class BookingsController extends Controller{
 
     public function select_from_week_form($id){
         $booking = Booking::findOrFail($id);
+        $booking->start_time = Carbon::parse($booking->start_time)->format('g:i A') ;
+        $booking->end_time = Carbon::parse($booking->end_time)->format('g:i A') ;
         $serviceLocation = Countyareas::select('id','area')->where('area' , '!=' ,'0')->get()->toArray();
 
         return view('bookings.select_from_week_form' , compact('booking','serviceLocation')); 
@@ -254,8 +264,8 @@ class BookingsController extends Controller{
         $booking = Booking::findOrFail($input['booking_id']);
         $booking['start_date'] = Carbon::parse($dates[0])->format('m/d/Y');
         $booking['end_date'] = Carbon::parse(end($dates))->format('m/d/Y');  
-        $booking['start_time'] = $input['todaystarttime'];
-        $booking['end_time'] = $input['todayendtime'];
+        $booking['start_time'] = Carbon::parse($input['todaystarttime'])->format('H:i') ;
+        $booking['end_time'] = Carbon::parse($input['todayendtime'])->format('H:i') ;
         $booking['address'] = $input['address'];
         $booking['city'] = $input['city'];
         $booking['state'] = $input['state'];

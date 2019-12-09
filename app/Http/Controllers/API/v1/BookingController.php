@@ -247,6 +247,8 @@ class BookingController extends Controller
     public function edit_booking(Request $request){
         $input = $request->input();
         $user = Auth::user();
+        $input['start_time'] = Carbon::parse($input['start_time'])->format('H:i') ;
+        $input['end_time'] = Carbon::parse($input['end_time'])->format('H:i') ;
         $booking = Booking::where('id', $input['booking_id'])->first();
         $validator =  Validator::make($input,
             [
@@ -317,6 +319,8 @@ class BookingController extends Controller
     public function override_booking(Request $request){
         $input = $request->input();
         $user = Auth::user();
+        $input['start_time'] = Carbon::parse($input['start_time'])->format('H:i') ;
+        $input['end_time'] = Carbon::parse($input['end_time'])->format('H:i') ;
         $booking = Booking::where('id', $input['override_id'])->first();
         $validator =  Validator::make($input,
             [
@@ -446,11 +450,15 @@ class BookingController extends Controller
                 $bookings[$key]['dates'] = Self::getDates($value['start_date'] , $value['end_date'] , null);
             }
 
+            $bookings[$key]['start_time'] = Carbon::parse($value['start_time'])->format('g:i A') ;
+            $bookings[$key]['end_time'] = Carbon::parse($value['end_time'])->format('g:i A') ;
+
             $diagnosis = unserialize($value['diagnosis_id']);
             foreach ($diagnosis as $a => $value) {
                 $diagnose[$a]= Diagnose::select('title')->where('id', $value)->get()->toArray()[0]['title'];
             }
             $bookings[$key]['diagnosis_id'] = $diagnose;
+
         }
 
         if(count($bookings) > 0){
@@ -497,6 +505,9 @@ class BookingController extends Controller
                 $data = unserialize($value['weekdays']);
                 $bookings[$key]['weekdays'] = $data;
             }
+
+            $bookings[$key]['start_time'] = Carbon::parse($value['start_time'])->format('g:i A') ;
+            $bookings[$key]['end_time'] = Carbon::parse($value['end_time'])->format('g:i A') ;
 
             foreach ($value->caregivers as $k => $care) {
                 $bookings[$key]['caregivers'][$k]['name'] = $care->caregiver->user->name;
@@ -555,6 +566,9 @@ class BookingController extends Controller
                 $data = unserialize($value['weekdays']);
                 $bookings[$key]['weekdays'] = $data;
             }
+
+            $bookings[$key]['start_time'] = Carbon::parse($value['start_time'])->format('g:i A') ;
+            $bookings[$key]['end_time'] = Carbon::parse($value['end_time'])->format('g:i A') ;
         }
 
         if(count($bookings) > 0){
@@ -580,6 +594,8 @@ class BookingController extends Controller
                 $data = unserialize($value['weekdays']);
                 $bookings[$key]['weekdays'] = $data;
             }
+            $bookings[$key]['start_time'] = Carbon::parse($value->start_time)->format('g:i A') ;
+            $bookings[$key]['end_time'] = Carbon::parse($value->end_time)->format('g:i A') ;
             $bookings[$key]['userCaregiver']['name'] = $value->userCaregiver->user->name;
             $bookings[$key]['userCaregiver']['profile_image'] = $value->userCaregiver->user->profile_image == null ? 'default.png' : $value->userCaregiver->user->profile_image ;
             $bookings[$key]['userCaregiver']['language'] = $value->userCaregiver->user->language;
@@ -610,6 +626,8 @@ class BookingController extends Controller
                 $data = unserialize($value['weekdays']);
                 $bookings[$key]['weekdays'] = $data;
             }
+            $bookings[$key]['start_time'] = Carbon::parse($value->start_time)->format('g:i A') ;
+            $bookings[$key]['end_time'] = Carbon::parse($value->end_time)->format('g:i A') ;
             $bookings[$key]['userCaregiver']['name'] = $value->userCaregiver->user->name;
             $bookings[$key]['userCaregiver']['profile_image'] = $value->userCaregiver->user->profile_image == null ? 'default.png' : $value->userCaregiver->user->profile_image ;
             $bookings[$key]['userCaregiver']['language'] = $value->userCaregiver->user->language;
@@ -651,6 +669,8 @@ class BookingController extends Controller
                     $data = unserialize($value['weekdays']);
                     $bookings[$key]['weekdays'] = $data;
                 }
+                $bookings[$key]['start_time'] = Carbon::parse($value->start_time)->format('g:i A') ;
+                $bookings[$key]['end_time'] = Carbon::parse($value->end_time)->format('g:i A') ;
                 $bookings[$key]['service_location_id'] = $value->service_location->area;
                 $bookings[$key]['user']['name'] = $value->user->name;
                 $bookings[$key]['user']['profile_image'] = $value->user->profile_image == null ? 'default.png' : $value->user->profile_image ;
@@ -697,6 +717,8 @@ class BookingController extends Controller
         foreach ($bookings as $key => $value) {
             $bookings[$key]['user']['name'] = $value->user->name;
             $bookings[$key]['user']['profile_image'] = $value->user->profile_image == null ? 'default.png' : $value->user->profile_image ;
+            $bookings[$key]['start_time'] = Carbon::parse($value->start_time)->format('g:i A') ;
+            $bookings[$key]['end_time'] = Carbon::parse($value->end_time)->format('g:i A') ;
         }
 
         if(count($bookings) > 0){

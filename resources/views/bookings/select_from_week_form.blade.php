@@ -137,14 +137,14 @@
                                                     <script>
                                                         $('#todaystarttime').bootstrapMaterialDatePicker({ 
                                                             date: false,
-                                                            format : 'HH:mm:ss',
+                                                            format : 'hh:mm A',
                                                         }).on('change', function(e, date){
                                                             $('#todayendtime').bootstrapMaterialDatePicker('setMinDate', date);
                                                         });
 
                                                         $('#todayendtime').bootstrapMaterialDatePicker({ 
                                                             date: false,
-                                                            format : 'HH:mm:ss'
+                                                            format : 'hh:mm A'
                                                         }).on('change', function(e, date){
                                                             //$("#today_submit").css('display', 'inline');
                                                         });
