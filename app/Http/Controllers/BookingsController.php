@@ -68,7 +68,7 @@ class BookingsController extends Controller{
 
             $booking = Booking::where('id', '=', $input['booking_id'])->with('user')->first();
             if($booking['user']['is_notify'] == 1)
-                Helper::sendNotifications($booking['user']['id'], $booking->id, 'Caregiver Assigned', 'Caregivers has been assigned for booking. Please select a caregiver from caregiver request section.');
+                Helper::sendNotifications($booking['user']['id'], $booking->id, 'Caregiver Assigned', 'Caregiver has been assigned for booking. Please select a caregiver from caregiver request section.');
         }else{            
             AssignedCaregiver::where('booking_id',$input['booking_id'])->where('caregiver_id', $input['caregiver_id'])->delete();
             flash()->success("Caregiver removed.");
