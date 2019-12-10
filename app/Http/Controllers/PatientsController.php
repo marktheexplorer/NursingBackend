@@ -281,7 +281,7 @@ class PatientsController extends Controller{
         $patient = PatientProfile::where('user_id' , $id)->delete();
         $booking = Booking::where('user_id' , $id)->delete();
         $user_relation = UserRelation::where('user_id' , $id)->delete();
-        $contact = ContactUs::where('user_id')->delete();
+        $contact = ContactUs::where('user_id', $id)->delete();
 
         if ($user->delete()) {
             $response = array(
