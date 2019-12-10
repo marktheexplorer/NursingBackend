@@ -36,6 +36,7 @@ class CreateBookingsTable extends Migration
             $table->boolean('24_hours')->default(0);
             $table->integer('no_of_weeks')->nullable();
             $table->unsignedBigInteger('caregiver_id')->nullable();
+            $table->integer('caregiver_limit')->nullable();
             $table->string('status')->nullable();
             $table->string('timezone')->nullable();
             $table->timestamps();

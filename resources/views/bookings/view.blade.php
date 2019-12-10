@@ -14,7 +14,16 @@
         </ol>
     </div>
     <div class="page-content fade-in-up">
-        @include('flash::message')
+    @include('flash::message') 
+    @if ($errors->has('caregiver_id'))
+        <span class="invalid-feedback" role="alert" style="display:inline;">
+            <strong>{{ $errors->first('caregiver_id') }}</strong>
+        </span>
+    @elseif($errors->has('caregiver_limit'))
+        <span class="invalid-feedback" role="alert" style="display:inline;">
+            <strong>{{ $errors->first('caregiver_limit') }}</strong>
+        </span>
+    @endif
         <div class="row">
             <div class="col-lg-12 col-md-12">
                 <div class="ibox">
@@ -139,47 +148,62 @@
                 </div>
             </div>
             @if($booking->status == 'Pending' || $booking->status == 'Caregiver Request')
-            <div class="col-md-12 col-lg-12" >
-                <div class="ibox">
-                    <div class="ibox-body">
-                        <div class="tab-content">
-                            <p><h3 style="text-align: center;">Caregivers</h3></p>
-                            <table class="table table-striped table-bordered table-hover" id="data-table" cellspacing="0" width="100%">
-                                <thead>
+           
+            <div class="col-md-12 col-lg-12" > 
+                <form action="{{ route('bookings.assign') }}" method="post" class="" enctype="multipart/form-data">
+                @csrf
+                    <div class="ibox">
+                        <div class="ibox-head">
+                            <div class="ibox-title">Caregivers</div>
+                            <div class="col-md-4 float-right">
+                                <label class="">Caregiver Limit:</label>
+                                <input type="number" max="5" min="1" name="caregiver_limit" value="{{ $booking->caregiver_limit ? $booking->caregiver_limit : '' }}" required>
+                            </div>
+                        </div>                    
+                        <div class="ibox-body">
+                            <div class="tab-content">
+                                <table class="table table-striped table-bordered table-hover" id="data-table" cellspacing="0" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Phone No.</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($caregivers as $key => $caregiver)
+                                            <tr>
+                                                <td>{{ ++$key }}</td>
+                                                <td>{{ $caregiver->name }}</td>
+                                                <td>{{ $caregiver->email }}</td>
+                                                <td>{{ $caregiver->mobile_number }}</td>
+                                                <td>
+                                                    <input type="hidden" name="booking_id" value="{{ $booking->id }}" />
+                                                    @if(in_array($caregiver->caregiverId, $assignedCaregiversId))
+                                                    <input type="checkbox" title="Un-Assign" checked class="form-control" style="cursor: pointer;" name="caregiver_id[]" value="{{ $caregiver->caregiverId }}" >
+                                                    @else
+                                                    <input type="checkbox" title="Assign" class="form-control" style="cursor: pointer;" name="caregiver_id[]" value="{{ $caregiver->caregiverId }}" >
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
                                     <tr>
-                                        <th>Id</th>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Phone No.</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                @foreach($caregivers as $key => $caregiver)
-                                    <tr>
-                                        <td>{{ ++$key }}</td>
-                                        <td>{{ $caregiver->name }}</td>
-                                        <td>{{ $caregiver->email }}</td>
-                                        <td>{{ $caregiver->mobile_number }}</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
                                         <td>
-                                            <form action="{{ route('bookings.assign') }}" method="post" class="form-horizontal" enctype="multipart/form-data">
-                                            @csrf
-                                                <input type="hidden" name="booking_id" value="{{ $booking->id }}" />
-                                                <input type="hidden" name="caregiver_id" value="{{ $caregiver->caregiverId }}" />
-                                                @if(in_array($caregiver->caregiverId, $assignedCaregiversId))
-                                                <input type="checkbox" title="Un-Assign" checked class="form-control" style="cursor: pointer;" onclick="$(this).closest('form').submit();">
-                                                @else
-                                                <input type="checkbox" title="Assign" class="form-control" style="cursor: pointer;" onclick="$(this).closest('form').submit();">
-                                                @endif
-                                            </form>
+                                            <button class="form-control btn-info" onclick="$(this).closest('form').submit();">Submit</button> 
                                         </td>
                                     </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
+                                </table>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
             @endif
         </div>

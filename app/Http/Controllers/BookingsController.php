@@ -63,26 +63,38 @@ class BookingsController extends Controller{
 
     public function assign(Request $request){
         $input = $request->input();
-        $exists = AssignedCaregiver::where('booking_id',$input['booking_id'])->where('caregiver_id', $input['caregiver_id'])->get();
-        if(count($exists) < 1){
-            AssignedCaregiver::insert(['booking_id'=>$input['booking_id'],'caregiver_id'=> $input['caregiver_id']]);
-            //Status Update
-            Booking::where('id', '=', $input['booking_id'])->update(array('status' =>  'Caregiver Request'));
-            flash()->success("Caregiver assigned.");
+        $validator =  Validator::make($input,
+            [
+                'caregiver_id' => 'required',
+                'caregiver_limit' => 'required|min:1|max:5'
+            ],[
+                'caregiver_id.required' => 'Please select caregiver.'
+            ]
+        );
 
-            $booking = Booking::where('id', '=', $input['booking_id'])->with('user')->first();
-            if($booking['user']['is_notify'] == 1)
-                Helper::sendNotifications($booking['user']['id'], $booking->id, 'Caregiver Assigned', 'Caregiver has been assigned for booking. Please select a caregiver from caregiver request section.');
-        }else{            
-            AssignedCaregiver::where('booking_id',$input['booking_id'])->where('caregiver_id', $input['caregiver_id'])->delete();
-            flash()->success("Caregiver removed.");
-
-            $isexist = AssignedCaregiver::where('booking_id',$input['booking_id'])->get();
-            if(count($isexist) < 1){
-                //change status 
-                Booking::where('id', '=', $input['booking_id'])->update(array('status' =>  'Pending'));
-            }
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator);
         }
+
+        if($input['caregiver_limit'] > count($input['caregiver_id'])){
+            flash()->error("Please select caregiver according to the  caregiver limit.");
+            return redirect()->back();
+        }
+
+        AssignedCaregiver::where('booking_id',$input['booking_id'])->delete();
+        
+        foreach ($input['caregiver_id'] as $key => $value) {
+           AssignedCaregiver::insert(['booking_id'=>$input['booking_id'],'caregiver_id'=> $value]);
+        }
+
+        //Status Update
+        Booking::where('id', $input['booking_id'])->update(['status' =>  'Caregiver Request', 'caregiver_limit' => $input['caregiver_limit'] ]);
+        flash()->success("Caregiver assigned.");
+
+        $booking = Booking::where('id', $input['booking_id'])->with('user')->first();
+        if($booking['user']['is_notify'] == 1)
+            Helper::sendNotifications($booking['user']['id'], $booking->id, 'Caregiver Assigned', 'Caregiver has been assigned for booking. Please select a caregiver from caregiver request section.');
+
         return redirect()->back();
     }
 
