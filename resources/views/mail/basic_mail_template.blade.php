@@ -27,7 +27,7 @@
     @elseif($objDemo->type == 'resend_basic_carepack_confirm')
         <tr>
             <td>
-                <p style="color: #555;line-height: 25px;margin: 0;"> Oops! Basic care pack confirmation document uploaded by you reject by admin, Now you have to upload document again.<p>
+                <p style="color: #555;line-height: 25px;margin: 0;"> Oops! Basic Start of Care Packet confirmation document uploaded by you reject by admin, Now you have to upload document again.<p>
                 <p style="color: #555;line-height: 25px;margin: 0;">Click below button and upload your documents again.</p><br/><br/>
             </td>
         </tr>

@@ -47,7 +47,7 @@ class DiagnoseController extends Controller{
                 $input['title'] = $input['title'];
                 $diagnose = Diagnose::create($input);
 
-                flash()->success('New Diagnose added successfully');
+                flash()->success('New diagnosis added successfully');
                 return redirect()->route('diagnosis.index');
     }
 
@@ -97,7 +97,7 @@ class DiagnoseController extends Controller{
         $diagnose->title = $input['title'];
         $diagnose->save();
 
-        flash()->success('Diagnose updated successfully');
+        flash()->success('Diagnosis updated successfully');
         return redirect()->route('diagnosis.index');
     }
 
@@ -107,10 +107,32 @@ class DiagnoseController extends Controller{
         $diagnose->save();
        
         if ($diagnose->is_blocked)
-            flash()->success("Diagnose blocked successfully."); 
+            flash()->success("Diagnosis blocked successfully."); 
         else 
-            flash()->success("Diagnose Unblocked successfully."); 
+            flash()->success("Diagnosis Unblocked successfully."); 
 
         return redirect()->route('diagnosis.index');  
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id){
+        $faq = Diagnose::findOrFail($id);
+        if ($faq->delete()) {
+            $response = array(
+                'status' => 'success',
+                'message' => 'Diagnosis deleted successfully',
+            );
+        } else {
+            $response = array(
+                'status' => 'error',
+                'message' => 'Diagnosis can not be deleted.Please try again',
+            );
+        }
+        return json_encode($response);
     }
 }

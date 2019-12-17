@@ -4,7 +4,7 @@
 <div class="content-wrapper">
     <!-- START PAGE CONTENT-->
     <div class="page-heading">
-        <h1 class="page-title">Diagnose Management</h1>
+        <h1 class="page-title">Diagnosis Management</h1>
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
                 <a href="{{ route('dashboard') }}"><i class="fas fa-home"></i></a>
@@ -51,6 +51,12 @@
                                         @endif
                                         </a>
                                     </li>
+                                    <li>
+                                        <form action="{{ route('diagnosis.destroy',['id' => $diagnose->id]) }}" method="POST" onsubmit="deleteDiagnosis('{{ $diagnose->id }}', '{{ $diagnose->title }}', event,this)">
+                                        @csrf
+                                            <button class="btn-sm btn-danger btn-cir" title="Delete"><i class="fas fa-trash-alt"></i></button>
+                                        </form>
+                                    </li>
 	              				</ul>
 	              			</td>
 	            		</tr>
@@ -67,5 +73,60 @@
     $(document).ready( function () {
         $('#data-table').DataTable();
     });
+
+    $(document).ready( function () {
+        $('#data-table').DataTable();
+    });
+
+    function deleteDiagnosis(id, title, event,form)
+    {
+        event.preventDefault();
+        swal({
+            title: "Are you sure?",
+            text: "You want to delete "+title+" diagnosis",
+            icon: "warning",
+            buttons: {
+                cancel: true,
+                confirm: true,
+            },
+            closeModal: false,
+            closeModal: false,
+            closeOnEsc: false,
+        })
+       .then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                url: $(form).attr('action'),
+                data: $(form).serialize(),
+                type: 'DELETE',
+                success: function(data) {
+                    data = JSON.parse(data);
+                    if(data['status']) {
+                        swal({
+                            title: data['message'],
+                            text: "Press ok to continue",
+                            icon: "success",
+                            buttons: {
+                                cancel: true,
+                                confirm: true,
+                            },
+                            closeOnConfirm: false,
+                            closeOnEsc: false,
+                        })
+                        .then((willDelete) => {
+                            if (willDelete) {
+                                window.location.reload();
+                            }
+                            });
+                        } else {
+                             swal("Error", data['message'], "error");
+                        }
+                    }
+                });
+            } else {
+                swal("Cancelled", title+" diagnosis will not be deleted.", "error");
+            }
+        });
+    }
 </script>
 @endsection

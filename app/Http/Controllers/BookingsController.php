@@ -467,7 +467,7 @@ class BookingsController extends Controller{
 
             return view('bookings.upload_carepack_docs', compact('data'));
         }else{
-            flash()->success("Please upload basic care pack document");
+            flash()->success("Please upload basic Start of Care Packet document");
             return view('bookings.upload_carepack_docs', compact('data'));
         }
     }
