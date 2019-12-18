@@ -736,7 +736,7 @@ class BookingController extends Controller
 
         if(count($notifications) > 0){
             foreach ($notifications as $key => $value) {
-                $notifications[$key]['created_at'] = Carbon::parse($value['created_at'])->format('m/d/Y');
+                $notifications[$key]['created_at'] = Carbon::parse($value['created_at'])->format('m/d/Y g:i A');
             }
             return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $notifications]);
         }else{
