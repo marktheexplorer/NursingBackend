@@ -53,7 +53,7 @@ class BookingController extends Controller
                 'weekdays.0' => 'sometimes|required',
                 '24_hours' => 'required',
                 'start_time' => 'required',
-                'end_time' =>'required|gt:start_time',
+                'end_time' =>'required',
                 'no_of_weeks' =>'required',
                 'address' => 'required',
                 'country' => 'required',
@@ -62,7 +62,8 @@ class BookingController extends Controller
                 'zip_code' => 'required',
                 'timezone' => 'required'
             ],[
-            	'weekdays.0.required' => 'Weekdays is required.'
+            	'weekdays.0.required' => 'Weekdays is required.',
+                'end_date.gt' => 'End Date must be greater than start date'
             ]
         );
 
@@ -259,12 +260,14 @@ class BookingController extends Controller
                 '24_hours' => 'required',
                 'service_location_id' => 'required',
                 'start_time' => 'required',
-                'end_time' =>'required|gt:start_time',
+                'end_time' =>'required',
                 'address' => 'required',
                 'country' => 'required',
                 'state' => 'required',
                 'city' => 'required',
                 'zip_code' => 'required',
+            ],[
+                'end_date.gt' => 'End Date must be greater than start date'
             ]
         );
 
