@@ -48,7 +48,7 @@ class BookingController extends Controller
                 'diagnosis_id' => 'required',
                 'service_location_id' => 'required',
                 'start_date'=>'required',
-                'end_date'=>'required',
+                'end_date'=>'required|gt:start_date',
                 'weekdays' => 'array',
                 'weekdays.0' => 'sometimes|required',
                 '24_hours' => 'required',
@@ -254,7 +254,7 @@ class BookingController extends Controller
             [
                 'booking_id' => 'required',
                 'start_date'=>'required',
-                'end_date'=>'required',
+                'end_date'=>'required|gt:start_date',
                 'weekdays' => 'array',
                 '24_hours' => 'required',
                 'service_location_id' => 'required',
