@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Booking;
 use App\Caregiver;
 use App\Diagnose;
+use App\Service;
 use App\User;
 use App\AssignedCaregiver;
 use App\Countyareas;
@@ -18,6 +19,7 @@ use App\Helper;
 use DB;
 
 class BookingsController extends Controller{
+    
     public function index(){
     	$bookings = Booking::orderBy('created_at', 'DESC')->get();
         $booking_type = Booking::select('booking_type')->distinct()->get()->toArray();
@@ -52,12 +54,23 @@ class BookingsController extends Controller{
             $assignedCaregivers[$key]['name'] = $value->caregiver->user->name;
             $assignedCaregivers[$key]['email'] = $value->caregiver->user->email;
         }
-    	foreach (unserialize($booking->diagnosis_id) as $key => $value) {
-    		$diagnosis[] = Diagnose::select('title')->where('id', $value)->get()[0]->title;
-    	}
-    	$diagnosis = implode(',', $diagnosis);
+        $diagnosis = array();
+        if($booking->diagnosis_id != 'null' && (!empty(unserialize($booking->diagnosis_id)))){
+            foreach (unserialize($booking->diagnosis_id) as $key => $value) {
+                $diagnosis[] = Diagnose::select('title')->where('id', $value)->get()[0]->title;
+            }
+            $diagnosis = implode(',', $diagnosis);
+        }
 
-    	return view('bookings.view' , compact('booking','caregivers','diagnosis','assignedCaregivers','assignedCaregiversId')); 
+        $services = array();
+        if($booking->services_id != 'null' && (!empty(unserialize($booking->services_id)))){
+            foreach (unserialize($booking->services_id) as $key => $value) {
+                $services[] = Service::select('title')->where('id', $value)->get()[0]->title;
+            }
+            $services = implode(',', $services);
+        }
+
+    	return view('bookings.view' , compact('booking','caregivers','diagnosis','services','assignedCaregivers','assignedCaregiversId')); 
 
     }
 
@@ -96,46 +109,6 @@ class BookingsController extends Controller{
             Helper::sendNotifications($booking['user']['id'], $booking->id, 'Caregiver Assigned', 'Caregiver has been assigned for booking. Please select a caregiver from caregiver request section.');
 
         return redirect()->back();
-    }
-
-    public function today_form($id){
-        $booking = Booking::findOrFail($id);
-        $booking->start_time = Carbon::parse($booking->start_time)->format('g:i A') ;
-        $booking->end_time = Carbon::parse($booking->end_time)->format('g:i A') ;
-        $serviceLocation = Countyareas::select('id','area')->where('area' , '!=' ,'0')->get()->toArray();
-        return view('bookings.edit' , compact('booking','serviceLocation'));
-    }
-
-    public function today_update(Request $request){
-        $input = $request->input();
-        $validator =  Validator::make($input,[
-            'todaystarttime' => 'required|string|max:40',
-            'todayendtime' => 'required|string|max:40',
-            'booking_id' => 'required|string|max:40',
-            'address' => 'required',
-            'state' => 'required',
-            'country' => 'required',
-            'city' => 'required',
-            'zipcode' => 'required',
-            'serviceLocation' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator);
-        }
-        $booking = Booking::findOrFail($input['booking_id']);
-        $booking->start_time = Carbon::parse($input['todaystarttime'])->format('H:i') ;
-        $booking->end_time = Carbon::parse($input['todayendtime'])->format('H:i') ;
-        $booking->address = $input['address'];
-        $booking->city = $input['city'];
-        $booking->state = $input['state'];
-        $booking->country = $input['country'];
-        $booking->zipcode = $input['zipcode'];
-        $booking->service_location_id = $input['serviceLocation'];
-        $booking->save();
-
-        flash()->success('Booking Update Successfully');
-        return redirect()->route('bookings.today_form', ['id' => $input['booking_id']]);
     }
 
     public function select_date_form($id)

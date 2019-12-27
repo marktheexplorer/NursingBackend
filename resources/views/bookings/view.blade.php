@@ -101,7 +101,13 @@
                                     <li class="media">
                                         <div class="media-img col-md-3">Diagnosis</div>
                                         <div class="media-body">
-                                            <div class="media-heading">{{ $diagnosis }}</div>
+                                            <div class="media-heading">{{ empty($diagnosis) ? '' : $diagnosis }}</div>
+                                        </div>
+                                    </li>
+                                    <li class="media">
+                                        <div class="media-img col-md-3">Services</div>
+                                        <div class="media-body">
+                                            <div class="media-heading">{{ empty($services) ? '' : $services }}</div>
                                         </div>
                                     </li>
                                     <li class="media">
