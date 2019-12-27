@@ -463,19 +463,23 @@ class BookingController extends Controller
             $bookings[$key]['start_time'] = Carbon::parse($value['start_time'])->format('g:i A') ;
             $bookings[$key]['end_time'] = Carbon::parse($value['end_time'])->format('g:i A') ;
 
-            $diagnosis = unserialize($value['diagnosis_id']);
-            foreach ($diagnosis as $a => $v) {
-                $diagnose[$a]= Diagnose::select('title')->where('id', $v)->get()->toArray()[0]['title'];
-            }
-            $bookings[$key]['diagnosis_id'] = $diagnose;
-
-            $services = unserialize($value['services_id']);
-            if($services != false){
-                foreach ($services as $a => $val) {
-                    $service[$a]= Service::select('title')->where('id', $val)->get()->toArray()[0]['title'];
+            if($value['diagnosis_id'] != null){
+                $diagnosis = unserialize($value['diagnosis_id']);
+                foreach ($diagnosis as $a => $v) {
+                    $diagnose[$a]= Diagnose::select('title')->where('id', $v)->get()->toArray()[0]['title'];
                 }
-                $bookings[$key]['services_id'] = $service;
-            }                
+                $bookings[$key]['diagnosis_id'] = $diagnose;
+            }
+
+            if($value['services_id'] != null){
+                $services = unserialize($value['services_id']);
+                if($services != false){
+                    foreach ($services as $a => $val) {
+                        $service[$a]= Service::select('title')->where('id', $val)->get()->toArray()[0]['title'];
+                    }
+                    $bookings[$key]['services_id'] = $service;
+                } 
+            }               
         }
 
         if(count($bookings) > 0){
