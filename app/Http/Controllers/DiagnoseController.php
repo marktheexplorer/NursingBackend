@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Diagnose;
+use App\Booking;
 use Validator;
 
 class DiagnoseController extends Controller{
@@ -122,7 +123,17 @@ class DiagnoseController extends Controller{
      */
     public function destroy($id){
         $diagnose = Diagnose::findOrFail($id);
-        // Booking::where('diagnosis_id' , $diagnose->id)->update(array('diagnosis_id' => null));
+        $booking = Booking::select('id','diagnosis_id')->get()->toArray();
+
+        foreach ($booking as $key => $value) {
+            $arr = unserialize($value['diagnosis_id']);
+            $key = array_search($diagnose->id, $arr);
+               
+            if($key !== false){
+                unset($arr[$key]);
+                Booking::where('id', $value['id'])->update(['diagnosis_id' => serialize($arr)]);
+            }
+        }
         if ($diagnose->delete()) {
             $response = array(
                 'status' => 'success',

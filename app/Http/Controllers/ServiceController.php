@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Service;
+use App\Booking;
 use Image; 
 use Validator;
 
@@ -142,6 +143,17 @@ class ServiceController extends Controller{
     public function destroy($id)
     {
         $service = Service::findOrFail($id);
+        $booking = Booking::select('id','services_id')->get()->toArray();
+
+        foreach ($booking as $key => $value) {
+            $arr = unserialize($value['services_id']);
+            $key = array_search($service->id, $arr);
+               
+            if($key !== false){
+                unset($arr[$key]);
+                Booking::where('id', $value['id'])->update(['services_id' => serialize($arr)]);
+            }
+        }
         if ($service->delete()) {
             $response = array(
                 'status' => 'success',
