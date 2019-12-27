@@ -470,11 +470,12 @@ class BookingController extends Controller
             $bookings[$key]['diagnosis_id'] = $diagnose;
 
             $services = unserialize($value['services_id']);
-            foreach ($services as $a => $val) {
-                $service[$a]= Service::select('title')->where('id', $val)->get()->toArray()[0]['title'];
-            }
-            $bookings[$key]['services_id'] = $service;
-
+            if($services != false){
+                foreach ($services as $a => $val) {
+                    $service[$a]= Service::select('title')->where('id', $val)->get()->toArray()[0]['title'];
+                }
+                $bookings[$key]['services_id'] = $service;
+            }                
         }
 
         if(count($bookings) > 0){
