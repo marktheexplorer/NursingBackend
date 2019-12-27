@@ -170,7 +170,7 @@ class BookingController extends Controller
         else
             $bookings = Booking::where('relation_id' , $relationId)->where('user_id', $id)->where('id','!=',$bookingId)->get()->toArray();
 
-        if($bookingType == 'Today' || $bookingType == 'Select date'){
+        if($bookingType == 'Select date'){
             
             foreach ($bookings as $key => $booking) {
             $booking_startDate = Carbon::parse($booking['start_date']);

@@ -163,6 +163,7 @@ class UserController extends Controller{
                     $success['height'] = PROFILE_HEIGHT;
                     $success['weight'] = PROFILE_WEIGHT;
                     $success['language'] = PROFILE_LANGUAGE;
+                    $success['today_msg'] = $data['today_msg'];
                 }else{
                     $userDetails =  User::where('users.id', $user->id)->first();
                     if($userDetails['profile_image'] == null)
@@ -175,6 +176,7 @@ class UserController extends Controller{
                     $success['token'] =  $token;
                     $success['userDetails'] =  $userDetails;
                     $success['service_area'] =  $data['county'];
+                    $success['today_msg'] = $data['today_msg'];
                 } 
 
                 return response()->json(['status_code' => $this->successStatus, 'message' => 'Otp verified.', 'data'=> $success]);
