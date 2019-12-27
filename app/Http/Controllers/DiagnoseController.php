@@ -121,8 +121,9 @@ class DiagnoseController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function destroy($id){
-        $faq = Diagnose::findOrFail($id);
-        if ($faq->delete()) {
+        $diagnose = Diagnose::findOrFail($id);
+        // Booking::where('diagnosis_id' , $diagnose->id)->update(array('diagnosis_id' => null));
+        if ($diagnose->delete()) {
             $response = array(
                 'status' => 'success',
                 'message' => 'Diagnosis deleted successfully',

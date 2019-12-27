@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\User;
 use App\Diagnose;
+use App\Service;
 use App\Countyareas;
 use App\Booking;
 use App\Qualification;
@@ -46,6 +47,7 @@ class BookingController extends Controller
                 'weight' =>'required',
                 'pets' => 'required',
                 'diagnosis_id' => 'required',
+                'services_id' => 'required',
                 'service_location_id' => 'required',
                 'start_date'=>'required',
                 'end_date'=>'required|after_or_equal:start_date',
@@ -98,12 +100,17 @@ class BookingController extends Controller
             $input['diagnosis'][] = Diagnose::select('id')->where('title', 'like', '%'.$value.'%')->first()->id;
         }
 
+        foreach ($input['services_id'] as $key => $value) {
+            $input['services'][] = Service::select('id')->where('title', 'like', '%'.$value.'%')->first()->id;
+        }
+
         $input['service_location_id'] = Countyareas::select('id')->where('area', 'like', '%'.$input['service_location_id'].'%')->first()->id;
 
         $input['zipcode'] = $input['zip_code'];
         $input['user_id'] = $user->id;
         $input['weekdays'] = serialize($input['weekdays']);
         $input['diagnosis_id'] = serialize($input['diagnosis']);
+        $input['services_id'] = serialize($input['services']);
         $input['status'] = 'Pending';
         $booking = Booking::create($input);
 
@@ -330,6 +337,7 @@ class BookingController extends Controller
                 'weight' =>'required',
                 'pets' => 'required',
                 'diagnosis_id' => 'required',
+                'services_id' => 'required',
                 'service_location_id' => 'required',
                 'start_date'=>'required',
                 'end_date'=>'required',
@@ -379,17 +387,19 @@ class BookingController extends Controller
             $input['diagnosis'][] = Diagnose::select('id')->where('title', 'like', '%'.$value.'%')->first()->id;
         }
 
+        foreach ($input['services_id'] as $key => $value) {
+            $input['services'][] = Service::select('id')->where('title', 'like', '%'.$value.'%')->first()->id;
+        }
+
         $input['service_location_id'] = Countyareas::select('id')->where('area', 'like', '%'.$input['service_location_id'].'%')->first()->id;
 
         $input['zipcode'] = $input['zip_code'];
         $input['user_id'] = $user->id;
         $input['weekdays'] = serialize($input['weekdays']);
         $input['diagnosis_id'] = serialize($input['diagnosis']);
+        $input['services_id'] = serialize($input['services']);
         $input['status'] = 'Pending';
         $booking->fill($input);
-
-        if($input['booking_id'] != null)
-             Booking::where('id', $input['booking_id'])->delete();
 
         if($booking->save()){
             return response()->json(['status_code' => $this->successStatus , 'message' => 'Schedule updated successfully.', 'data' => null]);
@@ -454,10 +464,16 @@ class BookingController extends Controller
             $bookings[$key]['end_time'] = Carbon::parse($value['end_time'])->format('g:i A') ;
 
             $diagnosis = unserialize($value['diagnosis_id']);
-            foreach ($diagnosis as $a => $value) {
-                $diagnose[$a]= Diagnose::select('title')->where('id', $value)->get()->toArray()[0]['title'];
+            foreach ($diagnosis as $a => $v) {
+                $diagnose[$a]= Diagnose::select('title')->where('id', $v)->get()->toArray()[0]['title'];
             }
             $bookings[$key]['diagnosis_id'] = $diagnose;
+
+            $services = unserialize($value['services_id']);
+            foreach ($services as $a => $val) {
+                $service[$a]= Service::select('title')->where('id', $val)->get()->toArray()[0]['title'];
+            }
+            $bookings[$key]['services_id'] = $service;
 
         }
 

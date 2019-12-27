@@ -21,6 +21,7 @@ class CreateBookingsTable extends Migration
             $table->string('weight');
             $table->string('pets');
             $table->string('diagnosis_id')->nullable();
+            $table->string('services_id')->nullable();
             $table->unsignedBigInteger('service_location_id')->nullable();
             $table->string('address');
             $table->string('city')->nullable();
