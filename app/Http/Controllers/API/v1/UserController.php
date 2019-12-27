@@ -469,6 +469,7 @@ class UserController extends Controller{
             $success['services'] =  $data['services'];
             $success['diagnosis'] =  $data['diagnosis'];
             $success['service_area'] =  $data['county'];
+            $success['today_msg'] =  $data['today_msg'];
             $success['height'] = PROFILE_HEIGHT;
             $success['weight'] = PROFILE_WEIGHT;
             $success['language'] = PROFILE_LANGUAGE;
@@ -483,6 +484,7 @@ class UserController extends Controller{
                         ->where('type', '=', 'service_area')->get();
             $success['userDetails'] =  $userDetails;
             $success['service_area'] =  $data['county'];
+            $success['today_msg'] =  $data['today_msg'];
         }          
         if (!empty($user))
             return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $success]);
@@ -497,7 +499,8 @@ class UserController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function getAllListData($userId)
-    {
+    {  
+        $admin = User::where('role_id' , 1)->first();
         $success['county'] = Countyareas::select('id','area')->where('area', '!=' ,'0')->where('is_area_blocked', '=', '1')->orderBy('area', 'ASC')->get();
 
         $success['services'] = DB::table('services')->select('id', 'title', 'description', 'service_image')->where('is_blocked', '=', '0')->orderBy('title', 'asc')->get();
@@ -507,6 +510,8 @@ class UserController extends Controller{
         $success['relations'] = Relation::pluck('title');
 
         $success['user_added_relations'] = UserRelation::select('user_relations.*', 'relations.title')->join('relations' , 'relation_id' , 'relations.id')->where('user_id', $userId)->get();
+
+        $success['today_msg'] = "Please contact admin for today's booking. Email : ".$admin->email." Phone No. : ".$admin->mobile_number ;
 
         return $success;
     }
