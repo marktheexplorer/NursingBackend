@@ -512,7 +512,7 @@ class BookingController extends Controller
 
     public function caregiverRequestsList()
     {
-        $bookings = Booking::select('id','relation_id', 'start_date', 'end_date', '24_hours', 'start_time', 'end_time','weekdays')->where('status', 'Caregiver Request')->where('user_id' , Auth::id())->get();
+        $bookings = Booking::select('id','relation_id', 'start_date', 'end_date', '24_hours', 'start_time', 'end_time','weekdays', 'caregiver_limit')->where('status', 'Caregiver Request')->where('user_id' , Auth::id())->get();
 
         foreach ($bookings as $key => $value) {
 

@@ -56,11 +56,12 @@
                                         </a>
                                     </li>
                                     <li class="media-list media-list-divider m-0" style="float: left;padding-right:5px;">
-                                        @if($booking->booking_type == 'Today')
-                                            <a href="{{ route('bookings.today_form',['id' => $booking->id]) }}">
-                                                <button class="btn-sm btn-primary btn-cir" title="Edit"><i class="fas fa-pencil-alt"></i></button>
-                                            </a>
-                                        @elseif($booking->booking_type == 'Select date')
+                                        <a href="{{ route('bookings.show',['id' => $booking->id]) }}">
+                                            <button class="btn-sm btn-secondary btn-cir" title="Manage Caregivers"><i class="fas fa-tasks"></i></button>
+                                        </a>
+                                    </li>
+                                    <li class="media-list media-list-divider m-0" style="float: left;padding-right:5px;">
+                                        @if($booking->booking_type == 'Select date')
                                             <a href="{{ route('bookings.select_date_form',['id' => $booking->id]) }}">
                                                 <button class="btn-sm btn-primary btn-cir" title="Edit"><i class="fas fa-pencil-alt"></i></button>
                                             </a>
@@ -74,11 +75,11 @@
                                             </a>
                                         @endif
                                     </li>
-                                    @if(($booking->booking_type == 'Select from week' || $booking->booking_type == 'Daily') && $booking->status == "Upcoming") 
+                                    @if($booking->status != "Completed") 
                                         <li class="media-list media-list-divider m-0" style="float: left;padding-right:5px;">
                                             <form action="{{ route('bookings.complete_booking',['id' => $booking->id]) }}" method="GET"  onsubmit="markascomplete('{{ $booking->id }}', '{{ $booking->name }}', event,this)">
                                                 <button class="btn-sm btn-info btn-cir" title="Mark as Completed"><i class="fas fa-check"></i></button>
-                                            </a>
+                                            </form>
                                         </li>
                                     @endif
                                     <li class="media-list media-list-divider m-0" style="float: left;padding-right:5px;">

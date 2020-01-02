@@ -16,8 +16,8 @@ return [
     'port'       => env('MAIL_PORT', 587),
     'from'       => ['address' =>'nursingcare@gmail.com', 'name' => '24*7NursingCare'],
     'encryption' => env('MAIL_ENCRYPTION', 'tls'),
-    'username'   => env('MAIL_USERNAME','sonu.shokeen@saffrontech.net'),
-    'password'   => env('MAIL_PASSWORD','Sshokeen24'),
+    'username'   => env('MAIL_USERNAME','kajal.garg@saffrontech.net'),
+    'password'   => env('MAIL_PASSWORD','kajal@844'),
     'sendmail'   => '/usr/sbin/sendmail -bs',
 
     'markdown' => [
