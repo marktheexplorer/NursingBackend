@@ -19,11 +19,11 @@ class CreateMessagesTable extends Migration
             $table->text('msg');
             $table->timestamps();
         });
-    }
 
         Schema::table('messages', function (Blueprint $table) {
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
+    }
 
     /**
      * Reverse the migrations.
