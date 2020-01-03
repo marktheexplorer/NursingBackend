@@ -32,6 +32,7 @@
                         <tr>
                             <th>#</th>
               				<th>Client</th>
+                            <th>Schedule ID</th>
 	                  		<th>Mobile Number</th>
 	                  		<th>Status</th>
 	                  		<th>Schedule Type</th>
@@ -44,6 +45,7 @@
 	            		<tr>
 	            			<td>{{ ++$key }}</td>
 	            			<td>{{ ucfirst($booking->user->name) }}</td>
+                            <td>{{ "NUR".$booking->id }}</td>
 	              			<td>{{ $booking->user->mobile_number != '' ? substr_replace(substr_replace($booking->user->mobile_number, '-', '3','0'), '-', '7','0') : '' }}</td>
 	              			<td>{{ $booking->status }}</td>
 	              			<td>{{ $booking->booking_type }}</td>
@@ -77,13 +79,13 @@
                                     </li>
                                     @if($booking->status != "Completed") 
                                         <li class="media-list media-list-divider m-0" style="float: left;padding-right:5px;">
-                                            <form action="{{ route('bookings.complete_booking',['id' => $booking->id]) }}" method="GET"  onsubmit="markascomplete('{{ $booking->id }}', '{{ $booking->name }}', event,this)">
+                                            <form action="{{ route('bookings.complete_booking',['id' => $booking->id]) }}" method="GET"  onsubmit="markascomplete('{{ $booking->id }}', event,this)">
                                                 <button class="btn-sm btn-info btn-cir" title="Mark as Completed"><i class="fas fa-check"></i></button>
                                             </form>
                                         </li>
                                     @endif
                                     <li class="media-list media-list-divider m-0" style="float: left;padding-right:5px;">
-                                        <form action="{{ route('bookings.delete',['id' => $booking->id]) }}" method="DELETE" onsubmit="deleteBooking('{{ $booking->id }}', '{{ $booking->name }}', event,this)">
+                                        <form action="{{ route('bookings.delete',['id' => $booking->id]) }}" method="DELETE" onsubmit="deleteBooking('{{ $booking->id }}', event,this)">
                                         @csrf
                                             <button class="btn-sm btn-danger btn-cir" title="Delete"><i class="fas fa-trash-alt"></i></button>
                                         </form>
@@ -105,11 +107,11 @@
         $('#data-table').DataTable();
     });
 
-    function markascomplete(id, title, event,form){
+    function markascomplete(id, event,form){
         event.preventDefault();
         swal({
             title: "Are you sure?",
-            text: "You want to mark as completed this Schedule",
+            text: "You want to mark as completed #NUR"+id+" Schedule",
             icon: "warning",
             buttons: {
                 cancel: true,
@@ -150,16 +152,16 @@
                     }
                 });
             } else {
-                swal("Cancelled", "Schedule will not be mark as completed.", "error");
+                swal("Cancelled", "#NUR"+id+" Schedule will not be mark as completed.", "error");
             }
         });
     }
 
-    function deleteBooking(id, title, event,form){
+    function deleteBooking(id, event,form){
         event.preventDefault();
         swal({
             title: "Are you sure?",
-            text: "You want to delete "+title+" booking",
+            text: "You want to delete #NUR"+id+" Schedule",
             icon: "warning",
             buttons: {
                 cancel: true,
@@ -200,7 +202,7 @@
                     }
                 });
             } else {
-                swal("Cancelled", title+" user will not be deleted.", "error");
+                swal("Cancelled", "#NUR"+id+" schedule will not be deleted.", "error");
             }
         });
     }

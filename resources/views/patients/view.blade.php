@@ -193,7 +193,7 @@
                             <table class="table table-striped table-bordered table-hover" id="data-table" cellspacing="0" width="100%">
                                 <thead>
                                     <tr>
-                                        <th>Id</th>
+                                        <th>Booking Id</th>
                                         <th>Status</th>
                                         <th>Caregiver Assigned</th>
                                         <th>Location</th>
@@ -205,7 +205,7 @@
                                 <tbody>
                                 @foreach($services as $key => $service)
                                     <tr>
-                                        <td>{{ ++$key }}</td>
+                                        <td>{{ "NUR".$service->id }}</td>
                                         <td>{{ $service->status }}</td>
                                         <td>{{ $service->caregiver_id != null ? $service->userCaregiver->user->name : '' }}</td>
                                         <td>{{ $service->address }} </td>
