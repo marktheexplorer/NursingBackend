@@ -55,6 +55,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function()
 	Route::resource('enquiries', 'EnquiryController');
 	Route::resource('relations', 'RelationController');
 	Route::resource('contactUs', 'ContactUsController');
+	Route::resource('sendmsg', 'SendMessageController');
 
 	//caregiver controller it automatically route the default route	
 	Route::get('caregiver/getzip', 'CaregiverController@getzip');
@@ -70,24 +71,18 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function()
 	Route::get('bookings/{id}', 'BookingsController@show')->name('bookings.show');
 	Route::delete('booking/destroy/{id}', 'BookingsController@destroy')->name('bookings.delete');
 	Route::post('bookings/assign', 'BookingsController@assign')->name('bookings.assign');	
-	Route::get('bookings/today_form/{id}', 'BookingsController@today_form')->name('bookings.today_form');
-	Route::post('bookings/today_update', 'BookingsController@today_update')->name('bookings.today_update');	
 	Route::get('bookings/select_from_week_form/{id}', 'BookingsController@select_from_week_form')->name('bookings.select_from_week_form');
 	Route::post('bookings/update_select_from_week_form', 'BookingsController@update_select_from_week_form')->name('bookings.update_select_from_week_form');
 	Route::get('bookings/daily_form/{id}', 'BookingsController@daily_form')->name('bookings.daily_form');
 	Route::post('bookings/update_daily_form', 'BookingsController@update_daily_form')->name('bookings.update_daily_form');	
 	Route::get('bookings/select_date_form/{id}', 'BookingsController@select_date_form')->name('bookings.select_date_form');
 	Route::post('bookings/update_select_date_form', 'BookingsController@update_select_date_form')->name('bookings.update_select_date_form');
-	Route::get('bookings/getzip', 'BookingsController@getzip');
 	Route::get('bookings/searchcity/{term}', 'BookingsController@searchcity');
 	Route::get('bookings/statefromcity', 'BookingsController@statefromcity');
 	Route::get('bookings/complete_booking/{id}', 'BookingsController@complete_booking')->name('bookings.complete_booking');
-	Route::get('bookings/confirmation_mail/{patient_id}', 'BookingsController@confirmation_mail')->name('bokkings.confirmation_mail');
 });
 
 Route::get('cms/{token}', 'CmsPageController@view_cms');
 Route::get('confirm_careservice/{token}', 'BookingsController@confirm_careservice');
 Route::post('upload_carepack_docs', 'BookingsController@upload_carepack_docs');
 Route::get('cms/{slug}', 'CmsPageController@view_cms');
-Route::get('set_password/{token}', 'CaregiverController@set_password');
-Route::post('caregiver/savepassword', 'CaregiverController@savepassword');

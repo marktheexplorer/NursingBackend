@@ -84,6 +84,10 @@
                 </ul>
             </li>
             <li>
+                <a href="{{ route('sendmsg.index') }}" style="{{ (request()->is('admin/sendmsg*')) ? 'background-color:#3498db;color:#fff;' : '' }}"><i class="sidebar-item-icon fas fa-sms"></i>
+                    <span class="nav-label">Send Message</span></a>
+            </li>
+            <li>
                 <a href="{{ route('contactUs.index') }}" style="{{ (request()->is('admin/contactUs*')) ? 'background-color:#3498db;color:#fff;' : '' }}"><i class="sidebar-item-icon fas fa-mail-bulk"></i>
                     <span class="nav-label">ContactUs Details</span>
                 </a>
