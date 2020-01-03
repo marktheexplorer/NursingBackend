@@ -21,6 +21,10 @@ class CreateMessagesTable extends Migration
         });
     }
 
+        Schema::table('messages', function (Blueprint $table) {
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+        });
+
     /**
      * Reverse the migrations.
      *
@@ -28,6 +32,10 @@ class CreateMessagesTable extends Migration
      */
     public function down()
     {
+        Schema::table('messages', function(Blueprint $table){
+            $table->dropForeign('messages_user_id_foreign');
+            $table->dropColumn('user_id');
+         });
         Schema::dropIfExists('messages');
     }
 }
