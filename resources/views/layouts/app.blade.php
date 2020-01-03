@@ -28,6 +28,7 @@
         <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     @endauth
+    @yield('top-css')
 </head>  
 <body class="@auth fixed-navbar has-animation @endauth @guest bg-silver-300 login-page @endguest">
     <div class="@auth page-wrapper @endauth">

@@ -84,7 +84,7 @@
                 </ul>
             </li>
             <li>
-                <a href="{{ route('sendmsg.index') }}" style="{{ (request()->is('admin/sendmsg*')) ? 'background-color:#3498db;color:#fff;' : '' }}"><i class="sidebar-item-icon fas fa-sms"></i>
+                <a href="{{ route('sendmsg.create') }}" style="{{ (request()->is('admin/sendmsg*')) ? 'background-color:#3498db;color:#fff;' : '' }}"><i class="sidebar-item-icon fas fa-sms"></i>
                     <span class="nav-label">Send Message</span></a>
             </li>
             <li>
