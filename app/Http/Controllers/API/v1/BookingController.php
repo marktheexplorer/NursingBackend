@@ -121,7 +121,7 @@ class BookingController extends Controller
             if($user->is_notify == 1)
             Helper::sendNotifications(Auth::id(), $booking->id, 'Schedule Requested', 'Your schedule request has been generated.');
 
-            $data = Self::sendTwilioMessage(Auth::user()->mobile_number, Auth::user()->country_code, 'A new schedule request has been confirmed for '.$booking->start_date.' at '.$booking->start_time); 
+            $data = Self::sendTwilioMessage(Auth::user()->mobile_number, Auth::user()->country_code, 'A new schedule request has been confirmed for '.$booking->start_date.' at '.$booking->start_time .'. Your Booking Id is NUR'.$booking->id); 
 
             if($booking->relation_id != null){
                 $data = Self::sendTwilioMessage($booking->relation->mobile_number, Auth::user()->country_code, 'A new schedule request has been generated for you by '.Auth::user()->name.' for '.$booking->start_date.' at '.$booking->start_time); 
@@ -462,6 +462,7 @@ class BookingController extends Controller
 
             $bookings[$key]['start_time'] = Carbon::parse($value['start_time'])->format('g:i A') ;
             $bookings[$key]['end_time'] = Carbon::parse($value['end_time'])->format('g:i A') ;
+            $bookings[$key]['bookingId'] = 'NUR'.$value['id'] ;
 
             if($value['diagnosis_id'] != null){
                 $diagnosis = unserialize($value['diagnosis_id']);
@@ -529,6 +530,7 @@ class BookingController extends Controller
 
             $bookings[$key]['start_time'] = Carbon::parse($value['start_time'])->format('g:i A') ;
             $bookings[$key]['end_time'] = Carbon::parse($value['end_time'])->format('g:i A') ;
+            $bookings[$key]['bookingId'] = 'NUR'.$value['id'] ;
 
             foreach ($value->caregivers as $k => $care) {
                 $bookings[$key]['caregivers'][$k]['name'] = $care->caregiver->user->name;
@@ -615,6 +617,7 @@ class BookingController extends Controller
                 $data = unserialize($value['weekdays']);
                 $bookings[$key]['weekdays'] = $data;
             }
+            $bookings[$key]['bookingId'] = 'NUR'.$value->id ;
             $bookings[$key]['start_time'] = Carbon::parse($value->start_time)->format('g:i A') ;
             $bookings[$key]['end_time'] = Carbon::parse($value->end_time)->format('g:i A') ;
             $bookings[$key]['userCaregiver']['name'] = $value->userCaregiver->user->name;
@@ -647,6 +650,7 @@ class BookingController extends Controller
                 $data = unserialize($value['weekdays']);
                 $bookings[$key]['weekdays'] = $data;
             }
+            $bookings[$key]['bookingId'] = 'NUR'.$value->id ;
             $bookings[$key]['start_time'] = Carbon::parse($value->start_time)->format('g:i A') ;
             $bookings[$key]['end_time'] = Carbon::parse($value->end_time)->format('g:i A') ;
             $bookings[$key]['userCaregiver']['name'] = $value->userCaregiver->user->name;
@@ -690,6 +694,7 @@ class BookingController extends Controller
                     $data = unserialize($value['weekdays']);
                     $bookings[$key]['weekdays'] = $data;
                 }
+                $bookings[$key]['bookingId'] = 'NUR'.$value->id ;
                 $bookings[$key]['start_time'] = Carbon::parse($value->start_time)->format('g:i A') ;
                 $bookings[$key]['end_time'] = Carbon::parse($value->end_time)->format('g:i A') ;
                 $bookings[$key]['service_location_id'] = $value->service_location->area;
@@ -736,6 +741,7 @@ class BookingController extends Controller
         $bookings = Booking::select('id','user_id', 'start_date', 'end_date','start_time','end_time', 'booking_type', '24_hours','caregiver_id')->where('status', 'Completed')->where('caregiver_id' , $caregiver['id'])->get();
 
         foreach ($bookings as $key => $value) {
+            $bookings[$key]['bookingId'] = 'NUR'.$value->id ;
             $bookings[$key]['user']['name'] = $value->user->name;
             $bookings[$key]['user']['profile_image'] = $value->user->profile_image == null ? 'default.png' : $value->user->profile_image ;
             $bookings[$key]['start_time'] = Carbon::parse($value->start_time)->format('g:i A') ;
@@ -758,6 +764,7 @@ class BookingController extends Controller
         if(count($notifications) > 0){
             foreach ($notifications as $key => $value) {
                 $notifications[$key]['created_at'] = Carbon::parse($value['created_at'])->format('m/d/Y g:i A');
+                $notifications[$key]['bookingId'] = 'NUR'.$value['booking_id'] ;
             }
             return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $notifications]);
         }else{
