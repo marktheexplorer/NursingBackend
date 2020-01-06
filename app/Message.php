@@ -10,4 +10,8 @@ class Message extends Model
     protected $fillable = [
         'user_id', 'msg'
     ];
+
+    public function user(){
+        return $this->hasOne('App\User', 'id', 'user_id');
+    }
 }

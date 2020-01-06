@@ -44,7 +44,6 @@ class SendMessageController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-                $msg = Message::create($input);
                 $user = User::where('id',$input['user_id'])->first();
 
                 $client = new Client(env('TWILIO_SID'), env('TWILIO_TOKEN'));
@@ -59,6 +58,8 @@ class SendMessageController extends Controller
 		                    'body' => $input['msg']
 		                )
 		            )->toArray();
+		            
+               		$msg = Message::create($input);
                 	flash()->success('Message Sent successfully.');
 
 		        }catch(\Exception $e){

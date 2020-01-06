@@ -9,14 +9,15 @@
                <div class="ibox-body">
                   <div class="tab-content">
                   @include('flash::message')
-                     <div class="tab-pane fade show active" id="tab-2">
-                        <form action="{{ route('sendmsg.store') }}" method="post" class="form-horizontal">
-                        @csrf                    
+                     <div class="tab-pane fade show active" id="tab-2">                   
                         <div class="card sendMsgCard">
                           <div class="card">
                              <div class="card-header" style="background-color: #ddd;">
-                                <h5>Send Message</h5>
+                                <h5>Send Message
+                                <a href="{{ route('sendmsg.index') }}"><button class="btn btn-info float-right"><i class="fas fa-history"></i> History</button></a></h5>
                              </div>
+                             <form action="{{ route('sendmsg.store') }}" method="post" class="form-horizontal">
+                             @csrf 
                              <div class="tab-content row">
                                 <div class="tab-pane fade show active col-md-12" id="tab-2">
                                   <div class="card-body">
@@ -47,18 +48,18 @@
                                             @endif
                                           </div>
                                       </div>
+                                      <div class="col-xs-12">
+                                        <div class="form-group col-sm-8 offset-sm-2"><br>
+                                          <button class="btn btn-primary pull-right" type="submit">Send</button>
+                                        </div>
+                                        <div class="form-group col-sm-5 pull-right"></div>
+                                      </div>
                                     </div>   
-                                 </div>
+                                  </div>
                                 </div>
                              </div>
-                          </div>
-                          <div class="col-xs-12">
-                            <div class="form-group col-sm-8 offset-sm-2"><br>
-                              <button class="btn btn-primary pull-right" type="submit">Send</button>
-                            </div>
-                            <div class="form-group col-sm-5 pull-right"></div>
-                          </div>
-                        </form>
+                          </form>
+                        </div>
                      </div>
                   </div>
                </div>
