@@ -233,6 +233,7 @@ class PatientsController extends Controller{
             $input['type'] = 'patient';
             $input['mobile_number'] = preg_replace('`-`', '', $input['mobile_number']);
             $input['dob'] = date("Y-m-d", strtotime($input['dob']));
+            $input['country_code'] = '1';
             $patient = User::create($input);
 
             $profile['user_id'] = $patient->id;

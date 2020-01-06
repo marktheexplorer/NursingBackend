@@ -122,6 +122,7 @@ class CaregiverController extends Controller{
         $input['type'] = 'caregiver';
         $input['dob'] = date("Y-m-d", strtotime($input['dob']));
         $input['mobile_number'] = preg_replace('`-`', '', $input['mobile_number']);
+        $input['country_code'] = '1';
         $user = User::create($input);
 
         if($user){
