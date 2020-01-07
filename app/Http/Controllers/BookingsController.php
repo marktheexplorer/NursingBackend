@@ -467,4 +467,9 @@ class BookingsController extends Controller{
         flash()->success("Uploaded Document approved.");
         return redirect()->route('bookings.show',['id' => $id]);
     }
+
+    public function manageBooking($id){
+
+        return view('bookings.manageBooking'); 
+    }
 }

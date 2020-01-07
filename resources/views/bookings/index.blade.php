@@ -19,7 +19,7 @@
                 <div class="ibox-title">Schedule Data</div>
                 <form method="get">    
                     <select name="booking_options" class="form-control" style="float: right;width:200px;" onchange="$(this.form).submit();">
-                        <option disabled="" selected=> -- Select Schedule Type --</option>
+                        <option disabled="" selected > -- Select Schedule Type --</option>
                         @foreach($booking_type as $key => $type)
                             <option value="{{ $type['booking_type'] }}" <?php echo ($select_booking_type == $type['booking_type'] ? 'selected' : ''); ?> >{{ ucfirst($type['booking_type']) }}</option>
                         @endforeach
@@ -58,7 +58,7 @@
                                         </a>
                                     </li>
                                     <li class="media-list media-list-divider m-0" style="float: left;padding-right:5px;">
-                                        <a href="{{ route('bookings.show',['id' => $booking->id]) }}">
+                                        <a href="{{ route('bookings.manageBooking',['id' => $booking->id]) }}">
                                             <button class="btn-sm btn-secondary btn-cir" title="Manage Caregivers"><i class="fas fa-tasks"></i></button>
                                         </a>
                                     </li>
