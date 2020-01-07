@@ -472,7 +472,7 @@ class BookingsController extends Controller{
         $booking = Booking::findOrFail($id);
         $booking->start_time = Carbon::parse($booking->start_time)->format('g:i A') ;
         $booking->end_time = Carbon::parse($booking->end_time)->format('g:i A') ;
-        
+
         $assigned_caregivers = AssignedCaregiver::where('booking_id',$id)->get();
         $assignedCaregivers = array();
         $assignedCaregiversId = array();
@@ -482,6 +482,8 @@ class BookingsController extends Controller{
             $assignedCaregivers[$key]['email'] = $value->caregiver->user->email;
         }
 
-        return view('bookings.manageBooking', compact('booking','assignedCaregivers')); 
+        $caregivers = Caregiver::get();
+
+        return view('bookings.manageBooking', compact('booking','assignedCaregivers','caregivers')); 
     }
 }

@@ -57,11 +57,13 @@
                                             <button class="btn-sm btn-warning btn-cir" title="View"><i class="fas fa-eye"></i></button>
                                         </a>
                                     </li>
+                                    @if($booking->status == 'Upcoming' || $booking->status == 'Caregiver Request')
                                     <li class="media-list media-list-divider m-0" style="float: left;padding-right:5px;">
                                         <a href="{{ route('bookings.manageBooking',['id' => $booking->id]) }}">
                                             <button class="btn-sm btn-secondary btn-cir" title="Manage Caregivers"><i class="fas fa-tasks"></i></button>
                                         </a>
                                     </li>
+                                    @endif
                                     <li class="media-list media-list-divider m-0" style="float: left;padding-right:5px;">
                                         @if($booking->booking_type == 'Select date')
                                             <a href="{{ route('bookings.select_date_form',['id' => $booking->id]) }}">

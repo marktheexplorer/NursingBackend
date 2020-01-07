@@ -91,22 +91,23 @@
                                                 <a class="btn-sm btn-danger btn-cir delBtn" title="Delete"><i class="fas fa-trash-alt"></i></a>
                                             </div>
                                             <div class="row form-group">
-                                                <label class="col-md-3">Choose Care Giver</label>
+                                                <label class="col-md-3">Choose CareGiver</label>
                                                 <div class="col-md-9">                                           
-                                                    <select name="qualification[]" class="form-control  select2">
-                                                        <option value="2"  >Certified Nursing Assistant</option>
-                                                        <option value="1"  >Home Health Aide</option>
-                                                        <option value="5"  >Licensed Practical Nurse</option>
-                                                        <option value="6"  >Registered Nurse</option>
+                                                    <select name="caregivers[]" class="form-control  select2">
+                                                        @foreach($caregivers as $caregiver)
+                                                            <option value="{{ $caregiver->id }}" >{{ $caregiver->user->name .' ('. $caregiver->user->email . ')'}}</option>
+                                                        @endforeach
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="row form-group">
-                                                <label class="col-md-3">Book Date</label>
+                                                <label class="col-md-3"> Date</label>
                                                 <div class="col-md-9">                                           
-                                                    <input type="text" id="start_date" class="form-control floating-label" placeholder="Start Date" style="max-width: 220px;float: left; margin-right: 90px" name="start_date" >                                              
+                                                    <input type="text" id="start_date" class="form-control floating-label" placeholder="Start Date" style="max-width: 220px;float: left;"  name="start_date" >      
+                                                    <span style="display: inline;float: left;margin: 7px 30px;font-weight: 600;">To </span>                                 
+                                                    <input type="text" id="end_date" class="form-control floating-label" placeholder="End Date" style="max-width: 220px;float: left; " name="end_date" >           
                                                 </div>
-                                            </div>                                        
+                                            </div>                                         
                                             <div class="row form-group">
                                                 <label class="col-md-3">Time</label>
                                                 <div class="col-md-9">     
@@ -148,9 +149,17 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
 
 <script>
-
                                                         
     $('#start_date').bootstrapMaterialDatePicker({
+        format : 'MM/DD/YYYY',
+        weekStart : 0, 
+        time: false ,
+        minDate : new Date(),
+    }).on('change', function(e, date){ 
+        
+    });
+
+     $('#end_date').bootstrapMaterialDatePicker({
         format : 'MM/DD/YYYY',
         weekStart : 0, 
         time: false ,
@@ -173,11 +182,7 @@
         //$("#today_submit").css('display', 'inline');
     });
 
-    $('.managebookingWrapItem .select2').select2({
-        placeholder: {
-            text: '-- Choose Care Giver --'
-        }
-    });
+    $('.select2').select2();
     $(".addBtnWrap .btn").on('click', function(){         
 
         $('.managebookingWrapItem:first').clone(true).appendTo('.managebookingWrap');
