@@ -27,6 +27,7 @@ Route::group(['middleware' => ['auth:api', 'blockedUser'], 'namespace' => 'API\v
 	Route::post('edit-profile', 'UserController@editProfileDetails');
 	Route::get('details', 'UserController@details');
 	Route::post('addUserRelation', 'UserController@addUserRelation');
+	Route::post('addHealthCondition', 'BookingController@addHealthConditions');
 	Route::post('destroyRelation', 'UserController@destroyUserRelation');
 	Route::post('booking', 'BookingController@booking');
 	Route::get('my_bookings', 'BookingController@my_bookings');

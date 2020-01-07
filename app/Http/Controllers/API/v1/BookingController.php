@@ -805,4 +805,33 @@ class BookingController extends Controller
         }
         return true;
    }
+
+       /**
+     * Add Health Conditions
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function addHealthConditions(Request $request)
+    {   
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|min:5|max:50',
+        ]);
+
+        if ($validator->fails())
+            return response()->json(['status_code'=> 400, 'message'=> $validator->errors()->first(), 'data' => null]);
+
+        $input = $request->input(); 
+        $diagnosis = Diagnose::where('title', 'like', '%'.$input['title'].'%')->get();
+
+        if(count($diagnosis) > 0){
+            return response()->json(['status_code'=> 400, 'message'=> 'This Health Condition is already exists.', 'data' => null]);
+        }else{
+
+            $diagnose = Diagnose::create($input);
+            $success['diagnosis'] = Diagnose::select('id', 'title')->where('is_blocked',0)->orderBy('title', 'asc')->get();
+
+            return response()->json(['status_code' => $this->successStatus , 'message' => 'Health Condition added successfully. ', 'data' => $success]);
+        }
+    }
 }
