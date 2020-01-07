@@ -469,7 +469,8 @@ class BookingsController extends Controller{
     }
 
     public function manageBooking($id){
+        $booking = Booking::findOrFail($id);
 
-        return view('bookings.manageBooking'); 
+        return view('bookings.manageBooking', compact('booking')); 
     }
 }

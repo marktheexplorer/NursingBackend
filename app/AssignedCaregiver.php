@@ -13,7 +13,7 @@ class AssignedCaregiver extends Model
      * @var array
      */
     protected $fillable = [
-        'id', 'booking_id', 'caregiver_id', 'status'
+        'id', 'booking_id', 'caregiver_id', 'status', 'start_date', 'end_date', 'start_time', 'end_time','created_at', 'updated_at'
     ];
 
     public function caregiver(){

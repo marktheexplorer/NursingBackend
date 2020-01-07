@@ -35,12 +35,20 @@
                                 <div class="col-xs-12 managebookingInfoWrap">                                
                                     <div class="row">
                                         <div class="col-md-3">
-                                            <label><u>Username - Shift Schedule</u></label>
+                                            <label><u>{{ '#NUR'.$booking->id }}</u></label>
                                         </div>
                                     </div>                              
                                     <div class="row">
                                         <div class="col-md-3">
-                                            <label>Caregiver List</label>
+                                            <label>Username</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <p>{{ $booking->user->name }}</p>
+                                        </div>
+                                    </div>                            
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label>Selected Caregivers</label>
                                         </div>
                                         <div class="col-md-9">
                                             <p>John Snow</p>

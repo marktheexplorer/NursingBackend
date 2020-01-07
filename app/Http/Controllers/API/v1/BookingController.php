@@ -556,17 +556,26 @@ class BookingController extends Controller
     {
         $user = Auth::user();
         $input = $request->input();
-        $caregiver = Caregiver::where('id', $input['caregiver_id'])->first();
-        $assign = AssignedCaregiver::where('booking_id' , $input['booking_id'])->where('caregiver_id', $input['caregiver_id'])->update(array('status' => 'Final'));
+
+        foreach ($input['caregiver_id'] as $key => $value) {
+           $assign = AssignedCaregiver::where('booking_id' , $input['booking_id'])->where('caregiver_id', $value)->update(array('status' => 'Final'));
+           $caregivers[] = Caregiver::where('id', $value)->first();
+        }
+        foreach ($caregivers as $key => $value) {
+            $caregiverNames[] = $value['user']['name'];
+        }
+        $caregiverNames = implode(',', $caregiverNames);
+        
         //Status Update
-        Booking::where('id', '=', $input['booking_id'])->update(array('status' =>  'Upcoming', 'caregiver_id' => $input['caregiver_id']));
+        Booking::where('id', '=', $input['booking_id'])->update(array('status' =>  'Upcoming'));
 
         if($assign){
             if($user->is_notify == 1)
-                Helper::sendNotifications($user->id, $input['booking_id'], 'Booking Confirmed', $caregiver['user']['name'].' has been assigned for booking.');
-            if($caregiver['user']['is_notify'] == 1)
-                Helper::sendNotifications($caregiver['user']['id'], $input['booking_id'], 'Booking Scheduled', 'A new booking has been scheduled for '.$user->name.'.');
-
+                Helper::sendNotifications($user->id, $input['booking_id'], 'Booking Confirmed', $caregiverNames.' has been assigned for booking.');
+            foreach ($caregivers as $key => $value) {
+                if($value['user']['is_notify'] == 1)
+                    Helper::sendNotifications($value['user']['id'], $input['booking_id'], 'Booking Scheduled', 'A new booking has been scheduled for '.$user->name.'.');
+            }
             return response()->json(['status_code' => $this->successStatus , 'message' => 'Request sent successfully.', 'data' => '']);
         }else{
             return response()->json(['status_code' => $this->errorStatus , 'message' => 'Request not sent successfully.', 'data' => null]);
@@ -590,6 +599,7 @@ class BookingController extends Controller
                 $bookings[$key]['weekdays'] = $data;
             }
 
+            $bookings[$key]['bookingId'] = 'NUR'.$value->id ;
             $bookings[$key]['start_time'] = Carbon::parse($value['start_time'])->format('g:i A') ;
             $bookings[$key]['end_time'] = Carbon::parse($value['end_time'])->format('g:i A') ;
         }

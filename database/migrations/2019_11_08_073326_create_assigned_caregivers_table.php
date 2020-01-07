@@ -18,6 +18,10 @@ class CreateAssignedCaregiversTable extends Migration
             $table->unsignedBigInteger('booking_id');
             $table->unsignedBigInteger('caregiver_id');
             $table->string('status')->nullable();
+            $table->string('start_date')->nullable();
+            $table->string('end_date')->nullable();
+            $table->string('start_time')->nullable();
+            $table->string('end_time')->nullable();
             $table->timestamps();
         });
 
