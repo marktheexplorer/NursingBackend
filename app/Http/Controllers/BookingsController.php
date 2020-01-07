@@ -470,7 +470,18 @@ class BookingsController extends Controller{
 
     public function manageBooking($id){
         $booking = Booking::findOrFail($id);
+        $booking->start_time = Carbon::parse($booking->start_time)->format('g:i A') ;
+        $booking->end_time = Carbon::parse($booking->end_time)->format('g:i A') ;
+        
+        $assigned_caregivers = AssignedCaregiver::where('booking_id',$id)->get();
+        $assignedCaregivers = array();
+        $assignedCaregiversId = array();
+        foreach ($assigned_caregivers as $key => $value) {
+            $assignedCaregiversId[] = $value->caregiver_id;
+            $assignedCaregivers[$key]['name'] = $value->caregiver->user->name;
+            $assignedCaregivers[$key]['email'] = $value->caregiver->user->email;
+        }
 
-        return view('bookings.manageBooking', compact('booking')); 
+        return view('bookings.manageBooking', compact('booking','assignedCaregivers')); 
     }
 }

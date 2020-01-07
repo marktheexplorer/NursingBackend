@@ -32,12 +32,15 @@
                         <form action="" enctype = 'multipart/form-data' method="post" class="form-horizontal patientForm">
                            @csrf                           
                            <div class="card managebookingCard">
-                                <div class="col-xs-12 managebookingInfoWrap">                                
+                                <div class="col-xs-12 managebookingInfoWrap">                               
                                     <div class="row">
                                         <div class="col-md-3">
-                                            <label><u>{{ '#NUR'.$booking->id }}</u></label>
+                                            <label>Booking ID</label>
                                         </div>
-                                    </div>                              
+                                        <div class="col-md-9">
+                                            <p><u>{{ '#NUR'.$booking->id }}</u></p>
+                                        </div>
+                                    </div>                            
                                     <div class="row">
                                         <div class="col-md-3">
                                             <label>Username</label>
@@ -51,7 +54,7 @@
                                             <label>Selected Caregivers</label>
                                         </div>
                                         <div class="col-md-9">
-                                            <p>John Snow</p>
+                                            <p> @foreach($assignedCaregivers as $key => $caregiver) {{ $key+1 }}.  {{ $caregiver['name'] }}  ({{ $caregiver['email'] }})  <br> @endforeach</p>
                                         </div>
                                     </div>                              
                                     <div class="row">
@@ -59,9 +62,19 @@
                                             <label>Schedule Date/Time</label>
                                         </div>
                                         <div class="col-md-9">
-                                            <p>John Snow</p>
+                                            <p>{{ $booking->start_date .' - '. $booking->end_date .' | '. $booking->start_time . ' - ' .$booking->end_time   }}</p>
                                         </div>
                                     </div>
+                                    @if( $booking->booking_type == 'Select from week' )                          
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label>WeekDays</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <p>{!! json_encode( implode(',' , unserialize($booking->weekdays))) !!}</p>
+                                        </div>
+                                    </div>
+                                    @endif
                                 </div>
                             </div>
                            <div class="card">
