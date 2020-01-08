@@ -29,7 +29,7 @@
                <div class="ibox-body">
                   <div class="tab-content">
                      <div class="tab-pane fade show active" id="tab-2">
-                        <form action="" enctype = 'multipart/form-data' method="post" class="form-horizontal patientForm">
+                        <form action="{{ route('bookings.shiftSave') }}" enctype = 'multipart/form-data' method="post" class="form-horizontal patientForm">
                            @csrf                           
                            <div class="card managebookingCard">
                                 <div class="col-xs-12 managebookingInfoWrap">                               
@@ -86,6 +86,7 @@
                                   <div class="card-body">
                                     <div class="managebookingWrap">
                                         <div class="col-xs-12 managebookingWrapItem">
+                                            <input type="hidden" name="booking_id" value="{{$booking->id}}">
                                             <div class="col-xs-12 actionWrap">
                                                 <button class="btn-sm btn-primary btn-cir" title="Edit"><i class="fas fa-pencil-alt"></i></button>
                                                 <a class="btn-sm btn-danger btn-cir delBtn" title="Delete"><i class="fas fa-trash-alt"></i></a>
@@ -105,15 +106,15 @@
                                                 <div class="col-md-9">                                           
                                                     <input type="text" id="startDate_0" class="form-control floating-label" placeholder="Start Date" style="max-width: 220px;float: left;"  name="start_date[]" >      
                                                     <span style="display: inline;float: left;margin: 7px 30px;font-weight: 600;">To </span>                                 
-                                                    <input type="text" id="endDate_0" class="form-control floating-label" placeholder="End Date" style="max-width: 220px;float: left; " name="end_date" >           
+                                                    <input type="text" id="endDate_0" class="form-control floating-label" placeholder="End Date" style="max-width: 220px;float: left; " name="end_date[]" >           
                                                 </div>
                                             </div>                                         
                                             <div class="row form-group">
                                                 <label class="col-md-3">Time</label>
                                                 <div class="col-md-9">     
-                                                    <input type="text" id="startTime_0" class="form-control floating-label" placeholder="Start Time" style="max-width: 220px;float: left;" name="todaystarttime">
+                                                    <input type="text" id="startTime_0" class="form-control floating-label" placeholder="Start Time" style="max-width: 220px;float: left;" name="start_time[]">
                                                     <span style="display: inline;float: left;margin: 7px 30px;font-weight: 600;">To </span>
-                                                    <input type="text" id="endTime_0" class="form-control floating-label" placeholder="End Time" style="max-width: 220px;float: left;" name="todayendtime[]">   
+                                                    <input type="text" id="endTime_0" class="form-control floating-label" placeholder="End Time" style="max-width: 220px;float: left;" name="end_time[]">   
                                                 </div>
                                             </div>
                                         </div>  

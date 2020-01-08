@@ -81,6 +81,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function()
 	Route::get('bookings/statefromcity', 'BookingsController@statefromcity');
 	Route::get('bookings/complete_booking/{id}', 'BookingsController@complete_booking')->name('bookings.complete_booking');
 	Route::get('bookings/manage/{id}', 'BookingsController@manageBooking')->name('bookings.manageBooking');
+	Route::post('bookings/shifts/save', 'BookingsController@saveBookingDetails')->name('bookings.shiftSave');
 });
 
 Route::get('cms/{token}', 'CmsPageController@view_cms');

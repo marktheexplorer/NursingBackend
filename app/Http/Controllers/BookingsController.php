@@ -445,35 +445,12 @@ class BookingsController extends Controller{
         }
     }
 
-    public function confirm_doc($id){
-        $isrequest = DB::table('bookings')->where('id', '=', $id)->first();
-        if(empty($isrequest)){
-            flash()->success("Un-authorized Request");
-            return redirect()->route('bookings.index');
-        }
-
-        //get final confirmed caregiver
-        $caregiver = DB::table('service_requests_attributes')->where('service_request_id', '=', $id)->where('type', '=', 'final_caregiver')->first();
-
-        //save request booking
-        $requestbooking = new \App\RequestBooking;
-        $requestbooking->request_id = $id;
-        $requestbooking->caregiver_id = $caregiver->value;
-        $requestbooking->start_date = date('Y-m-d', strtotime($isrequest->start_date));
-        $requestbooking->end_date = date('Y-m-d', strtotime($isrequest->end_date));
-        $requestbooking->save();
-
-        //redirect back to list page
-        flash()->success("Uploaded Document approved.");
-        return redirect()->route('bookings.show',['id' => $id]);
-    }
-
     public function manageBooking($id){
         $booking = Booking::findOrFail($id);
         $booking->start_time = Carbon::parse($booking->start_time)->format('g:i A') ;
         $booking->end_time = Carbon::parse($booking->end_time)->format('g:i A') ;
 
-        $assigned_caregivers = AssignedCaregiver::where('booking_id',$id)->get();
+        $assigned_caregivers = AssignedCaregiver::where('booking_id',$id)->where('status', 'Final')->get();
         $assignedCaregivers = array();
         $assignedCaregiversId = array();
         foreach ($assigned_caregivers as $key => $value) {
@@ -485,5 +462,26 @@ class BookingsController extends Controller{
         $caregivers = Caregiver::get();
 
         return view('bookings.manageBooking', compact('booking','assignedCaregivers','caregivers')); 
+    }
+
+    public function saveBookingDetails(Request $request){
+        $input = $request->input();
+        
+        AssignedCaregiver::where('booking_id', $input['booking_id'])->where('status', 'Final')->update(['status' => '']);
+        $count = count($input['caregivers']) ;
+
+        for ($i=1; $i < $count ; $i++) { 
+            AssignedCaregiver::insert([
+                'booking_id'=>$input['booking_id'],
+                'caregiver_id'=> $input['caregivers'][$i],
+                'start_date'=> $input['start_date'][$i],
+                'end_date'=> $input['end_date'][$i],
+                'start_time'=> $input['start_time'][$i],
+                'end_time'=> $input['end_time'][$i],
+                'status' => 'Final',
+            ]);
+        }
+        flash()->success('Booking Schedule Updated Successfully');
+        return redirect()->back();
     }
 }
