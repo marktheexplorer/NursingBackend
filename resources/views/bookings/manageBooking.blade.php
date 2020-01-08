@@ -93,7 +93,7 @@
                                             <div class="row form-group">
                                                 <label class="col-md-3">Choose CareGiver</label>
                                                 <div class="col-md-9">                                           
-                                                    <select name="caregivers[]" class="form-control  select2">
+                                                    <select name="caregivers[]" class="form-control select2" id="caregiver_0">
                                                         @foreach($caregivers as $caregiver)
                                                             <option value="{{ $caregiver->id }}" >{{ $caregiver->user->name .' ('. $caregiver->user->email . ')'}}</option>
                                                         @endforeach
@@ -103,17 +103,17 @@
                                             <div class="row form-group">
                                                 <label class="col-md-3"> Date</label>
                                                 <div class="col-md-9">                                           
-                                                    <input type="text" id="start_date" class="form-control floating-label" placeholder="Start Date" style="max-width: 220px;float: left;"  name="start_date" >      
+                                                    <input type="text" id="startDate_0" class="form-control floating-label" placeholder="Start Date" style="max-width: 220px;float: left;"  name="start_date[]" >      
                                                     <span style="display: inline;float: left;margin: 7px 30px;font-weight: 600;">To </span>                                 
-                                                    <input type="text" id="end_date" class="form-control floating-label" placeholder="End Date" style="max-width: 220px;float: left; " name="end_date" >           
+                                                    <input type="text" id="endDate_0" class="form-control floating-label" placeholder="End Date" style="max-width: 220px;float: left; " name="end_date" >           
                                                 </div>
                                             </div>                                         
                                             <div class="row form-group">
                                                 <label class="col-md-3">Time</label>
                                                 <div class="col-md-9">     
-                                                    <input type="text" id="todaystarttime" class="form-control floating-label" placeholder="Start Time" style="max-width: 220px;float: left;" name="todaystarttime" value="12:00 AM">
+                                                    <input type="text" id="startTime_0" class="form-control floating-label" placeholder="Start Time" style="max-width: 220px;float: left;" name="todaystarttime">
                                                     <span style="display: inline;float: left;margin: 7px 30px;font-weight: 600;">To </span>
-                                                    <input type="text" id="todayendtime" class="form-control floating-label" placeholder="End Time" style="max-width: 220px;float: left;" name="todayendtime">   
+                                                    <input type="text" id="endTime_0" class="form-control floating-label" placeholder="End Time" style="max-width: 220px;float: left;" name="todayendtime[]">   
                                                 </div>
                                             </div>
                                         </div>  
@@ -150,18 +150,20 @@
 
 <script>
                                                         
-    $('#start_date').bootstrapMaterialDatePicker({
+    $("input[id^='startDate']").bootstrapMaterialDatePicker({
         format : 'MM/DD/YYYY',
-        weekStart : 0, 
         time: false ,
         minDate : new Date(),
     }).on('change', function(e, date){ 
-        
+        // console.log(date);
+        console.log($(this).attr("name")); 
+        $(this).attr("value", date );
+        console.log($(this).attr("value"));
+        console.log($(this));
     });
 
-     $('#end_date').bootstrapMaterialDatePicker({
+     $('[id^=endDate]').bootstrapMaterialDatePicker({
         format : 'MM/DD/YYYY',
-        weekStart : 0, 
         time: false ,
         minDate : new Date(),
     }).on('change', function(e, date){ 
@@ -183,9 +185,20 @@
     });
 
     $('.select2').select2();
-    $(".addBtnWrap .btn").on('click', function(){         
 
-        $('.managebookingWrapItem:first').clone(true).appendTo('.managebookingWrap');
+    var current_id = 0;
+    $(".addBtnWrap .btn").on('click', function(){ 
+       var newElement = $('.managebookingWrapItem:first').clone(true);
+       var id = current_id+1;
+       current_id = id;
+
+       $.each($('input', newElement), function (index, value) {
+           value.id =  value.id.split("_")[0]+"_"+id ;
+       });
+       var field1 = $('select', newElement).attr("id");
+       $('select', newElement).attr("id", field1.split("_")[0]+"_"+id );
+
+       newElement.appendTo('.managebookingWrap');
     });
 
     $('.managebookingWrapItem .delBtn').click(function(){
