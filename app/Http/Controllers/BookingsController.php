@@ -466,11 +466,25 @@ class BookingsController extends Controller{
 
     public function saveBookingDetails(Request $request){
         $input = $request->input();
-        
+        $validator =  Validator::make($input,
+            [
+                'caregiver_id.*' => 'required',
+                'start_date.*' => 'required',
+                'end_date.*' => 'required',
+                'start_time.*' => 'required',
+                'end_time.*' => 'required',
+            ]
+        );
+
+        if ($validator->fails()) {
+            flash()->error('Please select all fields');
+            return redirect()->back()->withErrors($validator);
+        }
+
         AssignedCaregiver::where('booking_id', $input['booking_id'])->where('status', 'Final')->update(['status' => '']);
         $count = count($input['caregivers']) ;
 
-        for ($i=1; $i < $count ; $i++) { 
+        for ($i=0; $i < $count ; $i++) { 
             AssignedCaregiver::insert([
                 'booking_id'=>$input['booking_id'],
                 'caregiver_id'=> $input['caregivers'][$i],

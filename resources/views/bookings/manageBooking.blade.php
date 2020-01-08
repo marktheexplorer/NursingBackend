@@ -24,7 +24,8 @@
 <div class="content-wrapper">
    <div class="page-content fade-in-up">
         <div class="row">
-         <div class="col-lg-12 col-md-12">
+         <div class="col-lg-12 col-md-12"> 
+         @include('flash::message')
             <div class="ibox">
                <div class="ibox-body">
                   <div class="tab-content">
@@ -99,22 +100,47 @@
                                                             <option value="{{ $caregiver->id }}" >{{ $caregiver->user->name .' ('. $caregiver->user->email . ')'}}</option>
                                                         @endforeach
                                                     </select>
+                                                    @if ($errors->has('caregivers.*'))
+                                                        <span class="invalid-feedback" role="alert" style="display:inline;">
+                                                            <strong>{{ $errors->first('caregivers') }}</strong>
+                                                        </span>
+                                                    @endif
                                                 </div>
                                             </div>
                                             <div class="row form-group">
                                                 <label class="col-md-3"> Date</label>
                                                 <div class="col-md-9">                                           
-                                                    <input type="text" id="startDate_0" class="form-control floating-label" placeholder="Start Date" style="max-width: 220px;float: left;"  name="start_date[]" >      
+                                                    <input type="text" id="startDate_0" class="form-control floating-label" placeholder="Start Date" style="max-width: 220px;float: left;"  name="start_date[]" >  
+                                                    @if ($errors->has('start_date'))
+                                                        <span class="invalid-feedback" role="alert" style="display:inline;">
+                                                            <strong>{{ $errors->first('start_date.*') }}</strong>
+                                                        </span>
+                                                    @endif    
                                                     <span style="display: inline;float: left;margin: 7px 30px;font-weight: 600;">To </span>                                 
-                                                    <input type="text" id="endDate_0" class="form-control floating-label" placeholder="End Date" style="max-width: 220px;float: left; " name="end_date[]" >           
+                                                    <input type="text" id="endDate_0" class="form-control floating-label" placeholder="End Date" style="max-width: 220px;float: left; " name="end_date[]" > 
+                                                    @if ($errors->has('end_date'))
+                                                        <span class="invalid-feedback" role="alert" style="display:inline;">
+                                                            <strong>{{ $errors->first('end_date.0') }}</strong>
+                                                        </span>
+                                                    @endif          
                                                 </div>
                                             </div>                                         
                                             <div class="row form-group">
                                                 <label class="col-md-3">Time</label>
                                                 <div class="col-md-9">     
                                                     <input type="text" id="startTime_0" class="form-control floating-label" placeholder="Start Time" style="max-width: 220px;float: left;" name="start_time[]">
+                                                    @if ($errors->has('start_time'))
+                                                        <span class="invalid-feedback" role="alert" style="display:inline;">
+                                                            <strong>{{ $errors->first('start_time') }}</strong>
+                                                        </span>
+                                                    @endif
                                                     <span style="display: inline;float: left;margin: 7px 30px;font-weight: 600;">To </span>
-                                                    <input type="text" id="endTime_0" class="form-control floating-label" placeholder="End Time" style="max-width: 220px;float: left;" name="end_time[]">   
+                                                    <input type="text" id="endTime_0" class="form-control floating-label" placeholder="End Time" style="max-width: 220px;float: left;" name="end_time[]">  
+                                                    @if ($errors->has('end_time'))
+                                                        <span class="invalid-feedback" role="alert" style="display:inline;">
+                                                            <strong>{{ $errors->first('end_time') }}</strong>
+                                                        </span>
+                                                    @endif 
                                                 </div>
                                             </div>
                                         </div>  
