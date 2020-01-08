@@ -150,16 +150,12 @@
 
 <script>
                                                         
-    $("input[id^='startDate']").bootstrapMaterialDatePicker({
+    $("[id^=startDate]").bootstrapMaterialDatePicker({
         format : 'MM/DD/YYYY',
         time: false ,
         minDate : new Date(),
     }).on('change', function(e, date){ 
-        // console.log(date);
-        console.log($(this).attr("name")); 
-        $(this).attr("value", date );
-        console.log($(this).attr("value"));
-        console.log($(this));
+        
     });
 
      $('[id^=endDate]').bootstrapMaterialDatePicker({
@@ -194,6 +190,9 @@
 
        $.each($('input', newElement), function (index, value) {
            value.id =  value.id.split("_")[0]+"_"+id ;
+           console.log(newElement.find('input.text'));  
+           newElement.find('input.text').bootstrapMaterialDatePicker();
+           // console.log($(value.id).bootstrapMaterialDatePicker({format:'dd/mm/yy'}))
        });
        var field1 = $('select', newElement).attr("id");
        $('select', newElement).attr("id", field1.split("_")[0]+"_"+id );
