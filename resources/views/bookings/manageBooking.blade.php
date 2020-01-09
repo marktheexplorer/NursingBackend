@@ -120,7 +120,7 @@
                                     </div>
                                 </div>
                             </div>
-                            @elseif
+                            @else
                             @foreach($assigned as $assign)
                              <div class="container-fluid cloned-row1 educat_info" id="cloned-row1" name="cloned-row1">
                                 <div class="row">
