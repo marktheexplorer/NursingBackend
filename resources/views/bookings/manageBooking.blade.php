@@ -130,7 +130,7 @@
                                         <div class="col-md-9">                                           
                                             <select name="caregivers[]" class="form-control select2 caregiver" id="caregiver">
                                                 @foreach($caregivers as $caregiver)
-                                                    <option value="{{ $caregiver->id }}" >{{ $caregiver->user->name .' ('. $caregiver->user->email . ')'}}</option>
+                                                    <option value="{{ $caregiver->id }}" {{ $caregiver->id == $assign->caregiver_id ? 'selected' : ''}} >{{ $caregiver->user->name .' ('. $caregiver->user->email . ')'}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -138,17 +138,17 @@
                                     <div class="row col-md-12 form-group">
                                         <label class="col-md-3"> Date</label>
                                         <div class="col-md-9">                                           
-                                            <input type="text" id="start_date" class="form-control floating-label ipt_Field  start_date start_date" placeholder="Start Date" style="max-width: 220px;float: left;"  name="start_date[]" >   
+                                            <input type="text" id="start_date" class="form-control floating-label ipt_Field  start_date start_date" placeholder="Start Date" style="max-width: 220px;float: left;"  name="start_date[]" value="{{ $assign->start_date }}" >   
                                             <span style="display: inline;float: left;margin: 7px 30px;font-weight: 600;">To </span>                                 
-                                            <input type="text" id="end_date" class="form-control floating-label end_date" placeholder="End Date" style="max-width: 220px;float: left; " name="end_date[]" >      
+                                            <input type="text" id="end_date" class="form-control floating-label end_date" placeholder="End Date" style="max-width: 220px;float: left; " name="end_date[]" value="{{ $assign->end_date }}">      
                                         </div>
                                     </div>                           
                                     <div class="row col-md-12 form-group">
                                         <label class="col-md-3">Time</label>
                                         <div class="col-md-9">     
-                                            <input type="text" id="start_time" class="form-control floating-label start_time" placeholder="Start Time" style="max-width: 220px;float: left;" name="start_time[]">
+                                            <input type="text" id="start_time" class="form-control floating-label start_time" placeholder="Start Time" style="max-width: 220px;float: left;" name="start_time[]" value="{{ $assign->start_time }}">
                                             <span style="display: inline;float: left;margin: 7px 30px;font-weight: 600;">To </span>
-                                            <input type="text" id="end_time" class="form-control floating-label end_time" placeholder="End Time" style="max-width: 220px;float: left;" name="end_time[]">  
+                                            <input type="text" id="end_time" class="form-control floating-label end_time" placeholder="End Time" style="max-width: 220px;float: left;" name="end_time[]" value="{{ $assign->end_time }}">  
                                         </div>
                                     </div>
                                 </div> 
