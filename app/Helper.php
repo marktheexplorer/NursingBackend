@@ -29,7 +29,7 @@ class Helper extends Model
        }
     }
 
-    public function sendTwilioMessage($mobileNumber ,$countryCode, $message)
+    public static function sendTwilioMessage($mobileNumber ,$countryCode, $message)
     {   
         $client = new Client(env('TWILIO_SID'), env('TWILIO_TOKEN'));
 
