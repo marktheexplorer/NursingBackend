@@ -159,7 +159,7 @@ class BookingsController extends Controller{
         }
         $updatebooking = Booking::findOrFail($input['booking_id'])->update($booking);
  
-        flash()->success('Booking Update Successfully');
+        flash()->success('Booking Updated Successfully');
         return redirect()->route('bookings.select_date_form', ['id' => $input['booking_id']]);
     }
 
@@ -212,7 +212,7 @@ class BookingsController extends Controller{
         }
         $booking->save();
 
-        flash()->success('Booking Update Successfully');
+        flash()->success('Booking Updated Successfully');
         return redirect()->route('bookings.daily_form', ['id' => $input['booking_id']]);
     }
 
@@ -270,7 +270,7 @@ class BookingsController extends Controller{
         $booking['no_of_weeks'] = $input['no_of_weeks'];
         $booking->save();
 
-        flash()->success('Booking Update Successfully');
+        flash()->success('Booking Updated Successfully');
         return redirect()->route('bookings.select_from_week_form', ['id' => $input['booking_id']]);
     }
 
