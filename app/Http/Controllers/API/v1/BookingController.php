@@ -605,7 +605,7 @@ class BookingController extends Controller
             $bookings[$key]['bookingId'] = 'NUR'.$value->id ;
             $bookings[$key]['start_time'] = Carbon::parse($value->start_time)->format('g:i A') ;
             $bookings[$key]['end_time'] = Carbon::parse($value->end_time)->format('g:i A') ;
-
+            $userCaregiver = array();
             $assignedCaregiver = AssignedCaregiver::where('booking_id', $value->id)->where('status', 'Final')->get();
             foreach ($assignedCaregiver as $k => $ac) {
                 $datas['name'] = $ac->caregiver->user->name;
@@ -617,7 +617,6 @@ class BookingController extends Controller
                 $datas['end_time'] = $ac->end_time;
                 $datas['start_date'] = $ac->start_date;
                 $datas['end_date'] = $ac->end_date;
-
                 $userCaregiver[] = $datas;
             }
             $bookings[$key]['userCaregiver'] = $userCaregiver;
