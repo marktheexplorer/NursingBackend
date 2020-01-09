@@ -82,6 +82,45 @@
                              <div class="card-header" style="background-color: #ddd;">
                                 <h5>Manage Booking</h5>
                              </div>
+                            @if(count($assigned) == 0)
+                            <div class="container-fluid cloned-row1 educat_info" id="cloned-row1" name="cloned-row1">
+                                <div class="row">
+                                    <input type="hidden" name="booking_id" value="{{$booking->id}}">
+                                    <div class="row col-md-12 form-group">
+                                        <label class="col-md-3">Choose CareGiver</label>
+                                        <div class="col-md-9">                                           
+                                            <select name="caregivers[]" class="form-control select2 caregiver" id="caregiver">
+                                                @foreach($caregivers as $caregiver)
+                                                    <option value="{{ $caregiver->id }}" >{{ $caregiver->user->name .' ('. $caregiver->user->email . ')'}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>   
+                                    <div class="row col-md-12 form-group">
+                                        <label class="col-md-3"> Date</label>
+                                        <div class="col-md-9">                                           
+                                            <input type="text" id="start_date" class="form-control floating-label ipt_Field  start_date start_date" placeholder="Start Date" style="max-width: 220px;float: left;"  name="start_date[]" >   
+                                            <span style="display: inline;float: left;margin: 7px 30px;font-weight: 600;">To </span>                                 
+                                            <input type="text" id="end_date" class="form-control floating-label end_date" placeholder="End Date" style="max-width: 220px;float: left; " name="end_date[]" >      
+                                        </div>
+                                    </div>                           
+                                    <div class="row col-md-12 form-group">
+                                        <label class="col-md-3">Time</label>
+                                        <div class="col-md-9">     
+                                            <input type="text" id="start_time" class="form-control floating-label start_time" placeholder="Start Time" style="max-width: 220px;float: left;" name="start_time[]">
+                                            <span style="display: inline;float: left;margin: 7px 30px;font-weight: 600;">To </span>
+                                            <input type="text" id="end_time" class="form-control floating-label end_time" placeholder="End Time" style="max-width: 220px;float: left;" name="end_time[]">  
+                                        </div>
+                                    </div>
+                                </div> 
+                                <!-- Third row-fluid-->
+                                <div class="row">
+                                   <div class="col-xs-12 addBtnWrap">
+                                        <a class="btn btn-info add_button btn_more" ><i class="fas fa-plus"></i> Add</a>
+                                    </div>
+                                </div>
+                            </div>
+                            @elseif
                             @foreach($assigned as $assign)
                              <div class="container-fluid cloned-row1 educat_info" id="cloned-row1" name="cloned-row1">
                                 <div class="row">
@@ -121,6 +160,7 @@
                                 </div>
                             </div>
                             @endforeach
+                            @endif
                            </div>
                            <div class="row">
                             <div class="form-group col-sm-5 pull-right"></div>
