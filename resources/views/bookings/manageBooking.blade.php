@@ -151,7 +151,7 @@
                                     <div class="row form-group">
                                         <label class="col-md-3">Time</label>
                                         <div class="col-md-9">     
-                                            <input type="text" id="start_time" class="form-control floating-label deg_time" placeholder="Start Time" style="max-width: 220px;float: left;" name="start_time[]">
+                                            <input type="text" id="start_time" class="form-control floating-label start_time" placeholder="Start Time" style="max-width: 220px;float: left;" name="start_time[]">
                                             <span style="display: inline;float: left;margin: 7px 30px;font-weight: 600;">To </span>
                                             <input type="text" id="end_time" class="form-control floating-label deg_time" placeholder="End Time" style="max-width: 220px;float: left;" name="end_time[]">  
                                         </div>
@@ -193,39 +193,38 @@
 <script>
 
     $(document).ready(function () { 
-    var currentDate = new Date();
         $(".deg_date").datepicker();
-        $(".start_time").timepicker();
+        $("#start_time").timepicker();
+  
+          var count=0;
+          $(document).on("click", ".add_button", function () { 
+              var $clone = $('.cloned-row1:eq(0)').clone(true,true);
+              
+              $clone.find('[id]').each(function(){this.id+='someotherpart'+count});
+              $clone.find('.btn_more').after("<input type='button' class='btn_less1' value='less' id='buttonless'/>")
+              $clone.attr('id', "added"+(++count));
+              $clone.find("input.deg_date")
+                        .removeClass('hasDatepicker')
+                        .removeData('datepicker')
+                        .unbind()
+                        .datepicker();
 
-            var count=0;
-            $(document).on("click", ".add_button", function () { 
-                var $clone = $('.cloned-row1:eq(0)').clone(true,true);
-                //alert("Clone number" + clone);
-                $clone.find('[id]').each(function(){this.id+='someotherpart'+count});
-                $clone.find('.btn_more').after("<input type='button' class='btn_less1' value='less' id='buttonless'/>")
-                $clone.attr('id', "added"+(++count));
-                $clone.find("input.deg_date")
-                          .removeClass('hasDatepicker')
-                          .removeData('datepicker')
-                          .unbind()
-                          .datepicker();
-                $clone.find("input.start_time")
-                          .removeAttr("id")
-                          .attr('id','start_time'+count)
-                          .unbind()
-                          .timepicker();
-
-                $("#start_time"+count).timepicker();
-                $(this).parents('.educat_info').after($clone);
-                ++count;
-            });
-            $(document).on('click', ".btn_less1", function (){
-                var len = $('.cloned-row1').length;
-                if(len>1){
-                    $(this).closest(".btn_less1").parent().parent().parent().remove();
-                }
-            });
-        });
+              $clone.find("input.start_time").each(function(){
+                $(this).attr("id", "").removeData().off();
+                $(this).find('.add-on').removeData().off();
+                $(this).find('input').removeData().off();
+                $(this).timepicker();
+              });
+              
+              $(this).parents('.educat_info').after($clone);
+          });
+          $(document).on('click', ".btn_less1", function (){
+              var len = $('.cloned-row1').length;
+              if(len>1){
+                  $(this).closest(".btn_less1").parent().parent().parent().remove();
+              }
+          });
+      });
                                                         
     /*$("[id^=startDate]").bootstrapMaterialDatePicker({
         format : 'MM/DD/YYYY',
