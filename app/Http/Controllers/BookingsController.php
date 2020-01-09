@@ -356,6 +356,7 @@ class BookingsController extends Controller{
 
     public function complete_booking($id){
         $booking = Booking::findOrFail($id);
+
         if(empty($booking)){
             $response = array(
                 'status' => 'success',
@@ -365,6 +366,8 @@ class BookingsController extends Controller{
 
         $booking->status = 'Completed';
         if ($booking->save()) {
+            if($booking->user->is_notify == 1)
+                Helper::sendNotifications($booking->user->id, $booking->id, 'Booking Completed', 'Your schedule has been completed.');
             $response = array(
                 'status' => 'error',
                 'message' => 'Booking mark as completed successfully',

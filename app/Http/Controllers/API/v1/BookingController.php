@@ -123,7 +123,7 @@ class BookingController extends Controller
             $data = Helper::sendTwilioMessage(Auth::user()->mobile_number, Auth::user()->country_code, 'A new schedule request has been confirmed for '.$booking->start_date.' at '.$booking->start_time .'. Your Booking Id is NUR'.$booking->id); 
 
             if($booking->relation_id != null){
-                $data = Helper::sendTwilioMessage($booking->relation->mobile_number, Auth::user()->country_code, 'A new schedule request has been generated for you by '.Auth::user()->name.' for '.$booking->start_date.' at '.$booking->start_time); 
+                $data = Helper::sendTwilioMessage($booking->relation->mobile_number, Auth::user()->country_code, 'A new schedule request has been generated for you by '.Auth::user()->name.' for '.$booking->start_date.' at '.$booking->start_time.'. Your Booking Id is NUR'.$booking->id); 
             }
 
             Self::sendConfirmationMail($user->id);
