@@ -63,7 +63,8 @@
                                             <button class="btn-sm btn-secondary btn-cir" title="Manage Caregivers"><i class="fas fa-tasks"></i></button>
                                         </a>
                                     </li>
-                                    @endif
+                                    @endif                                    
+                                    @if($booking->status != 'Completed')
                                     <li class="media-list media-list-divider m-0" style="float: left;padding-right:5px;">
                                         @if($booking->booking_type == 'Select date')
                                             <a href="{{ route('bookings.select_date_form',['id' => $booking->id]) }}">
@@ -79,6 +80,7 @@
                                             </a>
                                         @endif
                                     </li>
+                                    @endif
                                     @if($booking->status != "Completed") 
                                         <li class="media-list media-list-divider m-0" style="float: left;padding-right:5px;">
                                             <form action="{{ route('bookings.complete_booking',['id' => $booking->id]) }}" method="GET"  onsubmit="markascomplete('{{ $booking->id }}', event,this)">
