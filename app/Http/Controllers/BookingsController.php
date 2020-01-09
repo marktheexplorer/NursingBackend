@@ -46,7 +46,7 @@ class BookingsController extends Controller{
         $booking->end_time = Carbon::parse($booking->end_time)->format('g:i A') ;
     	$caregivers = User::select('users.*','caregiver.id as caregiverId')->join('caregiver','caregiver.user_id','users.id')->orderBy('users.name','asc')->get();
 
-        $assigned_caregivers = AssignedCaregiver::where('booking_id',$id)->get();
+        $assigned_caregivers = AssignedCaregiver::where('booking_id',$id)->where('status', 'Assign')->get();
         $assignedCaregivers = array();
         $assignedCaregiversId = array();
         foreach ($assigned_caregivers as $key => $value) {
@@ -97,7 +97,7 @@ class BookingsController extends Controller{
         AssignedCaregiver::where('booking_id',$input['booking_id'])->delete();
         
         foreach ($input['caregiver_id'] as $key => $value) {
-           AssignedCaregiver::insert(['booking_id'=>$input['booking_id'],'caregiver_id'=> $value]);
+           AssignedCaregiver::insert(['booking_id'=>$input['booking_id'],'caregiver_id'=> $value, 'status' => 'Assign']);
         }
 
         //Status Update
