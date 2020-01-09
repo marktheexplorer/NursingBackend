@@ -82,78 +82,33 @@
                              <div class="card-header" style="background-color: #ddd;">
                                 <h5>Manage Booking</h5>
                              </div>
-                             <!-- <div class="tab-content row">
-                                <div class="tab-pane fade show active col-md-12" id="tab-2">
-                                  <div class="card-body">
-                                    <div class="managebookingWrap">
-                                        <div class="col-xs-12 managebookingWrapItem">
-                                            <input type="hidden" name="booking_id" value="{{$booking->id}}">
-                                            <div class="col-xs-12 actionWrap">
-                                                <button class="btn-sm btn-primary btn-cir" title="Edit"><i class="fas fa-pencil-alt"></i></button>
-                                                <a class="btn-sm btn-danger btn-cir delBtn" title="Delete"><i class="fas fa-trash-alt"></i></a>
-                                            </div>
-                                            <div class="row form-group">
-                                                <label class="col-md-3">Choose CareGiver</label>
-                                                <div class="col-md-9">                                           
-                                                    <select name="caregivers[]" class="form-control select2" id="caregiver_0">
-                                                        @foreach($caregivers as $caregiver)
-                                                            <option value="{{ $caregiver->id }}" >{{ $caregiver->user->name .' ('. $caregiver->user->email . ')'}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="row form-group">
-                                                <label class="col-md-3"> Date</label>
-                                                <div class="col-md-9">                                           
-                                                    <input type="text" id="startDate_0" class="form-control floating-label" placeholder="Start Date" style="max-width: 220px;float: left;"  name="start_date[]" >   
-                                                    <span style="display: inline;float: left;margin: 7px 30px;font-weight: 600;">To </span>                                 
-                                                    <input type="text" id="endDate_0" class="form-control floating-label" placeholder="End Date" style="max-width: 220px;float: left; " name="end_date[]" >      
-                                                </div>
-                                            </div>                                         
-                                            <div class="row form-group">
-                                                <label class="col-md-3">Time</label>
-                                                <div class="col-md-9">     
-                                                    <input type="text" id="startTime_0" class="form-control floating-label" placeholder="Start Time" style="max-width: 220px;float: left;" name="start_time[]">
-                                                    <span style="display: inline;float: left;margin: 7px 30px;font-weight: 600;">To </span>
-                                                    <input type="text" id="endTime_0" class="form-control floating-label" placeholder="End Time" style="max-width: 220px;float: left;" name="end_time[]">  
-                                                </div>
-                                            </div>
-                                        </div>  
-                                    </div>                                 
-                                   <div class="col-xs-12 addBtnWrap">
-                                        <a class="btn btn-info"><i class="fas fa-plus"></i> Add</a>
-                                    </div>
-                                 </div>
-                                </div>
-                             </div> -->
-
                              <div class="container-fluid cloned-row1 educat_info" id="cloned-row1" name="cloned-row1">
                                 <div class="row">
                                     <input type="hidden" name="booking_id" value="{{$booking->id}}">
-                                    <div class="row form-group">
+                                    <div class="row col-md-12 form-group">
                                         <label class="col-md-3">Choose CareGiver</label>
                                         <div class="col-md-9">                                           
-                                            <select name="caregiver[]" class="form-control select2 caregiver" id="caregiver">
+                                            <select name="caregivers[]" class="form-control select2 caregiver" id="caregiver">
                                                 @foreach($caregivers as $caregiver)
                                                     <option value="{{ $caregiver->id }}" >{{ $caregiver->user->name .' ('. $caregiver->user->email . ')'}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
                                     </div>   
-                                    <div class="row form-group">
+                                    <div class="row col-md-12 form-group">
                                         <label class="col-md-3"> Date</label>
                                         <div class="col-md-9">                                           
-                                            <input type="text" id="start_data" class="form-control floating-label ipt_Field  start_data deg_date" placeholder="Start Date" style="max-width: 220px;float: left;"  name="start_data[]" >   
+                                            <input type="text" id="start_date" class="form-control floating-label ipt_Field  start_date deg_date" placeholder="Start Date" style="max-width: 220px;float: left;"  name="start_date[]" >   
                                             <span style="display: inline;float: left;margin: 7px 30px;font-weight: 600;">To </span>                                 
                                             <input type="text" id="end_date" class="form-control floating-label deg_date" placeholder="End Date" style="max-width: 220px;float: left; " name="end_date[]" >      
                                         </div>
                                     </div>                           
-                                    <div class="row form-group">
+                                    <div class="row col-md-12 form-group">
                                         <label class="col-md-3">Time</label>
                                         <div class="col-md-9">     
                                             <input type="text" id="start_time" class="form-control floating-label start_time" placeholder="Start Time" style="max-width: 220px;float: left;" name="start_time[]">
                                             <span style="display: inline;float: left;margin: 7px 30px;font-weight: 600;">To </span>
-                                            <input type="text" id="end_time" class="form-control floating-label deg_time" placeholder="End Time" style="max-width: 220px;float: left;" name="end_time[]">  
+                                            <input type="text" id="end_time" class="form-control floating-label end_time" placeholder="End Time" style="max-width: 220px;float: left;" name="end_time[]">  
                                         </div>
                                     </div>
                                 </div> 
@@ -195,6 +150,7 @@
     $(document).ready(function () { 
         $(".deg_date").datepicker();
         $("#start_time").timepicker();
+        $("#end_time").timepicker();
   
           var count=0;
           $(document).on("click", ".add_button", function () { 
@@ -215,6 +171,13 @@
                 $(this).find('input').removeData().off();
                 $(this).timepicker();
               });
+
+              $clone.find("input.end_time").each(function(){
+                $(this).attr("id", "").removeData().off();
+                $(this).find('.add-on').removeData().off();
+                $(this).find('input').removeData().off();
+                $(this).timepicker();
+              });
               
               $(this).parents('.educat_info').after($clone);
           });
@@ -225,60 +188,6 @@
               }
           });
       });
-                                                        
-    /*$("[id^=startDate]").bootstrapMaterialDatePicker({
-        format : 'MM/DD/YYYY',
-        time: false ,
-        minDate : new Date(),
-    }).on('change', function(e, date){ 
-        
-    });
-
-     $('[id^=endDate]').bootstrapMaterialDatePicker({
-        format : 'MM/DD/YYYY',
-        time: false ,
-        minDate : new Date(),
-    }).on('change', function(e, date){ 
-        
-    });
-
-    $('#todaystarttime').bootstrapMaterialDatePicker({ 
-        date: false,
-        format : 'hh:mm A',
-    }).on('change', function(e, date){
-        $('#todayendtime').bootstrapMaterialDatePicker('setMinDate', date);
-    });
-
-    $('#todayendtime').bootstrapMaterialDatePicker({ 
-        date: false,
-        format : 'hh:mm A'
-    }).on('change', function(e, date){
-        //$("#today_submit").css('display', 'inline');
-    });
-
-    $('.select2').select2();
-
-    var current_id = 0;
-    $(".addBtnWrap .btn").on('click', function(){ 
-       var newElement = $('.managebookingWrapItem:first').clone(true);
-       var id = current_id+1;
-       current_id = id;
-
-       $.each($('input', newElement), function (index, value) {
-           value.id =  value.id.split("_")[0]+"_"+id ;
-           console.log(newElement.find('input.text'));  
-           newElement.find('input.text').bootstrapMaterialDatePicker();
-           // console.log($(value.id).bootstrapMaterialDatePicker({format:'dd/mm/yy'}))
-       });
-       var field1 = $('select', newElement).attr("id");
-       $('select', newElement).attr("id", field1.split("_")[0]+"_"+id );
-
-       newElement.appendTo('.managebookingWrap');
-    });
-
-    $('.managebookingWrapItem .delBtn').click(function(){
-        $(this).parent().parent().remove();
-    });*/
 
  </script>
 @endsection
