@@ -82,6 +82,7 @@
                              <div class="card-header" style="background-color: #ddd;">
                                 <h5>Manage Booking</h5>
                              </div>
+                            @foreach($assigned as $assign)
                              <div class="container-fluid cloned-row1 educat_info" id="cloned-row1" name="cloned-row1">
                                 <div class="row">
                                     <input type="hidden" name="booking_id" value="{{$booking->id}}">
@@ -98,9 +99,9 @@
                                     <div class="row col-md-12 form-group">
                                         <label class="col-md-3"> Date</label>
                                         <div class="col-md-9">                                           
-                                            <input type="text" id="start_date" class="form-control floating-label ipt_Field  start_date deg_date" placeholder="Start Date" style="max-width: 220px;float: left;"  name="start_date[]" >   
+                                            <input type="text" id="start_date" class="form-control floating-label ipt_Field  start_date start_date" placeholder="Start Date" style="max-width: 220px;float: left;"  name="start_date[]" >   
                                             <span style="display: inline;float: left;margin: 7px 30px;font-weight: 600;">To </span>                                 
-                                            <input type="text" id="end_date" class="form-control floating-label deg_date" placeholder="End Date" style="max-width: 220px;float: left; " name="end_date[]" >      
+                                            <input type="text" id="end_date" class="form-control floating-label end_date" placeholder="End Date" style="max-width: 220px;float: left; " name="end_date[]" >      
                                         </div>
                                     </div>                           
                                     <div class="row col-md-12 form-group">
@@ -119,6 +120,7 @@
                                     </div>
                                 </div>
                             </div>
+                            @endforeach
                            </div>
                            <div class="row">
                             <div class="form-group col-sm-5 pull-right"></div>
@@ -148,7 +150,14 @@
 <script>
 
     $(document).ready(function () { 
-        $(".deg_date").datepicker();
+        $(".start_date").datepicker({
+            minDate: '{{ $booking->start_date }}',
+            maxDate: '{{ $booking->end_date }}',
+        });
+        $(".end_date").datepicker({
+            minDate: '{{ $booking->start_date }}',
+            maxDate: '{{ $booking->end_date }}',
+        });
         $("#start_time").timepicker();
         $("#end_time").timepicker();
   
@@ -159,11 +168,22 @@
               $clone.find('[id]').each(function(){this.id+='someotherpart'+count});
               $clone.find('.btn_more').after("<input type='button' class='btn_less1 btn-danger' value='Delete' id='buttonless'/>")
               $clone.attr('id', "added"+(++count));
-              $clone.find("input.deg_date")
+              $clone.find("input.start_date")
                         .removeClass('hasDatepicker')
                         .removeData('datepicker')
                         .unbind()
-                        .datepicker();
+                        .datepicker({
+                            minDate: '{{ $booking->start_date }}',
+                            maxDate: '{{ $booking->end_date }}',
+                        });
+              $clone.find("input.end_date")
+                        .removeClass('hasDatepicker')
+                        .removeData('datepicker')
+                        .unbind()
+                        .datepicker({
+                            minDate: '{{ $booking->start_date }}',
+                            maxDate: '{{ $booking->end_date }}',
+                        });
 
               $clone.find("input.start_time").each(function(){
                 $(this).attr("id", "").removeData().off();
