@@ -613,8 +613,8 @@ class BookingController extends Controller
 
     public function upcoming_bookings(Request $request){
 
-        $bookings = Booking::select('id','relation_id', 'start_date', 'end_date', '24_hours', 'start_time', 'end_time','weekdays','caregiver_id')->where('status', 'Upcoming')->where('caregiver_id', '!=' , 'null')->where('user_id' , Auth::id())->get();
-
+        $bookings = Booking::select('id','relation_id', 'start_date', 'end_date', '24_hours', 'start_time', 'end_time','weekdays')->where('status', 'Upcoming')->where('user_id' , Auth::id())->get();
+        
         foreach ($bookings as $key => $value) {
 
             if($value['relation_id'] != null){
@@ -630,12 +630,20 @@ class BookingController extends Controller
             $bookings[$key]['bookingId'] = 'NUR'.$value->id ;
             $bookings[$key]['start_time'] = Carbon::parse($value->start_time)->format('g:i A') ;
             $bookings[$key]['end_time'] = Carbon::parse($value->end_time)->format('g:i A') ;
-            $bookings[$key]['userCaregiver']['name'] = $value->userCaregiver->user->name;
-            $bookings[$key]['userCaregiver']['profile_image'] = $value->userCaregiver->user->profile_image == null ? 'default.png' : $value->userCaregiver->user->profile_image ;
-            $bookings[$key]['userCaregiver']['language'] = $value->userCaregiver->user->language;
-            $bookings[$key]['userCaregiver']['description'] = $value->userCaregiver->user->description;
-            $bookings[$key]['userCaregiver']['discipline'] = Qualification::select('name')->join('caregiver_attributes' ,'caregiver_attributes.value' , 'qualifications.id')->where('type' , 'qualification')->where('caregiver_id', $value->userCaregiver->user->id)->get()->toArray();
-        }
+
+            $assignedCaregiver = AssignedCaregiver::where('booking_id', $value->id)->where('status', 'Final')->get();
+            // dd($assignedCaregivers);
+            foreach ($assignedCaregiver as $k => $ac) {
+                $datas['name'] = $ac->caregiver->user->name;
+                // dd($bookings);
+                $datas['profile_image'] = $ac->caregiver->user->profile_image == null ? 'default.png' : $ac->caregiver->user->profile_image ;
+                $datas['language'] = $ac->caregiver->user->language;
+                $datas['description'] = $ac->caregiver->user->description;
+                $datas['discipline'] = Qualification::select('name')->join('caregiver_attributes' ,'caregiver_attributes.value' , 'qualifications.id')->where('type' , 'qualification')->where('caregiver_id', $ac->caregiver->user->id)->get()->toArray();
+                $userCaregiver[] = $datas;
+            }
+            $bookings[$key]['userCaregiver'] = $userCaregiver;
+        } 
 
         if(count($bookings) > 0){
             return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $bookings]);
