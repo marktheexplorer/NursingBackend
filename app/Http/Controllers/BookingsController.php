@@ -17,7 +17,6 @@ use App\Mail\MailHelper;
 use Illuminate\Support\Facades\Mail;
 use App\Helper;
 use DB;
-use Twilio\Rest\Client;
 
 class BookingsController extends Controller{
     
@@ -498,32 +497,10 @@ class BookingsController extends Controller{
         }
         $booking = Booking::where('id', '=', $input['booking_id'])->first();
         Helper::sendNotifications($booking['user']['id'], $booking->id, 'Shifts Assigned', 'Time Slots has been updated to the caregivers for the booking NUR'.$booking->id);
-        Self::sendTwilioMessage($booking['user']['mobile_number'], $booking['user']['country_code'], 'Time Slots has been updated to the caregivers for the booking NUR'.$booking->id); 
+        Helper::sendTwilioMessage($booking['user']['mobile_number'], $booking['user']['country_code'], 'Time Slots has been updated to the caregivers for the booking NUR'.$booking->id); 
         flash()->success('Booking Schedule Updated Successfully');
         return redirect()->back();
     }
 
-    public function sendTwilioMessage($mobileNumber ,$countryCode, $message)
-    {   
-        $client = new Client(env('TWILIO_SID'), env('TWILIO_TOKEN'));
-
-        try{
-            $response = $client->messages->create(
-                // the number you'd like to send the message to
-                '+'.$countryCode.$mobileNumber ,
-                array(
-                    // A Twilio phone number you purchased at twilio.com/console
-                    'from' => '+13343397984',
-                    // the body of the text message you'd like to send
-                    'body' => $message
-                )
-            )->toArray();
-
-        }catch(\Exception $e){
-            $response = false;
-        }
-
-        return $response;
-
-    }
+    
 }

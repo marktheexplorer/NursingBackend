@@ -20,7 +20,6 @@ use Log;
 use App\Caregiver;
 use App\Notification;
 use App\Helper;
-use Twilio\Rest\Client;
 use App\Mail\MailHelper;
 use Illuminate\Support\Facades\Mail;
 
@@ -121,10 +120,10 @@ class BookingController extends Controller
             if($user->is_notify == 1)
             Helper::sendNotifications(Auth::id(), $booking->id, 'Schedule Requested', 'Your schedule request has been generated.');
 
-            $data = Self::sendTwilioMessage(Auth::user()->mobile_number, Auth::user()->country_code, 'A new schedule request has been confirmed for '.$booking->start_date.' at '.$booking->start_time .'. Your Booking Id is NUR'.$booking->id); 
+            $data = Helper::sendTwilioMessage(Auth::user()->mobile_number, Auth::user()->country_code, 'A new schedule request has been confirmed for '.$booking->start_date.' at '.$booking->start_time .'. Your Booking Id is NUR'.$booking->id); 
 
             if($booking->relation_id != null){
-                $data = Self::sendTwilioMessage($booking->relation->mobile_number, Auth::user()->country_code, 'A new schedule request has been generated for you by '.Auth::user()->name.' for '.$booking->start_date.' at '.$booking->start_time); 
+                $data = Helper::sendTwilioMessage($booking->relation->mobile_number, Auth::user()->country_code, 'A new schedule request has been generated for you by '.Auth::user()->name.' for '.$booking->start_date.' at '.$booking->start_time); 
             }
 
             Self::sendConfirmationMail($user->id);
@@ -133,30 +132,6 @@ class BookingController extends Controller
         }else{
             return response()->json(['status_code' => $this->errorStatus , 'message' => 'Schedule not created successfully.', 'data' => null]);
         }
-    }
-
-    public function sendTwilioMessage($mobileNumber ,$countryCode, $message)
-    {   
-        $client = new Client(env('TWILIO_SID'), env('TWILIO_TOKEN'));
-
-        try{
-            $response = $client->messages->create(
-                // the number you'd like to send the message to
-                '+'.$countryCode.$mobileNumber ,
-                array(
-                    // A Twilio phone number you purchased at twilio.com/console
-                    'from' => '+13343397984',
-                    // the body of the text message you'd like to send
-                    'body' => $message
-                )
-            )->toArray();
-
-        }catch(\Exception $e){
-            $response = false;
-        }
-
-        return $response;
-
     }
 
     public function validateBooking($startDate , $endDate , $startTime , $endTime, $bookingType, $relationId, $id, $weekDays, $type, $bookingId)
