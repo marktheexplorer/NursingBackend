@@ -632,14 +632,17 @@ class BookingController extends Controller
             $bookings[$key]['end_time'] = Carbon::parse($value->end_time)->format('g:i A') ;
 
             $assignedCaregiver = AssignedCaregiver::where('booking_id', $value->id)->where('status', 'Final')->get();
-            // dd($assignedCaregivers);
             foreach ($assignedCaregiver as $k => $ac) {
                 $datas['name'] = $ac->caregiver->user->name;
-                // dd($bookings);
                 $datas['profile_image'] = $ac->caregiver->user->profile_image == null ? 'default.png' : $ac->caregiver->user->profile_image ;
                 $datas['language'] = $ac->caregiver->user->language;
                 $datas['description'] = $ac->caregiver->user->description;
                 $datas['discipline'] = Qualification::select('name')->join('caregiver_attributes' ,'caregiver_attributes.value' , 'qualifications.id')->where('type' , 'qualification')->where('caregiver_id', $ac->caregiver->user->id)->get()->toArray();
+                $datas['start_time'] = $ac->start_time;
+                $datas['end_time'] = $ac->end_time;
+                $datas['start_date'] = $ac->start_date;
+                $datas['end_date'] = $ac->end_date;
+
                 $userCaregiver[] = $datas;
             }
             $bookings[$key]['userCaregiver'] = $userCaregiver;

@@ -160,7 +160,7 @@
                                 <!-- Third row-fluid-->
                                 <div class="row">
                                    <div class="col-xs-12 addBtnWrap">
-                                        <a class="btn btn-info add_button" ><i class="fas fa-plus"></i> Add</a>
+                                        <a class="btn btn-info add_button btn_more" ><i class="fas fa-plus"></i> Add</a>
                                     </div>
                                 </div>
                             </div>
@@ -201,7 +201,7 @@
               var $clone = $('.cloned-row1:eq(0)').clone(true,true);
               
               $clone.find('[id]').each(function(){this.id+='someotherpart'+count});
-              $clone.find('.btn_more').after("<input type='button' class='btn_less1' value='less' id='buttonless'/>")
+              $clone.find('.btn_more').after("<input type='button' class='btn_less1 btn-danger' value='Delete' id='buttonless'/>")
               $clone.attr('id', "added"+(++count));
               $clone.find("input.deg_date")
                         .removeClass('hasDatepicker')
