@@ -106,7 +106,8 @@ class BookingsController extends Controller{
 
         $booking = Booking::where('id', $input['booking_id'])->with('user')->first();
         if($booking['user']['is_notify'] == 1)
-            Helper::sendNotifications($booking['user']['id'], $booking->id, 'Caregiver Assigned', 'Caregiver has been assigned for booking. Please select a caregiver from caregiver request section.');
+            Helper::sendNotifications($booking['user']['id'], $booking->id, 'Caregiver Assigned', 'Caregiver has been assigned for schedule. Please select a caregiver from caregiver request section.');
+            Helper::sendTwilioMessage($booking['user']['mobile_number'], $booking['user']['country_code'], 'Caregiver has been assigned for schedule NUR'.$booking->id.' Please select a caregiver from caregiver request section.'); 
 
         return redirect()->back();
     }
@@ -460,6 +461,7 @@ class BookingsController extends Controller{
             $assignedCaregiversId[] = $value->caregiver_id;
             $assignedCaregivers[$key]['name'] = $value->caregiver->user->name;
             $assignedCaregivers[$key]['email'] = $value->caregiver->user->email;
+            $assignedCaregivers[$key]['phone_number'] = $value->caregiver->user->country_code.substr_replace(substr_replace($value->caregiver->user->mobile_number, '-', '3','0'), '-', '7','0') ;
         }
 
         $caregivers = Caregiver::get();

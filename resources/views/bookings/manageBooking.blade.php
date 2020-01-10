@@ -55,7 +55,7 @@
                                             <label>Selected Caregivers</label>
                                         </div>
                                         <div class="col-md-9">
-                                            <p> @foreach($assignedCaregivers as $key => $caregiver) {{ $key+1 }}.  {{ $caregiver['name'] }}  ({{ $caregiver['email'] }})  <br> @endforeach</p>
+                                            <p> @foreach($assignedCaregivers as $key => $caregiver) {{ $key+1 }}.  {{ $caregiver['name'] }}  ({{ $caregiver['email'] }}) :{{ $caregiver['phone_number'] }} <br> @endforeach</p>
                                         </div>
                                     </div>                              
                                     <div class="row">
