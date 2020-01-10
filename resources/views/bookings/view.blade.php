@@ -201,7 +201,7 @@
                                         <td></td>
                                         <td></td>
                                         <td>
-                                            <button class="form-control btn-info" onclick="$(this).closest('form').submit();">Submit</button> 
+                                            <button class="form-control btn btn-info" onclick="$(this).closest('form').submit();">Submit</button> 
                                         </td>
                                     </tr>
                                 </table>
