@@ -648,11 +648,21 @@ class BookingController extends Controller
             $bookings[$key]['bookingId'] = 'NUR'.$value->id ;
             $bookings[$key]['start_time'] = Carbon::parse($value->start_time)->format('g:i A') ;
             $bookings[$key]['end_time'] = Carbon::parse($value->end_time)->format('g:i A') ;
-            $bookings[$key]['userCaregiver']['name'] = $value->userCaregiver->user->name;
-            $bookings[$key]['userCaregiver']['profile_image'] = $value->userCaregiver->user->profile_image == null ? 'default.png' : $value->userCaregiver->user->profile_image ;
-            $bookings[$key]['userCaregiver']['language'] = $value->userCaregiver->user->language;
-            $bookings[$key]['userCaregiver']['description'] = $value->userCaregiver->user->description;
-            $bookings[$key]['userCaregiver']['discipline'] = Qualification::select('name')->join('caregiver_attributes' ,'caregiver_attributes.value' , 'qualifications.id')->where('type' , 'qualification')->where('caregiver_id', $value->userCaregiver->user->id)->get()->toArray();
+            $userCaregiver = array();
+            $assignedCaregiver = AssignedCaregiver::where('booking_id', $value->id)->where('status', 'Final')->get();
+            foreach ($assignedCaregiver as $k => $ac) {
+                $datas['name'] = $ac->caregiver->user->name;
+                $datas['profile_image'] = $ac->caregiver->user->profile_image == null ? 'default.png' : $ac->caregiver->user->profile_image ;
+                $datas['language'] = $ac->caregiver->user->language;
+                $datas['description'] = $ac->caregiver->user->description;
+                $datas['discipline'] = Qualification::select('name')->join('caregiver_attributes' ,'caregiver_attributes.value' , 'qualifications.id')->where('type' , 'qualification')->where('caregiver_id', $ac->caregiver->user->id)->get()->toArray();
+                $datas['start_time'] = $ac->start_time;
+                $datas['end_time'] = $ac->end_time;
+                $datas['start_date'] = $ac->start_date;
+                $datas['end_date'] = $ac->end_date;
+                $userCaregiver[] = $datas;
+            }
+            $bookings[$key]['userCaregiver'] = $userCaregiver;
         }
 
         if(count($bookings) > 0){
