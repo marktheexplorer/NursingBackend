@@ -461,7 +461,7 @@ class BookingsController extends Controller{
             $assignedCaregiversId[] = $value->caregiver_id;
             $assignedCaregivers[$key]['name'] = $value->caregiver->user->name;
             $assignedCaregivers[$key]['email'] = $value->caregiver->user->email;
-            $assignedCaregivers[$key]['phone_number'] = $value->caregiver->user->country_code.substr_replace(substr_replace($value->caregiver->user->mobile_number, '-', '3','0'), '-', '7','0') ;
+            $assignedCaregivers[$key]['phone_number'] = $value->caregiver->user->country_code.'-'.substr_replace(substr_replace($value->caregiver->user->mobile_number, '-', '3','0'), '-', '7','0') ;
         }
 
         $caregivers = Caregiver::get();
