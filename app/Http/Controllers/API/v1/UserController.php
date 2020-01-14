@@ -164,6 +164,7 @@ class UserController extends Controller{
                     $success['weight'] = PROFILE_WEIGHT;
                     $success['language'] = PROFILE_LANGUAGE;
                     $success['today_msg'] = $data['today_msg'];
+                    $success['admin_number'] = $data['admin_number'];
                 }else{
                     $userDetails =  User::where('users.id', $user->id)->first();
                     if($userDetails['profile_image'] == null)
@@ -177,6 +178,7 @@ class UserController extends Controller{
                     $success['userDetails'] =  $userDetails;
                     $success['service_area'] =  $data['county'];
                     $success['today_msg'] = $data['today_msg'];
+                    $success['admin_number'] = $data['admin_number'];
                 } 
 
                 return response()->json(['status_code' => $this->successStatus, 'message' => 'Otp verified.', 'data'=> $success]);
@@ -472,6 +474,7 @@ class UserController extends Controller{
             $success['diagnosis'] =  $data['diagnosis'];
             $success['service_area'] =  $data['county'];
             $success['today_msg'] =  $data['today_msg'];
+            $success['admin_number'] =  $data['admin_number'];
             $success['height'] = PROFILE_HEIGHT;
             $success['weight'] = PROFILE_WEIGHT;
             $success['language'] = PROFILE_LANGUAGE;
@@ -487,6 +490,7 @@ class UserController extends Controller{
             $success['userDetails'] =  $userDetails;
             $success['service_area'] =  $data['county'];
             $success['today_msg'] =  $data['today_msg'];
+            $success['admin_number'] =  $data['admin_number'];
         }          
         if (!empty($user))
             return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $success]);
@@ -514,6 +518,8 @@ class UserController extends Controller{
         $success['user_added_relations'] = UserRelation::select('user_relations.*', 'relations.title')->join('relations' , 'relation_id' , 'relations.id')->where('user_id', $userId)->get();
 
         $success['today_msg'] = "You are requesting to schedule a shift that is within 24 hours, please call the office at +" . $admin->country_code .'-'. substr_replace(substr_replace($admin->mobile_number, '-', '3','0'), '-', '7','0') . " to allow us to facilitate this request." ;
+
+        $success['admin_number'] = "+" . $admin->country_code .'-'. substr_replace(substr_replace($admin->mobile_number, '-', '3','0'), '-', '7','0');
 
         return $success;
     }
