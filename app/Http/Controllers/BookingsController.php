@@ -490,7 +490,6 @@ class BookingsController extends Controller{
 
         AssignedCaregiver::where('booking_id', $input['booking_id'])->where('status', 'Final')->update(['status' => '']);
         $count = count($input['caregivers']) ;
-
         for ($i=0; $i < $count ; $i++) { 
             AssignedCaregiver::insert([
                 'booking_id'=>$input['booking_id'],
@@ -502,10 +501,13 @@ class BookingsController extends Controller{
                 'status' => 'Final',
             ]);
         }
-
         $booking = Booking::where('id', '=', $input['booking_id'])->first();
         Helper::sendNotifications($booking['user']['id'], $booking->id, 'Shifts Assigned', 'Time Slots has been updated to the caregivers for the booking NUR'.$booking->id);
         Helper::sendTwilioMessage($booking['user']['mobile_number'], $booking['user']['country_code'], 'Time Slots has been updated to the caregivers for the booking NUR'.$booking->id); 
+        foreach ($input['caregivers'] as $key => $value) {
+           $caregiver = Caregiver::findOrFail($value);
+           Helper::sendTwilioMessage($caregiver->user->mobile_number, $caregiver->user->country_code, 'Time Slots has been updated for the booking NUR'.$booking->id);
+        }
         flash()->success('Booking Schedule Updated Successfully');
 
         return redirect()->back();
