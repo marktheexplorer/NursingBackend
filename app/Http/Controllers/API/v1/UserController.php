@@ -513,7 +513,7 @@ class UserController extends Controller{
 
         $success['user_added_relations'] = UserRelation::select('user_relations.*', 'relations.title')->join('relations' , 'relation_id' , 'relations.id')->where('user_id', $userId)->get();
 
-        $success['today_msg'] = "Please contact admin for today's booking. Email : ".$admin->email." Phone No. : ".$admin->mobile_number ;
+        $success['today_msg'] = "You are requesting to schedule a shift that is within 24 hours, please call the office at +" . $admin->country_code .'-'. substr_replace(substr_replace($admin->mobile_number, '-', '3','0'), '-', '7','0') . " to allow us to facilitate this request." ;
 
         return $success;
     }
