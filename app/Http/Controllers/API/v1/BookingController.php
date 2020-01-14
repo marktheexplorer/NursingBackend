@@ -675,24 +675,23 @@ class BookingController extends Controller
     public function upcoming_bookings_caregiver (Request $request , $start_date = null, $end_date = null)
     { 
         $caregiver = Caregiver::select('id')->where('user_id',Auth::id())->first();
-        $jobs = Booking::select('id','user_id','booking_type', 'start_date', 'end_date', '24_hours', 'start_time', 'end_time','weekdays','caregiver_id','service_location_id','address','city','state','country','zipcode')->where('status', 'Upcoming')->where('caregiver_id' , $caregiver['id'])->get();
-        
+        $jobs = AssignedCaregiver::where('caregiver_id', $caregiver['id'])->where('status', 'Final')->get();
+
         foreach ($jobs as $key => $value) {
             
             if(($request->input('start_date') != "null") && ($request->input('end_date') != "null")){
-            $bookingStart = Carbon::parse($value->start_date);
-            $bookingEnd = Carbon::parse($value->end_date);
-            $endDate = Carbon::parse($request->input('end_date'));
-            $startDate = Carbon::parse($request->input('start_date'));
-
-                if(($bookingStart->gte($startDate) && $bookingStart->lte($endDate)) || ($bookingStart->lte($startDate)&&($bookingEnd->gte($startDate) && $bookingEnd->lte($endDate))) || ($bookingEnd->gte($endDate)&&($bookingStart->gte($startDate) && $bookingStart->lte($endDate))))
-                {
-                    $bookings[] = $value;
-                }else{
-                    return response()->json(['status_code' => $this->errorStatus , 'message' => 'No Schedule', 'data' => null]);
-                }
+                $bookingStart = Carbon::parse($value->booking->start_date);
+                $bookingEnd = Carbon::parse($value->booking->end_date);
+                $endDate = Carbon::parse($request->input('end_date'));
+                $startDate = Carbon::parse($request->input('start_date'));
+                    if(($bookingStart->gte($startDate) && $bookingStart->lte($endDate)) || ($bookingStart->lte($startDate)&&($bookingEnd->gte($startDate) && $bookingEnd->lte($endDate))) || ($bookingEnd->gte($endDate)&&($bookingStart->gte($startDate) && $bookingStart->lte($endDate))))
+                    {
+                        $bookings[] = $value->booking;
+                    }else{
+                        return response()->json(['status_code' => $this->errorStatus , 'message' => 'No Schedule', 'data' => null]);
+                    }
             }else{
-                $bookings[] = $value;
+                $bookings[] = $value->booking;
             }
                 
                 if($value['weekdays'] != null){
@@ -702,11 +701,11 @@ class BookingController extends Controller
                 $bookings[$key]['bookingId'] = 'NUR'.$value->id ;
                 $bookings[$key]['start_time'] = Carbon::parse($value->start_time)->format('g:i A') ;
                 $bookings[$key]['end_time'] = Carbon::parse($value->end_time)->format('g:i A') ;
-                $bookings[$key]['service_location_id'] = $value->service_location->area;
-                $bookings[$key]['user']['name'] = $value->user->name;
-                $bookings[$key]['user']['profile_image'] = $value->user->profile_image == null ? 'default.png' : $value->user->profile_image ;
-                $bookings[$key]['user']['language'] = $value->user->language;
-                $bookings[$key]['user']['description'] = $value->user->description;
+                $bookings[$key]['service_location_id'] = $value->booking->service_location->area;
+                $bookings[$key]['user']['name'] = $value->booking->user->name;
+                $bookings[$key]['user']['profile_image'] = $value->booking->user->profile_image == null ? 'default.png' : $value->booking->user->profile_image ;
+                $bookings[$key]['user']['language'] = $value->booking->user->language;
+                $bookings[$key]['user']['description'] = $value->booking->user->description;
         }
 
         if(count($jobs) > 0){

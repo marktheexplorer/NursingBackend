@@ -20,4 +20,8 @@ class AssignedCaregiver extends Model
         return $this->hasOne('App\Caregiver' , 'id' ,'caregiver_id');
     }
 
+    public function booking(){
+        return $this->hasOne('App\Booking' , 'id' ,'booking_id');
+    }
+
 }
