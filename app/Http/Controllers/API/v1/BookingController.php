@@ -120,10 +120,10 @@ class BookingController extends Controller
             if($user->is_notify == 1)
                 Helper::sendNotifications(Auth::id(), $booking->id, 'Schedule Requested', 'Your schedule request has been generated.');
 
-            Helper::sendTwilioMessage(Auth::user()->mobile_number, Auth::user()->country_code, 'A new schedule request has been confirmed for '.$booking->start_date.' at '.$booking->start_time .'. Your Booking Id is NUR'.$booking->id); 
+            Helper::sendTwilioMessage(Auth::user()->mobile_number, Auth::user()->country_code, 'A new schedule request has been confirmed for '.$booking->start_date.' at '.Carbon::parse($booking->start_time)->format('g:i A') .'. Your Booking Id is NUR'.$booking->id); 
 
             if($booking->relation_id != null){
-                Helper::sendTwilioMessage($booking->relation->mobile_number, Auth::user()->country_code, 'A new schedule request has been generated for you by '.Auth::user()->name.' for '.$booking->start_date.' at '.$booking->start_time.'. Your Booking Id is NUR'.$booking->id); 
+                Helper::sendTwilioMessage($booking->relation->mobile_number, Auth::user()->country_code, 'A new schedule request has been generated for you by '.Auth::user()->name.' for '.$booking->start_date.' at '.Carbon::parse($booking->start_time)->format('g:i A').'. Your Booking Id is NUR'.$booking->id); 
             }
 
             Self::sendConfirmationMail($user->id);
