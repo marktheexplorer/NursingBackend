@@ -15,7 +15,7 @@ class CreateCountyAreasTable extends Migration
     {
         Schema::create('county_areas', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('county ');
+            $table->string('county');
             $table->string('area');
             $table->integer('is_blocked')->default(1);
             $table->integer('is_area_blocked')->default(1);

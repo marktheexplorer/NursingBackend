@@ -685,7 +685,7 @@ class BookingController extends Controller
                 $endDate = Carbon::parse($request->input('end_date'));
                 $startDate = Carbon::parse($request->input('start_date'));
                     if(($bookingStart->gte($startDate) && $bookingStart->lte($endDate)) || ($bookingStart->lte($startDate)&&($bookingEnd->gte($startDate) && $bookingEnd->lte($endDate))) || ($bookingEnd->gte($endDate)&&($bookingStart->gte($startDate) && $bookingStart->lte($endDate))))
-                    {
+                    { 
                         $bookings[] = $value->booking;
                     }else{
                         return response()->json(['status_code' => $this->errorStatus , 'message' => 'No Schedule', 'data' => null]);
@@ -693,19 +693,22 @@ class BookingController extends Controller
             }else{
                 $bookings[] = $value->booking;
             }
-                
-                if($value['weekdays'] != null){
-                    $data = unserialize($value['weekdays']);
+                if($value->booking->weekdays != null){
+                    $data = unserialize($value->booking->weekdays);
                     $bookings[$key]['weekdays'] = $data;
                 }
-                $bookings[$key]['bookingId'] = 'NUR'.$value->id ;
-                $bookings[$key]['start_time'] = Carbon::parse($value->start_time)->format('g:i A') ;
-                $bookings[$key]['end_time'] = Carbon::parse($value->end_time)->format('g:i A') ;
+                $bookings[$key]['bookingId'] = 'NUR'.$value->booking_id ;
+                $bookings[$key]['start_time'] = Carbon::parse($value->booking->start_time)->format('g:i A') ;
+                $bookings[$key]['end_time'] = Carbon::parse($value->booking->end_time)->format('g:i A') ;
                 $bookings[$key]['service_location_id'] = $value->booking->service_location->area;
                 $bookings[$key]['user']['name'] = $value->booking->user->name;
                 $bookings[$key]['user']['profile_image'] = $value->booking->user->profile_image == null ? 'default.png' : $value->booking->user->profile_image ;
                 $bookings[$key]['user']['language'] = $value->booking->user->language;
                 $bookings[$key]['user']['description'] = $value->booking->user->description;
+                $bookings[$key]['shift_start_time'] = $value->start_time ;
+                $bookings[$key]['shift_end_time'] = $value->end_time ;
+                $bookings[$key]['shift_start_date'] = $value->start_date ;
+                $bookings[$key]['shift_end_date'] = $value->end_date;
         }
 
         if(count($jobs) > 0){
