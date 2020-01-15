@@ -675,7 +675,7 @@ class BookingController extends Controller
     public function upcoming_bookings_caregiver (Request $request , $start_date = null, $end_date = null)
     { 
         $caregiver = Caregiver::select('id')->where('user_id',Auth::id())->first();
-        $jobs = AssignedCaregiver::select('assigned_caregivers.*')->where('assigned_caregivers.caregiver_id', $caregiver['id'])->where('assigned_caregivers.status', 'Final')->where('b.status','Upcoming')->join('bookings as b','b.id','assigned_caregivers.booking_id')->addSelect('assigned_caregivers.start_time as shift_start_time', 'assigned_caregivers.end_time as shift_end_time','assigned_caregivers.start_date as shift_start_date','assigned_caregivers.end_date as shift_end_date')->get();
+        $jobs = AssignedCaregiver::select('assigned_caregivers.*')->where('assigned_caregivers.caregiver_id', $caregiver['id'])->where('assigned_caregivers.status', 'Final')->where('assigned_caregivers.start_date' ,'!=', null)->where('b.status','Upcoming')->join('bookings as b','b.id','assigned_caregivers.booking_id')->addSelect('assigned_caregivers.start_time as shift_start_time', 'assigned_caregivers.end_time as shift_end_time','assigned_caregivers.start_date as shift_start_date','assigned_caregivers.end_date as shift_end_date')->get();
 
         foreach ($jobs as $key => $value) {
             
