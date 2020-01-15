@@ -745,7 +745,8 @@ class BookingController extends Controller
     public function completed_bookings_caregiver (Request $request)
     { 
         $caregiver = Caregiver::select('id')->where('user_id',Auth::id())->first();
-        $bookings = Booking::select('id','user_id', 'start_date', 'end_date','start_time','end_time', 'booking_type', '24_hours','caregiver_id')->where('status', 'Completed')->where('caregiver_id' , $caregiver['id'])->get();
+        $assignedCaregivers = AssignedCaregiver::where('caregiver_id', $caregiver->id)->pluck('booking_id')->toArray();
+        $bookings = Booking::select('id','user_id', 'start_date', 'end_date','start_time','end_time', 'booking_type', '24_hours','caregiver_id')->whereIn('id', $assignedCaregivers)->where('status', 'Completed')->get();
 
         foreach ($bookings as $key => $value) {
             $bookings[$key]['bookingId'] = 'NUR'.$value->id ;
