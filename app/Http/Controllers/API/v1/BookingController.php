@@ -675,7 +675,7 @@ class BookingController extends Controller
     public function upcoming_bookings_caregiver (Request $request , $start_date = null, $end_date = null)
     { 
         $caregiver = Caregiver::select('id')->where('user_id',Auth::id())->first();
-        $jobs = AssignedCaregiver::where('caregiver_id', $caregiver['id'])->where('status', 'Final')->get();
+        $jobs = AssignedCaregiver::where('assigned_caregivers.caregiver_id', $caregiver['id'])->where('assigned_caregivers.status', 'Final')->where('b.status','Upcoming')->join('bookings as b','b.id','assigned_caregivers.booking_id')->get();
 
         foreach ($jobs as $key => $value) {
             
