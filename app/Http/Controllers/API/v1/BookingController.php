@@ -549,7 +549,7 @@ class BookingController extends Controller
                 Helper::sendNotifications($user->id, $input['booking_id'], 'Booking Confirmed', $caregiverNames.' has been assigned for booking.');
             foreach ($caregivers as $key => $value) {
                 if($value['user']['is_notify'] == 1)
-                    Helper::sendNotifications($value['user']['id'], $input['booking_id'], 'Booking Scheduled', 'A new booking has been scheduled for '.$user->name.'.');
+                    Helper::sendNotifications($value['user']['id'], $input['booking_id'], 'Booking Scheduled', 'A new shift has been scheduled for '.$user->name.'.');
             }
             return response()->json(['status_code' => $this->successStatus , 'message' => 'Request sent successfully.', 'data' => '']);
         }else{
