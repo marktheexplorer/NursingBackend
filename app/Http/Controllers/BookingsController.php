@@ -361,7 +361,7 @@ class BookingsController extends Controller{
         if(empty($booking)){
             $response = array(
                 'status' => 'success',
-                'message' => 'Invalid Booking, Please try again',
+                'message' => 'Invalid Schedule, Please try again',
             );    
         }
 
@@ -502,13 +502,15 @@ class BookingsController extends Controller{
             ]);
         }
         $booking = Booking::where('id', '=', $input['booking_id'])->first();
-        Helper::sendNotifications($booking['user']['id'], $booking->id, 'Shifts Assigned', 'Time Slots has been updated to the caregivers for the booking NUR'.$booking->id);
-        Helper::sendTwilioMessage($booking['user']['mobile_number'], $booking['user']['country_code'], 'Time Slots has been updated to the caregivers for the booking NUR'.$booking->id); 
+
+        Helper::sendNotifications($booking['user']['id'], $booking->id, 'Shifts Assigned', 'Time Slots has been updated to the caregivers for the schedule NUR'.$booking->id);
+        Helper::sendTwilioMessage($booking['user']['mobile_number'], $booking['user']['country_code'], 'Time Slots has been updated to the caregivers for the schedule NUR'.$booking->id); 
+
         foreach ($input['caregivers'] as $key => $value) {
            $caregiver = Caregiver::findOrFail($value);
-           Helper::sendTwilioMessage($caregiver->user->mobile_number, $caregiver->user->country_code, 'Time Slots has been updated for the booking NUR'.$booking->id);
+           Helper::sendTwilioMessage($caregiver->user->mobile_number, $caregiver->user->country_code, 'Time Slots has been updated for the shift NUR'.$booking->id);
         }
-        flash()->success('Booking Schedule Updated Successfully');
+        flash()->success('Schedule Updated Successfully');
 
         return redirect()->back();
     }
