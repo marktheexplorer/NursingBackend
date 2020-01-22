@@ -31,20 +31,20 @@
                             <th>Disciplines</th>
                             <th>Language</th>
 	                  		<th>Created At</th>
-	                  		<th style="min-width: 100px;">Actions</th>
+	                  		<th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                    <?php $count = 1; ?>
+                   
                  	@foreach($caregivers as $key => $user)
 	            		<tr>
-                      <td>{{ $count }} <?php  $count++; ?></td>
+                            <td>{{ ++$key }}</td>
 	              			<td>{{ ucfirst($user->name) }}</td>
 	              			<td>{{ $user->email }}</td>
 	              			<td>{{ $user->mobile_number != '' ? substr_replace(substr_replace($user->mobile_number, '-', '3','0'), '-', '7','0') : '' }}</td>
-                      <td><?php echo "$".$user->min_price."-$".$user->max_price; ?></td>
-                      <td><?php echo implode(' , ',$user->qualification); ?></td>
-                      <td>{{ $user->language }}</td>
+                            <td><?php echo "$".$user->min_price."-$".$user->max_price; ?></td>
+                            <td><?php echo implode(' , ',$user->qualification); ?></td>
+                            <td>{{ $user->language }}</td>
 	              			<td>{{ date_format(date_create($user->created_at), 'd M, Y')}}
 	              			<td>
 	              				<ul class="actions-menu" style="padding-left: 0px;">

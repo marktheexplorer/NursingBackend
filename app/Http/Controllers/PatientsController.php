@@ -67,8 +67,8 @@ class PatientsController extends Controller{
             'f_name' => 'required|string|max:20',
             'm_name' => 'nullable|string|max:20',
             'l_name' => 'required|string|max:20',
-            'email' => 'required|email|string|max:60',
-            'mobile_number' => 'required|regex:/^\(?([0-9]{3})\)?[-]?([0-9]{3})[-]?([0-9]{4})$/',
+            'email' => 'required|email|string|max:60|unique:users,email,'.$id,
+            'mobile_number' => 'required|regex:/^\(?([0-9]{3})\)?[-]?([0-9]{3})[-]?([0-9]{4})$/|unique:users,mobile_number,'.$id,
             'dob' => 'required',
             'gender' => 'required',
             'pin_code' => 'required|numeric',
@@ -85,7 +85,8 @@ class PatientsController extends Controller{
             'language' => 'required',
             'pets' => 'required',
             'pets_description' => 'nullable|max:2000',
-            'additional_info' => 'max:150'
+            'additional_info' => 'max:150',
+            'country_code' => 'required',
         ],
         $messages = [
             'f_name.required'    => 'The First name is required.',
@@ -194,7 +195,8 @@ class PatientsController extends Controller{
             'language' => 'required',
             'pets_description' => 'max:2000',
             'long_term' => 'required',
-            'additional_info' => 'max:150'
+            'additional_info' => 'max:150',
+            'country_code' => 'required'
         ],
         $messages = [
             'f_name.required'    => 'The First name is required.',

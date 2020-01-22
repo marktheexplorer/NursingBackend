@@ -89,8 +89,6 @@
                                                         </span>
                                                     @endif
                                                 </div>
-                                            </div>
-                                            <div class="row">
                                                 <div class="col-sm-3  form-group">
                                                     <label>Email</label>
                                                     <input type="text" name="email" placeholder="Email" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" />
@@ -99,8 +97,21 @@
                                                             <strong>{{ $errors->first('email') }}</strong>
                                                         </span>
                                                     @endif
+                                                </div>          
+                                                 <div class="col-sm-3  form-group">
+                                                    <label>Country Code</label>
+                                                    <select name="country_code" class="form-control {{ $errors->has('country_code') ? ' is-invalid' : '' }}">
+                                                        <option disabled="true" selected="true"> -- Select --</option>
+                                                        <option value="1" {{ old('country_code') == 1 ? 'selected':'' }}>+1</option>
+                                                        <option value="91" {{ old('country_code') == 91 ? 'selected':'' }}>+91</option>
+                                                    </select>
+                                                    @if ($errors->has('country_code'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('country_code') }}</strong>
+                                                         </span>
+                                                    @endif
                                                 </div>
-                                                <div class="col-sm-3  form-group">
+                                                <div class="col-sm-3 form-group">
                                                     <label>Mobile Number</label>
                                                     <input type="text" class="form-control {{ $errors->has('mobile_number') ? ' is-invalid' : '' }}" placeholder="Mobile Number" name="mobile_number" value="{{ old('mobile_number')}}" id="mobile_number">
                                                     @if ($errors->has('mobile_number'))
@@ -134,8 +145,6 @@
                                                          </span>
                                                     @endif
                                                 </div>
-                                            </div>
-                                            <div class="row">
                                                 <div class="col-sm-3 form-group">
                                                     <label>Weight</label>
                                                     <select name="weight" class="form-control {{ $errors->has('weight') ? ' is-invalid' : '' }}">
@@ -168,9 +177,7 @@
                                                         </span>
                                                     @endif
                                                 </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="form-group col-sm-6" >
+                                                <div class="form-group col-sm-3" >
                                                     <label>Street </label>
                                                     <input type="text" class="form-control {{ $errors->has('location') ? ' is-invalid' : '' }}" name="location" placeholder="Location" value="{{ old('location') }}" autocomplete="off" />
                                                     @if ($errors->has('location'))
@@ -179,7 +186,7 @@
                                                         </span>
                                                     @endif
                                                 </div>
-                                                <div class="form-group col-sm-2" >
+                                                <div class="form-group col-sm-4" >
                                                     <label>City</label>
                                                     <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" placeholder="city" value="{{ old('city') }}" id="citysuggest" autocomplete="off" />
                                                     @if ($errors->has('city'))
@@ -188,7 +195,7 @@
                                                         </span>
                                                     @endif
                                                 </div>
-                                                <div class="form-group col-sm-2" >
+                                                <div class="form-group col-sm-4" >
                                                     <label>State </label>
                                                     <select name="state" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" readonly="true" id="state">
                                                         <option disabled="true" selected=""> -- Select State --</option>
@@ -204,7 +211,7 @@
                                                         </span>
                                                     @endif
                                                 </div>
-                                                <div class="form-group col-sm-2" >
+                                                <div class="form-group col-sm-4" >
                                                     <label>Zip Code </label>
                                                     <input type="text" class="form-control {{ $errors->has('zipcode') ? ' is-invalid' : '' }}" name="zipcode" placeholder="Zip code" value="{{ old('zipcode') }}" id="zipcode" readonly="true"  />
                                                     @if ($errors->has('zipcode'))
@@ -244,7 +251,8 @@
                                             <div class="row">
                                                 <div class="col-sm-6  form-group">
                                                     <label>Discipline</label>
-                                                    <select name="qualification[]" class="form-control {{ $errors->has('qualification') ? ' is-invalid' : '' }}" multiple="true">
+                                                    <select name="qualification[]" class="form-control {{ $errors->has('qualification') ? ' is-invalid' : '' }} select2" id
+                                                    ="discipline" multiple="multiple">
                                                         <option disabled="true" > -- Select Discipline --</option>
                                                         @foreach($qualification as $qlf)
                                                             <option value="{{ $qlf->id }}" {{ (collect(old('qualification'))->contains($qlf->id)) ? 'selected':'' }} >{{ ucfirst($qlf->name) }}</option>
@@ -258,7 +266,7 @@
                                                 </div>
                                                 <div class="col-sm-6  form-group">
                                                     <label>Service</label>
-                                                    <select name="service[]" class="form-control {{ $errors->has('service') ? ' is-invalid' : '' }}" multiple="true">
+                                                    <select name="service[]" class="form-control {{ $errors->has('service') ? ' is-invalid' : '' }}"  id="service" multiple="true">
                                                         <option disabled="true" > -- Select Service --</option>
                                                         @foreach($service_list as $srvc)
                                                             <option value="{{ $srvc->id }}" {{ (collect(old('service'))->contains($srvc->id)) ? 'selected':'' }}>{{ ucfirst($srvc->title) }}</option>
@@ -411,6 +419,20 @@
             placeholder: {
                 id: '-1', // the value of the option
                 text: ' -- Select Non Service Area --'
+            }
+        });
+
+        $("#discipline").select2({
+            placeholder: {
+                id: '-1', // the value of the option
+                text: ' -- Select Discipline --'
+            }
+        });
+
+        $("#service").select2({
+            placeholder: {
+                id: '-1', // the value of the option
+                text: ' -- Select Service --'
             }
         });
 

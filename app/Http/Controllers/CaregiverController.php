@@ -64,13 +64,14 @@ class CaregiverController extends Controller{
     public function store(Request $request){
 
         $input = $request->input();
+        $input['mobile_number'] = preg_replace('`-`', '', $input['mobile_number']);
 
         //make validation
         $validator =  Validator::make($input,[
             'fname' => 'required|string|max:40',
             'lname' => 'required|string|max:40',
-            'email' => 'email|required|string|unique:users,email',
-            'mobile_number' => 'required|unique:users,mobile_number|regex:/^\(?([0-9]{3})\)?[-]?([0-9]{3})[-]?([0-9]{4})$/',
+            'email' => 'email|required|string|unique:users',
+            'mobile_number' => 'required|unique:users',
             'service' => 'required|not_in:0',
             'gender' => 'required',
             'language' => 'required',
@@ -87,22 +88,25 @@ class CaregiverController extends Controller{
             'non_service_area' => 'required',
             'description' => 'required|max:150',
             'qualification' => 'required|not_in:0',
+            'country_code' => 'required',
         ],
         [   
             'max_price.gt' => 'The max price must be greater than min price.',
-            'mobile_number.regex' => 'The mobile number must be 10 digits.'
         ]);
 
         //show custome name of field in validation errors
         $attributeNames = array(
            'fname' => 'first name',
            'lname' => 'last name',
-           'mname' => 'middel name',
+           'mname' => 'middle name',
            'dob' => 'date of birth',
            'location' => 'street',
            'zipcode' => 'zip code'
         );
         $validator->setAttributeNames($attributeNames);
+        if($validator->fails()){
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
 
         if($request->has('profile_image') && ($request->file('profile_image') != null)) {
             $image = $request->file('profile_image');
@@ -113,16 +117,10 @@ class CaregiverController extends Controller{
             $image->move($destinationPath, $input['profile_image']);
         }
 
-        if($validator->fails()){
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
-
         $input['name'] = $input['fname'].' '.$input['mname'].' '.$input['lname'];
         $input['role_id'] = 2;
         $input['type'] = 'caregiver';
         $input['dob'] = date("Y-m-d", strtotime($input['dob']));
-        $input['mobile_number'] = preg_replace('`-`', '', $input['mobile_number']);
-        $input['country_code'] = '1';
         $user = User::create($input);
 
         if($user){
@@ -148,8 +146,7 @@ class CaregiverController extends Controller{
             $data = array();    //array to save caregiver attributes
 
             //save servicable area
-            $serivice_area = $input['service_area'];
-            foreach($serivice_area as $area){
+            foreach($input['service_area'] as $area){
                 $data[] = array(
                     'caregiver_id' => $user->id,
                     'value' => $area,
@@ -158,8 +155,7 @@ class CaregiverController extends Controller{
             }
 
             //save no servicable area
-            $non_service_area = $input['non_service_area'];
-            foreach($non_service_area as $area){
+            foreach($input['non_service_area'] as $area){
                 $data[] = array(
                     'caregiver_id' => $user->id,
                     'value' => $area,
@@ -188,7 +184,7 @@ class CaregiverController extends Controller{
             DB::table('caregiver_attributes')->insert($data);
 
             //redirect to index page.
-            flash()->success('New Caregiver Add successfull');
+            flash()->success('New Caregiver added successfully');
             return redirect()->route('caregiver.index');
         }else{
             flash()->success('There is some error, please try again..');
@@ -217,9 +213,8 @@ class CaregiverController extends Controller{
 
         $user->non_service_area = DB::table('caregiver_attributes')->select('county_areas.area')->Join('county_areas', 'county_areas.id', '=', 'caregiver_attributes.value')->where('caregiver_attributes.type', '=', 'non_service_area')->where('caregiver_attributes.caregiver_id', '=', $id)->orderBy('county_areas.area', 'asc')->get();
 
-        $caregiver_id = Caregiver::where('user_id' , $id)->first();
-        $services = Booking::where('status' , 'Upcoming')->where('caregiver_id' , $caregiver_id->id)->get();
-
+        $caregiver = Caregiver::where('user_id' , $id)->first();
+        $services = AssignedCaregiver::where('caregiver_id',$caregiver->id)->where('status','final')->with('booking')->get();
         return view('caregiver.view', compact('user' , 'services'));
     }
 
@@ -283,8 +278,8 @@ class CaregiverController extends Controller{
         $validator =  Validator::make($input,[
             'first_name' => 'required|string|max:40',
             'last_name' => 'required|string|max:40',
-            'email' => 'email|required|string',
-            'mobile_number' => 'required|regex:/^\(?([0-9]{3})\)?[-]?([0-9]{3})[-]?([0-9]{4})$/',
+            'email' => 'email|required|string|unique:users,email,'.$id,
+            'mobile_number' => 'required|regex:/^\(?([0-9]{3})\)?[-]?([0-9]{3})[-]?([0-9]{4})$/|unique:users,mobile_number,'.$id,
             'service' => 'required|not_in:0',
             'gender' => 'required',
             'language' => 'required',
@@ -301,6 +296,7 @@ class CaregiverController extends Controller{
             'non_service_area' => 'required',
             'description' => 'required|max:150',
             'qualification' => 'required|not_in:0',
+            'country_code' => 'required',
         ],
         [
             'max_price.gt' => 'The max price must be greater than min price.',

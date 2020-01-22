@@ -198,7 +198,7 @@
                                         <th>Caregiver Assigned</th>
                                         <th>Location</th>
                                         <th>Services Type</th>
-                                        <th>Schedule On</th>
+                                        <th>Schedule Date</th>
                                         <th>Schedule Time</th>
                                     </tr>
                                 </thead>
@@ -206,8 +206,14 @@
                                 @foreach($services as $key => $service)
                                     <tr>
                                         <td>{{ "NUR".$service->id }}</td>
-                                        <td>{{ $service->status }}</td>
-                                        <td>{{ $service->caregiver_id != null ? $service->userCaregiver->user->name : '' }}</td>
+                                        <td>{{ $service->status }}</td>  
+                                        <td>       
+                                        @foreach ($service->caregivers as $key => $value) 
+                                            @if($value->status == 'Final')
+                                                {{ $value->caregiver->user->name .','}}
+                                            @endif
+                                        @endforeach
+                                        </td>
                                         <td>{{ $service->address }} </td>
                                         <td>{{ $service->booking_type }} </td>
                                         <td>{{ $service->start_date .' - '. $service->end_date }}</td>

@@ -49,7 +49,8 @@
                                     <li class="media">
                                         <div class="media-img  col-md-3">Mobile Number</div>
                                         <div class="media-body">
-                                            <div class="media-heading">{{ $user->mobile_number }} </div>
+                                            <div class="media-heading">{{'
+                                                +'.$user->country_code .' '. substr_replace(substr_replace($user->mobile_number, '-', '3','0'), '-', '7','0') }} </div>
                                         </div>
                                     </li>
                                     <li class="media">
@@ -200,16 +201,17 @@
                 <div class="ibox">
                     <div class="ibox-body">
                         <div class="tab-content">
-                            <p><h3 style="text-align: center;">Schedule</h3></p>
+                            <p><h3 style="text-align: center;">Shifts</h3></p>
                             <table class="table table-striped table-bordered table-hover" id="data-table" cellspacing="0" width="100%">
                                 <thead>
                                     <tr>
                                         <th>Id</th>
                                         <th>Client</th>
-                                        <th>Location</th>
-                                        <th>Service Type</th>
-                                        <th>Schedule On</th>
-                                        <th>Schedule Time</th>
+                                        <th>Schedule ID</th>
+                                        <th>Status</th>
+                                        <th>Schedule Type</th>
+                                        <th>Shift Date</th>
+                                        <th>Shift Time</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -217,9 +219,10 @@
                                     @foreach($services as $key => $service)
                                         <tr>
                                             <td>{{ ++$key }}</td>
-                                            <td>{{ ucfirst($service->user->name) }}</td>
-                                            <td>{{ $service->address }} </td>
-                                            <td>{{ $service->booking_type }}</td>
+                                            <td>{{ ucfirst($service->booking->user->name) }}</td>
+                                            <td>{{ 'NUR'.$service->booking->id }} </td>
+                                            <td>{{ $service->booking->status }} </td>
+                                            <td>{{ $service->booking->booking_type }} </td>
                                             <td>{{ $service->start_date . ' - ' . $service->end_date }}</td>
                                             <td>{{ $service->start_time . ' - ' . $service->end_time }}</td>
                                         </tr>

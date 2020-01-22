@@ -50,7 +50,7 @@
                                       </div>
                                     </div>
                                    <div class="row">
-                                      <div class="col-sm-4 form-group">
+                                      <div class="col-sm-3 form-group">
                                          <label>First Name</label>
                                          <input type="text" class="form-control {{ $errors->has('f_name') ? ' is-invalid' : '' }}" name="f_name" placeholder="First Name" value="{{ old('f_name') }}"/>
                                          @if ($errors->has('f_name'))
@@ -59,7 +59,7 @@
                                          </span>
                                          @endif
                                       </div>
-                                      <div class="col-sm-4 form-group">
+                                      <div class="col-sm-3 form-group">
                                          <label>Middle Name</label>
                                          <input type="text" class="form-control {{ $errors->has('m_name') ? ' is-invalid' : '' }}" name="m_name" placeholder="Middle Name" value="{{ old('m_name') }}"/>
                                          @if ($errors->has('m_name'))
@@ -68,7 +68,7 @@
                                          </span>
                                          @endif
                                       </div>
-                                      <div class="col-sm-4 form-group">
+                                      <div class="col-sm-3 form-group">
                                          <label>Last Name</label>
                                          <input type="text" class="form-control {{ $errors->has('l_name') ? ' is-invalid' : '' }}" name="l_name" placeholder="Last Name" value="{{ old('l_name') }}"/>
                                          @if ($errors->has('l_name'))
@@ -76,10 +76,8 @@
                                          <strong>{{ $errors->first('l_name') }}</strong>
                                          </span>
                                          @endif
-                                      </div>                                      
-                                    </div>
-                                    <div class="row">  
-                                      <div class="col-sm-4 form-group">
+                                      </div>          
+                                      <div class="col-sm-3 form-group">
                                          <label>Email</label>
                                          <input type="text" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" placeholder="Email" value="{{ old('email') }}"/>
                                          @if ($errors->has('email'))
@@ -87,8 +85,21 @@
                                          <strong>{{ $errors->first('email') }}</strong>
                                          </span>
                                          @endif
+                                      </div>                                               
+                                       <div class="col-sm-3  form-group">
+                                          <label>Country Code</label>
+                                          <select name="country_code" class="form-control {{ $errors->has('country_code') ? ' is-invalid' : '' }}">
+                                              <option disabled="true" selected="true"> -- Select --</option>
+                                              <option value="1" {{ old('country_code') == 1 ? 'selected':'' }}>+1</option>
+                                              <option value="91" {{ old('country_code') == 91 ? 'selected':'' }}>+91</option>
+                                          </select>
+                                          @if ($errors->has('country_code'))
+                                              <span class="text-danger" >
+                                                  <strong>{{ $errors->first('country_code') }}</strong>
+                                               </span>
+                                          @endif
                                       </div>
-                                      <div class="col-sm-4 form-group">
+                                      <div class="col-sm-3 form-group">
                                          <label>Mobile Number</label>
                                          <input type="text" class="form-control {{ $errors->has('mobile_number') ? ' is-invalid' : '' }}" name="mobile_number" placeholder="Mobile Number" value="{{ old('mobile_number') }}" id="mobile_number" />
                                          @if ($errors->has('mobile_number'))
@@ -97,7 +108,7 @@
                                          </span>
                                          @endif
                                       </div>
-                                      <div class="col-sm-4 form-group date">
+                                      <div class="col-sm-3 form-group date">
                                          <label>Date of Birth</label>
                                          <input type="text" class="form-control {{ $errors->has('dob') ? ' is-invalid' : '' }}" name="dob" id="dob" placeholder="Date Of Birth" value="{{ old('dob') }}"/>
                                          <div class="input-group-addon">
@@ -109,8 +120,6 @@
                                          </span>
                                          @endif
                                       </div>
-                                    </div>
-                                    <div class="row">  
                                        <div class="col-sm-3  form-group">
                                           <label>Height</label>
                                           <select name="height" class="form-control {{ $errors->has('height') ? ' is-invalid' : '' }} select2">
@@ -164,10 +173,8 @@
                                                   <strong>{{ $errors->first('language') }}</strong>
                                               </span>
                                           @endif
-                                      </div>
-                                    </div>
-                                    <div class="row">  
-                                      <div class="col-sm-6 form-group">
+                                      </div> 
+                                      <div class="col-sm-3 form-group">
                                          <label>Street</label>
                                          <input type="text" class="form-control {{ $errors->has('street') ? ' is-invalid' : '' }}" name="street" id="street" placeholder="street" value="{{ old('street') }}" />
                                          @if ($errors->has('street'))
@@ -176,7 +183,7 @@
                                          </span>
                                          @endif
                                       </div>
-                                      <div class="col-sm-2 form-group">
+                                      <div class="col-sm-4 form-group">
                                          <label>City</label>
                                          <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" id="citysuggest" placeholder="City" value="{{ old('city') }}" />
                                          @if ($errors->has('city'))
@@ -185,7 +192,7 @@
                                          </span>
                                          @endif
                                       </div>
-                                      <div class="col-sm-2 form-group">
+                                      <div class="col-sm-4 form-group">
                                          <label>State</label>
                                          <select name="state" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" readonly="true" id="state">
                                               <option disabled="true" selected=""> -- Select State --</option>
@@ -201,7 +208,7 @@
                                          </span>
                                          @endif
                                       </div>
-                                      <div class="col-sm-2 form-group">
+                                      <div class="col-sm-4 form-group">
                                          <label>Zip Code</label>
                                          <input type="text" class="form-control {{ $errors->has('pin_code') ? ' is-invalid' : '' }}" id="pin_code" name="pin_code" placeholder="Zip Code" value="{{ old('pin_code') }}" readonly/>
                                          @if ($errors->has('pin_code'))

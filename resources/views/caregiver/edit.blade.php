@@ -88,9 +88,7 @@
                                                         </span>
                                                     @endif
                                                 </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-sm-4 form-group">
+                                                <div class="col-sm-3 form-group">
                                                     <label>Email</label>
                                                     <input type="text" name="email" placeholder="Email" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email', $user->email) }}" readonly/>
                                                     @if ($errors->has('email'))
@@ -98,8 +96,21 @@
                                                             <strong>{{ $errors->first('email') }}</strong>
                                                         </span>
                                                     @endif
+                                                </div>     
+                                                 <div class="col-sm-3  form-group">
+                                                    <label>Country Code</label>
+                                                    <select name="country_code" class="form-control {{ $errors->has('country_code') ? ' is-invalid' : '' }}">
+                                                        <option disabled="true" selected="true"> -- Select --</option>
+                                                        <option value="1" @php if(old('country_code', $user->country_code) == '1'){ echo 'selected'; } @endphp >+1</option>
+                                                        <option value="91" @php if(old('country_code', $user->country_code) == '91'){ echo 'selected'; } @endphp >+91</option>
+                                                    </select>
+                                                    @if ($errors->has('country_code'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('country_code') }}</strong>
+                                                         </span>
+                                                    @endif
                                                 </div>
-                                                <div class="col-sm-4  form-group">
+                                                <div class="col-sm-3  form-group">
                                                     <label>Mobile Number</label>
                                                     <input type="text" class="form-control {{ $errors->has('mobile_number') ? ' is-invalid' : '' }}" placeholder="Mobile Number" name="mobile_number" value="{{ old('mobile_number', $user->mobile_number) }}" id="mobile_number">
                                                     @if ($errors->has('mobile_number'))
@@ -108,7 +119,7 @@
                                                         </span>
                                                     @endif
                                                 </div>
-                                                <div class="form-group col-sm-4" >
+                                                <div class="form-group col-sm-3" >
                                                     <label>Date of Birth</label>
                                                     <input type="text" class="form-control {{ $errors->has('dob') ? ' is-invalid' : '' }}" name="dob" placeholder="Date of Birth" value="{{ old('dob', date('d/m/Y', strtotime($user->dob))) }}" id="dob"/>
                                                     @if ($errors->has('dob'))
@@ -117,10 +128,8 @@
                                                         </span>
                                                     @endif
                                                 </div>
-                                            </div>
-                                            <div class="row">
 
-                                                <div class="col-sm-4 form-group">
+                                                <div class="col-sm-3 form-group">
                                                     <label>Height</label>
                                                     <select name="height" class="form-control {{ $errors->has('height') ? ' is-invalid' : '' }}">
                                                         <option disabled="true" selected="true"> -- Select Height --</option>
@@ -134,7 +143,7 @@
                                                         </span>
                                                     @endif
                                                 </div>
-                                                <div class="col-sm-4 form-group">
+                                                <div class="col-sm-3 form-group">
                                                     <label>Weight</label>
                                                     <select name="weight" class="form-control {{ $errors->has('weight') ? ' is-invalid' : '' }}">
                                                         <option disabled="true" selected="true"> -- Select Weight --</option>
@@ -148,7 +157,7 @@
                                                         </span>
                                                     @endif
                                                 </div>
-                                                 <div class="col-sm-4  form-group">
+                                                 <div class="col-sm-3  form-group">
                                                     <label>Language</label>
                                                     <select name="language" class="form-control {{ $errors->has('language') ? ' is-invalid' : '' }}">
                                                         <option disabled="true" selected="true"> -- Select Language --</option>
@@ -161,10 +170,8 @@
                                                             <strong>{{ $errors->first('language') }}</strong>
                                                         </span>
                                                     @endif
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="form-group col-sm-6" >
+                                                </div>  
+                                                <div class="form-group col-sm-3" >
                                                     <label>Street </label>
                                                     <input type="text" class="form-control {{ $errors->has('location') ? ' is-invalid' : '' }}" name="location" placeholder="Location" value="{{ old('location', $user->location) }}" />
                                                     @if ($errors->has('location'))
@@ -173,7 +180,7 @@
                                                         </span>
                                                     @endif
                                                 </div>
-                                                <div class="form-group col-sm-2" >
+                                                <div class="form-group col-sm-4" >
                                                     <label>City </label>
                                                     <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" placeholder="city" value="{{ old('city', $user->city) }}"  id="citysuggest" autocomplete="off"/>
                                                     @if ($errors->has('city'))
@@ -182,7 +189,7 @@
                                                         </span>
                                                     @endif
                                                 </div>
-                                                <div class="form-group col-sm-2" >
+                                                <div class="form-group col-sm-4" >
                                                     <label>state </label>
                                                     <select name="state" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" readonly="true" id="state"">
                                                         <option disabled="true" selected=""> -- Select State --</option>
@@ -196,7 +203,7 @@
                                                         </span>
                                                     @endif
                                                 </div>
-                                                <div class="form-group col-sm-2" >
+                                                <div class="form-group col-sm-4" >
                                                     <label>Zip Code </label>
                                                     <input type="text" class="form-control {{ $errors->has('zipcode') ? ' is-invalid' : '' }}" name="zipcode" placeholder="Zip code" value="{{ old('zipcode', $user->zipcode) }}" id="zipcode" readonly />
                                                     @if ($errors->has('zipcode'))
@@ -244,7 +251,7 @@
                                                                 $qualification_array[] = $qlf->id;
                                                             }
                                                         } ?>
-                                                    <select name="qualification[]" class="form-control {{ $errors->has('qualification') ? ' is-invalid' : '' }}" multiple="true">
+                                                    <select name="qualification[]" class="form-control {{ $errors->has('qualification') ? ' is-invalid' : '' }} select2" id="discipline"  multiple="true">
                                                         <option disabled="true" > -- Select Discipline --</option>
                                                         @foreach($qualification as $qlf)
                                                             <option value="{{ $qlf->id }}" <?php if(in_array($qlf->id, $qualification_array)){ echo 'selected'; } ?> >{{ $qlf->name }}</option>
@@ -266,7 +273,7 @@
                                                                 $service_array[] = $qlf->id;
                                                             }
                                                         } ?>
-                                                    <select name="service[]" class="form-control {{ $errors->has('service') ? ' is-invalid' : '' }}" multiple="true">
+                                                    <select name="service[]" class="form-control {{ $errors->has('service') ? ' is-invalid' : '' }} select2" id="service" multiple="true">
                                                         <option disabled="true" > -- Select Service --</option>
                                                         @foreach($service_list as $srvc)
                                                             <option value="{{ $srvc->id }}" <?php if(in_array($srvc->id, $service_array)){ echo 'selected'; } ?> >{{ $srvc->title }}</option>
@@ -422,6 +429,20 @@
             placeholder: {
                 id: '-1', // the value of the option
                 text: '-- Select Non Service Area --'
+            }
+        });
+
+        $("#discipline").select2({
+            placeholder: {
+                id: '-1', // the value of the option
+                text: ' -- Select Discipline --'
+            }
+        });
+
+        $("#service").select2({
+            placeholder: {
+                id: '-1', // the value of the option
+                text: ' -- Select Service --'
             }
         });
 
