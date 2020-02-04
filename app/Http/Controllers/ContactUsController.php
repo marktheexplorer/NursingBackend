@@ -51,7 +51,9 @@ class ContactUsController extends Controller{
      */
     public function show($id)
     {
-       $contact = ContactUs::findOrFail($id);
+        $contact = ContactUs::findOrFail($id);
+        ContactUs::where('id',$id)->update(['is_read'=>'1']);
+        
         return view('contactUs.view', compact('contact'));
     }
 

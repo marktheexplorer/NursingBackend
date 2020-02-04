@@ -32,7 +32,7 @@
                     </thead>
                     <tbody>
                  	@foreach($contactUs as $key => $contact)
-	            		<tr>
+	            		<tr  @if($contact->is_read == 0) style="background-color: #cec4c4" @endif>
 	            			<td>{{ ++$key }}</td>
 	              			<td>{{ ucfirst($contact->user->f_name).' '.$contact->user->m_name.' '.$contact->user->l_name }}</td>
 	              			<td>{{ $contact->user->email }}</td>

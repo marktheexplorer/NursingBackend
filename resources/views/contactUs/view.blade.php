@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="content-wrapper">
+<div class="content-wrapper"> 
     <!-- START PAGE CONTENT-->
     <div class="page-heading">
         <h1 class="page-title">Contact Us Details</h1>
@@ -9,7 +9,7 @@
             <li class="breadcrumb-item">
                 <a href="{{ route('dashboard') }}"><i class="fas fa-home"></i></a>
             </li>
-            <li class="breadcrumb-item"><a href="{{ route('enquiries.index') }}" >Contact Us</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('contactUs.index') }}" >Contact Us</a></li>
         </ol>
     </div>
     <div class="page-content fade-in-up">

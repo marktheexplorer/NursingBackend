@@ -52,7 +52,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function()
 	Route::get('reorder', 'FaqController@reorder')->name('faqs.reorder');
 	Route::post('updateorder', 'FaqController@updateorder')->name('faqs.updateorder');
 	Route::resource('cms', 'CmsPageController');
-	Route::resource('enquiries', 'EnquiryController');
 	Route::resource('relations', 'RelationController');
 	Route::resource('contactUs', 'ContactUsController');
 	Route::resource('sendmsg', 'SendMessageController');
