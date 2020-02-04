@@ -220,12 +220,12 @@ class UserController extends Controller{
                     ->update([
                         'revoked' => 1
                     ]);
-                    $input['otp'] = rand(1000,9999);
+                $input['otp'] = rand(1000,9999);
 
-                    $user->otp = $input['otp'];
-                    $user->save();
-               
-                    $data = Self::sendTwilioOTP($input['mobile_number'], $input['country_code'], $input['otp']); 
+                $user->otp = $input['otp'];
+                $user->save();
+                
+                $data = Self::sendTwilioOTP($input['mobile_number'], $input['country_code'], $input['otp']); 
                 return response()->json(['status_code' => $this->successStatus, 'message' => 'Please verify the mobile number to proceed. An OTP has been sent to your registered mobile number.', 'data' => '']);
             } 
         } else {
