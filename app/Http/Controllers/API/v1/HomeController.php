@@ -56,7 +56,7 @@ class HomeController extends Controller
             $objDemo->message = $input['message'];
             $objDemo->userName = $user->f_name.' '.$user->m_name.' '.$user->l_name;
             $objDemo->userMobileNumber = $user->country_code.'-'.$user->mobile_number;
-            $issend = Mail::to('kajal.garg@saffrontech.net')->send(new MailHelper($objDemo));
+            $issend = Mail::to('Lmejer@24-7nursingcare.com')->send(new MailHelper($objDemo));
 
             return response()->json(['status_code'=> 200, 'message'=> 'Thanks for contacting us.', 'data' => null]);
         }
