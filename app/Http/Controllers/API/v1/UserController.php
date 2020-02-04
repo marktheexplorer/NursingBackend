@@ -327,7 +327,6 @@ class UserController extends Controller{
         }
     }
 
-
     /**
      * edit user profile details api
      *
