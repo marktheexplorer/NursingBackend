@@ -337,6 +337,16 @@ class UserController extends Controller{
     public function editProfileDetails(Request $request)
     {
         $input = $request->input(); 
+        $validator = Validator::make($request->all(), [
+            'f_name' => 'required|max:40',
+            'm_name' => 'max:40',
+            'l_name' => 'required|max:40',
+            'email' => 'required|email|unique:users,email,'.$id,
+            'mobile_number' => 'required|unique:users,mobile_number,'.$id,
+        ]);        
+
+        if ($validator->fails())
+            return response()->json(['status_code'=> $this->errorStatus, 'message'=> $validator->errors()->first(), 'data' => null]);
         $user = Auth::user();
         $user->fill($input);
         $user->save();
