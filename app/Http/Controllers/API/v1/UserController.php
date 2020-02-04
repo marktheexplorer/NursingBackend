@@ -341,18 +341,7 @@ class UserController extends Controller{
         $user->fill($input);
         $user->save();
 
-        if($user->type == 'patient'){
-            if($user->patient){
-                $user->patient->where('user_id',$user->id)->first()->fill($input)->save();
-            }else{
-                $userPatient = new PatientProfile;
-                $userPatient->user_id = $user->id;
-                $userPatient->save();
-            }
-
-            $user = User::where('users.id', Auth::id())->join('patients_profiles', 'users.id', 'user_id')->first();
-        }else{
-            Caregiver::where('user_id',$user->id)->first()->fill($input)->save();
+        if($user->role_id == '2'){
 
             DB::table('caregiver_attributes')->where('caregiver_id', '=', $user->id)->where('type', '=', 'service_area')->delete();
             if($request->exists('service_in')){                
@@ -366,8 +355,6 @@ class UserController extends Controller{
                 }
                 DB::table('caregiver_attributes')->insert($data);
             }
-            if($user['profile_image'] == null)
-                $user['profile_image'] = 'default.png';
             $user['service_in'] = DB::table('caregiver_attributes')->select('county_areas.id','county_areas.area')->join('county_areas', 'county_areas.id','caregiver_attributes.value')->where('caregiver_id', '=', $user->id)->where('type', '=', 'service_area')->get();
         }
 
@@ -455,12 +442,10 @@ class UserController extends Controller{
         $user = Auth::user();
         $data = Self::getAllListData($user->id);
 
-        if($user->type == 'patient'){
+        if($user->role_id == '3'){
 
             $userDetails =  User::where('users.id', Auth::id())->join('patients_profiles', 'users.id', 'user_id')->first();
             if($userDetails == null){
-                $user->alt_contact_name = '';
-                $user->alt_contact_no = '';
                 $success['userDetails'] =  $user;
             }else{
                 $success['userDetails'] =  $userDetails ;
