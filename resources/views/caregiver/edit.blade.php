@@ -50,28 +50,28 @@
                                             <div class="row">
                                                 <div class="col-sm-3 form-group">
                                                     <label>First Name</label>
-                                                    <input type="text" class="form-control {{ $errors->has('first_name') ? ' is-invalid' : '' }}" name="first_name" placeholder="First Name" value="{{ old('first_name', $user->first_name) }}" />
-                                                    @if ($errors->has('first_name'))
+                                                    <input type="text" class="form-control {{ $errors->has('f_name') ? ' is-invalid' : '' }}" name="f_name" placeholder="First Name" value="{{ old('f_name', $user->f_name) }}" />
+                                                    @if ($errors->has('f_name'))
                                                         <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $errors->first('first_name') }}</strong>
+                                                            <strong>{{ $errors->first('f_name') }}</strong>
                                                         </span>
                                                     @endif
                                                 </div>
                                                 <div class="col-sm-3 form-group">
                                                     <label>Middle Name</label>
-                                                    <input type="text" class="form-control {{ $errors->has('middle_name') ? ' is-invalid' : '' }}" name="middle_name" placeholder="Middle Name" value="{{ old('middle_name', $user->middle_name) }}" />
-                                                    @if ($errors->has('middle_name'))
+                                                    <input type="text" class="form-control {{ $errors->has('m_name') ? ' is-invalid' : '' }}" name="m_name" placeholder="Middle Name" value="{{ old('m_name', $user->m_name) }}" />
+                                                    @if ($errors->has('m_name'))
                                                         <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $errors->first('middle_name') }}</strong>
+                                                            <strong>{{ $errors->first('m_name') }}</strong>
                                                         </span>
                                                     @endif
                                                 </div>
                                                 <div class="col-sm-3 form-group">
                                                     <label>Last Name</label>
-                                                    <input type="text" class="form-control {{ $errors->has('last_name') ? ' is-invalid' : '' }}" name="last_name" placeholder="Last Name" value="{{ old('last_name', $user->last_name) }}" />
-                                                    @if ($errors->has('last_name'))
+                                                    <input type="text" class="form-control {{ $errors->has('l_name') ? ' is-invalid' : '' }}" name="l_name" placeholder="Last Name" value="{{ old('l_name', $user->l_name) }}" />
+                                                    @if ($errors->has('l_name'))
                                                         <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $errors->first('last_name') }}</strong>
+                                                            <strong>{{ $errors->first('l_name') }}</strong>
                                                         </span>
                                                     @endif
                                                 </div>
@@ -173,10 +173,10 @@
                                                 </div>  
                                                 <div class="form-group col-sm-3" >
                                                     <label>Street </label>
-                                                    <input type="text" class="form-control {{ $errors->has('location') ? ' is-invalid' : '' }}" name="location" placeholder="Location" value="{{ old('location', $user->location) }}" />
-                                                    @if ($errors->has('location'))
+                                                    <input type="text" class="form-control {{ $errors->has('street') ? ' is-invalid' : '' }}" name="street" placeholder="Location" value="{{ old('street', $user->street) }}" />
+                                                    @if ($errors->has('street'))
                                                         <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $errors->first('location') }}</strong>
+                                                            <strong>{{ $errors->first('street') }}</strong>
                                                         </span>
                                                     @endif
                                                 </div>
@@ -191,7 +191,7 @@
                                                 </div>
                                                 <div class="form-group col-sm-4" >
                                                     <label>state </label>
-                                                    <select name="state" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" readonly="true" id="state"">
+                                                    <select name="state" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" readonly="true" id="state">
                                                         <option disabled="true" selected=""> -- Select State --</option>
                                                         @foreach($city_state as $row)
                                                             <option  value="{{ $row->state_code }}" <?php if($row->state_code == old('state', $user->state)){ echo 'selected'; } ?> >{{ $row->state_code }}</option>
@@ -372,10 +372,10 @@
                                             <div class="row">
                                                 <div class="form-group col-sm-12" >
                                                     <label>Additional Information </label>
-                                                    <textarea class="form-control {{ $errors->has('description') ? ' is-invalid' : '' }}" rows="5" name="description" id="description" placeholder="Description">{{ old('description', $user->description) }}</textarea>
-                                                    @if ($errors->has('description'))
+                                                    <textarea class="form-control {{ $errors->has('additional_info') ? ' is-invalid' : '' }}" rows="5" name="additional_info" id="additional_info" placeholder="Description">{{ old('additional_info', $user->additional_info) }}</textarea>
+                                                    @if ($errors->has('additional_info'))
                                                         <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $errors->first('description') }}</strong>
+                                                            <strong>{{ $errors->first('additional_info') }}</strong>
                                                         </span>
                                                     @endif
                                                 </div>

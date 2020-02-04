@@ -23,7 +23,7 @@ class SendMessageController extends Controller
 
     public function create()
     {
-    	$users = User::select('id','name','country_code','mobile_number')->where('role_id' , '!=', 1)->get()->toArray();
+    	$users = User::select('id','f_name','m_name','l_name','country_code','mobile_number')->where('role_id' , '!=', 1)->get()->toArray();
     	return view('sendmsg.create', compact('users'));
     }
 

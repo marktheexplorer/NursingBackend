@@ -38,7 +38,7 @@
                                     <li class="media">
                                         <div class="media-img col-md-3">Client Name</div>
                                         <div class="media-body">
-                                            <div class="media-heading">{{ ucfirst($booking->user->name) }}</div>
+                                            <div class="media-heading">{{ ucfirst($booking->user->f_name).' '.$booking->user->m_name.' '.$booking->user->l_name }}</div>
                                         </div>
                                     </li>
                                     <li class="media">
@@ -181,7 +181,7 @@
                                         @foreach($caregivers as $key => $caregiver)
                                             <tr>
                                                 <td>{{ ++$key }}</td>
-                                                <td>{{ $caregiver->name }}</td>
+                                                <td>{{ $caregiver->f_name.' '.$caregiver->m_name.' '.$caregiver->l_name }}</td>
                                                 <td>{{ $caregiver->email }}</td>
                                                 <td>{{ $caregiver->mobile_number }}</td>
                                                 <td>

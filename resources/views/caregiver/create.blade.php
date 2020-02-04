@@ -51,28 +51,28 @@
                                             <div class="row">
                                                 <div class="col-sm-3 form-group">
                                                     <label>First Name</label>
-                                                    <input type="text" class="form-control {{ $errors->has('fname') ? ' is-invalid' : '' }}" name="fname" placeholder="First Name" value="{{ old('fname') }}" />
-                                                    @if ($errors->has('fname'))
+                                                    <input type="text" class="form-control {{ $errors->has('f_name') ? ' is-invalid' : '' }}" name="f_name" placeholder="First Name" value="{{ old('f_name') }}" />
+                                                    @if ($errors->has('f_name'))
                                                         <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $errors->first('fname') }}</strong>
+                                                            <strong>{{ $errors->first('f_name') }}</strong>
                                                         </span>
                                                     @endif
                                                 </div>
                                                 <div class="col-sm-3 form-group">
                                                     <label>Middle Name</label>
-                                                    <input type="text" class="form-control {{ $errors->has('mname') ? ' is-invalid' : '' }}" name="mname" placeholder="Middle Name" value="{{ old('mname') }}" />
-                                                    @if ($errors->has('mname'))
+                                                    <input type="text" class="form-control {{ $errors->has('m_name') ? ' is-invalid' : '' }}" name="m_name" placeholder="Middle Name" value="{{ old('m_name') }}" />
+                                                    @if ($errors->has('m_name'))
                                                         <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $errors->first('mname') }}</strong>
+                                                            <strong>{{ $errors->first('m_name') }}</strong>
                                                         </span>
                                                     @endif
                                                 </div>
                                                 <div class="col-sm-3 form-group">
                                                     <label>Last Name</label>
-                                                    <input type="text" class="form-control {{ $errors->has('lname') ? ' is-invalid' : '' }}" name="lname" placeholder="Last Name" value="{{ old('lname') }}" />
-                                                    @if ($errors->has('lname'))
+                                                    <input type="text" class="form-control {{ $errors->has('l_name') ? ' is-invalid' : '' }}" name="l_name" placeholder="Last Name" value="{{ old('l_name') }}" />
+                                                    @if ($errors->has('l_name'))
                                                         <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $errors->first('lname') }}</strong>
+                                                            <strong>{{ $errors->first('l_name') }}</strong>
                                                         </span>
                                                     @endif
                                                 </div>
@@ -179,10 +179,10 @@
                                                 </div>
                                                 <div class="form-group col-sm-3" >
                                                     <label>Street </label>
-                                                    <input type="text" class="form-control {{ $errors->has('location') ? ' is-invalid' : '' }}" name="location" placeholder="Location" value="{{ old('location') }}" autocomplete="off" />
-                                                    @if ($errors->has('location'))
+                                                    <input type="text" class="form-control {{ $errors->has('street') ? ' is-invalid' : '' }}" name="street" placeholder="Street" value="{{ old('street') }}" autocomplete="off" />
+                                                    @if ($errors->has('street'))
                                                         <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $errors->first('location') }}</strong>
+                                                            <strong>{{ $errors->first('street') }}</strong>
                                                         </span>
                                                     @endif
                                                 </div>
@@ -364,10 +364,10 @@
                                             <div class="row">
                                                 <div class="form-group col-sm-12" >
                                                     <label>Additional Information </label>
-                                                    <textarea class="form-control {{ $errors->has('description') ? ' is-invalid' : '' }}" rows="5" name="description" id="description" placeholder="Description">{{ trim(old('description')) }}</textarea>
-                                                    @if ($errors->has('description'))
+                                                    <textarea class="form-control {{ $errors->has('additional_info') ? ' is-invalid' : '' }}" rows="5" name="additional_info" id="additional_info" placeholder="Additional Information">{{ trim(old('additional_info')) }}</textarea>
+                                                    @if ($errors->has('additional_info'))
                                                         <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $errors->first('description') }}</strong>
+                                                            <strong>{{ $errors->first('additional_info') }}</strong>
                                                         </span>
                                                     @endif
                                                 </div>

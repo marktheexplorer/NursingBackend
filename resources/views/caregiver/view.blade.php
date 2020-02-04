@@ -24,7 +24,7 @@
                                 <img class="img-circle" src="{{ asset('admin/assets/img/admin-avatar.png') }}" />
                             @endif
                         </div>
-                        <h5 class="font-strong m-b-10 m-t-10">{{ ucfirst($user->name) }}</h5>
+                        <h5 class="font-strong m-b-10 m-t-10">{{ ucfirst($user->f_name).' '.$user->m_name.' '.$user->l_name }}</h5>
                         <div class="m-b-20 text-muted">Caregiver</div>
                     </div>
                 </div>
@@ -43,7 +43,7 @@
                                     <li class="media">
                                         <div class="media-img   col-md-3">Name</div>
                                         <div class="media-body">
-                                            <div class="media-heading">{{ $user->name }} </div>
+                                            <div class="media-heading">{{ ucfirst($user->f_name).' '.$user->m_name.' '.$user->l_name }} </div>
                                         </div>
                                     </li>
                                     <li class="media">
@@ -62,7 +62,7 @@
                                     <li class="media">
                                         <div class="media-img  col-md-3">Address</div>
                                         <div class="media-body">
-                                            <div class="media-heading">{{ $user->location.", ".$user->city.", ".$user->state.", ".$user->zipcode  }} </div>
+                                            <div class="media-heading">{{ $user->street.", ".$user->city.", ".$user->state.", ".$user->zipcode  }} </div>
                                         </div>
                                     </li>
                                     <li class="media">
@@ -181,7 +181,7 @@
                                     <li class="media">
                                         <div class="media-img  col-md-3">Description</div>
                                         <div class="media-body">
-                                            <div class="media-heading">{{ $user->description }} </div>
+                                            <div class="media-heading">{{ $user->additional_info }} </div>
                                         </div>
                                     </li>
                                     <li class="media">

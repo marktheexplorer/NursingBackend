@@ -28,7 +28,7 @@
                                 	<li class="media">
                                         <div class="media-img"><i class="far fa-user"></i></div>
                                         <div class="media-body">
-                                            <div class="media-heading">{{ $contact->user->name }} </div>
+                                            <div class="media-heading">{{ $contact->user->f_name.''.$contact->user->m_name.''.$contact->user->l_name }} </div>
                                         </div>
                                     </li>
                                     <li class="media">

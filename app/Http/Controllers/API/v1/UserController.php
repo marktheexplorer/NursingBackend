@@ -33,7 +33,9 @@ class UserController extends Controller{
     public function register(Request $request)
     {  
         $validator = Validator::make($request->all(), [
-            'name' => 'required|max:40',
+            'f_name' => 'required|max:40',
+            'm_name' => 'max:40',
+            'l_name' => 'required|max:40',
             'email' => 'required|email|unique:users',
             'mobile_number' => 'required|unique:users',
             'country_code' => 'required',
@@ -60,12 +62,10 @@ class UserController extends Controller{
         if($user && $input['type'] == 'patient')
         {
             $profile['user_id'] = $user->id;
-            $profile['f_name'] = $input['name'];
             $profile = PatientProfile::create($profile);
         } elseif($user && $input['type'] == 'caregiver')
         {
             $caregiver['user_id'] = $user->id;
-            $caregiver['first_name'] = $input['name'];
             $caregiver = Caregiver::create($caregiver);
         }
 
@@ -136,19 +136,16 @@ class UserController extends Controller{
                         'revoked' => 1
                     ]);
 
-                $token = $user->createToken($user->name)->accessToken;
+                $token = $user->createToken($user->f_name)->accessToken;
                 $data = Self::getAllListData($user->id);
 
-                if($user->type == 'patient'){
+                if($user->role_id == '3'){
 
                     $userDetails =  User::where('users.id', $user->id)->join('patients_profiles', 'users.id', 'user_id')->first(); 
                     if($userDetails->profile_image == null)
                         $userDetails->profile_image = 'default.png';
                     $success['token'] =  $token;
                     if($userDetails == null){
-                        $user->height = '';
-                        $user->weight = '';
-                        $user->language = '';
                         $user->alt_contact_name = '';
                         $user->alt_contact_no = '';
                         $success['userDetails'] =  $user;
@@ -207,8 +204,13 @@ class UserController extends Controller{
         if ($validator->fails())
             return response()->json(['status_code'=> $this->errorStatus, 'message'=> $validator->errors()->first(), 'data' => null]);
 
-            $input = $request->input();
-            $user = User::where('mobile_number', $input['mobile_number'])->where('country_code', $input['country_code'])->where('type' , $input['type'])->first();
+        $input = $request->input();
+        if($input['type'] == 'caregiver')
+            $input['role_id'] = 2;
+        else
+            $input['role_id'] = 3;
+
+        $user = User::where('mobile_number', $input['mobile_number'])->where('country_code', $input['country_code'])->where('role_id' , $input['role_id'])->first();
         if ($user) {
             if ($user->is_blocked) {
                 return response()->json(['status_code' => 999, 'message' => 'Your account is blocked by admin. Please contact to admin: admin@gmail.com.', 'data' => null]);
@@ -345,13 +347,11 @@ class UserController extends Controller{
             }else{
                 $userPatient = new PatientProfile;
                 $userPatient->user_id = $user->id;
-                $userPatient->f_name = $user->name;
                 $userPatient->save();
             }
 
             $user = User::where('users.id', Auth::id())->join('patients_profiles', 'users.id', 'user_id')->first();
         }else{
-            $input['first_name'] = $user->name;
             Caregiver::where('user_id',$user->id)->first()->fill($input)->save();
 
             DB::table('caregiver_attributes')->where('caregiver_id', '=', $user->id)->where('type', '=', 'service_area')->delete();
@@ -459,9 +459,6 @@ class UserController extends Controller{
 
             $userDetails =  User::where('users.id', Auth::id())->join('patients_profiles', 'users.id', 'user_id')->first();
             if($userDetails == null){
-                $user->height = '';
-                $user->weight = '';
-                $user->language = '';
                 $user->alt_contact_name = '';
                 $user->alt_contact_no = '';
                 $success['userDetails'] =  $user;

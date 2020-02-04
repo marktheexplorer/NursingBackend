@@ -51,7 +51,7 @@
                                           </div>
                                         <div class="col-sm-3 form-group">
                                             <label>First Name</label>
-                                            <input type="text" class="form-control {{ $errors->has('f_name') ? ' is-invalid' : '' }}" name="f_name" placeholder="First Name" value="{{ old('f_name', $user->patient?$user->patient->f_name:'') }}"/>
+                                            <input type="text" class="form-control {{ $errors->has('f_name') ? ' is-invalid' : '' }}" name="f_name" placeholder="First Name" value="{{ old('f_name', $user->f_name) }}"/>
                                             @if ($errors->has('f_name'))
                                                 <span class="text-danger">
                                                     <strong>{{ $errors->first('f_name') }}</strong>
@@ -60,7 +60,7 @@
                                         </div>
                                         <div class="col-sm-3 form-group">
                                             <label>Middle Name</label>
-                                            <input type="text" class="form-control {{ $errors->has('m_name') ? ' is-invalid' : '' }}" name="m_name" placeholder="Middle Name" value="{{ old('m_name', $user->patient?$user->patient->m_name:'') }}"/>
+                                            <input type="text" class="form-control {{ $errors->has('m_name') ? ' is-invalid' : '' }}" name="m_name" placeholder="Middle Name" value="{{ old('m_name', $user->m_name) }}"/>
                                             @if ($errors->has('m_name'))
                                                 <span class="text-danger">
                                                     <strong>{{ $errors->first('m_name') }}</strong>
@@ -69,7 +69,7 @@
                                         </div>
                                         <div class="col-sm-3 form-group">
                                             <label>Last Name</label>
-                                            <input type="text" class="form-control {{ $errors->has('l_name') ? ' is-invalid' : '' }}" name="l_name" placeholder="Last Name" value="{{ old('l_name', $user->patient?$user->patient->l_name:'') }}"/>
+                                            <input type="text" class="form-control {{ $errors->has('l_name') ? ' is-invalid' : '' }}" name="l_name" placeholder="Last Name" value="{{ old('l_name', $user->l_name) }}"/>
                                             @if ($errors->has('l_name'))
                                                 <span class="text-danger">
                                                     <strong>{{ $errors->first('l_name') }}</strong>
@@ -124,7 +124,7 @@
                                             <select name="height" class="form-control {{ $errors->has('height') ? ' is-invalid' : '' }}">
                                                 <option disabled="true" selected="true"> -- Select Height --</option>
                                                 @foreach(PROFILE_HEIGHT as $val)
-                                                    <option value="{{ $val }}" {{ ($user->patient?$user->patient->height:old('height')) == $val ? 'selected' : '' }}>{{$val}}</option>
+                                                    <option value="{{ $val }}" {{ (old('height',$user->height)) == $val ? 'selected' : '' }}>{{$val}}</option>
                                                 @endforeach
                                             </select>
                                             @if ($errors->has('height'))
@@ -138,7 +138,7 @@
                                             <select name="weight" class="form-control {{ $errors->has('weight') ? ' is-invalid' : '' }}">
                                                 <option disabled="true" selected="true"> -- Select Weight --</option>
                                                 @foreach(PROFILE_WEIGHT as $val)
-                                                    <option value="{{ $val }}" {{ ($user->patient?$user->patient->weight:old('weight')) == $val ? 'selected' : '' }}>{{$val}}</option>
+                                                    <option value="{{ $val }}" {{ (old('weight',$user->weight)) == $val ? 'selected' : '' }}>{{$val}}</option>
                                                 @endforeach
                                             </select>
                                             @if ($errors->has('weight'))
@@ -164,7 +164,7 @@
                                             <select name="language" class="form-control {{ $errors->has('language') ? ' is-invalid' : '' }}">
                                                 <option disabled="true" selected="true"> -- Select Language --</option>
                                                 @foreach(PROFILE_LANGUAGE as $val)
-                                                    <option value="{{ $val }}" {{ ($user->patient?$user->patient->language:old('language')) == $val ? 'selected' : '' }}>{{$val}}</option>
+                                                    <option value="{{ $val }}" {{ (old('language',$user->language)) == $val ? 'selected' : '' }}>{{$val}}</option>
                                                 @endforeach
                                             </select>
                                             @if ($errors->has('language'))
@@ -207,10 +207,10 @@
                                         </div>
                                         <div class="col-sm-4 form-group">
                                            <label>Zip Code</label>
-                                           <input type="text" class="form-control {{ $errors->has('pin_code') ? ' is-invalid' : '' }}" name="pin_code" placeholder="Zip Code" value="{{ old('pin_code' ,$user->patient ?$user->patient->pin_code:'') }}" id="pin_code" readonly />
-                                           @if ($errors->has('pin_code'))
+                                           <input type="text" class="form-control {{ $errors->has('zipcode') ? ' is-invalid' : '' }}" name="zipcode" placeholder="Zip Code" value="{{ old('zipcode' ,$user->zipcode) }}" id="zipcode" readonly />
+                                           @if ($errors->has('zipcode'))
                                            <span class="text-danger">
-                                           <strong>{{ $errors->first('pin_code') }}</strong>
+                                           <strong>{{ $errors->first('zipcode') }}</strong>
                                            </span>
                                            @endif
                                         </div>
@@ -314,7 +314,7 @@
                                        </div>
                                        <div class="form-group col-md-12">
                                            <label>Additional Information</label>
-                                           <textarea class="form-control" name="additional_info" placeholder="Description" rows="5">{{ old('additional_info', $user->patient? $user->patient->additional_info:'') }}</textarea>
+                                           <textarea class="form-control" name="additional_info" placeholder="Description" rows="5">{{ old('additional_info', $user->additional_info) }}</textarea>
                                            @if ($errors->has('additional_info'))
                                            <span class="text-danger">
                                            <strong>{{ $errors->first('additional_info') }}</strong>
@@ -436,7 +436,7 @@ $("#state").change(function () {
         type: 'GET',
         data:{city:cityoption, state:stateoption},
         success: function (res) {
-            $("#pin_code").val(res);
+            $("#zipcode").val(res);
         }
     });
 })

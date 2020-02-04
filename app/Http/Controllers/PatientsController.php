@@ -18,7 +18,7 @@ use Illuminate\Http\Request;
 use App\Exports\PatientExport;
 use Maatwebsite\Excel\Facades\Excel;
 
-class PatientsController extends Controller{
+class PatientsController extends Controller{ 
     public function __construct(){ 
         $this->middleware('preventBackHistory');
         $this->middleware('auth'); 
@@ -71,7 +71,7 @@ class PatientsController extends Controller{
             'mobile_number' => 'required|regex:/^\(?([0-9]{3})\)?[-]?([0-9]{3})[-]?([0-9]{4})$/|unique:users,mobile_number,'.$id,
             'dob' => 'required',
             'gender' => 'required',
-            'pin_code' => 'required|numeric',
+            'zipcode' => 'required|numeric',
             'city' => 'required|string',
             'state' => 'required|string',
             'street' => 'required|string',
@@ -121,31 +121,30 @@ class PatientsController extends Controller{
                 $image->move($destinationPath, $input['profile_image']);
             }
                 $user = User::findOrFail($id);
-                $user->name = $input['f_name'].' '.$input['m_name'].' '.$input['l_name'];
+                $user->f_name = $input['f_name'];
+                $user->m_name = $input['m_name'];
+                $user->l_name = $input['l_name'];
                 $user->email = $input['email'];
+                $user->height = $input['height'];
+                $user->weight = $input['weight'];
+                $user->language = $input['language'];
                 $user->mobile_number = preg_replace('`-`', '', $input['mobile_number']);
                 $user->city = $input['city'];
                 $user->state = $input['state'];
                 $user->street = $input['street'];
+                $user->zipcode = $input['zipcode'];
+                $user->additional_info = $input['additional_info'];
                 $user->dob = date("Y-m-d", strtotime($input['dob']));
                 $user->gender = $input['gender'];
                 $user->save();
 
                 $patient = PatientProfile::where('user_id',$id)->first();
-                $patient['f_name'] = $input['f_name'];
-                $patient['m_name'] = $input['m_name'];
-                $patient['l_name'] = $input['l_name'];
-                $patient['pin_code'] = $input['pin_code'];
                 $patient['diagnose_id'] = $input['diagnose_id'];
                 $patient['availability'] = $input['availability'];
-                $patient['height'] = $input['height'];
-                $patient['weight'] = $input['weight'];
-                $patient['language'] = $input['language'];
                 $patient['disciplines'] = implode(',', $input['qualification']) ;
                 $patient['long_term'] = $input['long_term'] == 'yes'? 1 : 0;
                 $patient['pets'] = $input['pets'] == 'yes'? 1 : 0;
                 $patient['pets_description'] = $input['pets'] == 'yes'? $input['pets_description'] : '';
-                $patient['additional_info'] = $input['additional_info'];
                 $patient->save();
 
                 flash()->success('Client updated successfully');
@@ -165,9 +164,11 @@ class PatientsController extends Controller{
         return redirect()->route('patients.index');
     }
 
-    public function create(){
+    public function create()
+    {
         $diagnosis = Diagnose::where('is_blocked','0')->get();
         $qualifications = Qualification::where('is_blocked','0')->orderBy('name', 'asc')->get();
+
         return view('patients.create', compact('diagnosis','qualifications'));
     }
 
@@ -181,7 +182,7 @@ class PatientsController extends Controller{
             'mobile_number' => 'required|unique:users|regex:/^\(?([0-9]{3})\)?[-]?([0-9]{3})[-]?([0-9]{4})$/',
             'dob' => 'required',
             'gender' => 'required',
-            'pin_code' => 'required|numeric',
+            'zipcode' => 'required|numeric',
             'city' => 'required|string',
             'state' => 'required|string',
             'street' => 'required|string',
@@ -230,29 +231,18 @@ class PatientsController extends Controller{
                 $image->move($destinationPath, $input['profile_image']);
             }
 
-            $input['name'] = $input['f_name'].' '.$input['m_name'].' '.$input['l_name'];
             $input['role_id'] = 3;
-            $input['type'] = 'patient';
             $input['mobile_number'] = preg_replace('`-`', '', $input['mobile_number']);
             $input['dob'] = date("Y-m-d", strtotime($input['dob']));
-            $input['country_code'] = '1';
             $patient = User::create($input);
 
             $profile['user_id'] = $patient->id;
-            $profile['f_name'] = $input['f_name'];
-            $profile['m_name'] = $input['m_name'];
-            $profile['l_name'] = $input['l_name'];
-            $profile['pin_code'] = $input['pin_code'];
             $profile['diagnose_id'] = $input['diagnose_id'];
             $profile['availability'] = $input['availability'];
-            $profile['height'] = $input['height'];
-            $profile['weight'] = $input['weight'];
-            $profile['language'] = $input['language'];
             $profile['disciplines'] = implode(',', $input['qualification']) ;
             $profile['long_term'] = $input['long_term'] == 'yes'? 1 : 0;
             $profile['pets'] = $input['pets'] == 'yes'? 1 : 0;
             $profile['pets_description'] = $input['pets'] == 'yes'? $input['pets_description'] : '';
-            $profile['additional_info'] = $input['additional_info'];
             $profile = PatientProfile::create($profile);
 
             flash()->success('New Client added successfully');

@@ -89,7 +89,7 @@
             </li>
             <li>
                 <a href="{{ route('contactUs.index') }}" style="{{ (request()->is('admin/contactUs*')) ? 'background-color:#3498db;color:#fff;' : '' }}"><i class="sidebar-item-icon fas fa-mail-bulk"></i>
-                    <span class="nav-label">ContactUs Details</span>
+                    <span class="nav-label">Contact Us Details</span>
                 </a>
             </li>
         </ul>

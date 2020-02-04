@@ -39,13 +39,13 @@
                  	@foreach($caregivers as $key => $user)
 	            		<tr>
                             <td>{{ ++$key }}</td>
-	              			<td>{{ ucfirst($user->name) }}</td>
+	              			<td>{{ ucfirst($user->f_name).' '.$user->m_name.' '.$user->l_name }}</td>
 	              			<td>{{ $user->email }}</td>
 	              			<td>{{ $user->mobile_number != '' ? substr_replace(substr_replace($user->mobile_number, '-', '3','0'), '-', '7','0') : '' }}</td>
-                            <td><?php echo "$".$user->min_price."-$".$user->max_price; ?></td>
-                            <td><?php echo implode(' , ',$user->qualification); ?></td>
+                            <td>{{ "$".$user->min_price."-$".$user->max_price }}</td>
+                            <td>{{ implode(' , ',$user->qualification) }}</td>
                             <td>{{ $user->language }}</td>
-	              			<td>{{ date_format(date_create($user->created_at), 'd M, Y')}}
+	              			<td>{{ date_format(date_create($user->created_at), 'd M, Y')}}</td>
 	              			<td>
 	              				<ul class="actions-menu" style="padding-left: 0px;">
                                     <li>

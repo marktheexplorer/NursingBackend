@@ -44,7 +44,7 @@
                  	@foreach($bookings as $key => $booking)
 	            		<tr>
 	            			<td>{{ ++$key }}</td>
-	            			<td>{{ ucfirst($booking->user->name) }}</td>
+	            			<td>{{ ucfirst($booking->user->f_name).' '.$booking->user->m_name.' '.$booking->user->l_name }}</td>
                             <td>{{ "NUR".$booking->id }}</td>
 	              			<td>{{ $booking->user->mobile_number != '' ? substr_replace(substr_replace($booking->user->mobile_number, '-', '3','0'), '-', '7','0') : '' }}</td>
 	              			<td>{{ $booking->status }}</td>

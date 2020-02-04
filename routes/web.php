@@ -63,8 +63,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function()
 	Route::get('caregiver/statefromcity', 'CaregiverController@statefromcity');
 	Route::get('caregiver/download_excel', 'CaregiverController@download_excel')->name('caregiver.download_excel');
 	Route::get('caregiver/blocked/{userId}', 'CaregiverController@blocked');
-	Route::get('caregiver/searchzip', 'CaregiverController@searchzip');
-	Route::get('caregiver/locationfromzip', 'CaregiverController@locationfromzip');	
 	Route::resource('caregiver', 'CaregiverController');
 
 	Route::get('bookings/index', 'BookingsController@index')->name('bookings.index');

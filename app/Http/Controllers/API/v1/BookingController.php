@@ -508,14 +508,14 @@ class BookingController extends Controller
             $bookings[$key]['bookingId'] = 'NUR'.$value['id'] ;
 
             foreach ($value->caregivers as $k => $care) {
-                $bookings[$key]['caregivers'][$k]['name'] = $care->caregiver->user->name;
+                $bookings[$key]['caregivers'][$k]['name'] = $care->caregiver->user->f_name.' '.$care->caregiver->user->m_name.' '.$care->caregiver->user->l_name;
                 if($care->caregiver->user->profile_image == null || empty($care->caregiver->user->profile_image))
                     $bookings[$key]['caregivers'][$k]['profile_image'] = 'default.png';
                 else
                     $bookings[$key]['caregivers'][$k]['profile_image'] = $care->caregiver->user->profile_image;
             
-                $bookings[$key]['caregivers'][$k]['language'] = $care->caregiver->language;
-                $bookings[$key]['caregivers'][$k]['description'] = $care->caregiver->description;
+                $bookings[$key]['caregivers'][$k]['language'] = $care->caregiver->user->language;
+                $bookings[$key]['caregivers'][$k]['description'] = $care->caregiver->user->additional_info;
                 $bookings[$key]['caregivers'][$k]['discipline'] = Qualification::select('name')->join('caregiver_attributes' ,'caregiver_attributes.value' , 'qualifications.id')->where('type' , 'qualification')->where('caregiver_id', $care->caregiver->user->id)->get()->toArray();
             }
         }
@@ -537,7 +537,7 @@ class BookingController extends Controller
            $caregivers[] = Caregiver::where('id', $value)->first();
         }
         foreach ($caregivers as $key => $value) {
-            $caregiverNames[] = $value['user']['name'];
+            $caregiverNames[] = $value['user']['f_name'].' '.$value['user']['m_name'].' '.$value['user']['l_name'];
         }
         $caregiverNames = implode(',', $caregiverNames);
         
@@ -549,7 +549,7 @@ class BookingController extends Controller
                 Helper::sendNotifications($user->id, $input['booking_id'], 'Booking Confirmed', $caregiverNames.' has been assigned for schedule.');
             foreach ($caregivers as $key => $value) {
                 if($value['user']['is_notify'] == 1)
-                    Helper::sendNotifications($value['user']['id'], $input['booking_id'], 'Booking Scheduled', 'A new shift has been scheduled for '.$user->name.'.');
+                    Helper::sendNotifications($value['user']['id'], $input['booking_id'], 'Booking Scheduled', 'A new shift has been scheduled for '.$user->f_name.' '.$user->m_name.' '.$user->l_name.'.');
             }
             return response()->json(['status_code' => $this->successStatus , 'message' => 'Request sent successfully.', 'data' => '']);
         }else{
@@ -608,7 +608,7 @@ class BookingController extends Controller
             $userCaregiver = array();
             $assignedCaregiver = AssignedCaregiver::where('booking_id', $value->id)->where('status', 'Final')->get();
             foreach ($assignedCaregiver as $k => $ac) {
-                $datas['name'] = $ac->caregiver->user->name;
+                $datas['name'] = $ac->caregiver->user->f_name.' '.$ac->caregiver->user->m_name.' '.$ac->caregiver->user->l_name;
                 $datas['profile_image'] = $ac->caregiver->user->profile_image == null ? 'default.png' : $ac->caregiver->user->profile_image ;
                 $datas['language'] = $ac->caregiver->user->language;
                 $datas['description'] = $ac->caregiver->user->description;
@@ -651,7 +651,7 @@ class BookingController extends Controller
             $userCaregiver = array();
             $assignedCaregiver = AssignedCaregiver::where('booking_id', $value->id)->where('status', 'Final')->get();
             foreach ($assignedCaregiver as $k => $ac) {
-                $datas['name'] = $ac->caregiver->user->name;
+                $datas['name'] = $ac->caregiver->user->f_name.' '.$ac->caregiver->user->m_name.' '.$ac->caregiver->user->l_name;
                 $datas['profile_image'] = $ac->caregiver->user->profile_image == null ? 'default.png' : $ac->caregiver->user->profile_image ;
                 $datas['language'] = $ac->caregiver->user->language;
                 $datas['description'] = $ac->caregiver->user->description;
@@ -701,7 +701,7 @@ class BookingController extends Controller
                 $bookings[$key]['start_time'] = Carbon::parse($value->booking->start_time)->format('g:i A') ;
                 $bookings[$key]['end_time'] = Carbon::parse($value->booking->end_time)->format('g:i A') ;
                 $bookings[$key]['service_location_id'] = $value->booking->service_location->area;
-                $bookings[$key]['user']['name'] = $value->booking->user->name;
+                $bookings[$key]['user']['name'] = $value->booking->user->f_name.' '.$value->booking->user->m_name.' '.$value->booking->user->l_name;
                 $bookings[$key]['user']['profile_image'] = $value->booking->user->profile_image == null ? 'default.png' : $value->booking->user->profile_image ;
                 $bookings[$key]['user']['language'] = $value->booking->user->language;
                 $bookings[$key]['user']['description'] = $value->booking->user->description;
@@ -750,7 +750,7 @@ class BookingController extends Controller
 
         foreach ($bookings as $key => $value) {
             $bookings[$key]['bookingId'] = 'NUR'.$value->id ;
-            $bookings[$key]['user']['name'] = $value->user->name;
+            $bookings[$key]['user']['name'] = $value->user->f_name.' '.$value->user->m_name.' '.$value->user->l_name;
             $bookings[$key]['user']['profile_image'] = $value->user->profile_image == null ? 'default.png' : $value->user->profile_image ;
             $bookings[$key]['start_time'] = Carbon::parse($value->start_time)->format('g:i A') ;
             $bookings[$key]['end_time'] = Carbon::parse($value->end_time)->format('g:i A') ;
@@ -800,7 +800,7 @@ class BookingController extends Controller
         $token = md5(uniqid(rand(), true));
         $objDemo = new \stdClass();
         $objDemo->sender = env('APP_NAME');
-        $objDemo->receiver = ucfirst($patient->name);
+        $objDemo->receiver = ucfirst($patient->f_name);
         $objDemo->type = 'basic_carepack_confirm';
         $objDemo->format = 'basic';
         $objDemo->subject = 'Basic Care Service Pack Mail';

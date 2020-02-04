@@ -31,7 +31,7 @@
                                         <li class="media">
                                             <div class="media-img col-md-3">Client Name</div>
                                             <div class="media-body">
-                                                <div class="media-heading">{{ ucfirst($booking['user']['name']) }}</div>
+                                                <div class="media-heading">{{ ucfirst($booking['user']['f_name']).' '.$booking['user']['m_name'].' '.$booking['user']['l_name'] }}</div>
                                             </div>
                                         </li>
                                         <li class="media">
@@ -223,8 +223,7 @@
                                         </li>        
                                         <li>
                                             <div class="media-img col-md-12" style="text-align: center;">
-                                                <input class="form-control btn-sm btn-primary" style="display:inline; max-width: 70px; padding:0px;background-color: #3498db; background-image: none; " type="submit" value="Submit" id="today_submit"/>&nbsp;&nbsp;&nbsp;&nbsp;<!--
-                                                <button onclick="$('#today_div').toggle();$('#editbtn').css('display', 'inline');" class="form-control btn-sm btn-primary" style="max-width: 70px;padding:0px;display: inline;background-color: #3498db;background-image: none;" type="button">Cancel</button> -->
+                                                <input class="form-control btn-sm btn-primary" style="display:inline; max-width: 70px; padding:0px;background-color: #3498db; background-image: none; " type="submit" value="Submit" id="today_submit"/>&nbsp;&nbsp;&nbsp;&nbsp;
                                             </div>    
                                         </li>
                                     </ul>

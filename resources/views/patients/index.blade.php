@@ -42,7 +42,7 @@
                  	@foreach($patients as $key => $patient)
 	            		<tr>
 	            			<td>{{ ++$key }}</td>
-	              			<td>{{ ucfirst($patient->name) }}</td>
+	              			<td>{{ ucfirst($patient->f_name).' '.$patient->m_name.' '.$patient->l_name }}</td>
 	              			<td>{{ $patient->email }}</td>
 	              			<td>{{ '+'.$patient->country_code.' '.substr_replace(substr_replace($patient->mobile_number, '-', '3','0'), '-', '7','0') }}</td>
 	              			<td>{{ date_format(date_create($patient->created_at), 'd M, y')}}</td>

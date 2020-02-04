@@ -18,14 +18,6 @@ class CreateCaregiversTable extends Migration
             $table->string('service')->nullable();
             $table->float('min_price')->nullable();
             $table->float('max_price')->nullable();
-            $table->longText('description')->nullable();
-            $table->string('zipcode')->nullable();
-            $table->string('height')->nullable();
-            $table->string('weight')->nullable();
-            $table->string('first_name');
-            $table->string('middle_name')->nullable();
-            $table->string('last_name')->nullable();
-            $table->string('language')->nullable();
             $table->timestamps();
         });
 

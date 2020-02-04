@@ -47,7 +47,7 @@
                                             <label>Username</label>
                                         </div>
                                         <div class="col-md-9">
-                                            <p>{{ $booking->user->name }}</p>
+                                            <p>{{ $booking->user->f_name.' '.$booking->user->m_name.' '.$booking->user->l_name }}</p>
                                         </div>
                                     </div>                            
                                     <div class="row">

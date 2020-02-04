@@ -11,7 +11,7 @@ use DB;
 class CaregiverExport implements FromCollection, WithHeadings, ShouldAutoSize{
     public function collection(){
         $usre_data = DB::table('users')
-        ->select('users.*', 'caregiver.service', 'caregiver.min_price', 'caregiver.max_price', 'caregiver.description','caregiver.language', 'caregiver.zipcode')
+        ->select('users.*', 'caregiver.service', 'caregiver.min_price', 'caregiver.max_price')
         ->Join('caregiver', 'caregiver.user_id', '=', 'users.id')
         ->orderBy('users.id', 'desc')->get();
 
@@ -30,14 +30,14 @@ class CaregiverExport implements FromCollection, WithHeadings, ShouldAutoSize{
                 $desciplines = implode(',', $row->qualification);
                 $output[] = array(
                     $count.".",
-                    ucfirst(str_replace(",", " ", $row->name)),
+                    ucfirst(str_replace(",", " ", $row->f_name).' '.$row->m_name.' '.$row->l_name),
                     $row->email,
                     $row->mobile_number != '' ? substr_replace(substr_replace($row->mobile_number, '-', '3','0'), '-', '7','0') : '' ,
                     $row->gender,
                     date("d-m-Y", strtotime($row->dob)),
                     $row->language,
                     $desciplines,
-                    ucfirst($row->location),
+                    ucfirst($row->street),
                     $row->city,
                     $row->state,
                     $row->zipcode,

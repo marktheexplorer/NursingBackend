@@ -210,10 +210,10 @@
                                       </div>
                                       <div class="col-sm-4 form-group">
                                          <label>Zip Code</label>
-                                         <input type="text" class="form-control {{ $errors->has('pin_code') ? ' is-invalid' : '' }}" id="pin_code" name="pin_code" placeholder="Zip Code" value="{{ old('pin_code') }}" readonly/>
-                                         @if ($errors->has('pin_code'))
+                                         <input type="text" class="form-control {{ $errors->has('zipcode') ? ' is-invalid' : '' }}" id="zipcode" name="zipcode" placeholder="Zip Code" value="{{ old('zipcode') }}" readonly/>
+                                         @if ($errors->has('zipcode'))
                                          <span class="text-danger">
-                                         <strong>{{ $errors->first('pin_code') }}</strong>
+                                         <strong>{{ $errors->first('zipcode') }}</strong>
                                          </span>
                                          @endif
                                       </div>
@@ -434,7 +434,7 @@ $("#state").change(function () {
         type: 'GET',
         data:{city:cityoption, state:stateoption},
         success: function (res) {
-            $("#pin_code").val(res);
+            $("#zipcode").val(res);
         }
     });
 })

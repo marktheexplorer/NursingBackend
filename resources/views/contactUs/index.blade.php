@@ -34,7 +34,7 @@
                  	@foreach($contactUs as $key => $contact)
 	            		<tr>
 	            			<td>{{ ++$key }}</td>
-	              			<td>{{ ucfirst($contact->user->name) }}</td>
+	              			<td>{{ ucfirst($contact->user->f_name).' '.$contact->user->m_name.' '.$contact->user->l_name }}</td>
 	              			<td>{{ $contact->user->email }}</td>
 	              			<td>{{ $contact->user->mobile_number }}</td>
                             <td>{{ date_format(date_create($contact->created_at) , 'd M ,y') }}

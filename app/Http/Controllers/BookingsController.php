@@ -26,7 +26,7 @@ class BookingsController extends Controller{
         $select_booking_type = '';
 
         //if filter by booking type
-        if(!empty($_GET['booking_options'])){
+        if(!empty($_GET['booking_options'])) {
             $if_in_array = in_array($_GET['booking_options'], array_column($booking_type, 'booking_type'));
             if($if_in_array) {
                 $bookings = Booking::where('booking_type', '=', $_GET['booking_options'])->orderBy('created_at', 'DESC')->get();
@@ -41,17 +41,18 @@ class BookingsController extends Controller{
     }
 
     public function show($id){
+
     	$booking = Booking::findOrFail($id);
         $booking->start_time = Carbon::parse($booking->start_time)->format('g:i A') ;
         $booking->end_time = Carbon::parse($booking->end_time)->format('g:i A') ;
-    	$caregivers = User::select('users.*','caregiver.id as caregiverId')->join('caregiver','caregiver.user_id','users.id')->orderBy('users.name','asc')->get();
+    	$caregivers = User::select('users.*','caregiver.id as caregiverId')->join('caregiver','caregiver.user_id','users.id')->orderBy('users.f_name','asc')->get();
 
-        $assigned_caregivers = AssignedCaregiver::where('booking_id',$id)->where('status', 'Final')->get();
+        $assigned_caregivers = AssignedCaregiver::where('booking_id',$id)->whereIn('status', ['Assign','Final'])->get();
         $assignedCaregivers = array();
         $assignedCaregiversId = array();
         foreach ($assigned_caregivers as $key => $value) {
             $assignedCaregiversId[] = $value->caregiver_id;
-            $assignedCaregivers[$key]['name'] = $value->caregiver->user->name;
+            $assignedCaregivers[$key]['name'] = $value->caregiver->user->f_name.' '.$value->caregiver->user->m_name.' '.$value->caregiver->user->l_name;
             $assignedCaregivers[$key]['email'] = $value->caregiver->user->email;
         }
         $diagnosis = array();
@@ -71,7 +72,6 @@ class BookingsController extends Controller{
         }
 
     	return view('bookings.view' , compact('booking','caregivers','diagnosis','services','assignedCaregivers','assignedCaregiversId')); 
-
     }
 
     public function assign(Request $request){
@@ -152,7 +152,7 @@ class BookingsController extends Controller{
         $booking['state'] = $input['state'];
         $booking['country'] = $input['country'];
         $booking['zipcode'] = $input['zipcode'];
-        $booking['24_hours ']= $input['is_full_day'];
+        $booking['24_hours'] = $input['is_full_day'];
         $booking['service_location_id']= $input['serviceLocation'];
         if($input['is_full_day']){
             $booking['start_time'] = '00:00:00';
@@ -459,7 +459,7 @@ class BookingsController extends Controller{
         $assignedCaregiversId = array();
         foreach ($assigned_caregivers as $key => $value) {
             $assignedCaregiversId[] = $value->caregiver_id;
-            $assignedCaregivers[$key]['name'] = $value->caregiver->user->name;
+            $assignedCaregivers[$key]['name'] = $value->caregiver->user->f_name.' '.$value->caregiver->user->m_name.' '.$value->caregiver->user->l_name;
             $assignedCaregivers[$key]['email'] = $value->caregiver->user->email;
             $assignedCaregivers[$key]['phone_number'] = '+'.$value->caregiver->user->country_code.'-'.substr_replace(substr_replace($value->caregiver->user->mobile_number, '-', '3','0'), '-', '7','0') ;
         }

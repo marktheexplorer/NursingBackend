@@ -31,7 +31,7 @@
                                         <li class="media">
                                             <div class="media-img col-md-3">Client Name</div>
                                             <div class="media-body">
-                                                <div class="media-heading">{{ ucfirst($booking['user']['name']) }}</div>
+                                                <div class="media-heading">{{ ucfirst($booking['user']['f_name']).' '.$booking['user']['m_name'].' '.$booking['user']['l_name'] }}</div>
                                             </div>
                                         </li>
                                         <li class="media">
