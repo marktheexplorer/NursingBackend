@@ -54,7 +54,7 @@
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img col-md-3">Duration</div>
+                                        <div class="media-img col-md-3">Date</div>
                                         <div class="media-body">
                                             <div class="media-heading">{{ $booking->start_date . ' - ' .$booking->end_date }}</div>
                                         </div>
@@ -68,7 +68,7 @@
                                     </li>
                                     @endif
                                     <li class="media">
-                                        <div class="media-img col-md-3">Timings</div>
+                                        <div class="media-img col-md-3">Shift(s)</div>
                                         <div class="media-body">
                                             <div class="media-heading">{{ $booking->start_time . ' - ' .$booking->end_time }}</div>
                                         </div>

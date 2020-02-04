@@ -375,7 +375,7 @@
         }
     }).autocomplete({
         source: function( request, response ) {
-            $.getJSON( "{{ env('APP_URL') }}admin/patients/searchcity", {
+            $.getJSON( "{{route('caregiver.searchcity')}}", {
                 term: request.term
             }, response );
         },
@@ -408,7 +408,7 @@
 function setstateoptions(){
     zip = $("#citysuggest").val();
     $.ajax({
-        url: "{{ env('APP_URL') }}admin/patients/statefromcity",
+        url: "{{route('caregiver.statefromcity')}}",
         type: 'GET',
         dataType: 'json',
         data:{term:zip},
@@ -432,7 +432,7 @@ $("#state").change(function () {
     stateoption = $("#state option:selected").val();
     cityoption = $("#citysuggest").val();
     $.ajax({
-        url: "{{ env('APP_URL') }}admin/patients/getzip",
+        url: "{{route('caregiver.getzip')}}",
         type: 'GET',
         data:{city:cityoption, state:stateoption},
         success: function (res) {

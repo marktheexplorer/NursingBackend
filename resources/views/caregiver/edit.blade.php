@@ -460,7 +460,7 @@
             console.log(term);
             return term;
         }
-
+ 
         // don't navigate away from the field on tab when selecting an item
         $( "#citysuggest" ).on( "keydown", function( event ) {
             if(event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active){
@@ -468,7 +468,7 @@
             }
         }).autocomplete({
             source: function( request, response ) {
-                $.getJSON( "{{ env('APP_URL') }}admin/caregiver/searchcity", {
+                $.getJSON( "{{ route('caregiver.searchcity') }}", {
                     term: request.term
                 }, response );
             },
@@ -502,7 +502,7 @@
     function setstateoptions(){
         zip = $("#citysuggest").val();
         $.ajax({
-            url: '{{ env('APP_URL') }}admin/caregiver/statefromcity',
+            url: '{{route("caregiver.statefromcity")}}',
             type: 'GET',
             dataType: 'json',
             data:{term:zip},
@@ -526,7 +526,7 @@
         stateoption = $("#state option:selected").val();
         cityoption = $("#citysuggest").val();
         $.ajax({
-            url: '{{ env('APP_URL') }}admin/caregiver/getzip',
+            url: '{{route("caregiver.getzip")}}',
             type: 'GET',
             data:{city:cityoption, state:stateoption},
             success: function (res) {

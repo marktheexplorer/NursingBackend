@@ -30,9 +30,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function()
 	Route::get('patients/download_excel', 'PatientsController@download_excel')->name('patients.download_excel');
 	Route::get('patients/active', 'PatientsController@activePatients')->name('patients.active');
 	Route::get('patients/inactive', 'PatientsController@inactivePatients')->name('patients.inactive');
-	Route::get('patients/searchcity', 'PatientsController@searchcity');	
-	Route::get('patients/statefromcity', 'PatientsController@statefromcity');
-	Route::get('patients/getzip', 'PatientsController@getzip');
 	Route::get('patients/blocked/{userId}', 'PatientsController@block');
 	Route::resource('patients', 'PatientsController');
 
@@ -57,9 +54,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function()
 	Route::resource('sendmsg', 'SendMessageController');
 
 	//caregiver controller it automatically route the default route	
-	Route::get('caregiver/getzip', 'CaregiverController@getzip');
-	Route::get('caregiver/searchcity', 'CaregiverController@searchcity');
-	Route::get('caregiver/statefromcity', 'CaregiverController@statefromcity');
+	Route::get('caregiver/getzip', 'CaregiverController@getzip')->name('caregiver.getzip');
+	Route::get('caregiver/searchcity', 'CaregiverController@searchcity')->name('caregiver.searchcity');
+	Route::get('caregiver/statefromcity', 'CaregiverController@statefromcity')->name('caregiver.statefromcity');
 	Route::get('caregiver/download_excel', 'CaregiverController@download_excel')->name('caregiver.download_excel');
 	Route::get('caregiver/blocked/{userId}', 'CaregiverController@blocked');
 	Route::resource('caregiver', 'CaregiverController');
@@ -74,8 +71,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function()
 	Route::post('bookings/update_daily_form', 'BookingsController@update_daily_form')->name('bookings.update_daily_form');	
 	Route::get('bookings/select_date_form/{id}', 'BookingsController@select_date_form')->name('bookings.select_date_form');
 	Route::post('bookings/update_select_date_form', 'BookingsController@update_select_date_form')->name('bookings.update_select_date_form');
-	Route::get('bookings/searchcity/{term}', 'BookingsController@searchcity');
-	Route::get('bookings/statefromcity', 'BookingsController@statefromcity');
 	Route::get('bookings/complete_booking/{id}', 'BookingsController@complete_booking')->name('bookings.complete_booking');
 	Route::get('bookings/manage/{id}', 'BookingsController@manageBooking')->name('bookings.manageBooking');
 	Route::post('bookings/shifts/save', 'BookingsController@saveBookingDetails')->name('bookings.shiftSave');
