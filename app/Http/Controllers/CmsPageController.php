@@ -54,7 +54,7 @@ class CmsPageController extends Controller{
         $cms->content = $input['content'];
         $cms->save();
 
-        flash()->success('New cms page added successfully');
+        flash()->success('New CMS page added successfully');
         return redirect()->route('cms.index');
     }
 
@@ -106,7 +106,7 @@ class CmsPageController extends Controller{
         $cms->content = $input['content'];
         $cms->save();
 
-        flash()->success("Cms page details updated successfully.");
+        flash()->success("CMS page details updated successfully.");
         return redirect()->route('cms.index');
     }
 
@@ -121,12 +121,12 @@ class CmsPageController extends Controller{
         if ($cms->delete()) {
             $response = array(
                 'status' => 'success',
-                'message' => 'Cms Page deleted successfully',
+                'message' => 'CMS Page deleted successfully',
             );
         } else {
             $response = array(
                 'status' => 'error',
-                'message' => 'Cms page can not be deleted.Please try again',
+                'message' => 'CMS page can not be deleted.Please try again',
             );
         }
         return json_encode($response);
