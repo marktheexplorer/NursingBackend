@@ -128,6 +128,7 @@ class PatientsController extends Controller{
                 $user->height = $input['height'];
                 $user->weight = $input['weight'];
                 $user->language = $input['language'];
+                $user->country_code = $input['country_code'];
                 $user->mobile_number = preg_replace('`-`', '', $input['mobile_number']);
                 $user->city = $input['city'];
                 $user->state = $input['state'];
