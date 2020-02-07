@@ -45,7 +45,7 @@
                                     <li class="media">
                                         <div class="media-img col-md-3">Name</div>
                                         <div class="media-body">
-                                            <div class="media-heading">{{ ucfirst($user->name) }}</div>
+                                            <div class="media-heading">{{ ucfirst($user->f_name).' '.$user->m_name.' '.$user->l_name }}</div>
                                         </div>
                                     </li>
                                     <li class="media">
@@ -75,19 +75,19 @@
                                     <li class="media">
                                         <div class="media-img col-md-3">Height</div>
                                         <div class="media-body">
-                                            <div class="media-heading">{{ $user->patient ? $user->patient->height : ''}}</div>
+                                            <div class="media-heading">{{ $user->height}}</div>
                                         </div>
                                     </li>
                                     <li class="media">
                                         <div class="media-img col-md-3">Weight</div>
                                         <div class="media-body">
-                                            <div class="media-heading">{{ $user->patient ? $user->patient->weight : ''}}</div>
+                                            <div class="media-heading">{{ $user->weight }}</div>
                                         </div>
                                     </li>
                                     <li class="media">
                                         <div class="media-img col-md-3">Language</div>
                                         <div class="media-body">
-                                            <div class="media-heading">{{ $user->patient ? $user->patient->language : ''}}</div>
+                                            <div class="media-heading">{{ $user->language }}</div>
                                         </div>
                                     </li>
                                     <li class="media">
@@ -111,7 +111,7 @@
                                     <li class="media">
                                         <div class="media-img col-md-3">Zip Code</div>
                                         <div class="media-body">
-                                            <div class="media-heading">{{ $user->patient ? $user->patient->pin_code : ''}}</div>
+                                            <div class="media-heading">{{ $user->zipcode }}</div>
                                         </div>
                                     </li>
                                 </ul>
@@ -176,7 +176,7 @@
                                     <li class="media">
                                         <div class="media-img col-md-3">Additional Information</div>
                                         <div class="media-body">
-                                            <div class="media-heading">{{ $user->patient ? $user->patient->additional_info : 'NA'}}</div>
+                                            <div class="media-heading">{{ $user->additional_info }}</div>
                                         </div>
                                     </li>
                                 </ul>
