@@ -41,7 +41,7 @@
                             <td>{{ ++$key }}</td>
 	              			<td>{{ ucfirst($user->f_name).' '.$user->m_name.' '.$user->l_name }}</td>
 	              			<td>{{ $user->email }}</td>
-	              			<td>{{ $user->mobile_number != '' ? substr_replace(substr_replace($user->mobile_number, '-', '3','0'), '-', '7','0') : '' }}</td>
+	              			<td>{{ '+'.$user->country_code.' '.substr_replace(substr_replace($user->mobile_number, '-', '3','0'), '-', '7','0') }}</td>
                             <td>{{ "$".$user->min_price."-$".$user->max_price }}</td>
                             <td>{{ implode(' , ',$user->qualification) }}</td>
                             <td>{{ $user->language }}</td>

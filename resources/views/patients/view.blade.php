@@ -57,7 +57,7 @@
                                     <li class="media">
                                         <div class="media-img col-md-3">Mobile Number</div>
                                         <div class="media-body">
-                                            <div class="media-heading">{{ $user->mobile_number }}</div>
+                                            <div class="media-heading">{{ '+'.$user->country_code.' '.substr_replace(substr_replace($user->mobile_number, '-', '3','0'), '-', '7','0') }}</div>
                                         </div>
                                     </li>
                                     <li class="media">
