@@ -36,7 +36,7 @@
                                 <div class="col-xs-12 managebookingInfoWrap">                               
                                     <div class="row">
                                         <div class="col-md-3">
-                                            <label>Booking ID</label>
+                                            <label>Schedule ID</label>
                                         </div>
                                         <div class="col-md-9">
                                             <p><u>{{ '#NUR'.$booking->id }}</u></p>
@@ -80,7 +80,7 @@
                             </div>
                            <div class="card">
                              <div class="card-header" style="background-color: #ddd;">
-                                <h5>Manage Booking</h5>
+                                <h5>Manage Schedule</h5>
                              </div>
                             @if(count($assigned) == 0)
                             <div class="container-fluid cloned-row1 educat_info" id="cloned-row1" name="cloned-row1">
@@ -107,9 +107,9 @@
                                     <div class="row col-md-12 form-group">
                                         <label class="col-md-3">Time</label>
                                         <div class="col-md-9">     
-                                            <input type="text" id="start_time" class="form-control floating-label start_time" placeholder="Start Time" style="max-width: 220px;float: left;" name="start_time[]">
+                                            <input type="text" id="start_time" class="form-control floating-label start_time" placeholder="Start Time" style="max-width: 220px;float: left;" name="start_time[]" autocomplete="off">
                                             <span style="display: inline;float: left;margin: 7px 30px;font-weight: 600;">To </span>
-                                            <input type="text" id="end_time" class="form-control floating-label end_time" placeholder="End Time" style="max-width: 220px;float: left;" name="end_time[]">  
+                                            <input type="text" id="end_time" class="form-control floating-label end_time" placeholder="End Time" style="max-width: 220px;float: left;" name="end_time[]" autocomplete="off">  
                                         </div>
                                     </div>
                                 </div> 
@@ -146,9 +146,9 @@
                                     <div class="row col-md-12 form-group">
                                         <label class="col-md-3">Time</label>
                                         <div class="col-md-9">     
-                                            <input type="text" id="start_time" class="form-control floating-label start_time" placeholder="Start Time" style="max-width: 220px;float: left;" name="start_time[]" value="{{ $assign->start_time }}">
+                                            <input type="text" id="start_time" class="form-control floating-label start_time" placeholder="Start Time" style="max-width: 220px;float: left;" name="start_time[]" value="{{ $assign->start_time }}" autocomplete="off">
                                             <span style="display: inline;float: left;margin: 7px 30px;font-weight: 600;">To </span>
-                                            <input type="text" id="end_time" class="form-control floating-label end_time" placeholder="End Time" style="max-width: 220px;float: left;" name="end_time[]" value="{{ $assign->end_time }}">  
+                                            <input type="text" id="end_time" class="form-control floating-label end_time" placeholder="End Time" style="max-width: 220px;float: left;" name="end_time[]" value="{{ $assign->end_time }}" autocomplete="off">  
                                         </div>
                                     </div>
                                 </div> 
