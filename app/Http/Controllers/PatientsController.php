@@ -279,12 +279,12 @@ class PatientsController extends Controller{
         if ($user->delete()) {
             $response = array(
                 'status' => 'success',
-                'message' => 'Patient deleted successfully',
+                'message' => 'Client deleted successfully',
             );
         } else {
             $response = array(
                 'status' => 'error',
-                'message' => 'Patient can not be deleted.Please try again',
+                'message' => 'Client can not be deleted.Please try again',
             );
         }
         return json_encode($response);
