@@ -183,7 +183,7 @@
                                                 <td>{{ ++$key }}</td>
                                                 <td>{{ $caregiver->f_name.' '.$caregiver->m_name.' '.$caregiver->l_name }}</td>
                                                 <td>{{ $caregiver->email }}</td>
-                                                <td>{{ $caregiver->mobile_number }}</td>
+                                                <td>{{ $caregiver->mobile_number != '' ? '+'.$caregiver->country_code.' '.substr_replace(substr_replace($caregiver->mobile_number, '-', '3','0'), '-', '7','0') : '' }}</td>
                                                 <td>
                                                     <input type="hidden" name="booking_id" value="{{ $booking->id }}" />
                                                     @if(in_array($caregiver->caregiverId, $assignedCaregiversId))

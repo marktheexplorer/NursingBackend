@@ -35,7 +35,7 @@
                  	@foreach($messages as $key => $message)
 	            		<tr>
 	            			<td>{{ ++$key }}</td>
-	              			<td>{{ $message->user->mobile_number != '' ? substr_replace(substr_replace($message->user->mobile_number, '-', '3','0'), '-', '7','0') : '' }}</td>
+	              			<td>{{ $message->user->mobile_number != '' ? '+'.$message->user->country_code.' '.substr_replace(substr_replace($message->user->mobile_number, '-', '3','0'), '-', '7','0') : '' }}</td>
                             <td>{{ $message->msg }}</td>
 	              			<td>{{ date_format(date_create($message->created_at), 'd M, y')}}</td>
 	            		</tr>

@@ -17,6 +17,7 @@ use App\UserRelation;
 use Illuminate\Http\Request;
 use App\Exports\PatientExport;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Message;
 
 class PatientsController extends Controller{ 
     public function __construct(){ 
@@ -276,6 +277,7 @@ class PatientsController extends Controller{
         $booking = Booking::where('user_id' , $id)->delete();
         $user_relation = UserRelation::where('user_id' , $id)->delete();
         $contact = ContactUs::where('user_id', $id)->delete();
+        $message = Message::where('user_id', $id)->delete();
 
         if ($user->delete()) {
             $response = array(
