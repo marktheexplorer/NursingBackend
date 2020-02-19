@@ -339,7 +339,8 @@ class UserController extends Controller{
         $validator = Validator::make($request->all(), [
             'f_name' => 'required|max:40',
             'm_name' => 'max:40',
-            'l_name' => 'required|max:40'
+            'l_name' => 'required|max:40',
+            'mobile_number' => 'digits:10|unique:users,mobile_number,'.Auth::id(),
         ]);        
 
         if ($validator->fails())
@@ -347,6 +348,18 @@ class UserController extends Controller{
         $user = Auth::user();
         $user->fill($input);
         $user->save();
+
+        if($input['mobile_no_changed'] == true){
+
+            $input['otp'] = rand(1000,9999);
+
+            $user->otp = $input['otp'];
+            $user->save();
+       
+            $data = Self::sendTwilioOTP($input['mobile_number'], $user->country_code, $input['otp']); 
+
+            return response()->json(['status_code'=> 501, 'message'=> 'Please verify your mobile number.', 'data' => null]);
+        }
 
         if($user->role_id == '2'){
 
