@@ -363,6 +363,7 @@ class UserController extends Controller{
                 DB::table('caregiver_attributes')->insert($data);
             }
             $user['service_in'] = DB::table('caregiver_attributes')->select('county_areas.id','county_areas.area')->join('county_areas', 'county_areas.id','caregiver_attributes.value')->where('caregiver_id', '=', $user->id)->where('type', '=', 'service_area')->get();
+            $user['mobile_number'] = "+" . $user->country_code .'-'. substr_replace(substr_replace($user->mobile_number, '-', '3','0'), '-', '7','0');
         }
 
         if ($user)
