@@ -141,7 +141,8 @@ class UserController extends Controller{
 
                 if($user->role_id == '3'){
 
-                    $userDetails =  User::where('users.id', $user->id)->join('patients_profiles', 'users.id', 'user_id')->first(); 
+                    $userDetails =  User::where('users.id', $user->id)->join('patients_profiles', 'users.id', 'user_id')->first();  
+                    $userDetails['mobile_number'] = substr_replace(substr_replace($userDetails->mobile_number, '-', '3','0'), '-', '7','0');
                     if($userDetails->profile_image == null)
                         $userDetails->profile_image = 'default.png';
                     $success['token'] =  $token;
@@ -163,7 +164,8 @@ class UserController extends Controller{
                     $success['today_msg'] = $data['today_msg'];
                     $success['admin_number'] = $data['admin_number'];
                 }else{
-                    $userDetails =  User::where('users.id', $user->id)->first();
+                    $userDetails =  User::where('users.id', $user->id)->first(); 
+                    $userDetails['mobile_number'] = substr_replace(substr_replace($userDetails->mobile_number, '-', '3','0'), '-', '7','0');
                     if($userDetails['profile_image'] == null)
                         $userDetails['profile_image'] = 'default.png';
                     $userDetails['service_in'] = DB::table('caregiver_attributes')
@@ -358,7 +360,7 @@ class UserController extends Controller{
        
             $data = Self::sendTwilioOTP($input['mobile_number'], $user->country_code, $input['otp']); 
             $success['country_code'] =  $user->country_code;
-            
+
             return response()->json(['status_code'=> 501, 'message'=> 'Please verify your mobile number.', 'data' => $success]);
         }
 
