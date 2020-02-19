@@ -465,7 +465,8 @@ class UserController extends Controller{
 
         if($user->role_id == '3'){
 
-            $userDetails =  User::where('users.id', Auth::id())->join('patients_profiles', 'users.id', 'user_id')->first();
+            $userDetails =  User::where('users.id', Auth::id())->join('patients_profiles', 'users.id', 'user_id')->first(); 
+            $userDetails['mobile_number'] = substr_replace(substr_replace($userDetails->mobile_number, '-', '3','0'), '-', '7','0');
             if($userDetails == null){
                 $success['userDetails'] =  $user;
             }else{
@@ -482,7 +483,8 @@ class UserController extends Controller{
             $success['weight'] = PROFILE_WEIGHT;
             $success['language'] = PROFILE_LANGUAGE;
         }else{
-            $userDetails =  User::where('users.id', Auth::id())->first();
+            $userDetails =  User::where('users.id', Auth::id())->first();            
+            $userDetails['mobile_number'] = substr_replace(substr_replace($userDetails->mobile_number, '-', '3','0'), '-', '7','0');
             if($userDetails['profile_image'] == null)
                 $userDetails['profile_image'] = 'default.png';
             $userDetails['service_in'] = DB::table('caregiver_attributes')
