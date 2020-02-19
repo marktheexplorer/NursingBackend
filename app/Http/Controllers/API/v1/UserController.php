@@ -357,8 +357,9 @@ class UserController extends Controller{
             $user->save();
        
             $data = Self::sendTwilioOTP($input['mobile_number'], $user->country_code, $input['otp']); 
-
-            return response()->json(['status_code'=> 501, 'message'=> 'Please verify your mobile number.', 'data' => null]);
+            $success['country_code'] =  $user->country_code;
+            
+            return response()->json(['status_code'=> 501, 'message'=> 'Please verify your mobile number.', 'data' => $success]);
         }
 
         if($user->role_id == '2'){

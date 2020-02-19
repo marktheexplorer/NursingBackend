@@ -175,7 +175,7 @@
                                         </div>
                                         <div class="col-sm-3 form-group">
                                             <label>Street</label>
-                                            <input type="text" class="form-control {{ $errors->has('street') ? ' is-invalid' : '' }}" name="street" placeholder="street" value="{{ old('street', $user->street) }}" id="street" />
+                                            <input type="text" class="mapControls form-control {{ $errors->has('street') ? ' is-invalid' : '' }}" name="street" placeholder="street" value="{{ old('street', $user->street) }}" id="searchMapInput" />
                                             @if ($errors->has('street'))
                                                 <span class="text-danger">
                                                     <strong>{{ $errors->first('street') }}</strong>
@@ -184,7 +184,7 @@
                                         </div>
                                         <div class="col-sm-4 form-group">
                                             <label>City</label>
-                                            <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" placeholder="City" value="{{ old('city', $user->city) }}" id="citysuggest"/>
+                                            <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" placeholder="City" value="{{ old('city', $user->city) }}" id="city-span" readonly />
                                             @if ($errors->has('city'))
                                                 <span class="text-danger">
                                                     <strong>{{ $errors->first('city') }}</strong>
@@ -193,12 +193,7 @@
                                         </div>
                                         <div class="col-sm-4 form-group">
                                             <label>State</label>
-                                            <select name="state" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" readonly="true" id="state">
-                                                <option disabled="true" selected=""> -- Select State --</option>
-                                                @foreach($city_state as $row)
-                                                    <option <?php if($row->state_code == $user->state){ echo 'selected'; } ?> >{{ $row->state_code }}</option>
-                                                @endforeach
-                                            </select>
+                                            <input type="text" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" placeholder="state" value="{{ old('state', $user->state) }}"  id="state-span" readonly/>
                                             @if ($errors->has('state'))
                                                 <span class="text-danger">
                                                     <strong>{{ $errors->first('state') }}</strong>
@@ -207,7 +202,7 @@
                                         </div>
                                         <div class="col-sm-4 form-group">
                                            <label>Zip Code</label>
-                                           <input type="text" class="form-control {{ $errors->has('zipcode') ? ' is-invalid' : '' }}" name="zipcode" placeholder="Zip Code" value="{{ old('zipcode' ,$user->zipcode) }}" id="zipcode" readonly />
+                                           <input type="text" class="form-control {{ $errors->has('zipcode') ? ' is-invalid' : '' }}" name="zipcode" placeholder="Zip Code" value="{{ old('zipcode' ,$user->zipcode) }}" id="zipcode-span" readonly />
                                            @if ($errors->has('zipcode'))
                                            <span class="text-danger">
                                            <strong>{{ $errors->first('zipcode') }}</strong>
@@ -350,7 +345,34 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.1.62/jquery.inputmask.bundle.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-0K1VdBYrA4qHKc5tS_rpf9bsmWsO-vc&libraries=places&callback=initMap" async defer></script>
 <script>
+    function initMap() {
+        var options = {
+          componentRestrictions: {country: "us"}
+        };
+        var input = document.getElementById('searchMapInput');
+        var autocomplete = new google.maps.places.Autocomplete(input,options);
+
+        autocomplete.addListener('place_changed', function() {
+            var place = autocomplete.getPlace();
+            address_components = place.address_components.reverse();
+            $('#searchMapInput').val(place.vicinity);
+
+            for (let i = 0; i < address_components.length; i++) {
+                if (address_components[i].types[0] == 'postal_code') {
+                    $('#zipcode-span').val(address_components[i].long_name);
+                }
+                else if (address_components[i].types[0] == 'administrative_area_level_1') {
+                    $('#state-span').val(address_components[i].long_name);
+                }
+                else if (address_components[i].types[0] == 'administrative_area_level_2') {
+                    $('#city-span').val(address_components[i].long_name);
+                }
+            }
+        });
+    }
+
    $( function(){
         var maxBirthdayDate = new Date();
         maxBirthdayDate.setFullYear( maxBirthdayDate.getFullYear() - 18,11,31);
@@ -366,80 +388,6 @@
         e.preventDefault();
     });
 
- $(function(){
-
-    // don't navigate away from the field on tab when selecting an item
-    $( "#citysuggest" ).on( "keydown", function( event ) {
-        if(event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active){
-            event.preventDefault();
-        }
-    }).autocomplete({
-        source: function( request, response ) {
-            $.getJSON( "{{route('caregiver.searchcity')}}", {
-                term: request.term
-            }, response );
-        },
-        search: function() {
-            // custom minLength
-            var term = this.value;
-            if ( term.length < 1){
-                return false;
-            }
-        },
-
-        focus: function() {
-            // prevent value inserted on focus
-            return false;
-        },
-
-        select: function( event, ui ) {
-            $( "#citysuggest" ).val(ui.item.value)
-            $( "#citysuggest" ).autocomplete("close");
-
-            //remove all options from select box
-            $("#state").find("option:gt(0)").remove();
-            $("#state").prop("selectedIndex", 0);
-            setstateoptions();
-            return false;
-        }
-    });
-});
-
-function setstateoptions(){
-    zip = $("#citysuggest").val();
-    $.ajax({
-        url: "{{route('caregiver.statefromcity')}}",
-        type: 'GET',
-        dataType: 'json',
-        data:{term:zip},
-        success: function (res) {
-            if(res['error']){
-                //swal("Oops", "Invalid City", "error");
-                $("#citysuggest").val('');
-                $("#citysuggest").focus();
-            }else{
-                $.each(res['list'], function( index, value ) {
-                    //alert( index + ": " + value );
-                    $('#state').append($("<option></option>").attr(value, value).text(value));
-                });
-            }
-        }
-    });
-    $("#state").attr("readonly", false);
-}
-
-$("#state").change(function () {
-    stateoption = $("#state option:selected").val();
-    cityoption = $("#citysuggest").val();
-    $.ajax({
-        url: "{{route('caregiver.getzip')}}",
-        type: 'GET',
-        data:{city:cityoption, state:stateoption},
-        success: function (res) {
-            $("#zipcode").val(res);
-        }
-    });
-})
     if($('input[name=pets]:checked').val() == 'no')
         {
             $('.describe').hide();

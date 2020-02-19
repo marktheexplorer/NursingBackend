@@ -2,7 +2,21 @@
 @section('content')
 <style type="text/css">
     .ui-autocomplete{max-height: 300px !important;overflow-y: scroll !important;overflow-x: hidden !important;}
+    .mapControls {
+        margin-top: 10px;
+        border: 1px solid transparent;
+        border-radius: 2px 0 0 2px;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        height: 32px;
+        outline: none;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+    #searchMapInput:focus {
+        border-color: #4d90fe;
+    }
 </style>
+
 <div class="content-wrapper">
     <!-- START PAGE CONTENT-->
     <div class="page-heading">
@@ -179,16 +193,17 @@
                                                 </div>
                                                 <div class="form-group col-sm-3" >
                                                     <label>Street </label>
-                                                    <input type="text" class="form-control {{ $errors->has('street') ? ' is-invalid' : '' }}" name="street" placeholder="Street" value="{{ old('street') }}" autocomplete="off" />
+                                                    <input type="text" id="searchMapInput" class="mapControls form-control {{ $errors->has('street') ? ' is-invalid' : '' }}" name="street" placeholder="Street" value="{{ old('street') }}" autocomplete="off" />
                                                     @if ($errors->has('street'))
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $errors->first('street') }}</strong>
                                                         </span>
                                                     @endif
                                                 </div>
+                                                
                                                 <div class="form-group col-sm-4" >
                                                     <label>City</label>
-                                                    <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" placeholder="city" value="{{ old('city') }}" id="citysuggest" autocomplete="off" />
+                                                    <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" placeholder="city" value="{{ old('city') }}" id="city-span" readonly />
                                                     @if ($errors->has('city'))
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $errors->first('city') }}</strong>
@@ -197,14 +212,7 @@
                                                 </div>
                                                 <div class="form-group col-sm-4" >
                                                     <label>State </label>
-                                                    <select name="state" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" readonly="true" id="state">
-                                                        <option disabled="true" selected=""> -- Select State --</option>
-                                                        @if (!empty(old('state')))
-                                                            <option selected="" value="{{ old('state') }}">
-                                                                {{ old('state') }}
-                                                            </option>
-                                                        @endif
-                                                    </select>
+                                                    <input type="text" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" placeholder="state" value="{{ old('state') }}" id="state-span" readonly />
                                                     @if ($errors->has('state'))
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $errors->first('state') }}</strong>
@@ -213,7 +221,7 @@
                                                 </div>
                                                 <div class="form-group col-sm-4" >
                                                     <label>Zip Code </label>
-                                                    <input type="text" class="form-control {{ $errors->has('zipcode') ? ' is-invalid' : '' }}" name="zipcode" placeholder="Zip code" value="{{ old('zipcode') }}" id="zipcode" readonly="true"  />
+                                                    <input type="text" class="form-control {{ $errors->has('zipcode') ? ' is-invalid' : '' }}" name="zipcode" placeholder="Zip code" value="{{ old('zipcode') }}" id="zipcode-span" readonly="true"  />
                                                     @if ($errors->has('zipcode'))
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $errors->first('zipcode') }}</strong>
@@ -397,7 +405,34 @@
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.1.62/jquery.inputmask.bundle.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-0K1VdBYrA4qHKc5tS_rpf9bsmWsO-vc&libraries=places&callback=initMap" async defer></script>
 <script>
+    function initMap() {
+        var options = {
+          componentRestrictions: {country: "us"}
+        };
+        var input = document.getElementById('searchMapInput');
+        var autocomplete = new google.maps.places.Autocomplete(input,options);
+
+        autocomplete.addListener('place_changed', function() {
+            var place = autocomplete.getPlace();
+            address_components = place.address_components.reverse();
+            $('#searchMapInput').val(place.vicinity);
+
+            for (let i = 0; i < address_components.length; i++) {
+                if (address_components[i].types[0] == 'postal_code') {
+                    $('#zipcode-span').val(address_components[i].long_name);
+                }
+                else if (address_components[i].types[0] == 'administrative_area_level_1') {
+                    $('#state-span').val(address_components[i].long_name);
+                }
+                else if (address_components[i].types[0] == 'administrative_area_level_2') {
+                    $('#city-span').val(address_components[i].long_name);
+                }
+            }
+        });
+    }
+
     $(function(){
         $("#servicearea").select2({
             placeholder: {
@@ -450,81 +485,7 @@
             console.log(term);
             return term;
         }
-
-        // don't navigate away from the field on tab when selecting an item
-        $( "#citysuggest" ).on( "keydown", function( event ) {
-            if(event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active){
-                event.preventDefault();
-            }
-        }).autocomplete({
-            source: function( request, response ) {
-                $.getJSON( "{{ route('caregiver.searchcity') }}", {
-                    term: request.term
-                }, response );
-            },
-
-            search: function() {
-                // custom minLength
-                var term = this.value;
-                if ( term.length < 1){
-                    return false;
-                }
-            },
-
-            focus: function() {
-                // prevent value inserted on focus
-                return false;
-            },
-
-            select: function( event, ui ) {
-                $( "#citysuggest" ).val(ui.item.value)
-                $( "#citysuggest" ).autocomplete("close");
-
-                //remove all options from select box
-                $("#state").find("option:gt(0)").remove();
-                $("#state").prop("selectedIndex", 0);
-                setstateoptions();
-                return false;
-            }
-        });
     });
-
-    function setstateoptions(){
-        zip = $("#citysuggest").val();
-        $.ajax({
-            url: '{{route("caregiver.statefromcity")}}',
-            type: 'GET',
-            dataType: 'json',
-            data:{term:zip},
-            success: function (res) {
-                if(res['error']){
-                    //swal("Oops", "Invalid City", "error");
-                    $("#citysuggest").val('');
-                    $("#citysuggest").focus();
-                }else{
-                    $.each(res['list'], function( index, value ) {
-                        //alert( index + ": " + value );
-                        $('#state').append($("<option></option>").attr(value, value).text(value));
-                    });
-                }
-            }
-        });
-        $("#state").attr("readonly", false);
-    }
-
-    $("#state").change(function () {
-        stateoption = $("#state option:selected").val();
-        cityoption = $("#citysuggest").val();
-        $.ajax({
-            url: '{{ route("caregiver.getzip") }}',
-            type: 'GET',
-            data:{city:cityoption, state:stateoption},
-            success: function (res) {
-                $("#zipcode").val(res);
-            }
-        });
-    })
-
 
     $("#dob").keydown(function(e){
         var key = event.keyCode;
@@ -641,5 +602,7 @@
           }
       });
     });
+
+
 </script>
 @endsection
