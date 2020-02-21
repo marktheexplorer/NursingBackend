@@ -116,7 +116,7 @@
                     if(data['status']) {
                         swal({
                             title: data['message'],
-                            text: "Press ok to continue",
+                            text: "Press OK to continue",
                             icon: "success",
                             buttons: {
                                 cancel: true,
