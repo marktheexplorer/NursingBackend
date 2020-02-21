@@ -60,7 +60,7 @@ class BookingsController extends Controller{
             foreach (unserialize($booking->diagnosis_id) as $key => $value) {
                 $diagnosis[] = Diagnose::select('title')->where('id', $value)->get()[0]->title;
             }
-            $diagnosis = implode(',', $diagnosis);
+            $diagnosis = implode(', ', $diagnosis);
         }
 
         $services = array();
@@ -68,7 +68,7 @@ class BookingsController extends Controller{
             foreach (unserialize($booking->services_id) as $key => $value) {
                 $services[] = Service::select('title')->where('id', $value)->get()[0]->title;
             }
-            $services = implode(',', $services);
+            $services = implode(', ', $services);
         }
 
     	return view('bookings.view' , compact('booking','caregivers','diagnosis','services','assignedCaregivers','assignedCaregiversId')); 

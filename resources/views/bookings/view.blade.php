@@ -63,7 +63,7 @@
                                     <li class="media">
                                         <div class="media-img col-md-3">WeekDays</div>
                                         <div class="media-body">
-                                            <div class="media-heading">{!! json_encode( implode(',' , unserialize($booking->weekdays))) !!}</div>
+                                            <div class="media-heading">{!! json_encode( implode(', ' , unserialize($booking->weekdays))) !!}</div>
                                         </div>
                                     </li>
                                     @endif
