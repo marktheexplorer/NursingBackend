@@ -47,7 +47,7 @@
                                         @if($diagnose->is_blocked)
                                             <button type="button" class="btn-sm btn-danger btn-cir" title="Block"><i class="fas fa-lock"></i></button>
                                         @else
-                                            <button type="button" class="btn-sm btn-success btn-cir" title="Un-Block"><i class="fas fa-lock-open"></i></button>
+                                            <button type="button" class="btn-sm btn-success btn-cir" title="Unblock"><i class="fas fa-lock-open"></i></button>
                                         @endif
                                         </a>
                                     </li>
