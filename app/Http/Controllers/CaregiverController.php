@@ -176,7 +176,7 @@ class CaregiverController extends Controller{
             DB::table('caregiver_attributes')->insert($data);
 
             //redirect to index page.
-            flash()->success('New Caregiver added successfully');
+            flash()->success('New caregiver added successfully');
             return redirect()->route('caregiver.index');
         }else{
             flash()->success('There is some error, please try again..');

@@ -173,7 +173,7 @@
                                                 </div>  
                                                 <div class="form-group col-sm-3" >
                                                     <label>Street </label>
-                                                    <input type="text" class="mapControls form-control {{ $errors->has('street') ? ' is-invalid' : '' }}" name="street" placeholder="Location" value="{{ old('street', $user->street) }}" id="searchMapInput" />
+                                                    <input type="text" class="mapControls form-control {{ $errors->has('street') ? ' is-invalid' : '' }}" name="street" placeholder="Street" value="{{ old('street', $user->street) }}" id="searchMapInput" />
                                                     @if ($errors->has('street'))
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $errors->first('street') }}</strong>
@@ -182,7 +182,7 @@
                                                 </div>
                                                 <div class="form-group col-sm-4" >
                                                     <label>City </label>
-                                                    <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" placeholder="city" value="{{ old('city', $user->city) }}"  id="city-span" readonly/>
+                                                    <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" placeholder="City" value="{{ old('city', $user->city) }}"  id="city-span" readonly/>
                                                     @if ($errors->has('city'))
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $errors->first('city') }}</strong>
@@ -191,7 +191,7 @@
                                                 </div>
                                                 <div class="form-group col-sm-4" >
                                                     <label>state </label>
-                                                    <input type="text" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" placeholder="state" value="{{ old('state', $user->state) }}"  id="state-span" readonly/>
+                                                    <input type="text" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" placeholder="State" value="{{ old('state', $user->state) }}"  id="state-span" readonly/>
                                                     @if ($errors->has('state'))
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $errors->first('state') }}</strong>
@@ -200,7 +200,7 @@
                                                 </div>
                                                 <div class="form-group col-sm-4" >
                                                     <label>Zip Code </label>
-                                                    <input type="text" class="form-control {{ $errors->has('zipcode') ? ' is-invalid' : '' }}" name="zipcode" placeholder="Zip code" value="{{ old('zipcode', $user->zipcode) }}" id="zipcode-span" readonly />
+                                                    <input type="text" class="form-control {{ $errors->has('zipcode') ? ' is-invalid' : '' }}" name="zipcode" placeholder="Zip Code" value="{{ old('zipcode', $user->zipcode) }}" id="zipcode-span" readonly />
                                                     @if ($errors->has('zipcode'))
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $errors->first('zipcode') }}</strong>

@@ -176,7 +176,7 @@
                                       </div> 
                                       <div class="col-sm-3 form-group">
                                          <label>Street</label>
-                                         <input type="text" class="mapControls form-control {{ $errors->has('street') ? ' is-invalid' : '' }}" name="street" id="searchMapInput" placeholder="street" value="{{ old('street') }}" />
+                                         <input type="text" class="mapControls form-control {{ $errors->has('street') ? ' is-invalid' : '' }}" name="street" id="searchMapInput" placeholder="Street" value="{{ old('street') }}" />
                                          @if ($errors->has('street'))
                                          <span class="text-danger">
                                          <strong>{{ $errors->first('street') }}</strong>
@@ -194,7 +194,7 @@
                                       </div>
                                       <div class="col-sm-4 form-group">
                                          <label>State</label>
-                                         <input type="text" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" placeholder="state" value="{{ old('state') }}" id="state-span" readonly />
+                                         <input type="text" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" placeholder="State" value="{{ old('state') }}" id="state-span" readonly />
                                          @if ($errors->has('state'))
                                          <span class="text-danger">
                                          <strong>{{ $errors->first('state') }}</strong>
