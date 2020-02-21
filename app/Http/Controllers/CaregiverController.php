@@ -17,6 +17,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\AssignedCaregiver;
 use App\Booking;
 use App\ContactUs;
+use App\Message;
 
 class CaregiverController extends Controller{
     public function __construct(){ 
@@ -332,6 +333,7 @@ class CaregiverController extends Controller{
         $user->country_code = $input['country_code'];
         $user->mobile_number = preg_replace('`-`', '', $input['mobile_number']);
         $user->city = $input['city'];
+        $user->zipcode = $input['zipcode'];
         $user->state = $input['state'];
         $user->street = $input['street'];
         $user->dob = date("Y-m-d", strtotime($input['dob']));
