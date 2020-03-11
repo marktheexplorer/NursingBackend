@@ -357,7 +357,7 @@
         autocomplete.addListener('place_changed', function() {
             var place = autocomplete.getPlace();
             address_components = place.address_components.reverse();
-            $('#searchMapInput').val(place.vicinity);
+            $('#searchMapInput').val(place.name);
 
             for (let i = 0; i < address_components.length; i++) {
                 if (address_components[i].types[0] == 'postal_code') {

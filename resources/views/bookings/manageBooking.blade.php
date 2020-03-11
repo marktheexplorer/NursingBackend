@@ -89,11 +89,11 @@
                                     <div class="row col-md-12 form-group">
                                         <label class="col-md-3">Choose CareGiver</label>
                                         <div class="col-md-9">                                           
-                                            <select name="caregivers[]" class="form-control select2 caregiver" id="caregiver">
-                                                @foreach($caregivers as $caregiver)
-                                                    <option value="{{ $caregiver->id }}" >{{ $caregiver->user->name .' ('. $caregiver->user->email . ')'}}</option>
-                                                @endforeach
-                                            </select>
+                                          <select name="caregivers[]" class="form-control select2 caregiver" id="caregiver">
+                                            @foreach($caregivers as $caregiver)
+                                                <option value="{{ $caregiver->id }}" >{{ $caregiver->user->name .' ('. $caregiver->user->email . ')'}}</option>
+                                            @endforeach
+                                          </select>
                                         </div>
                                     </div>   
                                     <div class="row col-md-12 form-group">

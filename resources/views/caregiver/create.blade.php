@@ -1,5 +1,6 @@
 @extends('layouts.app')
-@section('content')
+
+@section('top-css')
 <style type="text/css">
     .ui-autocomplete{max-height: 300px !important;overflow-y: scroll !important;overflow-x: hidden !important;}
     .mapControls {
@@ -16,7 +17,9 @@
         border-color: #4d90fe;
     }
 </style>
+@endsection
 
+@section('content')
 <div class="content-wrapper">
     <!-- START PAGE CONTENT-->
     <div class="page-heading">
@@ -42,7 +45,7 @@
                         <div class="tab-content">
                             <div class="tab-pane fade show active" id="tab-2">
                                <form action="{{ route('caregiver.store') }}" method="post" class="form-horizontal" enctype="multipart/form-data">
-                                @csrf
+                                    @csrf
                                     <div class="card">
                                         <div class="card-header" style="background-color: #ddd;">
                                             <h5>Personal Information</h5>
@@ -407,7 +410,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-0K1VdBYrA4qHKc5tS_rpf9bsmWsO-vc&libraries=places&callback=initMap" async defer></script>
 <script>
-    function initMap() {
+     function initMap() {
         var options = {
           componentRestrictions: {country: "us"}
         };
@@ -417,7 +420,7 @@
         autocomplete.addListener('place_changed', function() {
             var place = autocomplete.getPlace();
             address_components = place.address_components.reverse();
-            $('#searchMapInput').val(place.vicinity);
+            $('#searchMapInput').val(place.name);
 
             for (let i = 0; i < address_components.length; i++) {
                 if (address_components[i].types[0] == 'postal_code') {
@@ -570,7 +573,6 @@
         options = $.extend(defaults, options);
 
         return this.each(function() {
-
             $(this).on('change', function() {
                 var value = $(this).val(),
                     file = value.toLowerCase(),
@@ -597,7 +599,7 @@
               $('.image_error').text('');
           },
           error: function() {
-            $('#profile_image').val('')
+            $('#profile_image').val('');
             $('.image_error').text('Please upload a jpg , jpeg or png image .');
           }
       });
