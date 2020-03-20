@@ -369,14 +369,16 @@ class UserController extends Controller{
             DB::table('caregiver_attributes')->where('caregiver_id', '=', $user->id)->where('type', '=', 'service_area')->delete();
             if($request->exists('service_in')){                
                 $service_area = $input['service_in'];
-                foreach($service_area as $area){
-                    $data[] = array(
-                        'caregiver_id' => $user->id,
-                        'value' => $area,
-                        'type' => 'service_area'
-                    );
+                if($service_area != null){
+                    foreach($service_area as $area){
+                        $data[] = array(
+                            'caregiver_id' => $user->id,
+                            'value' => $area,
+                            'type' => 'service_area'
+                        );
+                    }
+                    DB::table('caregiver_attributes')->insert($data);
                 }
-                DB::table('caregiver_attributes')->insert($data);
             }
             $user['service_in'] = DB::table('caregiver_attributes')->select('county_areas.id','county_areas.area')->join('county_areas', 'county_areas.id','caregiver_attributes.value')->where('caregiver_id', '=', $user->id)->where('type', '=', 'service_area')->get();
             $user['mobile_number'] = substr_replace(substr_replace($user->mobile_number, '-', '3','0'), '-', '7','0');

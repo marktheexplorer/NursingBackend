@@ -64,12 +64,14 @@ class PatientsController extends Controller{
     public function update(Request $request, $id)
     {
         $input = $request->input();
+        $input['mobile_number'] = preg_replace('`-`', '', $input['mobile_number']);
+        
         $validator = validator::make($input,[
             'f_name' => 'required|string|max:20',
             'm_name' => 'nullable|string|max:20',
             'l_name' => 'required|string|max:20',
             'email' => 'required|email|string|max:60|unique:users,email,'.$id,
-            'mobile_number' => 'required|regex:/^\(?([0-9]{3})\)?[-]?([0-9]{3})[-]?([0-9]{4})$/|unique:users,mobile_number,'.$id,
+            'mobile_number' => 'required|unique:users,mobile_number,'.$id,
             'dob' => 'required',
             'gender' => 'required',
             'zipcode' => 'required|numeric',
@@ -176,12 +178,14 @@ class PatientsController extends Controller{
 
     public function store(Request $request){
         $input = $request->input();
+        $input['mobile_number'] = preg_replace('`-`', '', $input['mobile_number']);
+        
         $validator = validator::make($input,[
             'f_name' => 'required|string|max:20',
             'm_name' => 'nullable|string|max:20',
             'l_name' => 'required|string|max:20',
             'email' => 'required|email|string|max:60|unique:users',
-            'mobile_number' => 'required|unique:users|regex:/^\(?([0-9]{3})\)?[-]?([0-9]{3})[-]?([0-9]{4})$/',
+            'mobile_number' => 'required|unique:users',
             'dob' => 'required',
             'gender' => 'required',
             'zipcode' => 'required|numeric',
@@ -271,7 +275,7 @@ class PatientsController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function destroy($id){
-
+    dd('gg');
         $user = User::findOrFail($id);
         $patient = PatientProfile::where('user_id' , $id)->delete();
         $booking = Booking::where('user_id' , $id)->delete();

@@ -109,7 +109,7 @@
                                         </div>
                                         <div class="col-sm-3 form-group date">
                                            <label>Date of Birth</label>
-                                           <input type="text" class="form-control {{ $errors->has('dob') ? ' is-invalid' : '' }}" name="dob" id="dob" placeholder="Date Of Birth" value="{{ old('dob', date('d/m/Y', strtotime($user->dob))) }}"/>
+                                           <input type="text" class="form-control {{ $errors->has('dob') ? ' is-invalid' : '' }}" name="dob" id="dob" placeholder="Date Of Birth" value="{{ old('dob', $user->dob) }}"/>
                                            <div class="input-group-addon">
                                               <span class="glyphicon glyphicon-th"></span>
                                            </div>

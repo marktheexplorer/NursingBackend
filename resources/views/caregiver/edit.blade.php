@@ -121,7 +121,7 @@
                                                 </div>
                                                 <div class="form-group col-sm-3" >
                                                     <label>Date of Birth</label>
-                                                    <input type="text" class="form-control {{ $errors->has('dob') ? ' is-invalid' : '' }}" name="dob" placeholder="Date of Birth" value="{{ old('dob', date('d/m/Y', strtotime($user->dob))) }}" id="dob"/>
+                                                    <input type="text" class="form-control {{ $errors->has('dob') ? ' is-invalid' : '' }}" name="dob" placeholder="Date of Birth" value="{{ old('dob', $user->dob) }}" id="dob"/>
                                                     @if ($errors->has('dob'))
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $errors->first('dob')}}</strong>

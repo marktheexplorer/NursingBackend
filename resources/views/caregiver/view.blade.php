@@ -92,7 +92,7 @@
                                     <li class="media">
                                         <div class="media-img  col-md-3">Date of Birth</div>
                                         <div class="media-body">
-                                            <div class="media-heading">{{ date_format(date_create($user->dob), 'd M, Y') }} </div>
+                                            <div class="media-heading">{{ $user->dob }} </div>
                                         </div>
                                     </li>
                                 </ul>

@@ -267,11 +267,13 @@ class CaregiverController extends Controller{
      */
     public function update(Request $request, $id){
         $input = $request->input();
+        $input['mobile_number'] = preg_replace('`-`', '', $input['mobile_number']);
+        
         $validator =  Validator::make($input,[
             'f_name' => 'required|string|max:40',
             'l_name' => 'required|string|max:40',
             'email' => 'email|required|string|unique:users,email,'.$id,
-            'mobile_number' => 'required|regex:/^\(?([0-9]{3})\)?[-]?([0-9]{3})[-]?([0-9]{4})$/|unique:users,mobile_number,'.$id,
+            'mobile_number' => 'required|unique:users,mobile_number,'.$id,
             'service' => 'required|not_in:0',
             'gender' => 'required',
             'language' => 'required',
