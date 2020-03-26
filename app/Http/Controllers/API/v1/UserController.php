@@ -180,7 +180,7 @@ class UserController extends Controller{
                     $success['admin_number'] = $data['admin_number'];
                 } 
 
-                return response()->json(['status_code' => $this->successStatus, 'message' => 'Otp verified.', 'data'=> $success]);
+                return response()->json(['status_code' => $this->successStatus, 'message' => 'OTP verified.', 'data'=> $success]);
             } else {
                 return response()->json(['status_code' => 400, 'message' => 'Incorrect OTP.', 'data'=> null]);
             }

@@ -79,4 +79,3 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function()
 Route::get('cms/{token}', 'CmsPageController@view_cms');
 Route::get('confirm_careservice/{token}', 'BookingsController@confirm_careservice');
 Route::post('upload_carepack_docs', 'BookingsController@upload_carepack_docs');
-Route::get('cms/{slug}', 'CmsPageController@view_cms');
