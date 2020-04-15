@@ -60,9 +60,27 @@
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img  col-md-3">Address</div>
+                                        <div class="media-img  col-md-3">Street</div>
                                         <div class="media-body">
-                                            <div class="media-heading">{{ $user->street.", ".$user->city.", ".$user->state.", ".$user->zipcode  }} </div>
+                                            <div class="media-heading">{{ $user->street }} </div>
+                                        </div>
+                                    </li>
+                                    <li class="media">
+                                        <div class="media-img  col-md-3">City</div>
+                                        <div class="media-body">
+                                            <div class="media-heading">{{ $user->city  }} </div>
+                                        </div>
+                                    </li>
+                                    <li class="media">
+                                        <div class="media-img  col-md-3">State</div>
+                                        <div class="media-body">
+                                            <div class="media-heading">{{ $user->state  }} </div>
+                                        </div>
+                                    </li>
+                                    <li class="media">
+                                        <div class="media-img  col-md-3">ZipCode</div>
+                                        <div class="media-body">
+                                            <div class="media-heading">{{ $user->zipcode  }} </div>
                                         </div>
                                     </li>
                                     <li class="media">
