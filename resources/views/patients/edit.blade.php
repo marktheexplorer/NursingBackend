@@ -78,7 +78,7 @@
                                         </div>
                                         <div class="col-sm-3 form-group">
                                             <label>Email</label>
-                                            <input type="text" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" placeholder="Email" value="{{ old('email', $user->email) }}" readonly />
+                                            <input type="text" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" placeholder="Email" value="{{ old('email', $user->email) }}" />
                                             @if ($errors->has('email'))
                                                <span class="text-danger">
                                                <strong>{{ $errors->first('email') }}</strong>

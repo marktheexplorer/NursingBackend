@@ -90,7 +90,7 @@
                                                 </div>
                                                 <div class="col-sm-3 form-group">
                                                     <label>Email</label>
-                                                    <input type="text" name="email" placeholder="Email" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email', $user->email) }}" readonly/>
+                                                    <input type="text" name="email" placeholder="Email" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email', $user->email) }}" />
                                                     @if ($errors->has('email'))
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $errors->first('email') }}</strong>
