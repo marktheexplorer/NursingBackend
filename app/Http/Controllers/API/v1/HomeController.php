@@ -11,6 +11,7 @@ use Validator;
 use App\User;
 use App\Mail\MailHelper;
 use Illuminate\Support\Facades\Mail;
+use App\Helper;
 
 class HomeController extends Controller
 {
@@ -45,7 +46,8 @@ class HomeController extends Controller
 
         $user = User::findOrFail(Auth::id());
         if ($contactus->save()){
-
+            $emails = array("lmejer@24-7nursingcare.com", "fhernandez@24-7nursingcare.com", "mgomez@24-7nursingcare.com");
+            
             $objDemo = new \stdClass();
             $objDemo->sender = env('APP_NAME');
             $objDemo->receiver = ucfirst('Admin');
@@ -56,8 +58,10 @@ class HomeController extends Controller
             $objDemo->message = $input['message'];
             $objDemo->userName = $user->f_name.' '.$user->m_name.' '.$user->l_name;
             $objDemo->userMobileNumber = $user->country_code.'-'.$user->mobile_number;
-            $issend = Mail::to('kajal.garg@saffrontech.net')->send(new MailHelper($objDemo));
-
+            $issend = Mail::to($emails)->send(new MailHelper($objDemo));
+    
+            $numbers = ['+13055251495','+17862478888','+17863995955'];
+            Helper::sendContactUsMsg($numbers, $user->f_name.' '.$user->l_name.' Contacted you - '.$input['message']); 
             return response()->json(['status_code'=> 200, 'message'=> 'Thanks for contacting us.', 'data' => null]);
         }
         else

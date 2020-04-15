@@ -51,5 +51,30 @@ class Helper extends Model
 
         return $response;
     }
+    
+    public static function sendContactUsMsg($numbers, $message)
+    {   
+        $client = new Client(env('TWILIO_SID'), env('TWILIO_TOKEN'));
+        
+        foreach($numbers as $number){
+            try{
+                $response = $client->messages->create(
+                    // the number you'd like to send the message to
+                    $number ,
+                    array(
+                        // A Twilio phone number you purchased at twilio.com/console
+                        'from' => '+13343397984',
+                        // the body of the text message you'd like to send
+                        'body' => $message
+                    )
+                )->toArray();
+
+            }catch(\Exception $e){
+                $response = false;
+            }
+        }
+
+        return $response;
+    }
 
 }
