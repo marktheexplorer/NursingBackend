@@ -537,7 +537,7 @@ class BookingController extends Controller
            $caregivers[] = Caregiver::where('id', $value)->first();
         }
         foreach ($caregivers as $key => $value) {
-            $caregiverNames[] = $value['user']['f_name'].' '.$value['user']['m_name'].' '.$value['user']['l_name'];
+            $caregiverNames[] = $value['user']['f_name'].' '.$value['user']['l_name'];
         }
         $caregiverNames = implode(',', $caregiverNames);
         
