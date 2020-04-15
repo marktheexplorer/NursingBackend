@@ -275,7 +275,6 @@ class PatientsController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function destroy($id){
-    dd('gg');
         $user = User::findOrFail($id);
         $patient = PatientProfile::where('user_id' , $id)->delete();
         $booking = Booking::where('user_id' , $id)->delete();

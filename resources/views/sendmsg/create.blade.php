@@ -27,7 +27,7 @@
                                           <div class="col-md-10">                                                
                                               <select name="user_id" class="form-control">
                                                 @foreach($users as $user)
-                                                <option value="{{ $user['id'] }}">{{ "+".$user['country_code'].$user['mobile_number']." ( ".$user['f_name'].' '.$user['m_name'].' '.$user['l_name']." )" }}</option>
+                                                <option value="{{ $user['id'] }}">{{ '+'.$user['country_code'].' '.substr_replace(substr_replace($user['mobile_number'], '-', '3','0'), '-', '7','0')." ( ".$user['f_name'].' '.$user['m_name'].' '.$user['l_name']." )" }}</option>
                                                 @endforeach
                                               </select>
                                             @if ($errors->has('user'))

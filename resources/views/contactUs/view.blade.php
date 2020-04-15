@@ -40,7 +40,7 @@
                                     <li class="media">
                                         <div class="media-img"><i class="fas fa-phone-volume"></i></div>
                                         <div class="media-body">
-                                            <div class="media-heading text-warning">{{ $contact->user->mobile_number }}</div>
+                                            <div class="media-heading text-warning">{{ '+'.$contact->user->country_code.' '.substr_replace(substr_replace($contact->user->mobile_number, '-', '3','0'), '-', '7','0') }}</div>
                                         </div>
                                     </li>
                                     <li class="media">

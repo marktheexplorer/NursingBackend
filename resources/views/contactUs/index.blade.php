@@ -36,7 +36,7 @@
 	            			<td>{{ ++$key }}</td>
 	              			<td>{{ ucfirst($contact->user->f_name).' '.$contact->user->m_name.' '.$contact->user->l_name }}</td>
 	              			<td>{{ $contact->user->email }}</td>
-	              			<td>{{ $contact->user->mobile_number }}</td>
+	              			<td>{{ '+'.$contact->user->country_code.' '.substr_replace(substr_replace($contact->user->mobile_number, '-', '3','0'), '-', '7','0') }}</td>
                             <td>{{ date_format(date_create($contact->created_at) , 'd M ,y') }}
 	              			<td>
 	              				<ul class="actions-menu">
