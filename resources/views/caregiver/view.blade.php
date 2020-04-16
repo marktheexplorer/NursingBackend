@@ -66,7 +66,7 @@
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img  col-md-3">City</div>
+                                        <div class="media-img  col-md-3">County</div>
                                         <div class="media-body">
                                             <div class="media-heading">{{ $user->city  }} </div>
                                         </div>

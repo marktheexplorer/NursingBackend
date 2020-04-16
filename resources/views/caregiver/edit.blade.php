@@ -181,8 +181,8 @@
                                                     @endif
                                                 </div>
                                                 <div class="form-group col-sm-4" >
-                                                    <label>City </label>
-                                                    <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" placeholder="City" value="{{ old('city', $user->city) }}"  id="city-span" readonly/>
+                                                    <label>County </label>
+                                                    <input type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" placeholder="County" value="{{ old('city', $user->city) }}"  id="city-span" readonly/>
                                                     @if ($errors->has('city'))
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $errors->first('city') }}</strong>
