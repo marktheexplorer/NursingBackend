@@ -41,6 +41,7 @@ class CreateUsersTable extends Migration
             $table->string('password')->nullable();
             $table->string('carepack_mail_token')->nullable();
             $table->text('additional_info')->nullable();
+            $table->string('document')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

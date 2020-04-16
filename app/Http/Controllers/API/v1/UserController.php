@@ -558,5 +558,15 @@ class UserController extends Controller{
         else
             return response()->json(['status_code' => 400 , 'message' => 'Notification settings cannot be updated. Please try again.', 'data' => null]);
     }
+    
+    public function viewDocument(Request $request){
+        $user = Auth::user();
+        
+        $document = url('pdf/'.$user->document);
+        if(!empty($user->document))
+            return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $document]);
+        else
+            return response()->json(['status_code' => 400, 'message' => 'No PDF uploaded.' , 'data' => '']);
+    }
 
 }

@@ -63,7 +63,7 @@ class PatientsController extends Controller{
      */
     public function update(Request $request, $id)
     {
-        $input = $request->input();
+        $input = $request->all();
         $input['mobile_number'] = preg_replace('`-`', '', $input['mobile_number']);
         
         $validator = validator::make($input,[
@@ -90,6 +90,7 @@ class PatientsController extends Controller{
             'pets_description' => 'nullable|max:2000',
             'additional_info' => 'max:150',
             'country_code' => 'required',
+            'document' => 'mimes:pdf,xlx,csv|max:2048',
         ],
         $messages = [
             'f_name.required'    => 'The First name is required.',
@@ -113,46 +114,58 @@ class PatientsController extends Controller{
         }
 
         if($request->has('profile_image') && ($request->file('profile_image') != null)) {
-                $image = $request->file('profile_image');
+            $image = $request->file('profile_image');
 
-                $user = User::findOrFail($id);
-                $input['profile_image'] = time().'.'.$image->getClientOriginalExtension();
-                $user->profile_image = $input['profile_image'];
-                $user->save();
-                $destinationPath = config('image.user_image_path');
-                $img = Image::make($image->getRealPath());
-                $image->move($destinationPath, $input['profile_image']);
-            }
-                $user = User::findOrFail($id);
-                $user->f_name = $input['f_name'];
-                $user->m_name = $input['m_name'];
-                $user->l_name = $input['l_name'];
-                $user->email = $input['email'];
-                $user->height = $input['height'];
-                $user->weight = $input['weight'];
-                $user->language = $input['language'];
-                $user->country_code = $input['country_code'];
-                $user->mobile_number = preg_replace('`-`', '', $input['mobile_number']);
-                $user->city = $input['city'];
-                $user->state = $input['state'];
-                $user->street = $input['street'];
-                $user->zipcode = $input['zipcode'];
-                $user->additional_info = $input['additional_info'];
-                $user->dob = date("Y-m-d", strtotime($input['dob']));
-                $user->gender = $input['gender'];
-                $user->save();
+            $user = User::findOrFail($id);
+            $input['profile_image'] = time().'.'.$image->getClientOriginalExtension();
+            $user->profile_image = $input['profile_image'];
+            $user->save();
+            $destinationPath = config('image.user_image_path');
+            $img = Image::make($image->getRealPath());
+            $image->move($destinationPath, $input['profile_image']);
+        }
+        
+        if($request->has('document') && ($request->file('document') != null)) {
+            $pdf = $request->file('document');
 
-                $patient = PatientProfile::where('user_id',$id)->first();
-                $patient['diagnose_id'] = $input['diagnose_id'];
-                $patient['availability'] = $input['availability'];
-                $patient['disciplines'] = implode(',', $input['qualification']) ;
-                $patient['long_term'] = $input['long_term'] == 'yes'? 1 : 0;
-                $patient['pets'] = $input['pets'] == 'yes'? 1 : 0;
-                $patient['pets_description'] = $input['pets'] == 'yes'? $input['pets_description'] : '';
-                $patient->save();
+            $user = User::findOrFail($id);
+            $input['document'] = time().'.'.$pdf->getClientOriginalExtension();
+            $user->document = $input['document'];
+            $user->save();
 
-                flash()->success('Client updated successfully');
-                return redirect()->route('patients.index');
+            $pdf->move(public_path('pdf'), $input['document']);
+        }
+        
+        $user = User::findOrFail($id);
+        $user->f_name = $input['f_name'];
+        $user->m_name = $input['m_name'];
+        $user->l_name = $input['l_name'];
+        $user->email = $input['email'];
+        $user->height = $input['height'];
+        $user->weight = $input['weight'];
+        $user->language = $input['language'];
+        $user->country_code = $input['country_code'];
+        $user->mobile_number = preg_replace('`-`', '', $input['mobile_number']);
+        $user->city = $input['city'];
+        $user->state = $input['state'];
+        $user->street = $input['street'];
+        $user->zipcode = $input['zipcode'];
+        $user->additional_info = $input['additional_info'];
+        $user->dob = date("Y-m-d", strtotime($input['dob']));
+        $user->gender = $input['gender'];
+        $user->save();
+
+        $patient = PatientProfile::where('user_id',$id)->first();
+        $patient['diagnose_id'] = $input['diagnose_id'];
+        $patient['availability'] = $input['availability'];
+        $patient['disciplines'] = implode(',', $input['qualification']) ;
+        $patient['long_term'] = $input['long_term'] == 'yes'? 1 : 0;
+        $patient['pets'] = $input['pets'] == 'yes'? 1 : 0;
+        $patient['pets_description'] = $input['pets'] == 'yes'? $input['pets_description'] : '';
+        $patient->save();
+
+        flash()->success('Client updated successfully');
+        return redirect()->route('patients.index');
     }
 
     public function block($id){

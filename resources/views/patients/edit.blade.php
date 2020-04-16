@@ -209,6 +209,19 @@
                                            </span>
                                            @endif
                                         </div>
+                                        <div class="col-sm-6 form-group">
+                                            <label>Document Upload</label>
+                                            <input type="file" class="form-control {{ $errors->has('document') ? ' is-invalid' : '' }}" name="document" value="{{ old('document' ,$user->document) }}"/>
+                                            <br>
+                                            @if ($errors->has('document'))
+                                            <span class="text-danger">
+                                                <strong>{{ $errors->first('document') }}</strong>
+                                            </span>
+                                            @endif
+                                        </div>
+                                        <div class="col-sm-6 form-group">
+                                            @if($user->document) Click to see Uploaded document  <span><a href={{ url('pdf/'.$user->document) }} target = "_blank"><i class="fas fa-file-pdf"></i></a></span> @endif
+                                        </div>
                                     </div>
                                     </div>
                                   </div>

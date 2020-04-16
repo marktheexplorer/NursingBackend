@@ -114,6 +114,14 @@
                                             <div class="media-heading">{{ $user->zipcode }}</div>
                                         </div>
                                     </li>
+                                    @if($user->document)
+                                    <li class="media">
+                                        <div class="media-img col-md-3">Document Uploaded</div>
+                                        <div class="media-body">
+                                            <span><a href={{ url('pdf/'.$user->document) }} target = "_blank"><i class="fas fa-file-pdf"></i></a></span>
+                                        </div>
+                                    </li>
+                                    @endif
                                 </ul>
                             </div>
                         </div>
