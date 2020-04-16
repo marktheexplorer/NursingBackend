@@ -342,6 +342,7 @@ class UserController extends Controller{
             'f_name' => 'required|max:40',
             'm_name' => 'max:40',
             'l_name' => 'required|max:40',
+            'email' => 'required|email|unique:users,email,'.Auth::id(),
             'mobile_number' => 'digits:10|unique:users,mobile_number,'.Auth::id(),
         ]);        
 
