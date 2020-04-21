@@ -114,6 +114,18 @@
                                             <div class="media-heading">{{ $user->zipcode }}</div>
                                         </div>
                                     </li>
+                                    <li class="media">
+                                        <div class="media-img col-md-3">Alternate Contact Name</div>
+                                        <div class="media-body">
+                                            <div class="media-heading">{{ $user->alt_contact_name }}</div>
+                                        </div>
+                                    </li>
+                                    <li class="media">
+                                        <div class="media-img col-md-3">Alternate Contact Number</div>
+                                        <div class="media-body">
+                                            <div class="media-heading">{{ $user->alt_contact_no }}</div>
+                                        </div>
+                                    </li>
                                     @if($user->document)
                                     <li class="media">
                                         <div class="media-img col-md-3">Document Uploaded</div>

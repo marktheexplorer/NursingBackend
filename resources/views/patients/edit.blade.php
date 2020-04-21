@@ -210,6 +210,24 @@
                                            @endif
                                         </div>
                                         <div class="col-sm-6 form-group">
+                                           <label>Alternate Contact Name</label>
+                                           <input type="text" class="form-control {{ $errors->has('alt_contact_name') ? ' is-invalid' : '' }}" name="alt_contact_name" placeholder="Alternate Contact Name" value="{{ old('alt_contact_name' ,$user->alt_contact_name) }}" />
+                                           @if ($errors->has('alt_contact_name'))
+                                           <span class="text-danger">
+                                           <strong>{{ $errors->first('alt_contact_name') }}</strong>
+                                           </span>
+                                           @endif
+                                        </div>
+                                        <div class="col-sm-6 form-group">
+                                           <label>Alternate Contact Number</label>
+                                           <input type="text" class="form-control {{ $errors->has('alt_contact_no') ? ' is-invalid' : '' }}" name="alt_contact_no" placeholder="Alternate Contact Number" value="{{ old('alt_contact_no' ,$user->alt_contact_no) }}" />
+                                           @if ($errors->has('alt_contact_no'))
+                                           <span class="text-danger">
+                                           <strong>{{ $errors->first('alt_contact_no') }}</strong>
+                                           </span>
+                                           @endif
+                                        </div>
+                                        <div class="col-sm-6 form-group">
                                             <label>Document Upload</label>
                                             <input type="file" class="form-control {{ $errors->has('document') ? ' is-invalid' : '' }}" name="document" value="{{ old('document' ,$user->document) }}"/>
                                             <br>

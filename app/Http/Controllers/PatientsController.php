@@ -90,6 +90,7 @@ class PatientsController extends Controller{
             'pets_description' => 'nullable|max:2000',
             'additional_info' => 'max:150',
             'country_code' => 'required',
+            'alt_contact_name' => 'string|max:40',
             'document' => 'mimes:pdf,xlx,csv|max:2048',
         ],
         $messages = [
@@ -153,6 +154,8 @@ class PatientsController extends Controller{
         $user->additional_info = $input['additional_info'];
         $user->dob = date("Y-m-d", strtotime($input['dob']));
         $user->gender = $input['gender'];
+        $user->alt_contact_name = $input['alt_contact_name'];
+        $user->alt_contact_no = $input['alt_contact_no'];
         $user->save();
 
         $patient = PatientProfile::where('user_id',$id)->first();
