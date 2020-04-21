@@ -40,6 +40,9 @@ class UserController extends Controller{
             'mobile_number' => 'required|unique:users',
             'country_code' => 'required',
             'type' => ['required', Rule::in(['caregiver', 'patient'])],
+        ],[
+            'l_name.required' => 'Please enter last name.',
+            'f_name.required' => 'Please enter first name.',
         ]);        
 
         if ($validator->fails())
