@@ -90,7 +90,7 @@ class PatientsController extends Controller{
             'pets_description' => 'nullable|max:2000',
             'additional_info' => 'max:150',
             'country_code' => 'required',
-            'alt_contact_name' => 'string|max:40',
+            'alt_contact_name' => 'max:40',
             'document' => 'mimes:pdf,xlx,csv|max:2048',
         ],
         $messages = [
@@ -152,7 +152,7 @@ class PatientsController extends Controller{
         $user->street = $input['street'];
         $user->zipcode = $input['zipcode'];
         $user->additional_info = $input['additional_info'];
-        $user->dob = date("Y-m-d", strtotime($input['dob']));
+        $user->dob = date("m/d/Y", strtotime($input['dob']));
         $user->gender = $input['gender'];
         $user->alt_contact_name = $input['alt_contact_name'];
         $user->alt_contact_no = $input['alt_contact_no'];
@@ -255,7 +255,7 @@ class PatientsController extends Controller{
 
             $input['role_id'] = 3;
             $input['mobile_number'] = preg_replace('`-`', '', $input['mobile_number']);
-            $input['dob'] = date("Y-m-d", strtotime($input['dob']));
+            $input['dob'] = date("m/d/Y", strtotime($input['dob']));
             $patient = User::create($input);
 
             $profile['user_id'] = $patient->id;

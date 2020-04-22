@@ -123,7 +123,7 @@ class CaregiverController extends Controller{
         }
 
         $input['role_id'] = 2;
-        $input['dob'] = date("Y-m-d", strtotime($input['dob']));
+        $input['dob'] = date("m/d/Y", strtotime($input['dob']));
         $user = User::create($input);
 
         if($user){
@@ -338,7 +338,7 @@ class CaregiverController extends Controller{
         $user->zipcode = $input['zipcode'];
         $user->state = $input['state'];
         $user->street = $input['street'];
-        $user->dob = date("Y-m-d", strtotime($input['dob']));
+        $user->dob = date("m/d/Y", strtotime($input['dob']));
         $user->gender = $input['gender'];
         $user->save();
 
