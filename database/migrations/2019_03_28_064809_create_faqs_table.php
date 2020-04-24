@@ -17,8 +17,13 @@ class CreateFaqsTable extends Migration
             $table->bigIncrements('id');
             $table->text('question');
             $table->longText('answer');
+            $table->unsignedBigInteger('role_id');;
             $table->tinyInteger('faq_order')->default('0');
             $table->timestamps();
+        });
+
+        Schema::table('faqs', function (Blueprint $table) {
+            $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
         });
     }
 
@@ -29,6 +34,10 @@ class CreateFaqsTable extends Migration
      */
     public function down()
     {
+        Schema::table('faqs', function(Blueprint $table){
+            $table->dropForeign('faqs_role_id_foreign');
+            $table->dropColumn('role_id');
+         });
         Schema::dropIfExists('faqs');
     }
 }

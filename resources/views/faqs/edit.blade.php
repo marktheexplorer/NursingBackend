@@ -41,6 +41,18 @@
                                             </span>
                                         @endif
                                     </div>
+                                    <div class="form-group col-md-12">
+                                        <label>Select Role</label>
+                                        <select class="form-control" id="role" name="role_id">
+                                            <option value="3" {{ old('role_id', $faq->role_id) == 3 ? 'selected' : '' }} >Client</option>
+                                            <option value="2" {{ old('role_id', $faq->role_id) == 2 ? 'selected' : '' }}>Caregiver</option>
+                                        </select>
+                                        @if ($errors->has('role_id'))
+                                            <span class="invalid-feedback" role="alert" style="display:block">
+                                                <strong>{{ $errors->first('role_id') }}</strong>
+                                            </span>
+                                        @endif
+                                    </div>
                                 </div>    
                                 <div class="form-group col-md-12" style="padding-left: 0px;">
                                     <div class="form-group">

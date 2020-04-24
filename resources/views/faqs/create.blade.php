@@ -29,7 +29,7 @@
                                 <div class="row">
                                     <div class="form-group col-md-12">
                                         <label>Question</label>
-                                        <input type="text" class="form-control {{ $errors->has('question') ? ' is-invalid' : '' }}" name="question" placeholder="Enter Question" value="{{ old('question') }}" required/>
+                                        <input type="text" class="form-control {{ $errors->has('question') ? ' is-invalid' : '' }}" name="question" placeholder="Enter Question" value="{{ old('question') }}" />
                                         @if ($errors->has('question'))
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $errors->first('question') }}</strong>
@@ -42,6 +42,18 @@
                                         @if ($errors->has('answer'))
                                             <span class="invalid-feedback" role="alert" style="display:block">
                                                 <strong>{{ $errors->first('answer') }}</strong>
+                                            </span>
+                                        @endif
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <label>Select Role</label>
+                                        <select class="form-control" id="role" name="role_id">
+                                            <option value="3">Client</option>
+                                            <option value="2">Caregiver</option>
+                                        </select>
+                                        @if ($errors->has('role_id'))
+                                            <span class="invalid-feedback" role="alert" style="display:block">
+                                                <strong>{{ $errors->first('role_id') }}</strong>
                                             </span>
                                         @endif
                                     </div>

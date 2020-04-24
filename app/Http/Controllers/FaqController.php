@@ -52,6 +52,7 @@ class FaqController extends Controller{
         $faq = new Faq();
         $faq->question = $input['question'];
         $faq->answer = $input['answer'];
+        $faq->role_id = $input['role_id'];
         $faq_no = Faq::count();
         $faq->faq_order = $faq_no + 1;
         $faq->save();
