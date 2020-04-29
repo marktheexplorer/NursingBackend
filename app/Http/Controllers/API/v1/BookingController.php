@@ -55,7 +55,6 @@ class BookingController extends Controller
                 '24_hours' => 'required',
                 'start_time' => 'required',
                 'end_time' =>'required',
-                'no_of_weeks' =>'required',
                 'address' => 'required',
                 'country' => 'required',
                 'state' => 'required',
@@ -87,12 +86,16 @@ class BookingController extends Controller
         }
 
         if($input['booking_type'] == 'Select from week'){
-            $startDate = Carbon::now()->format('m/d/Y');
-            $endDate = Carbon::now()->addweek($input['no_of_weeks'])->format('m/d/Y');
+           /* $startDate = Carbon::now()->format('m/d/Y');
+            $endDate = Carbon::now()->addweek($input['no_of_weeks'])->format('m/d/Y');*/
 
-            $dates = Self::getDates($startDate , $endDate , $input['weekdays']);
-            $input['start_date'] = Carbon::parse($dates[0])->format('m/d/Y');
-            $input['end_date'] = Carbon::parse(end($dates))->format('m/d/Y');
+            $dates = Self::getDates($input['start_date'] , $input['end_date'] , $input['weekdays']);
+            
+            if(empty($dates)){
+                return response()->json(['status_code'=> 400, 'message'=> 'Please select valid date range.', 'data' => null]);
+            }
+            /*$input['start_date'] = Carbon::parse($dates[0])->format('m/d/Y');
+            $input['end_date'] = Carbon::parse(end($dates))->format('m/d/Y');*/
         }
 
         foreach ($input['diagnosis_id'] as $key => $value) {
@@ -271,12 +274,16 @@ class BookingController extends Controller
         }
 
         if($booking->booking_type == 'Select from week'){
-            $startDate = Carbon::now()->format('m/d/Y');
-            $endDate = Carbon::now()->addweek($input['no_of_weeks'])->format('m/d/Y');
+            /*$startDate = Carbon::now()->format('m/d/Y');
+            $endDate = Carbon::now()->addweek($input['no_of_weeks'])->format('m/d/Y');*/
 
-            $dates = Self::getDates($startDate , $endDate , $input['weekdays']);
-            $input['start_date'] = Carbon::parse($dates[0])->format('m/d/Y');
-            $input['end_date'] = Carbon::parse(end($dates))->format('m/d/Y');
+            $dates = Self::getDates($input['start_date'] , $input['end_date'] , $input['weekdays']);
+            
+            if(empty($dates)){
+                return response()->json(['status_code'=> 400, 'message'=> 'Please select valid date range.', 'data' => null]);
+            }
+            /*$input['start_date'] = Carbon::parse($dates[0])->format('m/d/Y');
+            $input['end_date'] = Carbon::parse(end($dates))->format('m/d/Y');*/
         }
 
         $input['service_location_id'] = Countyareas::select('id')->where('area', 'like', '%'.$input['service_location_id'].'%')->first()->id;
@@ -321,7 +328,6 @@ class BookingController extends Controller
                 '24_hours' => 'required',
                 'start_time' => 'required',
                 'end_time' =>'required',
-                'no_of_weeks' =>'required',
                 'address' => 'required',
                 'country' => 'required',
                 'state' => 'required',
@@ -350,12 +356,16 @@ class BookingController extends Controller
         }
 
         if($input['booking_type'] == 'Select from week'){
-            $startDate = Carbon::now()->format('m/d/Y');
-            $endDate = Carbon::now()->addweek($input['no_of_weeks'])->format('m/d/Y');
+            /*$startDate = Carbon::now()->format('m/d/Y');
+            $endDate = Carbon::now()->addweek($input['no_of_weeks'])->format('m/d/Y');*/
 
-            $dates = Self::getDates($startDate , $endDate , $input['weekdays']);
-            $input['start_date'] = Carbon::parse($dates[0])->format('m/d/Y');
-            $input['end_date'] = Carbon::parse(end($dates))->format('m/d/Y');
+            $dates = Self::getDates($input['start_date'] , $input['end_date'] , $input['weekdays']);
+            
+            if(empty($dates)){
+                return response()->json(['status_code'=> 400, 'message'=> 'Please select valid date range.', 'data' => null]);
+            }
+            /*$input['start_date'] = Carbon::parse($dates[0])->format('m/d/Y');
+            $input['end_date'] = Carbon::parse(end($dates))->format('m/d/Y');*/
         }
 
         foreach ($input['diagnosis_id'] as $key => $value) {

@@ -232,13 +232,14 @@ class BookingsController extends Controller{
             [
                 'city' => 'required',
                 'weekdays'=>'required',
-                'no_of_weeks'=>'required',
                 'is_full_day' => 'required',
                 'booking_id' => 'required|string|max:40',
                 'address' => 'required',
                 'state' => 'required',
                 'country' => 'required',
                 'zipcode' => 'required',
+                'start_date'=>'required',
+                'end_date'=>'required|after_or_equal:start_date',
             ]
         );
 
@@ -246,14 +247,18 @@ class BookingsController extends Controller{
             return redirect()->back()->withErrors($validator);
         }
 
-        $startDate = Carbon::now()->format('m/d/Y');
-        $endDate = Carbon::now()->addweek($input['no_of_weeks'])->format('m/d/Y');
+        /*$startDate = Carbon::now()->format('m/d/Y');
+        $endDate = Carbon::now()->addweek($input['no_of_weeks'])->format('m/d/Y');*/
 
-        $dates = Self::getDates($startDate , $endDate , $input['weekdays']);
+        $dates = Self::getDates($input['start_date'] , $input['end_date'] , $input['weekdays']);
+        if(empty($dates)){
+            flash()->error('Please select valid date range.');   
+            return redirect()->back();
+        }
         
         $booking = Booking::findOrFail($input['booking_id']);
-        $booking['start_date'] = Carbon::parse($dates[0])->format('m/d/Y');
-        $booking['end_date'] = Carbon::parse(end($dates))->format('m/d/Y');  
+        $booking['start_date'] = $input['start_date'];
+        $booking['end_date'] = $input['end_date'];  
         $booking['start_time'] = Carbon::parse($input['todaystarttime'])->format('H:i') ;
         $booking['end_time'] = Carbon::parse($input['todayendtime'])->format('H:i') ;
         $booking['address'] = $input['address'];
@@ -268,7 +273,6 @@ class BookingsController extends Controller{
             $booking->end_time = '23:59:59';
         }
         $booking['weekdays'] = serialize($input['weekdays']);
-        $booking['no_of_weeks'] = $input['no_of_weeks'];
         $booking->save();
 
         flash()->success('Booking Updated Successfully');

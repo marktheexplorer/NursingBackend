@@ -47,6 +47,43 @@
                                             </div>
                                         </li>
                                         <li class="media">
+                                            <div class="media-img col-md-3">Date</div>
+                                            <div class="media-body">
+                                                <div class="media-heading">
+                                                    <input type="hidden" value="{{ $booking['id'] }}" name="booking_id" /> 
+                                                    <input type="text" id="start_date" class="form-control floating-label" placeholder="Start Date" style="max-width: 120px;float: left; margin-right: 90px" name="start_date" value="{{ $booking['start_date'] }}" >
+                                                    <span style="display: inline;float: left;margin-right: 90px;">To </span>
+                                                    <input type="text" id="end_date" class="form-control floating-label" placeholder="End Date" style="max-width: 120px;float: left; margin-right: 90px" name="end_date" value="{{ $booking['end_date'] }}" >
+                                                    <script>
+                                                        $('#start_date').bootstrapMaterialDatePicker({
+                                                            format : 'MM/DD/YYYY',
+                                                            weekStart : 0, 
+                                                            time: false ,
+                                                            minDate : new Date(),
+                                                        }).on('change', function(e, date){ 
+                                                            $('#end_date').bootstrapMaterialDatePicker('setMinDate', date);
+                                                         });
+
+                                                        $('#end_date').bootstrapMaterialDatePicker({
+                                                            format : 'MM/DD/YYYY',
+                                                            weekStart : 0, 
+                                                            time: false ,
+                                                            minDate : new Date(),
+                                                        }).on('change', function(e, date){  });
+                                                    </script>
+                                                    @if ($errors->has('start_date'))
+                                                        <span class="invalid-feedback" role="alert" style="display:inline;">
+                                                            <strong>{{ $errors->first('start_date') }}</strong>
+                                                        </span>
+                                                    @elseif($errors->has('end_date'))
+                                                        <span class="invalid-feedback" role="alert" style="display:inline;">
+                                                            <strong>{{ $errors->first('end_date') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="media">
                                             <div class="media-img col-md-3">Choose Week Days</div>
                                             <div class="media-body">
                                                 <div class="media-heading"><?php
@@ -75,19 +112,6 @@
                                                     @if ($errors->has('weekdays'))
                                                         <span class="invalid-feedback" role="alert" style="display:inline;">
                                                             <strong>{{ $errors->first('weekdays') }}</strong>
-                                                        </span>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li class="media">
-                                            <div class="media-img col-md-3">Choose Frequency</div>
-                                            <div class="media-body">
-                                                <div class="media-heading">
-                                                    <input type="number" value="{{ old('no_of_weeks', $booking->no_of_weeks) }}" name="no_of_weeks" class="form-control" style="max-width: 270px;" min="1" />
-                                                    @if ($errors->has('no_of_weeks'))
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $errors->first('no_of_weeks') }}</strong>
                                                         </span>
                                                     @endif
                                                 </div>
