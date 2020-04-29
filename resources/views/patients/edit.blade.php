@@ -238,7 +238,7 @@
                                             @endif
                                         </div>
                                         <div class="col-sm-6 form-group">
-                                            @if($user->document) Click to see Uploaded document  <span><a href={{ url('pdf/'.$user->document) }} target = "_blank"><i class="fas fa-file-pdf"></i></a></span> @endif
+                                            @if($user->document) Click to see Uploaded document  <span><a href={{ asset('pdf/'.$user->document) }} target = "_blank"><i class="fas fa-file-pdf"></i></a></span> @endif
                                         </div>
                                     </div>
                                     </div>

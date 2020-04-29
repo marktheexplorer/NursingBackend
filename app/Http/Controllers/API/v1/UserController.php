@@ -566,7 +566,7 @@ class UserController extends Controller{
     public function viewDocument(Request $request){
         $user = Auth::user();
         
-        $document = url('pdf/'.$user->document);
+        $document = asset('pdf/'.$user->document);
         if(!empty($user->document))
             return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $document]);
         else
