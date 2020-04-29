@@ -70,7 +70,12 @@ class HomeController extends Controller
 
     public function faqListing()
     {
-        $faqs = Faq::select('question',htmlspecialchars_decode('answer'))->orderBy('faq_order', 'ASC')->get();
+        $user = Auth::user();
+        $faqs = Faq::select('question','answer')->where('role_id',$user->role_id)->orderBy('faq_order', 'ASC')->get();
+        
+        foreach($faqs as $faq){
+            $faq->answer = strip_tags(html_entity_decode($faq->answer));
+        }
 
         if (count($faqs) > 0)
             return response()->json(['status_code'=> 200, 'message'=> '', 'data' => $faqs]);

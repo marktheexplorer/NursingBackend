@@ -17,7 +17,7 @@ class CreateFaqsTable extends Migration
             $table->bigIncrements('id');
             $table->text('question');
             $table->longText('answer');
-            $table->unsignedBigInteger('role_id');;
+            $table->unsignedBigInteger('role_id');
             $table->tinyInteger('faq_order')->default('0');
             $table->timestamps();
         });
