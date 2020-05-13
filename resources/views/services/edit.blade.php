@@ -39,15 +39,6 @@
                                             @endif
                                         </div>
                                         <div class="col-sm-12 form-group">
-                                            <label>Description </label>
-                                            <textarea class="form-control" name="description" rows="15">{{ old('name', $service->description) }}</textarea>
-                                            @if ($errors->has('description'))
-                                                <span class="text-danger" >
-                                                    <strong>{{ $errors->first('description') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div> 
-                                        <div class="col-sm-12 form-group">
                                             <label>Select Image:</label>
                                             <input type="file" name="service_image" class="" onchange="readURL(this);"><br/><?php
                                             if(empty($service->service_image)) { ?>

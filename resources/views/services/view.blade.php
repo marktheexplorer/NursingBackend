@@ -31,8 +31,6 @@
 
                                 <h5>Title</h5>
                                 <p>{{ ucfirst($service->title) }} </p>
-                                <h5>Description</h5>
-                                <p>{!! $service->description !!} </p>
                         </div>
                     </div>
                 </div>

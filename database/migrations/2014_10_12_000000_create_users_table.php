@@ -33,6 +33,7 @@ class CreateUsersTable extends Migration
             $table->string('otp')->nullable();  
             $table->boolean('is_blocked')->default(0);
             $table->boolean('is_notify')->default(1);
+            $table->string('address')->nullable();
             $table->string('city')->nullable();
             $table->string('state')->nullable();
             $table->string('street')->nullable();

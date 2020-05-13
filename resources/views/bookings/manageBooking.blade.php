@@ -91,7 +91,7 @@
                                         <div class="col-md-9">                                           
                                           <select name="caregivers[]" class="form-control select2 caregiver" id="caregiver">
                                             @foreach($caregivers as $caregiver)
-                                                <option value="{{ $caregiver->id }}" >{{ $caregiver->user->name .' ('. $caregiver->user->email . ')'}}</option>
+                                                <option value="{{ $caregiver->id }}" >{{ $caregiver->user->f_name.' '. $caregiver->user->l_name .' ('. $caregiver->user->email . ')'}}</option>
                                             @endforeach
                                           </select>
                                         </div>

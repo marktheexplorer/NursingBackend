@@ -47,6 +47,10 @@ class MailHelper extends Mailable{
           //send after contact us
           $objDemo = $this->objDemo;
           return $this->from($this->objDemo->mail_from, $this->objDemo->mail_from_name)->subject($this->objDemo->subject)->view('mail.contact_us_mail', compact('objDemo'));          
+        }else if($this->objDemo->type == 'schedule_confirm_mail'){
+          //send after new sschedule created
+          $objDemo = $this->objDemo;
+          return $this->from($this->objDemo->mail_from, $this->objDemo->mail_from_name)->subject($this->objDemo->subject)->view('mail.scheduleConfirmedMail', compact('objDemo'));          
         }
     }
 }

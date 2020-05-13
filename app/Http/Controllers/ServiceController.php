@@ -46,7 +46,6 @@ class ServiceController extends Controller{
         $input = $request->input();
         $validator = validator::make($input,[
             'title' => 'required|string|max:60',
-            'description' => 'required|string',
             'service_image' => 'nullable|image|mimes:jpeg,png,jpg'
         ]);
 
@@ -64,7 +63,6 @@ class ServiceController extends Controller{
         }
 
         $input['title'] = $input['title'];
-        $input['description'] = $input['description'];
         $service = Service::create($input);
 
         flash()->success('New Service added successfully');
@@ -107,7 +105,6 @@ class ServiceController extends Controller{
         $input = $request->input();
         $validator = validator::make($input,[
             'title' => 'required|string|max:60',
-            'description' => 'required|string',
             'service_image' => 'nullable|image|mimes:jpeg,png,jpg'
         ]);
 
@@ -126,7 +123,6 @@ class ServiceController extends Controller{
 
                 $service = Service::findOrFail($id);
                 $service->title = $input['title'];
-                $service->description = $input['description'];
                 $service->service_image = isset($input['service_image'])? $input['service_image'] : null;
                 $service->save();
 
@@ -147,11 +143,14 @@ class ServiceController extends Controller{
 
         foreach ($booking as $key => $value) {
             $arr = unserialize($value['services_id']);
-            $key = array_search($service->id, $arr);
-               
-            if($key !== false){
-                unset($arr[$key]);
-                Booking::where('id', $value['id'])->update(['services_id' => serialize($arr)]);
+            
+            if($arr !== false){
+                $key = array_search($service->id, $arr);
+            }else{
+                if($key !== false){
+                    unset($arr[$key]);
+                    Booking::where('id', $value['id'])->update(['services_id' => serialize($arr)]);
+                }
             }
         }
         if ($service->delete()) {

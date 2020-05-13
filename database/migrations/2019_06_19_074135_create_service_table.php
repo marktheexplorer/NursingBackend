@@ -16,7 +16,7 @@ class CreateServiceTable extends Migration
         Schema::create('services', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('title');
-            $table->longtext('description');
+            $table->longtext('description')->nullable();
             $table->string('service_image')->nullable();
             $table->boolean('is_blocked')->default(0);
             $table->timestamps();

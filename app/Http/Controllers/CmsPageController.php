@@ -39,7 +39,7 @@ class CmsPageController extends Controller{
     public function store(Request $request){
         $input = $request->input(); 
         $validator =  Validator::make($input,[
-            'title' => 'required|string|max:200',
+            'title' => 'required|string|max:200|unique:cms_pages',
             'content' => 'required|string|max:2000',
         ]);
 
@@ -90,7 +90,7 @@ class CmsPageController extends Controller{
     public function update(Request $request, $id){
         $input = $request->input();
         $validator =  Validator::make($input,[
-            'title' => 'required|string|max:200',
+            'title' => 'required|string|max:200|unique:cms_pages,title,'.$id,
             'content' => 'required|string|max:2000',
         ]);
 
