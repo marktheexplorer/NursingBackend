@@ -146,6 +146,7 @@ class UserController extends Controller{
 
                     $userDetails =  User::where('users.id', $user->id)->join('patients_profiles', 'users.id', 'user_id')->first();  
                     $userDetails['mobile_number'] = substr_replace(substr_replace($userDetails->mobile_number, '-', '3','0'), '-', '7','0');
+                    $userDetails['language'] = unserialize($userDetails['language']);
                     if($userDetails->profile_image == null)
                         $userDetails->profile_image = 'default.png';
                     $success['token'] =  $token;
@@ -169,6 +170,7 @@ class UserController extends Controller{
                 }else{
                     $userDetails =  User::where('users.id', $user->id)->first(); 
                     $userDetails['mobile_number'] = substr_replace(substr_replace($userDetails->mobile_number, '-', '3','0'), '-', '7','0');
+                    $userDetails['language'] = unserialize($userDetails['language']);
                     if($userDetails['profile_image'] == null)
                         $userDetails['profile_image'] = 'default.png';
                     $userDetails['service_in'] = DB::table('caregiver_attributes')
@@ -351,6 +353,8 @@ class UserController extends Controller{
 
         if ($validator->fails())
             return response()->json(['status_code'=> $this->errorStatus, 'message'=> $validator->errors()->first(), 'data' => null]);
+            
+        $input['language'] = serialize($input['language']);
         $user = Auth::user();
         $user->fill($input);
         $user->save();
@@ -386,6 +390,7 @@ class UserController extends Controller{
             }
             $user['service_in'] = DB::table('caregiver_attributes')->select('county_areas.id','county_areas.area')->join('county_areas', 'county_areas.id','caregiver_attributes.value')->where('caregiver_id', '=', $user->id)->where('type', '=', 'service_area')->get();
             $user['mobile_number'] = substr_replace(substr_replace($user->mobile_number, '-', '3','0'), '-', '7','0');
+            $user['language'] = unserialize($input['language']);
         }
 
         if ($user)

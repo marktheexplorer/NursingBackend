@@ -526,7 +526,7 @@ class BookingController extends Controller
                 else
                     $bookings[$key]['caregivers'][$k]['profile_image'] = $care->caregiver->user->profile_image;
             
-                $bookings[$key]['caregivers'][$k]['language'] = $care->caregiver->user->language;
+                $bookings[$key]['caregivers'][$k]['language'] = unserialize($care->caregiver->user->language);
                 $bookings[$key]['caregivers'][$k]['description'] = $care->caregiver->user->additional_info;
                 $bookings[$key]['caregivers'][$k]['discipline'] = Qualification::select('name')->join('caregiver_attributes' ,'caregiver_attributes.value' , 'qualifications.id')->where('type' , 'qualification')->where('caregiver_id', $care->caregiver->user->id)->get()->toArray();
             }
@@ -622,7 +622,7 @@ class BookingController extends Controller
             foreach ($assignedCaregiver as $k => $ac) {
                 $datas['name'] = $ac->caregiver->user->f_name.' '.$ac->caregiver->user->m_name.' '.$ac->caregiver->user->l_name;
                 $datas['profile_image'] = $ac->caregiver->user->profile_image == null ? 'default.png' : $ac->caregiver->user->profile_image ;
-                $datas['language'] = $ac->caregiver->user->language;
+                $datas['language'] = unserialize($ac->caregiver->user->language);
                 $datas['description'] = $ac->caregiver->user->description;
                 $datas['discipline'] = Qualification::select('name')->join('caregiver_attributes' ,'caregiver_attributes.value' , 'qualifications.id')->where('type' , 'qualification')->where('caregiver_id', $ac->caregiver->user->id)->get()->toArray();
                 $datas['start_time'] = $ac->start_time;
@@ -665,7 +665,7 @@ class BookingController extends Controller
             foreach ($assignedCaregiver as $k => $ac) {
                 $datas['name'] = $ac->caregiver->user->f_name.' '.$ac->caregiver->user->m_name.' '.$ac->caregiver->user->l_name;
                 $datas['profile_image'] = $ac->caregiver->user->profile_image == null ? 'default.png' : $ac->caregiver->user->profile_image ;
-                $datas['language'] = $ac->caregiver->user->language;
+                $datas['language'] = unserialize($ac->caregiver->user->language);
                 $datas['description'] = $ac->caregiver->user->description;
                 $datas['discipline'] = Qualification::select('name')->join('caregiver_attributes' ,'caregiver_attributes.value' , 'qualifications.id')->where('type' , 'qualification')->where('caregiver_id', $ac->caregiver->user->id)->get()->toArray();
                 $datas['start_time'] = $ac->start_time;
@@ -715,7 +715,7 @@ class BookingController extends Controller
                 $bookings[$key]['service_location_id'] = $value->booking->service_location->area;
                 $bookings[$key]['user']['name'] = $value->booking->user->f_name.' '.$value->booking->user->m_name.' '.$value->booking->user->l_name;
                 $bookings[$key]['user']['profile_image'] = $value->booking->user->profile_image == null ? 'default.png' : $value->booking->user->profile_image ;
-                $bookings[$key]['user']['language'] = $value->booking->user->language;
+                $bookings[$key]['user']['language'] = unserialize($value->booking->user->language);
                 $bookings[$key]['user']['description'] = $value->booking->user->description;
                 $bookings[$key]['shift_start_time'] = $value->shift_start_time ;
                 $bookings[$key]['shift_end_time'] = $value->shift_end_time ;
