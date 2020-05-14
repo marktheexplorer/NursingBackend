@@ -90,7 +90,7 @@ class PatientsController extends Controller{
             'pets_description' => 'nullable|max:2000',
             'additional_info' => 'max:150',
             'country_code' => 'required',
-            'alt_contact_name' => 'max:40',
+            'alt_contact_name' => 'string|max:40',
             'document' => 'mimes:pdf,xlx,csv|max:2048',
         ],
         $messages = [
@@ -144,7 +144,7 @@ class PatientsController extends Controller{
         $user->email = $input['email'];
         $user->height = $input['height'];
         $user->weight = $input['weight'];
-        $user->language = $input['language'];
+        $user->language = serialize($input['language']);
         $user->country_code = $input['country_code'];
         $user->mobile_number = preg_replace('`-`', '', $input['mobile_number']);
         $user->city = $input['city'];
@@ -254,6 +254,7 @@ class PatientsController extends Controller{
             }
 
             $input['role_id'] = 3;
+            $input['language'] = serialize($input['language']);
             $input['mobile_number'] = preg_replace('`-`', '', $input['mobile_number']);
             $input['dob'] = date("m/d/Y", strtotime($input['dob']));
             $patient = User::create($input);

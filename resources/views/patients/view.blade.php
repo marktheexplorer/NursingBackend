@@ -1,4 +1,3 @@
-
 @extends('layouts.app')
 
 @section('content')
@@ -33,7 +32,7 @@
             </div>
             <div class="col-lg-9 col-md-8">
                 <div class="ibox">
-                    <div class="ibox-body">
+                    <div class="ibox-bodfy">
                         <ul class="nav nav-tabs tabs-line">
                             <li class="nav-item">
                                 <a class="nav-link active" href="#tab-1" data-toggle="tab"><i class="ti-bar-chart"></i> Personal Information</a>
@@ -87,7 +86,7 @@
                                     <li class="media">
                                         <div class="media-img col-md-3">Language</div>
                                         <div class="media-body">
-                                            <div class="media-heading">{{ $user->language }}</div>
+                                            <div class="media-heading">{{ implode(', ', unserialize($user->language)) }}</div>
                                         </div>
                                     </li>
                                     <li class="media">

@@ -161,10 +161,9 @@
                                         </div>
                                         <div class="col-sm-3  form-group">
                                             <label>Language</label>
-                                            <select name="language" class="form-control {{ $errors->has('language') ? ' is-invalid' : '' }}">
-                                                <option disabled="true" selected="true"> -- Select Language --</option>
+                                            <select name="language" class="form-control {{ $errors->has('language') ? ' is-invalid' : '' }} multiple" multiple="multiple">
                                                 @foreach(PROFILE_LANGUAGE as $val)
-                                                    <option value="{{ $val }}" {{ (old('language',$user->language)) == $val ? 'selected' : '' }}>{{$val}}</option>
+                                                    <option value="{{ $val }}" {{ (in_array($val, unserialize($user->language))) ? 'selected' :''}}>{{$val}}</option>
                                                 @endforeach
                                             </select>
                                             @if ($errors->has('language'))
