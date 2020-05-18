@@ -86,7 +86,7 @@
                                     <li class="media">
                                         <div class="media-img col-md-3">Language</div>
                                         <div class="media-body">
-                                            <div class="media-heading">{{ implode(', ', unserialize($user->language)) }}</div>
+                                            <div class="media-heading">{{ ($user->language !== NULL)? implode(', ', unserialize($user->language)) : '' }}</div>
                                         </div>
                                     </li>
                                     <li class="media">
