@@ -233,6 +233,7 @@ class UserController extends Controller{
                 $user->save();
                 
                 $data = Self::sendTwilioOTP($input['mobile_number'], $input['country_code'], $input['otp']); 
+                $user->language = unserialize($user->language);
                 return response()->json(['status_code' => $this->successStatus, 'message' => 'Please verify the mobile number to proceed. An OTP has been sent to your registered mobile number.', 'data' => '']);
             } 
         } else {
@@ -347,15 +348,16 @@ class UserController extends Controller{
             'f_name' => 'required|max:40',
             'm_name' => 'max:40',
             'l_name' => 'required|max:40',
-            'email' => 'required|email|unique:users,email,'.Auth::id(),
+            'email' => 'email|unique:users,email,'.Auth::id(),
             'mobile_number' => 'digits:10|unique:users,mobile_number,'.Auth::id(),
         ]);        
 
         if ($validator->fails())
             return response()->json(['status_code'=> $this->errorStatus, 'message'=> $validator->errors()->first(), 'data' => null]);
             
-        $input['language'] = serialize($input['language']);
+        
         $user = Auth::user();
+        $input['language'] = serialize($input['language']);
         $user->fill($input);
         $user->save();
 
@@ -372,26 +374,23 @@ class UserController extends Controller{
             return response()->json(['status_code'=> 501, 'message'=> 'Please verify your mobile number.', 'data' => $success]);
         }
 
-        if($user->role_id == '2'){
-
-            DB::table('caregiver_attributes')->where('caregiver_id', '=', $user->id)->where('type', '=', 'service_area')->delete();
-            if($request->exists('service_in')){                
-                $service_area = $input['service_in'];
-                if($service_area != null){
-                    foreach($service_area as $area){
-                        $data[] = array(
-                            'caregiver_id' => $user->id,
-                            'value' => $area,
-                            'type' => 'service_area'
-                        );
-                    }
-                    DB::table('caregiver_attributes')->insert($data);
+        DB::table('caregiver_attributes')->where('caregiver_id', '=', $user->id)->where('type', '=', 'service_area')->delete();
+        if($request->exists('service_in')){                
+            $service_area = $input['service_in'];
+            if($service_area != null){
+                foreach($service_area as $area){
+                    $data[] = array(
+                        'caregiver_id' => $user->id,
+                        'value' => $area,
+                        'type' => 'service_area'
+                    );
                 }
+                DB::table('caregiver_attributes')->insert($data);
             }
-            $user['service_in'] = DB::table('caregiver_attributes')->select('county_areas.id','county_areas.area')->join('county_areas', 'county_areas.id','caregiver_attributes.value')->where('caregiver_id', '=', $user->id)->where('type', '=', 'service_area')->get();
-            $user['mobile_number'] = substr_replace(substr_replace($user->mobile_number, '-', '3','0'), '-', '7','0');
-            $user['language'] = unserialize($input['language']);
         }
+        $user['service_in'] = DB::table('caregiver_attributes')->select('county_areas.id','county_areas.area')->join('county_areas', 'county_areas.id','caregiver_attributes.value')->where('caregiver_id', '=', $user->id)->where('type', '=', 'service_area')->get();
+        $user['mobile_number'] = substr_replace(substr_replace($user->mobile_number, '-', '3','0'), '-', '7','0');
+        $user->language = unserialize($user->language);
 
         if ($user)
             return response()->json(['status_code' => $this->successStatus , 'message' => 'Profile details updated successfully.', 'data' => $user]);
@@ -481,6 +480,7 @@ class UserController extends Controller{
 
             $userDetails =  User::where('users.id', Auth::id())->join('patients_profiles', 'users.id', 'user_id')->first(); 
             $userDetails['mobile_number'] = substr_replace(substr_replace($userDetails->mobile_number, '-', '3','0'), '-', '7','0');
+            $userDetails['language'] = unserialize( $userDetails['language'])==false?NULL:unserialize( $userDetails['language']);
             if($userDetails == null){
                 $success['userDetails'] =  $user;
             }else{
@@ -499,6 +499,7 @@ class UserController extends Controller{
         }else{
             $userDetails =  User::where('users.id', Auth::id())->first();            
             $userDetails['mobile_number'] = substr_replace(substr_replace($userDetails->mobile_number, '-', '3','0'), '-', '7','0');
+            $userDetails['language'] = unserialize( $userDetails['language'])==false?NULL:unserialize( $userDetails['language']);
             if($userDetails['profile_image'] == null)
                 $userDetails['profile_image'] = 'default.png';
             $userDetails['service_in'] = DB::table('caregiver_attributes')
@@ -510,6 +511,7 @@ class UserController extends Controller{
             $success['service_area'] =  $data['county'];
             $success['today_msg'] =  $data['today_msg'];
             $success['admin_number'] =  $data['admin_number'];
+            $success['language'] = PROFILE_LANGUAGE;
         }          
         if (!empty($user))
             return response()->json(['status_code' => $this->successStatus , 'message' => '', 'data' => $success]);

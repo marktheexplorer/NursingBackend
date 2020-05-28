@@ -32,6 +32,7 @@
                         <tr>
                             <th>#</th>
               				<th>Client</th>
+              				<th>Booking For</th>
                             <th>Schedule ID</th>
 	                  		<th>Mobile Number</th>
 	                  		<th>Status</th>
@@ -45,6 +46,7 @@
 	            		<tr>
 	            			<td>{{ ++$key }}</td>
 	            			<td>{{ ucfirst($booking->user->f_name).' '.$booking->user->m_name.' '.$booking->user->l_name }}</td>
+	            			<td>{{ $booking->relation ? $booking->relation->name : 'Myself' }}</td>
                             <td>{{ "NUR".$booking->id }}</td>
 	              			<td>{{ '+'.$booking->user->country_code.' '.$booking->user->mobile_number != '' ? '+'.$booking->user->country_code.' '.substr_replace(substr_replace($booking->user->mobile_number, '-', '3','0'), '-', '7','0') : '' }}</td>
 	              			<td>{{ $booking->status }}</td>

@@ -30,7 +30,7 @@
                <div class="ibox-body">
                   <div class="tab-content">
                      <div class="tab-pane fade show active" id="tab-2">
-                        <form action="{{ route('bookings.shiftSave') }}" enctype = 'multipart/form-data' method="post" class="form-horizontal patientForm">
+                        <form action="{{ route('bookings.shiftSave') }}" onsubmit="save('{{ $booking->id }}', event,this)" enctype = 'multipart/form-data' method="post" class="form-horizontal patientForm">
                            @csrf                           
                            <div class="card managebookingCard">
                                 <div class="col-xs-12 managebookingInfoWrap">                               
@@ -190,6 +190,69 @@
 
 <script>
 
+    function save(id, event,form){
+        event.preventDefault();
+        
+        var formData = $(form).serializeArray();
+        $.each(formData, function(i, field){
+            console.log(field.start_date);
+           /*if(field.name == 'start_time[]' || field.name == 'end_time[]'){
+                var timeStart = new Date("01/01/2007 " + valuestart).getHours();
+                var timeEnd = new Date("01/01/2007 " + valuestop).getHours();
+
+                var hourDiff = timeEnd - timeStart; 
+                console.log(field.value);
+           }*/
+        });
+        
+        swal({
+            title: "Are you sure?",
+            text: "You want to save #NUR"+id+" Schedule",
+            icon: "warning",
+            buttons: {
+                cancel: true,
+                confirm: true,
+            },
+            closeModal: false,
+            closeModal: false,
+            closeOnEsc: false,
+        })
+       .then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                url: $(form).attr('action'),
+                data: $(form).serialize(),
+                type: 'POST',
+                success: function(data) {
+                    data = JSON.parse(data);
+                    if(data['status']) {
+                        swal({
+                            title: data['message'],
+                            text: "Press OK to continue",
+                            icon: data['status'],
+                            buttons: {
+                                cancel: true,
+                                confirm: true,
+                            },
+                            closeOnConfirm: false,
+                            closeOnEsc: false,
+                        })
+                        .then((willDelete) => {
+                            if (willDelete) {
+                                window.location.reload();
+                            }
+                            });
+                        } else {
+                             swal("Error", data['message'], "error");
+                        }
+                    }
+                });
+            } else {
+                swal("Cancelled", "#NUR"+id+" schedule can not be saved.", "error");
+            }
+        });
+    }
+    
     $(document).ready(function () { 
         $(".start_date").datepicker({
             minDate: '{{ $booking->start_date }}',

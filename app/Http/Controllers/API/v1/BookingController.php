@@ -528,6 +528,7 @@ class BookingController extends Controller
                 $bookings[$key]['caregivers'][$k]['language'] = unserialize($care->caregiver->user->language);
                 $bookings[$key]['caregivers'][$k]['description'] = $care->caregiver->user->additional_info;
                 $bookings[$key]['caregivers'][$k]['discipline'] = Qualification::select('name')->join('caregiver_attributes' ,'caregiver_attributes.value' , 'qualifications.id')->where('type' , 'qualification')->where('caregiver_id', $care->caregiver->user->id)->get()->toArray();
+                $bookings[$key]['caregivers'][$k]['service_in'] = DB::table('caregiver_attributes')->select('county_areas.id','county_areas.area')->join('county_areas', 'county_areas.id','caregiver_attributes.value')->where('caregiver_id', '=', $user->id)->where('type', '=', 'service_area')->get();
             }
         }
 
@@ -550,7 +551,7 @@ class BookingController extends Controller
         foreach ($caregivers as $key => $value) {
             $caregiverNames[] = $value['user']['f_name'].' '.$value['user']['l_name'];
         }
-        $caregiverNames = implode(',', $caregiverNames);
+        $caregiverNames = implode(', ', $caregiverNames);
         
         //Status Update
         Booking::where('id', '=', $input['booking_id'])->update(array('status' =>  'Upcoming'));
@@ -628,6 +629,8 @@ class BookingController extends Controller
                 $datas['end_time'] = $ac->end_time;
                 $datas['start_date'] = $ac->start_date;
                 $datas['end_date'] = $ac->end_date;
+                $datas['gender'] = $ac->gender;
+                $datas['service_in'] = DB::table('caregiver_attributes')->select('county_areas.id','county_areas.area')->join('county_areas', 'county_areas.id','caregiver_attributes.value')->where('caregiver_id', '=', $user->id)->where('type', '=', 'service_area')->get();
                 $userCaregiver[] = $datas;
             }
             $bookings[$key]['userCaregiver'] = $userCaregiver;
@@ -671,6 +674,8 @@ class BookingController extends Controller
                 $datas['end_time'] = $ac->end_time;
                 $datas['start_date'] = $ac->start_date;
                 $datas['end_date'] = $ac->end_date;
+                $datas['gender'] = $ac->gender;
+                $datas['service_in'] = DB::table('caregiver_attributes')->select('county_areas.id','county_areas.area')->join('county_areas', 'county_areas.id','caregiver_attributes.value')->where('caregiver_id', '=', $user->id)->where('type', '=', 'service_area')->get();
                 $userCaregiver[] = $datas;
             }
             $bookings[$key]['userCaregiver'] = $userCaregiver;

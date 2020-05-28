@@ -238,8 +238,6 @@ class BookingsController extends Controller{
                 'state' => 'required',
                 'country' => 'required',
                 'zipcode' => 'required',
-                'start_date'=>'required',
-                'end_date'=>'required|after_or_equal:start_date',
             ]
         );
 
@@ -488,8 +486,11 @@ class BookingsController extends Controller{
         );
 
         if ($validator->fails()) {
-            flash()->error('Please select all fields');
-            return redirect()->back()->withErrors($validator);
+            $response = array(
+                'status' => 'error',
+                'message' => 'Please fill all the fields',
+            );
+            return json_encode($response);
         }
 
         AssignedCaregiver::where('booking_id', $input['booking_id'])->where('status', 'Final')->update(['status' => '']);
@@ -514,9 +515,12 @@ class BookingsController extends Controller{
            $caregiver = Caregiver::findOrFail($value);
            Helper::sendTwilioMessage($caregiver->user->mobile_number, $caregiver->user->country_code, 'Time Slots has been updated for the shift NUR'.$booking->id);
         }
-        flash()->success('Schedule Updated Successfully');
-
-        return redirect()->back();
+        
+        $response = array(
+            'status' => 'success',
+            'message' => 'Booking saved successfully',
+        );
+        return json_encode($response);
     }
 
     
