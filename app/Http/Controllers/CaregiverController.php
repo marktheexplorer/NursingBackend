@@ -43,7 +43,6 @@ class CaregiverController extends Controller{
             ->where('caregiver_attributes.caregiver_id', '=', $value->id)
             ->pluck('qualifications.name')->toArray();
         }
-
         return view('caregiver.index', compact('caregivers'));
     }
 
@@ -123,7 +122,9 @@ class CaregiverController extends Controller{
         }
 
         $input['role_id'] = 2;
+        $input['language'] = serialize($input['language']);
         $input['dob'] = date("m/d/Y", strtotime($input['dob']));
+        $input['address'] = $input['street'].', '.$input['city'].', '.$input['state'].', '.$input['zipcode'];
         $user = User::create($input);
 
         if($user){
@@ -330,10 +331,11 @@ class CaregiverController extends Controller{
         $user->email = $input['email'];
         $user->height = $input['height'];
         $user->weight = $input['weight'];
-        $user->language = $input['language'];
+        $user->language = serialize($input['language']);
         $user->additional_info = $input['additional_info'];
         $user->country_code = $input['country_code'];
         $user->mobile_number = preg_replace('`-`', '', $input['mobile_number']);
+        $user->address = $input['street'].', '.$input['city'].', '.$input['state'].', '.$input['zipcode'];
         $user->city = $input['city'];
         $user->zipcode = $input['zipcode'];
         $user->state = $input['state'];

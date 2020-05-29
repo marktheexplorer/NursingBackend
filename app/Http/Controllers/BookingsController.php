@@ -492,9 +492,37 @@ class BookingsController extends Controller{
             );
             return json_encode($response);
         }
-
-        AssignedCaregiver::where('booking_id', $input['booking_id'])->where('status', 'Final')->update(['status' => '']);
+        
+        $booking = Booking::where('id', '=', $input['booking_id'])->first();
+        $actualDiff = Carbon::parse($booking->end_date)->diffInDays(Carbon::parse($booking->start_date));
+        $actualDiffTime = Carbon::parse($booking->end_time)->diffInHours(Carbon::parse($booking->start_time));
         $count = count($input['caregivers']) ;
+        $diff = 0;
+        $diffTime = 0;
+        for ($i=0; $i < $count ; $i++) { 
+            $startDate = Carbon::parse($input['start_date'][$i]);
+            $endDate = Carbon::parse($input['end_date'][$i]);
+            $startTime = Carbon::parse($input['start_time'][$i]);
+            $endTime = Carbon::parse($input['end_time'][$i]);
+            
+            $diffTime += $endTime->diffInHours($startTime);
+            $diff += $endDate->diffInDays($startDate);
+        }
+        if($actualDiff > $diff){
+            $response = array(
+                'status' => 'info',
+                'message' => 'Time is left. Please assign caregiver carefully.',
+            );
+            return json_encode($response);
+        }else if($actualDiffTime > $diffTime){
+            $response = array(
+                'status' => 'info',
+                'message' => 'Time is left. Please assign caregiver carefully.',
+            );
+            return json_encode($response);
+        }
+        AssignedCaregiver::where('booking_id', $input['booking_id'])->where('status', 'Final')->update(['status' => '']);
+        
         for ($i=0; $i < $count ; $i++) { 
             AssignedCaregiver::insert([
                 'booking_id'=>$input['booking_id'],
@@ -506,7 +534,6 @@ class BookingsController extends Controller{
                 'status' => 'Final',
             ]);
         }
-        $booking = Booking::where('id', '=', $input['booking_id'])->first();
 
         Helper::sendNotifications($booking['user']['id'], $booking->id, 'Shifts Assigned', 'Time Slots has been updated to the caregivers for the schedule NUR'.$booking->id);
         Helper::sendTwilioMessage($booking['user']['mobile_number'], $booking['user']['country_code'], 'Time Slots has been updated to the caregivers for the schedule NUR'.$booking->id); 

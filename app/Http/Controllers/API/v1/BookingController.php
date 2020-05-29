@@ -20,6 +20,7 @@ use Log;
 use App\Caregiver;
 use App\Notification;
 use App\Helper;
+use App\UserRelation;
 use App\Mail\MailHelper;
 use Illuminate\Support\Facades\Mail;
 
@@ -528,7 +529,8 @@ class BookingController extends Controller
                 $bookings[$key]['caregivers'][$k]['language'] = unserialize($care->caregiver->user->language);
                 $bookings[$key]['caregivers'][$k]['description'] = $care->caregiver->user->additional_info;
                 $bookings[$key]['caregivers'][$k]['discipline'] = Qualification::select('name')->join('caregiver_attributes' ,'caregiver_attributes.value' , 'qualifications.id')->where('type' , 'qualification')->where('caregiver_id', $care->caregiver->user->id)->get()->toArray();
-                $bookings[$key]['caregivers'][$k]['service_in'] = DB::table('caregiver_attributes')->select('county_areas.id','county_areas.area')->join('county_areas', 'county_areas.id','caregiver_attributes.value')->where('caregiver_id', '=', $user->id)->where('type', '=', 'service_area')->get();
+                $bookings[$key]['caregivers'][$k]['service_in'] = DB::table('caregiver_attributes')->select('county_areas.id','county_areas.area')->join('county_areas', 'county_areas.id','caregiver_attributes.value')->where('caregiver_id', '=', $care->caregiver->user->id)->where('type', '=', 'service_area')->get();
+                $bookings[$key]['caregivers'][$k]['gender'] = $care->caregiver->user->gender;
             }
         }
 
@@ -629,8 +631,8 @@ class BookingController extends Controller
                 $datas['end_time'] = $ac->end_time;
                 $datas['start_date'] = $ac->start_date;
                 $datas['end_date'] = $ac->end_date;
-                $datas['gender'] = $ac->gender;
-                $datas['service_in'] = DB::table('caregiver_attributes')->select('county_areas.id','county_areas.area')->join('county_areas', 'county_areas.id','caregiver_attributes.value')->where('caregiver_id', '=', $user->id)->where('type', '=', 'service_area')->get();
+                $datas['gender'] = $ac->caregiver->user->gender;
+                $datas['service_in'] = DB::table('caregiver_attributes')->select('county_areas.id','county_areas.area')->join('county_areas', 'county_areas.id','caregiver_attributes.value')->where('caregiver_id', '=', $ac->caregiver->user->id)->where('type', '=', 'service_area')->get();
                 $userCaregiver[] = $datas;
             }
             $bookings[$key]['userCaregiver'] = $userCaregiver;
@@ -674,8 +676,8 @@ class BookingController extends Controller
                 $datas['end_time'] = $ac->end_time;
                 $datas['start_date'] = $ac->start_date;
                 $datas['end_date'] = $ac->end_date;
-                $datas['gender'] = $ac->gender;
-                $datas['service_in'] = DB::table('caregiver_attributes')->select('county_areas.id','county_areas.area')->join('county_areas', 'county_areas.id','caregiver_attributes.value')->where('caregiver_id', '=', $user->id)->where('type', '=', 'service_area')->get();
+                $datas['gender'] = $ac->caregiver->user->gender;
+                $datas['service_in'] = DB::table('caregiver_attributes')->select('county_areas.id','county_areas.area')->join('county_areas', 'county_areas.id','caregiver_attributes.value')->where('caregiver_id', '=', $ac->caregiver->user->id)->where('type', '=', 'service_area')->get();
                 $userCaregiver[] = $datas;
             }
             $bookings[$key]['userCaregiver'] = $userCaregiver;
@@ -725,6 +727,7 @@ class BookingController extends Controller
                 $bookings[$key]['shift_end_time'] = $value->shift_end_time ;
                 $bookings[$key]['shift_start_date'] = $value->start_date ;
                 $bookings[$key]['shift_end_date'] = $value->end_date;
+                $bookings[$key]['relation_id'] = $bookings[$key]['relation_id'] != null? UserRelation::findOrFail($bookings[$key]['relation_id'])->name : '';
         }
 
         if(count($jobs) > 0){
