@@ -43,8 +43,8 @@
 	              			<td>{{ $user->email }}</td>
 	              			<td>{{ '+'.$user->country_code.' '.substr_replace(substr_replace($user->mobile_number, '-', '3','0'), '-', '7','0') }}</td>
                             <td>{{ "$".$user->min_price."-$".$user->max_price }}</td>
-                            <td>{{ implode(' , ',$user->qualification) }}</td>
-                            <td>{{ $user->language }}</td>
+                            <td>{{ !empty($user->qualification)?implode(' , ',$user->qualification):'' }}</td>
+                            <td>{{ !empty($user->language)? implode(', ', unserialize($user->language)) : '' }}</td>
 	              			<td>{{ date_format(date_create($user->created_at), 'd M, Y')}}</td>
 	              			<td>
 	              				<ul class="actions-menu" style="padding-left: 0px;">

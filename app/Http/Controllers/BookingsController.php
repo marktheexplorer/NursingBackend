@@ -341,7 +341,7 @@ class BookingsController extends Controller{
      */
     public function destroy($id){
         $booking = Booking::findOrFail($id);
-        $assignedCaregivers = AssignedCaregiver::where('booking_id',$booking->id)->delete();
+        $assignedCaregivers = AssignedCaregiver::where('booking_id',$id)->delete();
 
         if ($booking->delete()) {
             $response = array(

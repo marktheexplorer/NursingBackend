@@ -161,9 +161,9 @@
                                         </div>
                                         <div class="col-sm-3  form-group">
                                             <label>Language</label>
-                                            <select name="language" class="form-control {{ $errors->has('language') ? ' is-invalid' : '' }} multiple" multiple="multiple">
+                                            <select name="language[]" class="form-control {{ $errors->has('language') ? ' is-invalid' : '' }} multiple" multiple="multiple">
                                                 @foreach(PROFILE_LANGUAGE as $val)
-                                                    <option value="{{ $val }}" {{ (in_array($val, unserialize($user->language))) ? 'selected' :''}}>{{$val}}</option>
+                                                    <option value="{{ $val }}" {{ ($user->language !== NULL)?(in_array($val, unserialize($user->language))) ? 'selected' :'' : ''}}>{{$val}}</option>
                                                 @endforeach
                                             </select>
                                             @if ($errors->has('language'))
@@ -227,14 +227,12 @@
                                            @endif
                                         </div>
                                         <div class="col-sm-6 form-group">
-                                            <label>Document Upload</label>
-                                            <input type="file" class="form-control {{ $errors->has('document') ? ' is-invalid' : '' }}" name="document" value="{{ old('document' ,$user->document) }}"/>
+                                            <label>Document Upload (Accepted format: PDF)</label>
+                                            <input type="file" class="form-control {{ $errors->has('document') ? ' is-invalid' : '' }}" id="document" name="document" value="{{ old('document' ,$user->document) }}"/>
                                             <br>
-                                            @if ($errors->has('document'))
-                                            <span class="text-danger">
-                                                <strong>{{ $errors->first('document') }}</strong>
+                                            <span class="text-danger doc_error">
+                                                <strong>{{ $errors->has('document')?$errors->first('document'):'' }}</strong>
                                             </span>
-                                            @endif
                                         </div>
                                         <div class="col-sm-6 form-group">
                                             @if($user->document) Click to see Uploaded document  <span><a href={{ asset('pdf/'.$user->document) }} target = "_blank"><i class="fas fa-file-pdf"></i></a></span> @endif
@@ -375,7 +373,7 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.1.62/jquery.inputmask.bundle.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-0K1VdBYrA4qHKc5tS_rpf9bsmWsO-vc&libraries=places&callback=initMap" async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{env('GOOGLE_API_KEY')}}&libraries=places&callback=initMap" async defer></script>
 <script>
     function initMap() {
         var options = {
@@ -507,5 +505,23 @@ $(function() {
     });
 
 });
+
+$(function() {
+    $('#document').checkFileType({
+        allowedExtensions: ['pdf'],
+        success: function() {
+            $('.doc_error').removeClass('text-danger').addClass('text-success');
+            $('.doc_error').text('Document uploaded successfully.');
+        },
+        error: function() {
+          $('#document').val('')
+          $('.doc_error').removeClass('text-success').addClass('text-danger');
+          $('.doc_error').text('Please upload a pdf file .');
+        }
+    });
+
+});
+
+
 </script>
 @endsection

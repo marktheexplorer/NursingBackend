@@ -180,8 +180,7 @@
                                                 </div>
                                                 <div class="col-sm-3  form-group">
                                                     <label>Language</label>
-                                                    <select name="language" class="form-control {{ $errors->has('language') ? ' is-invalid' : '' }}">
-                                                        <option disabled="true" selected="true"> -- Select Language --</option>
+                                                    <select name="language[]" class="form-control {{ $errors->has('language') ? ' is-invalid' : '' }} multiple" multiple="multiple">
                                                         @foreach(PROFILE_LANGUAGE as $val)
                                                             <option value="{{ $val }}" {{ old('language') == $val ? 'selected':'' }}>
                                                                 {{ $val }}
@@ -408,7 +407,7 @@
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.1.62/jquery.inputmask.bundle.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-0K1VdBYrA4qHKc5tS_rpf9bsmWsO-vc&libraries=places&callback=initMap" async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{env('GOOGLE_API_KEY')}}&libraries=places&callback=initMap" async defer></script>
 <script>
      function initMap() {
         var options = {
@@ -464,6 +463,13 @@
             placeholder: {
                 id: '-1', // the value of the option
                 text: ' -- Select Discipline --'
+            }
+        });
+        
+        $(".multiple").select2({
+            placeholder: {
+                id: '-1', // the value of the option
+                text: ' -- Select --'
             }
         });
 

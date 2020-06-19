@@ -44,7 +44,7 @@
                                     <li class="media">
                                         <div class="media-img col-md-3">Schedule For</div>
                                         <div class="media-body">
-                                            <div class="media-heading">{{ $booking->relation_id == '' ? 'Myself' :  $booking->relation->name .' - '. $booking->relation->relation->title }}</div>
+                                            <div class="media-heading">{{ $booking->relation_id == '' ? 'Myself' :  $booking->relation->name }}</div>
                                         </div>
                                     </li>
                                     <li class="media">

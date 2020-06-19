@@ -46,8 +46,8 @@ class HomeController extends Controller
 
         $user = User::findOrFail(Auth::id());
         if ($contactus->save()){
-            $emails = array("lmejer@24-7nursingcare.com", "fhernandez@24-7nursingcare.com", "mgomez@24-7nursingcare.com");
-            
+            $emails = array("lmejer@24-7nursingcare.com", "fhernandez@24-7nursingcare.com", "mgomez@24-7nursingcare.com","vikrant.tyagi@saffrontech.net");
+
             $objDemo = new \stdClass();
             $objDemo->sender = env('APP_NAME');
             $objDemo->receiver = ucfirst('Admin');
@@ -59,9 +59,10 @@ class HomeController extends Controller
             $objDemo->userName = $user->f_name.' '.$user->m_name.' '.$user->l_name;
             $objDemo->userMobileNumber = $user->country_code.'-'.$user->mobile_number;
             $issend = Mail::to($emails)->send(new MailHelper($objDemo));
-    
-            $numbers = ['+13055251495','+17862478888','+17863995955'];
+            
+            $numbers = ['+13055251495','+17862478888','+17863995955','+919891550561'];
             Helper::sendContactUsMsg($numbers, $user->f_name.' '.$user->l_name.' Contacted you - '.$input['message']); 
+            
             return response()->json(['status_code'=> 200, 'message'=> 'Thanks for contacting us.', 'data' => null]);
         }
         else
@@ -71,12 +72,12 @@ class HomeController extends Controller
     public function faqListing()
     {
         $user = Auth::user();
-        $faqs = Faq::select('question','answer')->where('role_id',$user->role_id)->orderBy('faq_order', 'ASC')->get();
-        
+        $faqs = Faq::select('question',htmlspecialchars_decode('answer'))->where('role_id',$user->role_id)->orderBy('faq_order', 'ASC')->get();
+    
         foreach($faqs as $faq){
             $faq->answer = strip_tags(html_entity_decode($faq->answer));
         }
-
+        
         if (count($faqs) > 0)
             return response()->json(['status_code'=> 200, 'message'=> '', 'data' => $faqs]);
         else
