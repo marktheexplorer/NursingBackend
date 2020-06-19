@@ -174,19 +174,6 @@
                                             </div>
                                         </li>
                                         <li class="media">
-                                            <div class="media-img col-md-3">Address</div>
-                                            <div class="media-body">
-                                                <div class="media-heading">
-                                                    <input type="text" value="{{ $booking->address }}" name="address" class="form-control" style="max-width: 270px;" />
-                                                    @if ($errors->has('address'))
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $errors->first('address') }}</strong>
-                                                        </span>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li class="media">
                                             <div class="media-img col-md-3">Service Location</div>
                                             <div class="media-body">
                                                 <div class="media-heading">
@@ -273,87 +260,8 @@
 @endsection
 @section('footer-scripts')
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/css/select2.min.css" rel="stylesheet" />
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.1.62/jquery.inputmask.bundle.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
 <script type="text/javascript">
-    $(document).ready( function () {
-        $('#data-table').DataTable();
-    });
-</script>
-<script>
-    $(function(){
-        function split( val ) {
-            return val.split( /,\s*/ );
-        }
-
-        function extractLast( term ) {
-            //return split( term ).pop();
-            temp = $.trim($("#service_zipcode").val());
-            fnd = ','
-            if(temp.indexOf(fnd) != -1){
-                term =  temp+" "+term;
-            }
-            console.log(term);
-            return term;
-        }
-
-        // don't navigate away from the field on tab when selecting an item
-        $( "#citysuggest" ).on( "keydown", function( event ) {
-            if(event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active){
-                event.preventDefault();
-            }
-        }).autocomplete({
-            source: function( request, response ) {
-                $.getJSON( "{{ env('APP_URL') }}admin/bookings/search_service_location", {
-                    term: request.term
-                }, response );
-            },
-
-            search: function() {
-                // custom minLength
-                var term = this.value;
-                if ( term.length < 2){
-                    return false;
-                }
-            },
-
-            focus: function() {
-                // prevent value inserted on focus
-                return false;
-            },
-
-            select: function( event, ui ) {
-                $( "#citysuggest" ).val(ui.item.value)
-                $( "#citysuggest" ).autocomplete("close");
-
-                //remove all options from select box
-                $("#state").find("option:gt(0)").remove();
-                $("#state").prop("selectedIndex", 0);
-                setstateoptions();
-                return false;
-            }
-        });
-    });
-
-    function setstateoptions(){
-        zip = $("#citysuggest").val();
-        $.ajax({
-            url: '{{ env('APP_URL') }}admin/caregiver/statefromcity',
-            type: 'GET',
-            dataType: 'json',
-            data:{term:zip},
-            success: function (res) {
-                if(res['error']){
-                    $("#citysuggest").val('');
-                    $("#citysuggest").focus();
-                }else{
-                }
-            }
-        });
-    }
 
     $('input[type=radio][name=is_full_day]').change(function() {
         $("#timingdiv").toggle();

@@ -116,9 +116,9 @@
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <div class="media-img col-md-3">Address</div>
+                                        <div class="media-img col-md-3">County</div>
                                         <div class="media-body">
-                                            <div class="media-heading">{{ $booking->address }}</div>
+                                            <div class="media-heading">{{ $booking->city}}</div>
                                         </div>
                                     </li>
                                     <li class="media">
