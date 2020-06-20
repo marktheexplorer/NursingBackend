@@ -46,7 +46,7 @@ class HomeController extends Controller
 
         $user = User::findOrFail(Auth::id());
         if ($contactus->save()){
-            $emails = array("lmejer@24-7nursingcare.com", "fhernandez@24-7nursingcare.com", "mgomez@24-7nursingcare.com","vikrant.tyagi@saffrontech.net");
+            $emails = array("lmejer@24-7nursingcare.com", "fhernandez@24-7nursingcare.com", "mgomez@24-7nursingcare.com");
 
             $objDemo = new \stdClass();
             $objDemo->sender = env('APP_NAME');
@@ -60,7 +60,7 @@ class HomeController extends Controller
             $objDemo->userMobileNumber = $user->country_code.'-'.$user->mobile_number;
             $issend = Mail::to($emails)->send(new MailHelper($objDemo));
             
-            $numbers = ['+13055251495','+17862478888','+17863995955','+919891550561'];
+            $numbers = ['+13055251495','+17862478888','+17863995955'];
             Helper::sendContactUsMsg($numbers, $user->f_name.' '.$user->l_name.' Contacted you - '.$input['message']); 
             
             return response()->json(['status_code'=> 200, 'message'=> 'Thanks for contacting us.', 'data' => null]);
